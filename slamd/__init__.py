@@ -1,11 +1,13 @@
 import os
 
 from flask import Flask, redirect, render_template
+from flask_cors import CORS
 
 import config
 from slamd.materials.materials_controller import materials
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(config.get_config_obj(os.getenv('FLASK_ENV')))
 
 

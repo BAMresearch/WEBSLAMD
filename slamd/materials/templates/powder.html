@@ -1,4 +1,13 @@
 <div class="form-group">
-    {{ form.ingredient.label(class_="control-label col-sm-2") }}
-    {{ form.ingredient(class_="col-sm-10") }}
+    <div>
+        {{ form.ingredient.label(class_="control-label col-sm-2") }}
+        {{ form.ingredient(class_="col-sm-10") }}
+    </div>
+    <div>
+        {% for sub_form in form.additional_properties %}
+            {{ sub_form.form.name(placeholder='Scenario Title') }}
+            {{ sub_form.form.value(placeholder='Scenario Title') }}
+            {{ sub_form.form.add_button(placeholder='Scenario Title') }}
+        {% endfor %}
+    </div>
 </div>
