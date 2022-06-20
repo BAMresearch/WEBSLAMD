@@ -1,17 +1,21 @@
 {{ base_materials_form.hidden_tag() }}
-<div>
-    {{ base_materials_form.material_name.label }} <br />
-    {{ base_materials_form.material_name }}
-</div>
 
-<div>
-    {{ base_materials_form.material_type.label }} <br />
-    {{ base_materials_form.material_type }}
+<div class="form-horizontal">
+    <div class="form-group">
+        {{ base_materials_form.material_name.label(class_="control-label col-sm-2") }}
+        {{ base_materials_form.material_name(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        {{ base_materials_form.material_type.label(class_="control-label col-sm-2") }}
+        {{ base_materials_form.material_type(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        {{ base_materials_form.material_unit.label(class_="control-label col-sm-2") }} <br />
+        {{ base_materials_form.material_unit(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Add material</button>
+        </div>
+    </div>
 </div>
-
-<div>
-    {{ base_materials_form.material_unit.label }} <br />
-    {{ base_materials_form.material_unit }}
-</div>
-
-<button type="submit" class="btn btn-primary">Add material</button>
