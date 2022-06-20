@@ -1,4 +1,4 @@
-window.addEventListener("load", () => {
+const selectMaterialType = () => {
     const elem = document.getElementById('material_type');
 
     elem.addEventListener("change", async () => {
@@ -11,7 +11,6 @@ window.addEventListener("load", () => {
         }
     }
     )
-})
+}
 
-
-
+window.addEventListener("load", selectMaterialType)

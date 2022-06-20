@@ -1,7 +1,8 @@
+from re import template
 from flask import Blueprint, render_template, redirect, request, make_response, jsonify
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
-from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.materials_service import MaterialsService
 
 materials = Blueprint('materials', __name__,
                       template_folder='templates',
@@ -17,10 +18,8 @@ def material_page():
 
 @materials.route('/<type>', methods=['GET'])
 def select_material_type(type):
-    type = type.lower()
-    # TODO: Select the correct form dynamically
-    body = {'template': render_template(f'{type}.html', form=PowderForm())}
-    print(f'Received GET request for {type}')
+    template_file, form = MaterialsService().create_material_form(type)
+    body = {'template': render_template(template_file, form=form)}
     return make_response(jsonify(body), 200)
 
 
