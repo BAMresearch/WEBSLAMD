@@ -20,5 +20,7 @@ class BaseMaterialsForm(Form):
     material_unit = SelectField(
         label='Unit',
         validators=[validators.DataRequired()],
-        choices=["Liter", "Kilogram"]
+        choices=['Liter', 'Kilogram']
     )
+
+    submit = SubmitField('Add material')
