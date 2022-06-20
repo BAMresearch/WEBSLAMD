@@ -8,6 +8,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <main class="col-sm-10 col-md-10 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
-    <p class="headline">SLAMD - Materials Formulations</p>
+    <h3>SLAMD - Materials Formulations</h3>
+
+    <form action="" method="post" novalidate>
+        {% include 'base_materials_form.html' %}
+    </form>
 </main>
 {%endblock%}
