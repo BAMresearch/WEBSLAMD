@@ -2,6 +2,7 @@ from re import template
 from flask import Blueprint, render_template, redirect, request, make_response, jsonify
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
+from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
 
 materials = Blueprint('materials', __name__,
@@ -13,7 +14,7 @@ materials = Blueprint('materials', __name__,
 
 @materials.route('', methods=['GET'])
 def material_page():
-    return render_template('materials.html', base_materials_form=BaseMaterialsForm())
+    return render_template('materials.html', base_materials_form=BaseMaterialsForm(), form=PowderForm())
 
 
 @materials.route('/<type>', methods=['GET'])
