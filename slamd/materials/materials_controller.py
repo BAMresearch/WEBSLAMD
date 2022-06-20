@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, request
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
@@ -9,6 +9,13 @@ materials = Blueprint('materials', __name__,
                       url_prefix='/materials')
 
 
-@materials.route("", methods=['GET'])
+@materials.route('', methods=['GET'])
 def material_page():
     return render_template('materials.html', base_materials_form=(BaseMaterialsForm()))
+
+@materials.route('', methods=['POST'])
+def submit_material():
+    form = BaseMaterialsForm(request.form)
+    if form.validate():
+        return redirect('/')
+    return render_template('materials.html', base_materials_form=form)

@@ -7,7 +7,8 @@ class BaseMaterialsForm(Form):
     # TODO: validation -> name must be unique
     material_name = StringField(
         label='Name',
-        validators=[validators.DataRequired()]
+        validators=[validators.DataRequired(
+            message="Material name cannot be empty")]
     )
 
     material_type = SelectField(
