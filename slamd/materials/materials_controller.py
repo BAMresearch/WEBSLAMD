@@ -34,7 +34,6 @@ def add_property():
     # body = {'template': render_template(template_file, form=form)}
     return render_template('materials.html', base_materials_form=BaseMaterialsForm(), form=PowderForm())
 
-
 @materials.route('', methods=['POST'])
 def submit_material():
     form = BaseMaterialsForm(request.form)
