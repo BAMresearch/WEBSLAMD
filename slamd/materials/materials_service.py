@@ -6,15 +6,14 @@ from slamd.materials.forms.liquid_form import LiquidForm
 class MaterialsService:
 
     def create_material_form(self, type):
-        material_type = type.lower()
         template_file = f'{type}_form.html'
-        if material_type == 'powder':
+        if type == 'powder':
             form = PowderForm()
-        elif material_type == 'liquid':
+        elif type == 'liquid':
             form = LiquidForm()
-        elif material_type == 'aggregates':
+        elif type == 'aggregates':
             form = AggregatesForm()
         else:
-            raise ValueError(f'Provided material type {material_type} is not supported')
+            raise ValueError(f'Provided material type {type} is not supported')
         return template_file, form
 
