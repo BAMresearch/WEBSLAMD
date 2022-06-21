@@ -1,0 +1,20 @@
+{{ form.hidden_tag() }}
+<div class="form-horizontal">
+    <div class="form-group">
+        {{ form.fine_aggregates.label(class_="control-label col-sm-2") }}
+        {{ form.fine_aggregates(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        {{ form.coarse_aggregates.label(class_="control-label col-sm-2") }}
+        {{ form.coarse_aggregates(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        {{ form.type.label(class_="control-label col-sm-2") }}
+        {{ form.type(class_="col-sm-10") }}
+    </div>
+    <div class="form-group">
+        {{ form.grading_curve.label(class_="control-label col-sm-2") }}
+        {{ form.grading_curve(class_="col-sm-10") }}
+    </div>
+
+</div>

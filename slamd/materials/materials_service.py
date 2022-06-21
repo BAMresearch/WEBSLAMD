@@ -1,16 +1,20 @@
+from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.liquid_form import LiquidForm
 
 
 class MaterialsService:
+
     def create_material_form(self, type):
-        type = type.lower()
+        material_type = type.lower()
         template_file = f'{type}_form.html'
-        if type == 'powder':
+        if material_type == 'powder':
             form = PowderForm()
-        elif type == 'liquid':
+        elif material_type == 'liquid':
             form = LiquidForm()
+        elif material_type == 'aggregates':
+            form = AggregatesForm()
         else:
-            raise ValueError(f'Provided material type {type} is not supported')
+            raise ValueError(f'Provided material type {material_type} is not supported')
         return template_file, form
 
