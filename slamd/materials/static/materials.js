@@ -14,7 +14,7 @@ const selectMaterialType = () => {
 }
 
 const addProperty = () => {
-    const elem = document.getElementById('add_button');
+    const elem = document.getElementById('add_property_button');
 
     elem.addEventListener("click", async () => {
             try {
