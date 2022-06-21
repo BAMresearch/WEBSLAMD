@@ -5,7 +5,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 class MaterialsService:
     def create_material_form(self, type):
         type = type.lower()
-        template_file = f'{type}.html'
+        template_file = f'{type}_form.html'
         if type == 'powder':
             form = PowderForm()
         elif type == 'liquid':
