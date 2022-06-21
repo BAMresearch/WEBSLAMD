@@ -17,25 +17,23 @@
     <div class="additional-properties form-group">
         <h5>Additional Properties - Leave empty if not needed.</h5>
 
-        <form novalidate>
-            {% for property in base_materials_form.additional_properties %}
-            {{ property.form.hidden_tag() }}
-            <div class="form-group">
-                {{ property.form.name.label(class_="control-label col-sm-2") }}
-                {{ property.form.name(class_="col-sm-10") }}
-            </div>
-            <div class="form-group">
-                {{ property.form.value.label(class_="control-label col-sm-2") }}
-                {{ property.form.value(class_="col-sm-10") }} <br />
-            </div>
-            {% endfor %}
+        {% for property in base_materials_form.additional_properties %}
+        {{ property.form.hidden_tag() }}
+        <div class="form-group">
+            {{ property.form.name.label(class_="control-label col-sm-2") }}
+            {{ property.form.name(class_="col-sm-10") }}
+        </div>
+        <div class="form-group">
+            {{ property.form.value.label(class_="control-label col-sm-2") }}
+            {{ property.form.value(class_="col-sm-10") }} <br />
+        </div>
+        {% endfor %}
 
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    {{ base_materials_form.add_property_button }}
-                </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                {{ base_materials_form.add_property_button }}
             </div>
-        </form>
+        </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
