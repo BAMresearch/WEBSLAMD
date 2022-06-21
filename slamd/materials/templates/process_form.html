@@ -1,0 +1,15 @@
+{{ form.hidden_tag() }}
+<div class="form-horizontal">
+  <div class="form-group">
+    {{ form.duration.label(class_="control-label col-sm-2") }}
+    {{ form.duration(class_="col-sm-10") }}
+  </div>
+  <div class="form-group">
+    {{ form.temperature.label(class_="control-label col-sm-2") }}
+    {{ form.temperature(class_="col-sm-10") }}
+  </div>
+  <div class="form-group">
+    {{ form.relative_humidity.label(class_="control-label col-sm-2") }}
+    {{ form.relative_humidity(class_="col-sm-10") }}
+  </div>
+</div>
