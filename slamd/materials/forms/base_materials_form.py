@@ -25,6 +25,4 @@ class BaseMaterialsForm(Form):
                                       min_entries=1,
                                       max_entries=10)
 
-    add_property_button = SubmitField('Add property')
-
     submit = SubmitField('Add material')

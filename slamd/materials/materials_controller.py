@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, request, make_response, 
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.forms.add_property_form import AddPropertyForm
 from slamd.materials.materials_service import MaterialsService
 
 materials = Blueprint('materials', __name__,
@@ -24,11 +25,10 @@ def select_material_type(type):
     return make_response(jsonify(body), 200)
 
 
-@materials.route('/add_property', methods=['GET'])
+@materials.route('/add_property', methods=['POST'])
 def add_property():
-    print('#######')
-    print('TEST')
-    print('#######')
+    print(request.form)
+    form = AddPropertyForm(request.form)
     # form = request.form
     # template_file, form = MaterialsService().create_material_form(type)
     # body = {'template': render_template(template_file, form=form)}
