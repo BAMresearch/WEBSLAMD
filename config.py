@@ -9,6 +9,7 @@ class ConfigDevelopment:
 
 class ConfigTesting:
     TESTING = True
+    SECRET_KEY = 'test_key'
 
 
 def get_config_obj(config_name):

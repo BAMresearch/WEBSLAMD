@@ -1,26 +1,3 @@
-import pytest
-
-import config
-from slamd import app as slamd
-
-
-@pytest.fixture()
-def app():
-    slamd.config.from_object(config.ConfigTesting)
-
-    yield slamd
-
-
-@pytest.fixture()
-def client(app):
-    return app.test_client()
-
-
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
-
-
 def test_slamd_loads(client):
     response = client.get("/", follow_redirects=True)
 
@@ -32,3 +9,10 @@ def test_slamd_redirects_materials_page(client):
 
     assert len(response.history) == 1
     assert response.request.path == "/materials"
+
+
+def test_slamd_selects_type(client):
+    response = client.get("/materials/liquid")
+    print(str(response))
+    assert response.status_code == 200
+    assert 'Precursor' in response.json['template']
