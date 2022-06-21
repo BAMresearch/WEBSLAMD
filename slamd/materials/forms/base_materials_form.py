@@ -18,10 +18,4 @@ class BaseMaterialsForm(Form):
                  'Admixture', 'Additive', 'Process', 'Custom']
     )
 
-    material_unit = SelectField(
-        label='Unit',
-        validators=[validators.DataRequired()],
-        choices=['Liter', 'Kilogram']
-    )
-
     submit = SubmitField('Add material')

@@ -24,9 +24,20 @@ def select_material_type(type):
     return make_response(jsonify(body), 200)
 
 
+@materials.route('/add_property', methods=['GET'])
+def add_property():
+    print('#######')
+    print('TEST')
+    print('#######')
+    # form = request.form
+    # template_file, form = MaterialsService().create_material_form(type)
+    # body = {'template': render_template(template_file, form=form)}
+    return render_template('materials.html', base_materials_form=BaseMaterialsForm(), form=PowderForm())
+
+
 @materials.route('', methods=['POST'])
 def submit_material():
     form = BaseMaterialsForm(request.form)
     if form.validate():
         return redirect('/')
-    return render_template('materials.html', base_materials_form=form)
+    return render_template('materials.html', base_materials_form=form, form=PowderForm())

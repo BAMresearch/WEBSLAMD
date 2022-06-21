@@ -1,13 +1,31 @@
-<div class="form-group">
-    <div>
+{{ form.hidden_tag() }}
+<div class="form-horizontal">
+    <div class="form-group">
         {{ form.ingredient.label(class_="control-label col-sm-2") }}
         {{ form.ingredient(class_="col-sm-10") }}
     </div>
-    <div>
-        {% for sub_form in form.additional_properties %}
-            {{ sub_form.form.name(placeholder='Scenario Title') }}
-            {{ sub_form.form.value(placeholder='Scenario Title') }}
-            {{ sub_form.form.add_button(placeholder='Scenario Title') }}
+    <div class="additional-properties">
+        <h5>Additional Properties - Leave empty if not needed.</h5>
+
+        {% for property in form.additional_properties %}
+        {{ property.form.hidden_tag() }}
+        <form novalidate>
+            <div class="form-group">
+                {{ property.form.name.label(class_="control-label col-sm-2") }}
+                {{ property.form.name(class_="col-sm-10") }}
+            </div>
+            <div class="form-group">
+                {{ property.form.value.label(class_="control-label col-sm-2") }}
+                {{ property.form.value(class_="col-sm-10") }} <br/>
+            </div>
         {% endfor %}
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ form.add_button }}
+                </div>
+            </div>
+        </form>
+
     </div>
 </div>

@@ -1,7 +1,6 @@
 {{ base_materials_form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 
-
 <div class="form-horizontal">
     <div class="form-group">
         {{ base_materials_form.material_name.label(class_="control-label col-sm-2") }}
@@ -12,11 +11,9 @@
         {{ base_materials_form.material_type.label(class_="control-label col-sm-2") }}
         {{ base_materials_form.material_type(class_="col-sm-10") }}
     </div>
-    <div class="form-group">
-        {{ base_materials_form.material_unit.label(class_="control-label col-sm-2") }} <br />
-        {{ base_materials_form.material_unit(class_="col-sm-10") }}
+    <div id="template-placeholder">
+        {% include 'powder.html' %}
     </div>
-    <div id="template-placeholder">{% include 'powder.html' %}</div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             {{ base_materials_form.submit }}
