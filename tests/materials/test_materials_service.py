@@ -1,14 +1,16 @@
 from slamd import create_app
 from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
+from slamd.materials.forms.costs_form import CostsForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.materials_service import MaterialsService
 
+app = create_app('testing')
+
 
 def test_create_material_form_creates_powder():
-    app = create_app('testing')
     with app.test_request_context('/materials/powder'):
         file, form = MaterialsService().create_material_form('powder')
         assert file == 'powder_form.html'
@@ -16,7 +18,6 @@ def test_create_material_form_creates_powder():
 
 
 def test_create_material_form_creates_liquid():
-    app = create_app('testing')
     with app.test_request_context('/materials/liquid'):
         file, form = MaterialsService().create_material_form('liquid')
         assert file == 'liquid_form.html'
@@ -24,7 +25,6 @@ def test_create_material_form_creates_liquid():
 
 
 def test_create_material_form_creates_aggregates():
-    app = create_app('testing')
     with app.test_request_context('/materials/aggregates'):
         file, form = MaterialsService().create_material_form('aggregates')
         assert file == 'aggregates_form.html'
@@ -32,7 +32,6 @@ def test_create_material_form_creates_aggregates():
 
 
 def test_create_material_form_creates_process():
-    app = create_app('testing')
     with app.test_request_context('/materials/process'):
         file, form = MaterialsService().create_material_form('process')
         assert file == 'process_form.html'
@@ -40,8 +39,14 @@ def test_create_material_form_creates_process():
 
 
 def test_create_material_form_creates_admixture():
-    app = create_app('testing')
     with app.test_request_context('/materials/admixture'):
         file, form = MaterialsService().create_material_form('admixture')
         assert file == 'admixture_form.html'
         assert isinstance(form, AdmixtureForm)
+
+
+def test_create_material_form_creates_costs():
+    with app.test_request_context('/materials/costs'):
+        file, form = MaterialsService().create_material_form('costs')
+        assert file == 'costs_form.html'
+        assert isinstance(form, CostsForm)

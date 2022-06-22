@@ -17,7 +17,7 @@ class BaseMaterialsForm(Form):
         label='Material type',
         validators=[validators.DataRequired()],
         choices=['Powder', 'Liquid', 'Aggregates',
-                 'Admixture', 'Additive', 'Process', 'Custom']
+                 'Admixture', 'Additive', 'Process', 'Custom', 'Costs']
     )
 
     additional_properties = FieldList(FormField(AddPropertyForm),

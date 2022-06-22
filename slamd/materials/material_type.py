@@ -7,3 +7,4 @@ class MaterialType(Enum):
     AGGREGATES = 'aggregates'
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
+    COSTS = 'costs'
