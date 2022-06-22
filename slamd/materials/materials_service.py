@@ -22,4 +22,3 @@ class MaterialsService:
         else:
             raise BadRequest()
         return template_file, form
-
