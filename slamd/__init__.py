@@ -1,30 +1,27 @@
-import os
-
-from flask import Flask, redirect, render_template
+from flask import Flask, render_template
 from flask_cors import CORS
-from werkzeug.exceptions import BadRequest
 
 import config
+from slamd.common.landing_controller import landing
 from slamd.materials.materials_controller import materials
 
-app = Flask(__name__)
-CORS(app)
-app.config.from_object(config.get_config_obj(os.getenv('FLASK_ENV')))
 
-
-@app.route('/', methods=['GET'])
-def landing():
-    return redirect('/materials')
-
-
-@app.errorhandler(404)
 def handle_404(err):
-    return render_template('404.html'), 404
+    return render_template('404.html')
 
 
-@app.errorhandler(BadRequest)
 def handle_400(err):
-    return render_template('400.html'), 400
+    return render_template('400.html')
 
 
-app.register_blueprint(materials)
+def create_app(env=None):
+    app = Flask(__name__)
+    CORS(app)
+    app.config.from_object(config.get_config_obj(env))
+
+    app.register_blueprint(landing)
+    app.register_blueprint(materials)
+
+    app.register_error_handler(404, lambda err: handle_404(err))
+    app.register_error_handler(400, lambda err: handle_400(err))
+    return app
