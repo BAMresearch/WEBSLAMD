@@ -23,6 +23,15 @@ def test_slamd_selects_aggregates(client):
     assert 'Grading Curve' in template
 
 
+def test_slamd_selects_admixture(client):
+    response = client.get("/materials/admixture")
+
+    assert response.status_code == 200
+    template = response.json['template']
+    assert 'Composition' in template
+    assert 'Type' in template
+
+
 def test_slamd_selects_process(client):
     response = client.get("/materials/process")
 

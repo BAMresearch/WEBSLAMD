@@ -1,4 +1,5 @@
 from slamd import create_app
+from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
@@ -36,3 +37,11 @@ def test_create_material_form_creates_process():
         file, form = MaterialsService().create_material_form('process')
         assert file == 'process_form.html'
         assert isinstance(form, ProcessForm)
+
+
+def test_create_material_form_creates_admixture():
+    app = create_app('testing')
+    with app.test_request_context('/materials/admixture'):
+        file, form = MaterialsService().create_material_form('admixture')
+        assert file == 'admixture_form.html'
+        assert isinstance(form, AdmixtureForm)

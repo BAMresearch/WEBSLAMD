@@ -6,3 +6,4 @@ class MaterialType(Enum):
     LIQUID = 'liquid'
     AGGREGATES = 'aggregates'
     PROCESS = 'process'
+    ADMIXTURE = 'admixture'
