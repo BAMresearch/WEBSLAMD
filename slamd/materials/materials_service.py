@@ -2,7 +2,6 @@ from werkzeug.exceptions import BadRequest
 
 from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
-from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 from slamd.materials.forms.costs_form import CostsForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
@@ -29,10 +28,3 @@ class MaterialsService:
         else:
             raise BadRequest
         return template_file, form
-
-    def create_additional_properties_form(self, num_fields):
-        base_materials_form = BaseMaterialsForm()
-        for i in range(num_fields):
-            base_materials_form.additional_properties.append_entry(
-                {'name': f'Prop {i+1}', 'value': ''})
-        return base_materials_form

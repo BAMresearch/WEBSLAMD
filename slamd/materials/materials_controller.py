@@ -23,16 +23,11 @@ def select_material_type(type):
     return make_response(jsonify(body), 200)
 
 
-@materials.route('/add_property', methods=['POST'])
+@materials.route('/add_property/', methods=['GET'])
 def add_property():
-    body = request.get_json()
-    if 'num_fields' not in body:
-        return redirect('/')
-    base_materials_form = MaterialsService(
-    ).create_additional_properties_form(body['num_fields'])
-    # TODO: This may not be always PowderForm! Preserve the previous selection!
+    property_name_prefix = 'additional-property-0-'
     body = {'template': render_template(
-        'materials.html', base_materials_form=base_materials_form, form=PowderForm())}
+        'add_property_form.html', property=property_name_prefix)}
     return make_response(jsonify(body), 200)
 
 

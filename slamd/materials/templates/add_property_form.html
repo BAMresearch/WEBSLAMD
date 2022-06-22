@@ -1,0 +1,13 @@
+
+<!-- Custom Add Property input fields -->
+<!-- We need to generate a new name for every new input field to prevent collisions -->
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="{{ property+'name' }}">Name</label>
+        <input class="col-sm-10" id="{{ property+'name'  }}" name="{{ property+'name' }}" type="text" value="">
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="{{ property+'value' }}">Value</label>
+        <input class="col-sm-10" id="{{ property+'value' }}" name="{{ property+'value' }}" type="text" value="">
+    </div>
+</div>
