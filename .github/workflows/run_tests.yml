@@ -1,9 +1,9 @@
 # .github/workflows/app.yaml
-name: PyTest
+name: Run tests with PyTest
 on: push
 
 jobs:
-  test:
+  run-unit-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
