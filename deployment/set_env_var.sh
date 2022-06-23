@@ -11,6 +11,7 @@ fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
-cd ${SCRIPT_DIR}/..
+# shellcheck disable=SC2164
+cd "${SCRIPT_DIR}"/..
 
 heroku config:set --app="${APP_NAME}" "${KEY}"="${VALUE}"
