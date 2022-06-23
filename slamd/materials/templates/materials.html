@@ -1,0 +1,14 @@
+<head>
+    <meta charset="UTF-8">
+    <title>SLAMD - Materials</title>
+    <link rel="stylesheet" href="{{url_for('materials.static', filename='materials.css')}}">
+    <script src="{{url_for('materials.static', filename='materials.js')}}"></script>
+</head>
+
+{% extends 'base.html' %}
+{% block content %}
+<main class="col-sm-10 col-md-10 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
+    <h3>New base material</h3>
+    {% include 'base_materials_form.html' %}
+</main>
+{%endblock%}
