@@ -25,7 +25,7 @@ def select_material_type(type):
 
 @materials.route('/add_property/<new_property_index>', methods=['GET'])
 def add_property(new_property_index):
-    property_name_prefix = f'additional-property-{new_property_index}-'
+    property_name_prefix = f'additional-properties-{new_property_index}-'
     body = {'template': render_template('add_property_form.html', property=property_name_prefix)}
     return make_response(jsonify(body), 200)
 

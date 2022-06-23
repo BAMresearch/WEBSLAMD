@@ -17,8 +17,8 @@ function collectAdditionalProperties(newPropIndex) {
     if (newPropIndex > 0) {
 
         for (let i = 0; i < newPropIndex; i++) {
-            let name = document.getElementById(`additional-property-${i}-name`).value;
-            let value = document.getElementById(`additional-property-${i}-value`).value;
+            let name = document.getElementById(`additional-properties-${i}-name`).value;
+            let value = document.getElementById(`additional-properties-${i}-value`).value;
             usersInputs.push({
                 name: name,
                 value: value
@@ -44,8 +44,8 @@ const addAdditionalProperty = () => {
             const form = await response.json();
             placeholder.innerHTML += form["template"];
             for (let i = 0; i < usersInputs.length; i++) {
-                document.getElementById(`additional-property-${i}-name`).value = usersInputs[i].name;
-                document.getElementById(`additional-property-${i}-value`).value = usersInputs[i].value;
+                document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
+                document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
             }
         } catch (error) {
             console.log(error);
