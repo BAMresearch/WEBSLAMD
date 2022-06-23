@@ -1,15 +1,15 @@
 {{ form.hidden_tag() }}
 <div class="form-horizontal">
-    <div class="form-group">
+    <div class="form-group mb-3">
         {{ form.co2_footprint.label(class_="control-label col-sm-2") }}
-        {{ form.co2_footprint(class_="col-sm-10") }}
+        {{ form.co2_footprint(class_="form-control col-sm-10") }}
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
         {{ form.costs.label(class_="control-label col-sm-2") }}
-        {{ form.costs(class_="col-sm-10") }}
+        {{ form.costs(class_="form-control col-sm-10") }}
     </div>
-    <div class="form-group">
+    <div class="form-group mb-3">
         {{ form.delivery_time.label(class_="control-label col-sm-2") }}
-        {{ form.delivery_time(class_="col-sm-10") }}
+        {{ form.delivery_time(class_="form-control col-sm-10") }}
     </div>
 </div>
