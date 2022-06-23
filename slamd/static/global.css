@@ -1,5 +1,17 @@
 .background {
-    background-color: lightgray;
+    background-color: white;
+}
+
+.control-label {
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.form-control {
+    font-family: Arial, Helvetica, sans-serif
+}
+
+.navbar-brand {
+    font-family: Arial, Helvetica, sans-serif
 }
 
 .sidebar {
@@ -47,4 +59,8 @@
     margin-top: -.8em;
     text-align: center;
     line-height: 1.6em;
+}
+
+h3, h5 {
+    font-family: Arial, Helvetica, sans-serif
 }
