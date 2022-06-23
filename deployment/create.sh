@@ -10,6 +10,7 @@ fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
-cd ${SCRIPT_DIR}/..
+# shellcheck disable=SC2164
+cd "${SCRIPT_DIR}"/..
 
-heroku create ${APP_NAME} --remote ${STAGE_NAME}
+heroku create "${APP_NAME}" --remote "${STAGE_NAME}"

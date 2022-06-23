@@ -9,6 +9,7 @@ fi
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
-cd ${SCRIPT_DIR}/..
 
-heroku ps:scale web=0 --app=${APP_NAME}
+cd "${SCRIPT_DIR}"/..
+
+heroku ps:scale web=0 --app="${APP_NAME}"
