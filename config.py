@@ -12,10 +12,16 @@ class ConfigTesting:
     SECRET_KEY = 'test_key'
 
 
+class ConfigDemo:
+    SECRET_KEY = os.getenv('SECRET_KEY')
+
+
 def get_config_obj(config_name):
     if config_name == 'development':
         return ConfigDevelopment
     elif config_name == 'testing':
         return ConfigTesting
+    elif config_name == 'demo':
+        return ConfigDemo
     else:
         return ConfigDevelopment
