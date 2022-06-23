@@ -1,0 +1,24 @@
+# .github/workflows/app.yaml
+name: Run tests with PyTest
+on: push
+
+jobs:
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      # Setup Python (faster than using Python container)
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      
+      - name: Run test suite
+        run: |
+          pytest -v
