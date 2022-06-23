@@ -25,8 +25,13 @@ def select_material_type(type):
 
 @materials.route('/add_property/<new_property_index>', methods=['GET'])
 def add_property(new_property_index):
-    property_name_prefix = f'additional-properties-{new_property_index}-'
-    body = {'template': render_template('add_property_form.html', property=property_name_prefix)}
+    """
+    Return HTML for an additional property form.
+    The <input> tags generated here must have different 'name' and 'id' attributes.
+    We use indexes starting from zero to name them differently.
+    The format matches what WTForms does when rendering a FieldList.
+    """
+    body = {'template': render_template('add_property_form.html', index=new_property_index)}
     return make_response(jsonify(body), 200)
 
 
