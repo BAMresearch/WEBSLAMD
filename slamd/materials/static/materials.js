@@ -1,9 +1,13 @@
+
 const selectMaterialType = () => {
+    const protocol = window.location.protocol
+    const host = window.location.host;
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", async () => {
         try {
-            const response = await fetch(`http://localhost:5001/materials/${elem.value.toLowerCase()}`);
+            const url = `${protocol}//${host}/materials/${elem.value.toLowerCase()}`;
+            const response = await fetch(url);
             const form = await response.json();
             document.getElementById("template-placeholder").innerHTML = form["template"];
         } catch (error) {
@@ -29,6 +33,8 @@ function collectAdditionalProperties(newPropIndex) {
 }
 
 const addAdditionalProperty = () => {
+    const protocol = window.location.protocol
+    const host = window.location.host;
     const elem = document.getElementById("add_property_button");
 
     elem.addEventListener("click", async () => {
@@ -40,7 +46,8 @@ const addAdditionalProperty = () => {
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
         try {
-            const response = await fetch(`http://localhost:5001/materials/add_property/${newPropIndex}`);
+            const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
+            const response = await fetch(url);
             const form = await response.json();
             placeholder.innerHTML += form["template"];
             for (let i = 0; i < usersInputs.length; i++) {
