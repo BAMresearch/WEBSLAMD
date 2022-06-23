@@ -12,14 +12,12 @@ jobs:
         uses: actions/checkout@v3
 
       # Setup Python (faster than using Python container)
-      - name: Setup Python
+      - name: Setup Python and install dependencies
         uses: actions/setup-python@v4
         with:
-          python-version: "3.x"
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+          python-version: '3.x'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       
       - name: Run test suite
         run: |
