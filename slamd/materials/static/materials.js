@@ -21,10 +21,28 @@ const addAdditionalProperty = () => {
         const placeholder = document.getElementById("additional-properties-placeholder")
         const newPropIndex = placeholder.childElementCount;
 
+        usersInputs = []
+        if (newPropIndex > 0) {
+
+            for (let i = 0; i < newPropIndex; i++) {
+                let name = document.getElementById(`additional-property-${i}-name`).value;
+                let value = document.getElementById(`additional-property-${i}-value`).value;
+                usersInputs.push({
+                    name: name,
+                    value: value
+                })
+            }
+        }
+
         try {
             const response = await fetch(`http://localhost:5001/materials/add_property/${newPropIndex}`);
             const form = await response.json();
             placeholder.innerHTML += form["template"];
+            for (let i = 0; i < usersInputs.length; i++)
+                for (let item of usersInputs) {
+                    document.getElementById(`additional-property-${i}-name`).value = usersInputs[i].name;
+                    document.getElementById(`additional-property-${i}-value`).value = usersInputs[i].value;
+                }
         } catch (error) {
             console.log(error);
         }
