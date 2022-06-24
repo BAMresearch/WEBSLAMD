@@ -28,10 +28,10 @@ def test_slamd_selects_liquid(client):
     assert 'Na2O (I)' in response.json['template']
     assert 'SiO2 (I)' in response.json['template']
     assert 'H2O' in response.json['template']
-    assert 'Na2O (dry) (%m)' in response.json['template']
-    assert 'SiO2 (dry) (%m)' in response.json['template']
-    assert 'Water (%m)' in response.json['template']
-    assert 'Total NaOH (%m)' in response.json['template']
+    assert 'Na2O (dry)' in response.json['template']
+    assert 'SiO2 (dry)' in response.json['template']
+    assert 'Water' in response.json['template']
+    assert 'Total NaOH' in response.json['template']
 
 
 def test_slamd_selects_aggregates(client):
