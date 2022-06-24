@@ -40,13 +40,3 @@ def test_slamd_selects_process(client):
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
-
-
-def test_slamd_selects_costs(client):
-    response = client.get("/materials/costs")
-
-    template = response.json['template']
-    assert response.status_code == 200
-    assert 'CO2-Footprint' in template
-    assert 'Costs' in template
-    assert 'Delivery time' in template

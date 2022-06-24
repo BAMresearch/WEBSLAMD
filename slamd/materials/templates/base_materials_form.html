@@ -12,26 +12,41 @@
             {{ base_materials_form.material_type.label(class_="control-label col-sm-2") }}
             {{ base_materials_form.material_type(class_="form-control col-sm-10") }}
         </div>
-        <div id="template-placeholder">
-            {% include 'powder_form.html' %}
-        </div>
-        <div class="additional-properties form-group mb-3">
-            <h5>Additional Properties - Leave empty if not needed.</h5>
-
-            <div id="additional-properties-placeholder"></div>
-
-            <div class="form-group mb-3">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-secondary" type="button" id="add_property_button">
-                        Add property
-                    </button>
+        <h5>Costs properties</h3>
+            <div class="form-horizontal">
+                <div class="form-group mb-3">
+                    {{ base_materials_form.co2_footprint.label(class_="control-label col-sm-2") }}
+                    {{ base_materials_form.co2_footprint(class_="form-control col-sm-10") }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ base_materials_form.costs.label(class_="control-label col-sm-2") }}
+                    {{ base_materials_form.costs(class_="form-control col-sm-10") }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ base_materials_form.delivery_time.label(class_="control-label col-sm-2") }}
+                    {{ base_materials_form.delivery_time(class_="form-control col-sm-10") }}
                 </div>
             </div>
-        </div>
-        <div class="form-group mb-3">
-            <div class="col-sm-offset-2 col-sm-10">
-                {{ base_materials_form.submit(class_="btn btn-primary") }}
+            <div id="template-placeholder">
+                {% include 'powder_form.html' %}
             </div>
-        </div>
+            <div class="additional-properties form-group mb-3">
+                <h5>Additional Properties - Leave empty if not needed.</h5>
+
+                <div id="additional-properties-placeholder"></div>
+
+                <div class="form-group mb-3">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-secondary" type="button" id="add_property_button">
+                            Add property
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <div class="col-sm-offset-2 col-sm-10">
+                    {{ base_materials_form.submit(class_="btn btn-primary") }}
+                </div>
+            </div>
     </div>
 </form>
