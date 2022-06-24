@@ -14,13 +14,13 @@ materials_service = MaterialsService()
 
 @materials.route('', methods=['GET'])
 def material_page():
-    return render_template('materials.html', form=PowderForm(), type='powder')
+    return render_template('materials.html', form=PowderForm())
 
 
 @materials.route('/<type>', methods=['GET'])
 def select_material_type(type):
     template_file, form = materials_service.create_material_form(type)
-    body = {'template': render_template(template_file, form=form, type=type)}
+    body = {'template': render_template(template_file, form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -36,10 +36,10 @@ def add_property(new_property_index):
     return make_response(jsonify(body), 200)
 
 
-@materials.route('/<type>', methods=['POST'])
-def submit_material(type):
-    valid, form = materials_service.save_material(type, request.form)
+@materials.route('', methods=['POST'])
+def submit_material():
+    valid, form = materials_service.save_material(request.form)
 
     if valid:
         return redirect('/')
-    return render_template('materials.html', form=form, type='powder')
+    return render_template('materials.html', form=form)

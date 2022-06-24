@@ -1,7 +1,8 @@
 {{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 
-<form action="{{ url_for('materials.submit_material', type=type) }}" method="post" novalidate>
+<form action="" method="post" novalidate>
+    {{ form.csrf_token }}
     <div class="form-horizontal">
         <div class="form-group mb-3">
             {{ form.material_name.label(class_="control-label col-sm-2") }}

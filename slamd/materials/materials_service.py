@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import not_empty
 from slamd.materials.material_factory import MaterialFactory
 from slamd.materials.model.additional_property import AdditionalProperty
 
@@ -6,24 +7,23 @@ class MaterialsService:
 
     def create_material_form(self, type):
         template_file = f'{type}_form.html'
-        form = MaterialFactory.create_material_form(type)
+        form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
-    # TODO: refactor -> path var not needed as it is passed as property of submitted_material
-    def save_material(self, type, submitted_material):
-        form = MaterialFactory.create_material_form(type, submitted_material)
+    def save_material(self, submitted_material):
+        form = MaterialFactory.create_material_form(submitted_material=submitted_material)
 
         additional_properties = []
         submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
         submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
 
         for name, value in zip(submitted_names, submitted_values):
-            additional_property = AdditionalProperty(name, value)
-            additional_properties.append(additional_property)
-            form.additional_properties.append_entry(additional_property)
+            if not_empty(name):
+                additional_property = AdditionalProperty(name, value)
+                additional_properties.append(additional_property)
 
         if form.validate():
-            self._create_base_material_by_type(type, submitted_material, additional_properties)
+            self._create_base_material_by_type(submitted_material, additional_properties)
             return True, None
         return False, form
 
@@ -31,6 +31,6 @@ class MaterialsService:
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional-properties' in k and label in k]
 
-    def _create_base_material_by_type(self, type, submitted_material, additional_properties):
-        strategy = MaterialFactory.create_strategy(type)
+    def _create_base_material_by_type(self, submitted_material, additional_properties):
+        strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         strategy.create_model(submitted_material, additional_properties)

@@ -13,7 +13,10 @@ from slamd.materials.strategies.powder_strategy import PowderStrategy
 class MaterialFactory:
 
     @classmethod
-    def create_material_form(cls, type, submitted_material=None):
+    def create_material_form(cls, type=None, submitted_material=None):
+        if submitted_material is not None:
+            type = submitted_material['material_type'].lower()
+
         if type == MaterialType.POWDER.value:
             return PowderForm() if submitted_material is None else PowderForm(submitted_material)
         elif type == MaterialType.LIQUID.value:

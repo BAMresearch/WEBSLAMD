@@ -5,8 +5,7 @@ from slamd.materials.forms.add_property_form import AddPropertyForm
 
 
 class BaseMaterialsForm(Form):
-
-#ToDo: validation -> name must be unique
+    # ToDo: validation -> name must be unique
 
     material_name = StringField(
         label='Name',
@@ -21,15 +20,22 @@ class BaseMaterialsForm(Form):
                  'Admixture', 'Additive', 'Process', 'Custom']
     )
 
-    co2_footprint = DecimalField(label='CO2-Footprint')
+    co2_footprint = DecimalField(
+        label='CO2-Footprint',
+        validators=[
+            validators.Optional()
+        ])
 
-    costs = DecimalField(label='Costs')
+    costs = DecimalField(
+        label='Costs',
+        validators=[
+            validators.Optional()
+        ])
 
-    delivery_time = IntegerField(label='Delivery time')
-
-    additional_properties = FieldList(FormField(AddPropertyForm),
-                                      label='Custom Property',
-                                      min_entries=1,
-                                      max_entries=10)
+    delivery_time = IntegerField(
+        label='Delivery time',
+        validators=[
+            validators.Optional()
+        ])
 
     submit = SubmitField('Add material')
