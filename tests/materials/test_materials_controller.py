@@ -2,14 +2,14 @@ def test_slamd_selects_powder(client):
     response = client.get("/materials/powder")
 
     assert response.status_code == 200
-    assert 'Fe2O3 (%m)' in response.json['template']
+    assert 'Fe2O3' in response.json['template']
 
 
 def test_slamd_selects_liquid(client):
     response = client.get("/materials/liquid")
 
     assert response.status_code == 200
-    assert 'Na2SiO3 (%m)' in response.json['template']
+    assert 'Na2SiO3' in response.json['template']
 
 
 def test_slamd_selects_aggregates(client):
