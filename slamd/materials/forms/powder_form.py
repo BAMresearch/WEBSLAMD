@@ -39,3 +39,9 @@ class PowderForm(Form):
     mno = DecimalField(
         label='Mn2O3 (%m)'
     )
+    fine = DecimalField(
+        label='Fine modules (m2/kg)'
+    )
+    gravity = DecimalField(
+        label='Specific gravity (%m)'
+    )
