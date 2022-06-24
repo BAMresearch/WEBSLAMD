@@ -1,30 +1,30 @@
-{{ base_materials_form.hidden_tag() }}
+{{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 
-<form action="" method="post" novalidate>
+<form action="{{ url_for('materials.submit_material', type=type) }}" method="post" novalidate>
     <div class="form-horizontal">
         <div class="form-group mb-3">
-            {{ base_materials_form.material_name.label(class_="control-label col-sm-2") }}
-            {{ base_materials_form.material_name(class_="form-control col-sm-10") }}
-            {{ with_errors(base_materials_form.material_name) }}
+            {{ form.material_name.label(class_="control-label col-sm-2") }}
+            {{ form.material_name(class_="form-control col-sm-10") }}
+            {{ with_errors(form.material_name) }}
         </div>
         <div class="form-group mb-3">
-            {{ base_materials_form.material_type.label(class_="control-label col-sm-2") }}
-            {{ base_materials_form.material_type(class_="form-control col-sm-10") }}
+            {{ form.material_type.label(class_="control-label col-sm-2") }}
+            {{ form.material_type(class_="form-control col-sm-10") }}
         </div>
-        <h5>Costs properties</h3>
+        <h3>Costs properties</h3>
             <div class="form-horizontal">
                 <div class="form-group mb-3">
-                    {{ base_materials_form.co2_footprint.label(class_="control-label col-sm-2") }}
-                    {{ base_materials_form.co2_footprint(class_="form-control col-sm-10") }}
+                    {{ form.co2_footprint.label(class_="control-label col-sm-2") }}
+                    {{ form.co2_footprint(class_="form-control col-sm-10") }}
                 </div>
                 <div class="form-group mb-3">
-                    {{ base_materials_form.costs.label(class_="control-label col-sm-2") }}
-                    {{ base_materials_form.costs(class_="form-control col-sm-10") }}
+                    {{ form.costs.label(class_="control-label col-sm-2") }}
+                    {{ form.costs(class_="form-control col-sm-10") }}
                 </div>
                 <div class="form-group mb-3">
-                    {{ base_materials_form.delivery_time.label(class_="control-label col-sm-2") }}
-                    {{ base_materials_form.delivery_time(class_="form-control col-sm-10") }}
+                    {{ form.delivery_time.label(class_="control-label col-sm-2") }}
+                    {{ form.delivery_time(class_="form-control col-sm-10") }}
                 </div>
             </div>
             <div id="template-placeholder">
@@ -45,7 +45,7 @@
             </div>
             <div class="form-group mb-3">
                 <div class="col-sm-offset-2 col-sm-10">
-                    {{ base_materials_form.submit(class_="btn btn-primary") }}
+                    {{ form.submit(class_="btn btn-primary") }}
                 </div>
             </div>
     </div>

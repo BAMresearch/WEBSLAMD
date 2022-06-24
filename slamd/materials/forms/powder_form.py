@@ -1,8 +1,11 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import DecimalField
 
+from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
-class PowderForm(Form):
+
+class PowderForm(BaseMaterialsForm):
+
     feo = DecimalField(
         label='Fe2O3 (%m)'
     )

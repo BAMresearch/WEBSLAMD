@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, redirect, request, make_response, jsonify
+from flask import Blueprint, render_template, request, make_response, jsonify, redirect
 
-from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
 
@@ -10,16 +9,18 @@ materials = Blueprint('materials', __name__,
                       static_url_path='static',
                       url_prefix='/materials')
 
+materials_service = MaterialsService()
+
 
 @materials.route('', methods=['GET'])
 def material_page():
-    return render_template('materials.html', base_materials_form=BaseMaterialsForm(), form=PowderForm())
+    return render_template('materials.html', form=PowderForm(), type='powder')
 
 
 @materials.route('/<type>', methods=['GET'])
 def select_material_type(type):
-    template_file, form = MaterialsService().create_material_form(type)
-    body = {'template': render_template(template_file, form=form)}
+    template_file, form = materials_service.create_material_form(type)
+    body = {'template': render_template(template_file, form=form, type=type)}
     return make_response(jsonify(body), 200)
 
 
@@ -35,9 +36,10 @@ def add_property(new_property_index):
     return make_response(jsonify(body), 200)
 
 
-@materials.route('', methods=['POST'])
-def submit_material():
-    form = BaseMaterialsForm(request.form)
-    if form.validate():
+@materials.route('/<type>', methods=['POST'])
+def submit_material(type):
+    result, form = materials_service.save_material(type, request.form)
+
+    if result:
         return redirect('/')
-    return render_template('materials.html', base_materials_form=form, form=PowderForm())
+    return render_template('materials.html', form=form, type='powder')
