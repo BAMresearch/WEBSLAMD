@@ -13,7 +13,6 @@ class MaterialsService:
     def save_material(self, type, submitted_material):
         form = MaterialFactory.create_material_form(type, submitted_material)
 
-        #if form.validate():
         additional_properties = []
         submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
         submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
@@ -21,9 +20,12 @@ class MaterialsService:
         for name, value in zip(submitted_names, submitted_values):
             additional_property = AdditionalProperty(name, value)
             additional_properties.append(additional_property)
+            form.additional_properties.append_entry(additional_property)
 
-        self._create_base_material_by_type(type, submitted_material, additional_properties)
-        #return False, form
+        if form.validate():
+            self._create_base_material_by_type(type, submitted_material, additional_properties)
+            return True, None
+        return False, form
 
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if

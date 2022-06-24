@@ -38,8 +38,8 @@ def add_property(new_property_index):
 
 @materials.route('/<type>', methods=['POST'])
 def submit_material(type):
-    result, form = materials_service.save_material(type, request.form)
+    valid, form = materials_service.save_material(type, request.form)
 
-    if result:
+    if valid:
         return redirect('/')
     return render_template('materials.html', form=form, type='powder')

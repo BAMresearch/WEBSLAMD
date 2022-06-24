@@ -1,3 +1,5 @@
+from flask import session
+
 from slamd.materials.model.base_material import Costs
 from slamd.materials.model.powder import Powder, Composition, Structure
 
@@ -26,3 +28,10 @@ class PowderStrategy:
         powder.composition = composition
         powder.structure = structure
         powder.additional_properties = additional_properties
+
+        before = session.get('powders', None)
+
+        if before is None:
+            session['powders'] = [powder]
+        else:
+            session['powders'].append(powder)
