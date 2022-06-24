@@ -9,7 +9,7 @@ from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.materials_service import MaterialsService
 
-app = create_app('testing')
+app = create_app('testing', with_session=False)
 
 
 def test_create_material_form_creates_powder():
