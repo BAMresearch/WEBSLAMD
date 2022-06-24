@@ -13,13 +13,13 @@ class PowderForm(Form):
         label='Al2O3 (%m)'
     )
     cao = DecimalField(
-        label='Al2O3 (%m)'
+        label='CaO (%m)'
     )
     mgo = DecimalField(
-        label='Al2O3 (%m)'
+        label='MgO (%m)'
     )
     nao = DecimalField(
-        label='Al2O3 (%m)'
+        label='Na2O (%m)'
     )
     ko = DecimalField(
         label='K2O (%m)'
