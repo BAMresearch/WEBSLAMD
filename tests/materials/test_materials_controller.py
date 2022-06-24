@@ -3,6 +3,17 @@ def test_slamd_selects_powder(client):
 
     assert response.status_code == 200
     assert 'Fe2O3' in response.json['template']
+    assert 'SiO2' in response.json['template']
+    assert 'Al2O3' in response.json['template']
+    assert 'CaO' in response.json['template']
+    assert 'MgO' in response.json['template']
+    assert 'Na2O' in response.json['template']
+    assert 'K2O' in response.json['template']
+    assert 'SO3' in response.json['template']
+    assert 'TiO2' in response.json['template']
+    assert 'P2O5' in response.json['template']
+    assert 'SrO' in response.json['template']
+    assert 'Mn2O3' in response.json['template']
 
 
 def test_slamd_selects_liquid(client):
@@ -10,6 +21,17 @@ def test_slamd_selects_liquid(client):
 
     assert response.status_code == 200
     assert 'Na2SiO3' in response.json['template']
+    assert 'NaOH' in response.json['template']
+    assert 'Na2SiO3 specific' in response.json['template']
+    assert 'NaOH specific' in response.json['template']
+    assert 'Total solution' in response.json['template']
+    assert 'Na2O (I)' in response.json['template']
+    assert 'SiO2 (I)' in response.json['template']
+    assert 'H2O' in response.json['template']
+    assert 'Na2O (dry) (%m)' in response.json['template']
+    assert 'SiO2 (dry) (%m)' in response.json['template']
+    assert 'Water (%m)' in response.json['template']
+    assert 'Total NaOH (%m)' in response.json['template']
 
 
 def test_slamd_selects_aggregates(client):
