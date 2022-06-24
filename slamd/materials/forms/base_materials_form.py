@@ -6,7 +6,7 @@ from slamd.materials.forms.add_property_form import AddPropertyForm
 
 class BaseMaterialsForm(Form):
 
-    # TODO: validation -> name must be unique
+
     material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(
