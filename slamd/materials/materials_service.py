@@ -6,7 +6,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
-from slamd.materials.model.AdditionalProperty import AdditionalProperty
+from slamd.materials.model.additional_property import AdditionalProperty
 
 
 class MaterialsService:
@@ -19,21 +19,20 @@ class MaterialsService:
     def save_material(self, type, submitted_material):
         form = self._create_material_form(type, submitted_material)
 
-        additional_properties = []
-        submitted_names = [submitted_material[k] for k in sorted(submitted_material) if
-                                'additional-properties' in k and 'name' in k]
-
-        submitted_values = [submitted_material[k] for k in sorted(submitted_material) if
-                           'additional-properties' in k and 'value' in k]
-
-        for name, value in zip(submitted_names, submitted_values):
-            additional_property = AdditionalProperty(name, value)
-            additional_properties.append(additional_property)
-
         if form.validate():
-            additional_properties = submitted_material['additional-properties']
-            pass
+            additional_properties = []
+            submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
+            submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
+
+            for name, value in zip(submitted_names, submitted_values):
+                additional_property = AdditionalProperty(name, value)
+                additional_properties.append(additional_property)
+
         return False, form
+
+    def _extract_additional_property_by_label(self, submitted_material, label):
+        return [submitted_material[k] for k in sorted(submitted_material) if
+                'additional-properties' in k and label in k]
 
     def _create_material_form(self, type, submitted_material=None):
         if type == MaterialType.POWDER.value:

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_session import Session
 
 import config
 from slamd.common.error_handling import handle_404, handle_400
@@ -11,6 +12,7 @@ def create_app(env=None):
     app = Flask(__name__)
     CORS(app)
     app.config.from_object(config.get_config_obj(env))
+    Session(app)
 
     app.register_blueprint(landing)
     app.register_blueprint(materials)
