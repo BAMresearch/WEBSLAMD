@@ -43,3 +43,4 @@ def submit_material():
     if valid:
         return redirect('/')
     return render_template('materials.html', form=form)
+

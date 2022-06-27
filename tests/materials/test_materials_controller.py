@@ -1,3 +1,12 @@
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from slamd import create_app
+from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.materials_service import MaterialsService
+
+
 def test_slamd_selects_powder(client):
     response = client.get("/materials/powder")
 
@@ -62,3 +71,27 @@ def test_slamd_selects_process(client):
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
+
+
+def mock_materials_service():
+    return True, None
+
+
+@pytest.fixture
+def users():
+    return True, None
+
+
+@patch.object(MaterialsService, 'save_material', MagicMock(return_value=(True, None)))
+def test_slamd_creates_new_powder_when_saving_is_successful(client):
+    app = create_app('testing', with_session=False)
+
+    with app.test_request_context('/materials'):
+
+        form = PowderForm(material_name='test powder', material_type='Powder')
+
+        response = client.post('/materials', data=form.data)
+
+    assert response.status_code == 302
+    assert b'test powder' not in response.data
+    assert response.request.path == "/materials"
