@@ -1,12 +1,15 @@
 <div class="row g-3 mb-3">
-    <div class="col-md-6">
+    <div class="col-md-5">
         <label class="control-label" for="{{ 'additional-properties-'+index+'-name' }}">Name</label>
         <input class="form-control" id="{{ 'additional-properties-'+index+'-name'  }}"
             name="{{ 'additional-properties-'+index+'-name' }}" type="text" value="">
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <label class="control-label" for="{{ 'additional-properties-'+index+'-value' }}">Value</label>
         <input class="form-control" id="{{ 'additional-properties-'+index+'-value' }}"
             name="{{ 'additional-properties-'+index+'-value' }}" type="text" value="">
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-danger" type="button">Delete</button>
     </div>
 </div>
