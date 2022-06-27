@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_session import Session
+from flask_wtf import CSRFProtect
 
 import config
 from slamd.common.error_handling import handle_404, handle_400
@@ -15,6 +16,8 @@ def create_app(env=None, with_session=True):
 
     if with_session:
         Session(app)
+        csrf = CSRFProtect(app)
+        csrf.init_app(app)
 
     app.register_blueprint(landing)
     app.register_blueprint(materials)
