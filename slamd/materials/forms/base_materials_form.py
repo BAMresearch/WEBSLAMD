@@ -1,14 +1,15 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, DecimalField, IntegerField, SelectField, validators, SubmitField
+from wtforms import StringField, DecimalField, IntegerField, SelectField, validators, SubmitField, ValidationError
+
+from slamd.materials.forms.validation import name_is_unique
 
 
 class BaseMaterialsForm(Form):
-    # ToDo: validation -> name must be unique
 
     material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(
-            message="Material name cannot be empty")]
+            message="Material name cannot be empty"), name_is_unique]
     )
 
     material_type = SelectField(
