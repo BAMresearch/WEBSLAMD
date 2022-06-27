@@ -1,5 +1,5 @@
 import pytest
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import NotFound
 
 from slamd import create_app
 from slamd.materials.forms.admixture_form import AdmixtureForm
@@ -49,5 +49,5 @@ def test_create_material_form_creates_admixture():
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
     with app.test_request_context('/materials/invalid'):
-        with pytest.raises(BadRequest):
+        with pytest.raises(NotFound):
             MaterialsService().create_material_form('invalid')

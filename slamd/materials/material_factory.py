@@ -1,4 +1,4 @@
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
@@ -28,7 +28,7 @@ class MaterialFactory:
         elif type == MaterialType.ADMIXTURE.value:
             return AdmixtureForm() if submitted_material is None else AdmixtureForm(submitted_material)
         else:
-            raise BadRequest
+            raise NotFound
 
     # TODO: add remaining strategies
     @classmethod
