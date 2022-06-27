@@ -16,8 +16,8 @@ For convenience, we added two scripts (run.bat for Windows and run.sh for Unix a
 Both require setting a key which for the sake of using the app locally can be taken to be any string. Note that in general,
 these should be generate e.g. using python's urandom. Execute the corresponding script from the root directory of this project as follows:  
 
-- ``run.bat`` (Windows)
-- ``./run.sh`` (Unix / Mac)
+- ``run.bat <KEY>`` (Windows)
+- ``./run.sh <KEY>`` (Unix / Mac)
 
 ### Running Tests
 Go to root directory and run ``pytest`` to run all tests.
