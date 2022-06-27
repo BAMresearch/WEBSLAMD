@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from slamd import create_app
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
@@ -71,15 +69,6 @@ def test_slamd_selects_process(client):
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
-
-
-def mock_materials_service():
-    return True, None
-
-
-@pytest.fixture
-def users():
-    return True, None
 
 
 @patch.object(MaterialsService, 'save_material', MagicMock(return_value=(True, None)))
