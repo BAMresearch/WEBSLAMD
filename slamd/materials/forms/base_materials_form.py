@@ -1,7 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, DecimalField, IntegerField, SelectField, FieldList, FormField, validators, SubmitField
-
-from slamd.materials.forms.add_property_form import AddPropertyForm
+from wtforms import StringField, DecimalField, IntegerField, SelectField, validators, SubmitField
 
 
 class BaseMaterialsForm(Form):
@@ -21,19 +19,19 @@ class BaseMaterialsForm(Form):
     )
 
     co2_footprint = DecimalField(
-        label='CO2-Footprint',
+        label='CO2-Footprint (kg)',
         validators=[
             validators.Optional()
         ])
 
     costs = DecimalField(
-        label='Costs',
+        label='Costs (€/kg)',
         validators=[
             validators.Optional()
         ])
 
     delivery_time = IntegerField(
-        label='Delivery time',
+        label='Delivery time (days)',
         validators=[
             validators.Optional()
         ])

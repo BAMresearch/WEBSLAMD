@@ -10,7 +10,7 @@ class ConfigDevelopment:
 
 class ConfigTesting:
     TESTING = True
-    SECRET_KEY = 'test_key'
+    WTF_CSRF_ENABLED = False
 
 
 class ConfigDemo:

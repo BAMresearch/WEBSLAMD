@@ -1,4 +1,3 @@
-from flask_wtf import FlaskForm as Form
 from wtforms import DecimalField
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
