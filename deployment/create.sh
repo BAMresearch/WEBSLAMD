@@ -4,7 +4,7 @@ APP_NAME=${1}
 STAGE_NAME=${2}
 
 if [[ $# -ne 2 ]]; then
-  echo "You need to provide name and stage of your app "
+  echo "You need to provide name and stage of your app."
   exit
 fi
 

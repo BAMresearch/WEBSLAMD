@@ -3,7 +3,7 @@
 APP_NAME=${1}
 
 if [[ $# -ne 1 ]]; then
-  echo "You need to provide the name your app and key and value for the environment variable."
+  echo "You need to provide the name of your app."
   exit
 fi
 
