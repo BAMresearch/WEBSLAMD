@@ -1,4 +1,7 @@
+from unittest.mock import patch, MagicMock
+
 import pytest
+from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.exceptions import NotFound
 
 from slamd import create_app
@@ -8,6 +11,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.materials_service import MaterialsService
+from slamd.materials.strategies.powder_strategy import PowderStrategy
 
 app = create_app('testing', with_session=False)
 
@@ -51,3 +55,30 @@ def test_create_material_form_raises_bad_request_when_invalid_form_is_requested(
     with app.test_request_context('/materials/invalid'):
         with pytest.raises(NotFound):
             MaterialsService().create_material_form('invalid')
+
+
+@patch.object(PowderStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_powder():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test powder'),
+                                   ('material_type', 'Powder'),
+                                   ('co2_footprint', ''),
+                                   ('costs', ''),
+                                   ('delivery_time', ''),
+                                   ('feo', ''),
+                                   ('sio', ''),
+                                   ('alo', ''),
+                                   ('alo', ''),
+                                   ('cao', ''),
+                                   ('mgo', ''),
+                                   ('nao', ''),
+                                   ('ko', ''),
+                                   ('so', ''),
+                                   ('po', ''),
+                                   ('tio', ''),
+                                   ('sro', ''),
+                                   ('mno', ''),
+                                   ('fine', ''),
+                                   ('gravity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)

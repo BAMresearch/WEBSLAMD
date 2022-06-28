@@ -12,6 +12,10 @@ class MaterialsService:
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
+    def find_all(self, type):
+        if type == 'powder':
+            return session['powders']
+
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
 
@@ -36,7 +40,3 @@ class MaterialsService:
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         strategy.create_model(submitted_material, additional_properties)
-
-    def find_all(self, type):
-        if type == 'powder':
-            return session['powders']
