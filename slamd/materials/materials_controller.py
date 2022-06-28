@@ -24,6 +24,13 @@ def select_material_type(type):
     return make_response(jsonify(body), 200)
 
 
+@materials.route('/all/<type>', methods=['GET'])
+def find_all_materials_of_type(type):
+    all_materials = materials_service.find_all(type)
+    body = {'template': render_template('base_materials_table.html', all_materials=all_materials)}
+    return make_response(jsonify(body), 200)
+
+
 @materials.route('/add_property/<new_property_index>', methods=['GET'])
 def add_property(new_property_index):
     """

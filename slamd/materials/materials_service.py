@@ -1,3 +1,5 @@
+from flask import session
+
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.material_factory import MaterialFactory
 from slamd.materials.model.additional_property import AdditionalProperty
@@ -34,3 +36,7 @@ class MaterialsService:
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         strategy.create_model(submitted_material, additional_properties)
+
+    def find_all(self, type):
+        if type == 'powder':
+            return session['powders']

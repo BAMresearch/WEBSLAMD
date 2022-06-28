@@ -1,7 +1,7 @@
+const protocol = window.location.protocol
+const host = window.location.host;
 
 const selectMaterialType = () => {
-    const protocol = window.location.protocol
-    const host = window.location.host;
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", async () => {
@@ -10,6 +10,21 @@ const selectMaterialType = () => {
             const response = await fetch(url);
             const form = await response.json();
             document.getElementById("template-placeholder").innerHTML = form["template"];
+        } catch (error) {
+            console.log(error);
+        }
+    });
+}
+
+const showAllMaterialsForType = () => {
+    const elem = document.getElementById("show_all_materials_for_type_dropdown");
+
+    elem.addEventListener("change", async () => {
+        try {
+            const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
+            const response = await fetch(url);
+            const form = await response.json();
+            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
         } catch (error) {
             console.log(error);
         }
@@ -33,8 +48,6 @@ function collectAdditionalProperties(newPropIndex) {
 }
 
 const addAdditionalProperty = () => {
-    const protocol = window.location.protocol
-    const host = window.location.host;
     const elem = document.getElementById("add_property_button");
 
     elem.addEventListener("click", async () => {
@@ -61,4 +74,5 @@ const addAdditionalProperty = () => {
 }
 
 window.addEventListener("load", selectMaterialType);
+window.addEventListener("load", showAllMaterialsForType);
 window.addEventListener("load", addAdditionalProperty);
