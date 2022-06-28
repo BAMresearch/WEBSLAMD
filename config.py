@@ -15,6 +15,7 @@ class ConfigTesting:
 
 class ConfigDemo:
     SECRET_KEY = os.getenv('SECRET_KEY')
+    SESSION_TYPE = "filesystem"
 
 
 def get_config_obj(config_name):
