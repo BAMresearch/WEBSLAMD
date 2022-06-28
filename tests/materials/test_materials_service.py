@@ -1,16 +1,19 @@
+from unittest.mock import patch, MagicMock
+
 import pytest
-from werkzeug.exceptions import BadRequest
+from werkzeug.datastructures import ImmutableMultiDict
+from werkzeug.exceptions import NotFound
 
 from slamd import create_app
 from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
-from slamd.materials.forms.costs_form import CostsForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.materials_service import MaterialsService
+from slamd.materials.strategies.powder_strategy import PowderStrategy
 
-app = create_app('testing')
+app = create_app('testing', with_session=False)
 
 
 def test_create_material_form_creates_powder():
@@ -48,14 +51,34 @@ def test_create_material_form_creates_admixture():
         assert isinstance(form, AdmixtureForm)
 
 
-def test_create_material_form_creates_costs():
-    with app.test_request_context('/materials/costs'):
-        file, form = MaterialsService().create_material_form('costs')
-        assert file == 'costs_form.html'
-        assert isinstance(form, CostsForm)
-
-
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
     with app.test_request_context('/materials/invalid'):
-        with pytest.raises(BadRequest):
+        with pytest.raises(NotFound):
             MaterialsService().create_material_form('invalid')
+
+
+@patch.object(PowderStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_powder():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test powder'),
+                                   ('material_type', 'Powder'),
+                                   ('co2_footprint', ''),
+                                   ('costs', ''),
+                                   ('delivery_time', ''),
+                                   ('feo', ''),
+                                   ('sio', ''),
+                                   ('alo', ''),
+                                   ('alo', ''),
+                                   ('cao', ''),
+                                   ('mgo', ''),
+                                   ('nao', ''),
+                                   ('ko', ''),
+                                   ('so', ''),
+                                   ('po', ''),
+                                   ('tio', ''),
+                                   ('sro', ''),
+                                   ('mno', ''),
+                                   ('fine', ''),
+                                   ('gravity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)

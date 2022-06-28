@@ -1,0 +1,15 @@
+<h3>All base material</h3>
+<div class="col-md-6">
+    <label class="control-label" for="show_all_materials_for_type_dropdown">Material type</label>
+    <select class="form-control form-select" id="show_all_materials_for_type_dropdown" name="show_all_materials_for_type_dropdown" required="">
+        <option value="Liquid">Liquid</option>
+        <option value="Powder">Powder</option>
+        <option value="Aggregates">Aggregates</option>
+        <option value="Admixture">Admixture</option>
+        <option value="Additive">Additive</option>
+        <option value="Process">Process</option>
+        <option value="Custom">Custom</option></select>
+</div>
+<div id="base_materials_table_placeholder">
+    {% include 'base_materials_table.html' %}
+</div>

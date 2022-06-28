@@ -1,11 +1,10 @@
-{{ form.hidden_tag() }}
-<div class="form-horizontal">
-    <div class="form-group mb-3">
-        {{ form.composition.label(class_="control-label col-sm-2") }}
-        {{ form.composition(class_="form-control col-sm-10") }}
+<div class="row g-3">
+    <div class="col-md-6">
+        {{ form.composition.label(class_="control-label") }}
+        {{ form.composition(class_="form-control") }}
     </div>
-    <div class="form-group mb-3">
-        {{ form.type.label(class_="control-label col-sm-2") }}
-        {{ form.type(class_="form-control col-sm-10") }}
+    <div class="col-md-6">
+        {{ form.type.label(class_="control-label") }}
+        {{ form.type(class_="form-control") }}
     </div>
 </div>

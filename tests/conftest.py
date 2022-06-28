@@ -6,7 +6,7 @@ from slamd import create_app
 
 @pytest.fixture()
 def app():
-    app = create_app('testing')
+    app = create_app('testing', with_session=False)
     CORS(app)
 
     yield app
@@ -20,4 +20,3 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
-

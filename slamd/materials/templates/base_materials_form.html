@@ -1,37 +1,81 @@
-{{ base_materials_form.hidden_tag() }}
+{{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 
-<form action="" method="post" novalidate>
-    <div class="form-horizontal">
-        <div class="form-group mb-3">
-            {{ base_materials_form.material_name.label(class_="control-label col-sm-2") }}
-            {{ base_materials_form.material_name(class_="form-control col-sm-10") }}
-            {{ with_errors(base_materials_form.material_name) }}
-        </div>
-        <div class="form-group mb-3">
-            {{ base_materials_form.material_type.label(class_="control-label col-sm-2") }}
-            {{ base_materials_form.material_type(class_="form-control col-sm-10") }}
-        </div>
-        <div id="template-placeholder">
-            {% include 'powder_form.html' %}
-        </div>
-        <div class="additional-properties form-group mb-3">
-            <h5>Additional Properties - Leave empty if not needed.</h5>
+<h3>New base material</h3>
+<form class="row g-3" action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <div class="col-md-6">
+        {{ form.material_name.label(class_="control-label") }}
+        {{ form.material_name(class_="form-control") }}
+        {{ with_errors(form.material_name) }}
+    </div>
+    <div class="col-md-6">
+        {{ form.material_type.label(class_="control-label") }}
+        {{ form.material_type(class_="form-control form-select") }}
+    </div>
 
-            <div id="additional-properties-placeholder"></div>
-
-            <div class="form-group mb-3">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-secondary" type="button" id="add_property_button">
-                        Add property
-                    </button>
+    <div class="accordion accordion-flush" id="accordionBaseMaterialsForm">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Cost Properties
+                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
+                <div class="accordion-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            {{ form.co2_footprint.label(class_="control-label") }}
+                            {{ form.co2_footprint(class_="form-control") }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.costs.label(class_="control-label") }}
+                            {{ form.costs(class_="form-control") }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.delivery_time.label(class_="control-label") }}
+                            {{ form.delivery_time(class_="form-control") }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="form-group mb-3">
-            <div class="col-sm-offset-2 col-sm-10">
-                {{ base_materials_form.submit(class_="btn btn-primary") }}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                    Composition Properties
+                </button>
+            </h2>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
+                <div class="accordion-body" id="template-placeholder">
+                    {% include 'powder_form.html' %}
+                </div>
             </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                    Additional Properties - Leave empty if not needed.
+                </button>
+            </h2>
+            <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree">
+                <div class="accordion-body">
+                    <div class="additional-properties">
+                        <div id="additional-properties-placeholder"></div>
+                        <button class="btn btn-secondary" type="button" id="add_property_button">
+                            Add property
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="col-sm-offset-2 col-sm-10">
+            {{ form.submit(class_="btn btn-primary") }}
         </div>
     </div>
 </form>

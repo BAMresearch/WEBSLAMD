@@ -1,9 +1,13 @@
+const protocol = window.location.protocol
+const host = window.location.host;
+
 const selectMaterialType = () => {
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", async () => {
         try {
-            const response = await fetch(`http://localhost:5001/materials/${elem.value.toLowerCase()}`);
+            const url = `${protocol}//${host}/materials/${elem.value.toLowerCase()}`;
+            const response = await fetch(url);
             const form = await response.json();
             document.getElementById("template-placeholder").innerHTML = form["template"];
         } catch (error) {
@@ -12,20 +16,43 @@ const selectMaterialType = () => {
     });
 }
 
-function collectAdditionalProperties(newPropIndex) {
-    usersInputs = []
-    if (newPropIndex > 0) {
+const showAllMaterialsForType = () => {
+    const elem = document.getElementById("show_all_materials_for_type_dropdown");
 
-        for (let i = 0; i < newPropIndex; i++) {
-            let name = document.getElementById(`additional-properties-${i}-name`).value;
-            let value = document.getElementById(`additional-properties-${i}-value`).value;
-            usersInputs.push({
-                name: name,
-                value: value
-            })
+    elem.addEventListener("change", async () => {
+        try {
+            const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
+            const response = await fetch(url);
+            const form = await response.json();
+            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
+        } catch (error) {
+            console.log(error);
         }
+    });
+}
+
+const collectAdditionalProperties = (newPropIndex) => {
+    usersInputs = [];
+    if (newPropIndex <= 0) {
+        return usersInputs;
+    }
+
+    for (let i = 0; i < newPropIndex; i++) {
+        let name = document.getElementById(`additional-properties-${i}-name`).value;
+        let value = document.getElementById(`additional-properties-${i}-value`).value;
+        usersInputs.push({
+            name: name,
+            value: value
+        });
     }
     return usersInputs;
+}
+
+const restoreAdditionalProperties = (usersInputs) => {
+    for (let i = 0; i < usersInputs.length; i++) {
+        document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
+        document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
+    }
 }
 
 const addAdditionalProperty = () => {
@@ -40,18 +67,24 @@ const addAdditionalProperty = () => {
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
         try {
-            const response = await fetch(`http://localhost:5001/materials/add_property/${newPropIndex}`);
+            const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
+            const response = await fetch(url);
             const form = await response.json();
             placeholder.innerHTML += form["template"];
-            for (let i = 0; i < usersInputs.length; i++) {
-                document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
-                document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
-            }
         } catch (error) {
             console.log(error);
         }
+
+        restoreAdditionalProperties(usersInputs)
+        // Set up delete button
+        const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
+        deleteButton.addEventListener("click", () => {
+            // Select the row div element that contains the whole new entry and delete it
+            document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
+        });
     });
 }
 
 window.addEventListener("load", selectMaterialType);
+window.addEventListener("load", showAllMaterialsForType);
 window.addEventListener("load", addAdditionalProperty);

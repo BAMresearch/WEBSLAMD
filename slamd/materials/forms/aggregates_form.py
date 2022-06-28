@@ -1,8 +1,9 @@
-from flask_wtf import FlaskForm as Form
 from wtforms import DecimalField, StringField
 
+from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
-class AggregatesForm(Form):
+
+class AggregatesForm(BaseMaterialsForm):
 
     fine_aggregates = DecimalField(label='Fine Aggregates')
 
