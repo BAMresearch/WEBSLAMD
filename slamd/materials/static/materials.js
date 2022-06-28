@@ -67,6 +67,12 @@ const addAdditionalProperty = () => {
                 document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
                 document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
             }
+            // Set up delete button
+            const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
+            deleteButton.addEventListener("click", ({ target }) => {
+                // Select the row div element that contains the whole new entry and delete it
+                document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
+            });
         } catch (error) {
             console.log(error);
         }
