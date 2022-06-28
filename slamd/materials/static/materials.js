@@ -56,7 +56,7 @@ const restoreAdditionalProperties = (usersInputs) => {
 }
 
 const addAdditionalProperty = () => {
-    const elem = document.getElementById("add_property_button");
+    const elem = document.getElementById("add-property-button");
 
     elem.addEventListener("click", async () => {
         // Each additional property form is contained in one single div.
@@ -75,16 +75,24 @@ const addAdditionalProperty = () => {
             console.log(error);
         }
 
-        restoreAdditionalProperties(usersInputs)
-        // Set up delete button
-        const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
-        deleteButton.addEventListener("click", () => {
-            // Select the row div element that contains the whole new entry and delete it
-            document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
-        });
+        restoreAdditionalProperties(usersInputs);
+    });
+}
+
+const deleteAdditionalProperty = () => {
+    const elem = document.getElementById("delete-property-button");
+
+    elem.addEventListener("click", () => {
+        const placeholder = document.getElementById("additional-properties-placeholder");
+        const newPropIndex = placeholder.childElementCount;
+        // Select the row div element that contains the last entry and delete it
+        if (newPropIndex > 0) {
+            document.getElementById(`additional-properties-${newPropIndex - 1}-row`).remove();
+        }
     });
 }
 
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", showAllMaterialsForType);
 window.addEventListener("load", addAdditionalProperty);
+window.addEventListener("load", deleteAdditionalProperty);
