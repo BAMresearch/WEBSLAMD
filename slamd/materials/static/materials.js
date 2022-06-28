@@ -16,21 +16,6 @@ const selectMaterialType = () => {
     });
 }
 
-const showAllMaterialsForType = () => {
-    const elem = document.getElementById("show_all_materials_for_type_dropdown");
-
-    elem.addEventListener("change", async () => {
-        try {
-            const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
-    });
-}
-
 const collectAdditionalProperties = (newPropIndex) => {
     usersInputs = [];
     if (newPropIndex <= 0) {
@@ -86,5 +71,4 @@ const addAdditionalProperty = () => {
 }
 
 window.addEventListener("load", selectMaterialType);
-window.addEventListener("load", showAllMaterialsForType);
 window.addEventListener("load", addAdditionalProperty);

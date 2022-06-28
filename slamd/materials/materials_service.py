@@ -12,9 +12,8 @@ class MaterialsService:
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
-    def find_all(self, type):
-        if type == 'powder':
-            return session['powders']
+    def find_all(self):
+        return session['powders']
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
