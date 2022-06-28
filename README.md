@@ -20,4 +20,5 @@ these should be generate e.g. using python's urandom. Execute the corresponding 
 - ``./run.sh <KEY>`` (Unix / Mac)
 
 ### Running Tests
-Go to root directory and run ``pytest`` to run all tests.
+Go to root directory and run ``pytest`` to run all tests. If you want to have a nice report showing coverage, run
+``pytest --cov=slamd tests/``

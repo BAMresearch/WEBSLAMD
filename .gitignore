@@ -18,5 +18,6 @@ venv.bak/
 *.iml
 .vscode/
 
-# Session
+# Libraries
 flask_session
+.coverage
