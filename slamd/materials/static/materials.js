@@ -31,20 +31,28 @@ const showAllMaterialsForType = () => {
     });
 }
 
-function collectAdditionalProperties(newPropIndex) {
-    usersInputs = []
-    if (newPropIndex > 0) {
+const collectAdditionalProperties = (newPropIndex) => {
+    usersInputs = [];
+    if (newPropIndex <= 0) {
+        return usersInputs;
+    }
 
-        for (let i = 0; i < newPropIndex; i++) {
-            let name = document.getElementById(`additional-properties-${i}-name`).value;
-            let value = document.getElementById(`additional-properties-${i}-value`).value;
-            usersInputs.push({
-                name: name,
-                value: value
-            })
-        }
+    for (let i = 0; i < newPropIndex; i++) {
+        let name = document.getElementById(`additional-properties-${i}-name`).value;
+        let value = document.getElementById(`additional-properties-${i}-value`).value;
+        usersInputs.push({
+            name: name,
+            value: value
+        });
     }
     return usersInputs;
+}
+
+const restoreAdditionalProperties = (usersInputs) => {
+    for (let i = 0; i < usersInputs.length; i++) {
+        document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
+        document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
+    }
 }
 
 const addAdditionalProperty = () => {
@@ -63,19 +71,17 @@ const addAdditionalProperty = () => {
             const response = await fetch(url);
             const form = await response.json();
             placeholder.innerHTML += form["template"];
-            for (let i = 0; i < usersInputs.length; i++) {
-                document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
-                document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
-            }
-            // Set up delete button
-            const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
-            deleteButton.addEventListener("click", ({ target }) => {
-                // Select the row div element that contains the whole new entry and delete it
-                document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
-            });
         } catch (error) {
             console.log(error);
         }
+
+        restoreAdditionalProperties(usersInputs)
+        // Set up delete button
+        const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
+        deleteButton.addEventListener("click", () => {
+            // Select the row div element that contains the whole new entry and delete it
+            document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
+        });
     });
 }
 
