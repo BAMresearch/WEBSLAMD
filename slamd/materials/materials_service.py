@@ -13,7 +13,8 @@ class MaterialsService:
         return template_file, form
 
     def find_all(self):
-        return session['powders']
+        data = session.get('powders', [])
+        return data
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)

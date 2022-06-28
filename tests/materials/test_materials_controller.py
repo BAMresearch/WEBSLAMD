@@ -5,6 +5,22 @@ from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
 
 
+@patch.object(MaterialsService, 'find_all', MagicMock(return_value=[{'name': 'test powder'}]))
+def test_slamd_shows_form_and_table(client):
+    response = client.get("/materials")
+
+    assert response.status_code == 200
+
+    assert b'Name' in response.data
+    assert b'Material type' in response.data
+    assert b'CO2-Footprint' in response.data
+    assert b'Costs' in response.data
+    assert b'Delivery time' in response.data
+
+    assert b'All base materials' in response.data
+    assert b'test powder' in response.data
+
+
 def test_slamd_selects_powder(client):
     response = client.get("/materials/powder")
 
