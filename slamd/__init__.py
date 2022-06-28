@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_cors import CORS
 from flask_session import Session
@@ -16,6 +18,7 @@ def create_app(env=None, with_session=True):
 
     if with_session:
         Session(app)
+        app.secret_key = os.getenv('SECRET_KEY')
         csrf = CSRFProtect(app)
         csrf.init_app(app)
 
