@@ -1,6 +1,6 @@
 from flask import session
 
-from slamd.common.slamd_utils import empty, join_all
+from slamd.common.slamd_utils import empty, join_all, symbol_of
 from slamd.materials.base_material_dto import BaseMaterialDto
 from slamd.materials.model.base_material import Costs
 from slamd.materials.model.powder import Powder, Composition, Structure
@@ -44,8 +44,8 @@ class PowderStrategy(BaseMaterialStrategy):
         dto.name = powder.name
         dto.type = powder.type
 
-        further_information = join_all([self._include(u'Fe\u2082O\u2083', powder.composition.feo),
-                                        self._include(u'SiO\u2082', powder.composition.sio)])
+        further_information = join_all([self._include(symbol_of('Fe2O3'), powder.composition.feo),
+                                        self._include(symbol_of('SiO2'), powder.composition.sio)])
         additional_properties = powder.additional_properties
         if len(additional_properties) == 0:
             displayed_information = further_information[:-1]
