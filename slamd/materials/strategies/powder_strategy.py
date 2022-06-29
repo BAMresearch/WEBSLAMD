@@ -1,5 +1,7 @@
 from flask import session
 
+from slamd.common.slamd_utils import empty
+from slamd.materials.base_material_dto import BaseMaterialDto
 from slamd.materials.model.base_material import Costs
 from slamd.materials.model.powder import Powder, Composition, Structure
 
@@ -35,3 +37,30 @@ class PowderStrategy:
             session['powder_list'] = [powder]
         else:
             session['powder_list'].append(powder)
+
+    def create_dto(self, powder):
+        dto = BaseMaterialDto()
+        dto.name = powder.name
+        dto.type = powder.type
+
+        further_information = self._join_all([self._include('FeO', powder.composition.feo), self._include('SiO', powder.composition.sio)])
+        additional_properties = powder.additional_properties
+        if len(additional_properties) == 0:
+            displayed_information = further_information[:-1]
+            dto.further_information = displayed_information
+            return dto
+
+        for i, property in enumerate(additional_properties):
+            further_information.join(f' {property.name}: {property.value},')
+
+        displayed_information = further_information[:-1]
+        dto.further_information = displayed_information
+        return dto
+
+    def _include(self, displayed_name, property):
+        if empty(property):
+            return ''
+        return f' {displayed_name}: {property},'
+
+    def _join_all(self, input_list):
+        return ''.join(input for input in input_list)

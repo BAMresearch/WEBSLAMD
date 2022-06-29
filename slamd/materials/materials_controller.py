@@ -43,5 +43,7 @@ def submit_material():
 
     if valid:
         return redirect('/')
-    return render_template('materials.html', form=form)
+
+    all_materials = materials_service.find_all()
+    return render_template('materials.html', form=form, all_materials=all_materials)
 

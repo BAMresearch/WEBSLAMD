@@ -1,5 +1,6 @@
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.material_factory import MaterialFactory
+from slamd.materials.material_type import MaterialType
 from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.model.additional_property import AdditionalProperty
 
@@ -12,9 +13,18 @@ class MaterialsService:
         return template_file, form
 
     def find_all(self):
-        all_materials = MaterialsPersistence.find_all()
-        sorted_by_type = sorted(all_materials, key=lambda material: material.type)
-        sorted_by_name = sorted(sorted_by_type, key=lambda powder: powder.type)
+        all_material_types = MaterialType.get_all_types()
+
+        all_material_dtos = []
+        for material_type in all_material_types:
+            materials = MaterialsPersistence.find_by_type(material_type)
+            strategy = MaterialFactory.create_strategy(material_type)
+            for material in materials:
+                dto = strategy.create_dto(material)
+                all_material_dtos.append(dto)
+
+        sorted_by_type = sorted(all_material_dtos, key=lambda material: material.type)
+        sorted_by_name = sorted(sorted_by_type, key=lambda material: material.name)
         return sorted_by_name
 
     def save_material(self, submitted_material):
