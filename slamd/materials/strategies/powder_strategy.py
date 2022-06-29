@@ -1,7 +1,6 @@
-from flask import session
-
-from slamd.common.slamd_utils import empty, join_all, symbol_of
+from slamd.common.slamd_utils import join_all, symbol_of
 from slamd.materials.base_material_dto import BaseMaterialDto
+from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.model.base_material import Costs
 from slamd.materials.model.powder import Powder, Composition, Structure
 from slamd.materials.strategies.base_material_strategy import BaseMaterialStrategy
@@ -32,12 +31,7 @@ class PowderStrategy(BaseMaterialStrategy):
         powder.structure = structure
         powder.additional_properties = additional_properties
 
-        before = session.get('powder_list', None)
-
-        if before is None:
-            session['powder_list'] = [powder]
-        else:
-            session['powder_list'].append(powder)
+        MaterialsPersistence.save('powder', powder)
 
     def create_dto(self, powder):
         dto = BaseMaterialDto()
