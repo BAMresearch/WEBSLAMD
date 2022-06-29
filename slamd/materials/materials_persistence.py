@@ -15,9 +15,9 @@ class MaterialsPersistence:
 
     @classmethod
     def save(cls, material_type, material):
-        before = session.get(f'{material_type.lower()}_list', None)
+        before = cls.find_by_type(material_type)
 
-        if before is None:
+        if not before:
             session[f'{material_type.lower()}_list'] = [material]
         else:
             session[f'{material_type.lower()}_list'].append(material)
