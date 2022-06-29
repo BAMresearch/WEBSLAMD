@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, DecimalField, IntegerField, SelectField, validators, SubmitField, ValidationError
+from wtforms import StringField, DecimalField, IntegerField, SelectField, SubmitField
+from wtforms import FieldList, FormField
+from wtforms import validators, ValidationError
 
 from slamd.materials.forms.validation import name_is_unique
+from slamd.materials.forms.add_property_form import AddPropertyForm
 
 
 class BaseMaterialsForm(Form):
@@ -36,5 +39,10 @@ class BaseMaterialsForm(Form):
         validators=[
             validators.Optional()
         ])
+
+    additional_properties = FieldList(FormField(AddPropertyForm),
+                                      label='Custom Property',
+                                      min_entries=1,
+                                      max_entries=10)
 
     submit = SubmitField('Add material')
