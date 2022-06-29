@@ -6,7 +6,7 @@ def name_is_unique(form, field):
     name_of_new_material = field.data
     type_of_new_material = form['material_type'].data
 
-    session_key = f'{type_of_new_material.lower()}s'
+    session_key = f'{type_of_new_material.lower()}_list'
     materials_of_given_type = session.get(session_key, None)
     if materials_of_given_type is not None:
         materials_of_type = session[session_key]

@@ -29,9 +29,9 @@ class PowderStrategy:
         powder.structure = structure
         powder.additional_properties = additional_properties
 
-        before = session.get('powders', None)
+        before = session.get('powder_list', None)
 
         if before is None:
-            session['powders'] = [powder]
+            session['powder_list'] = [powder]
         else:
-            session['powders'].append(powder)
+            session['powder_list'].append(powder)

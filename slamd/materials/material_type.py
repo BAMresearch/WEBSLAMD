@@ -7,4 +7,11 @@ class MaterialType(Enum):
     AGGREGATES = 'aggregates'
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
-    COSTS = 'costs'
+
+    @staticmethod
+    def get_all_types():
+        return [MaterialType.POWDER.value,
+                MaterialType.AGGREGATES.value,
+                MaterialType.LIQUID.value,
+                MaterialType.PROCESS.value,
+                MaterialType.ADMIXTURE.value]

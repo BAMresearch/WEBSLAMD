@@ -70,5 +70,6 @@ const addAdditionalProperty = () => {
     });
 }
 
+
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", addAdditionalProperty);

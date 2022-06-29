@@ -1,7 +1,6 @@
-from flask import session
-
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.material_factory import MaterialFactory
+from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.model.additional_property import AdditionalProperty
 
 
@@ -13,8 +12,10 @@ class MaterialsService:
         return template_file, form
 
     def find_all(self):
-        data = session.get('powders', [])
-        return data
+        all_materials = MaterialsPersistence.find_all()
+        sorted_by_type = sorted(all_materials, key=lambda material: material.type)
+        sorted_by_name = sorted(sorted_by_type, key=lambda powder: powder.type)
+        return sorted_by_name
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
