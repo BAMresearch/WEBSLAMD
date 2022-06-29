@@ -9,6 +9,6 @@ class AggregatesForm(BaseMaterialsForm):
 
     coarse_aggregates = DecimalField(label='Coarse Aggregates')
 
-    type = StringField(label='Type')
+    fa_density = StringField(label='FA Density')
 
-    grading_curve = StringField(label='Grading Curve')
+    ca_density = StringField(label='CA Density')
