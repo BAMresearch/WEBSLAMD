@@ -42,13 +42,14 @@ class PowderStrategy(BaseMaterialStrategy):
 
         additional_properties = powder.additional_properties
         if len(additional_properties) == 0:
-            displayed_information = further_information[:-1]
-            dto.further_information = displayed_information
-            return dto
+            return self._set_further_information(dto, further_information)
 
         for property in additional_properties:
             further_information += f' {property.name}: {property.value},'
 
+        return self._set_further_information(dto, further_information)
+
+    def _set_further_information(self, dto, further_information):
         displayed_information = further_information[:-1].strip()
         dto.further_information = displayed_information
         return dto
