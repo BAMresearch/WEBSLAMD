@@ -93,23 +93,30 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
         return ['powder']
 
     def mock_find_by_type(input):
-        powder = Powder()
-        powder.name = 'test powder'
-        powder.type = 'Powder'
+        powder1 = Powder(Composition(feo='23.3', sio=None), Structure(fine=None, gravity='12'))
+        powder1.name = 'test powder'
+        powder1.type = 'Powder'
+        powder1.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
 
-        powder.composition = Composition(feo='23.3', sio=None)
+        powder2 = Powder(Composition(feo=None, sio=None), Structure(fine=None, gravity=None))
+        powder2.name = 'my powder'
+        powder2.type = 'Powder'
+        powder2.additional_properties = []
 
-        powder.structure = Structure(fine=None, gravity='12')
-        powder.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
-        return [powder]
+        return [powder1, powder2]
 
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
     monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
 
     result = MaterialsService().find_all()
-    assert len(result) == 1
+    assert len(result) == 2
 
     dto = result[0]
+    assert dto.name == 'my powder'
+    assert dto.type == 'Powder'
+    assert dto.further_information == ''
+
+    dto = result[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
     assert dto.further_information == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
