@@ -93,17 +93,7 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
         return ['powder']
 
     def mock_find_by_type(input):
-        powder1 = Powder(Composition(feo='23.3', sio=None), Structure(fine=None, gravity='12'))
-        powder1.name = 'test powder'
-        powder1.type = 'Powder'
-        powder1.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
-
-        powder2 = Powder(Composition(feo=None, sio=None), Structure(fine=None, gravity=None))
-        powder2.name = 'my powder'
-        powder2.type = 'Powder'
-        powder2.additional_properties = []
-
-        return [powder1, powder2]
+        return _create_test_powders()
 
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
     monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
@@ -120,3 +110,15 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
     assert dto.further_information == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
+
+
+def _create_test_powders():
+    powder1 = Powder(Composition(feo='23.3', sio=None), Structure(fine=None, gravity='12'))
+    powder1.name = 'test powder'
+    powder1.type = 'Powder'
+    powder1.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
+    powder2 = Powder(Composition(feo=None, sio=None), Structure(fine=None, gravity=None))
+    powder2.name = 'my powder'
+    powder2.type = 'Powder'
+    powder2.additional_properties = []
+    return [powder1, powder2]
