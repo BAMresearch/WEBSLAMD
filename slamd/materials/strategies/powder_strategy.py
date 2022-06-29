@@ -44,15 +44,15 @@ class PowderStrategy(BaseMaterialStrategy):
         dto.name = powder.name
         dto.type = powder.type
 
-        further_information = join_all([self._include('FeO', powder.composition.feo), self._include('SiO', powder.composition.sio)])
+        further_information = join_all('', [self._include('FeO', powder.composition.feo), self._include('SiO', powder.composition.sio)])
         additional_properties = powder.additional_properties
         if len(additional_properties) == 0:
             displayed_information = further_information[:-1]
             dto.further_information = displayed_information
             return dto
 
-        for i, property in enumerate(additional_properties):
-            further_information.join(f' {property.name}: {property.value},')
+        for property in additional_properties:
+            further_information += f' {property.name}: {property.value},'
 
         displayed_information = further_information[:-1]
         dto.further_information = displayed_information
