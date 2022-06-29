@@ -44,8 +44,8 @@ class PowderStrategy(BaseMaterialStrategy):
         dto.name = powder.name
         dto.type = powder.type
 
-        further_information = join_all([self._include(symbol_of('Fe2O3'), powder.composition.feo),
-                                        self._include(symbol_of('SiO2'), powder.composition.sio)])
+        further_information = join_all(self._gather_composition_information(powder))
+
         additional_properties = powder.additional_properties
         if len(additional_properties) == 0:
             displayed_information = further_information[:-1]
@@ -58,3 +58,10 @@ class PowderStrategy(BaseMaterialStrategy):
         displayed_information = further_information[:-1]
         dto.further_information = displayed_information
         return dto
+
+    def _gather_composition_information(self, powder):
+        return [self._include(symbol_of('Fe2O3'), powder.composition.feo),
+                self._include(symbol_of('SiO2'), powder.composition.sio),
+                self._include('Fine modules', powder.structure.fine),
+                self._include(symbol_of('Specific Gravity'), powder.structure.gravity)
+                ]
