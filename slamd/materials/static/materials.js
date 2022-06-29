@@ -1,5 +1,7 @@
 const protocol = window.location.protocol
 const host = window.location.host;
+const warningMaxNumberProperties = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
+const maxNumberProperties = 10;
 
 const selectMaterialType = () => {
     const elem = document.getElementById("material_type");
@@ -64,6 +66,12 @@ const addAdditionalProperty = () => {
         const placeholder = document.getElementById("additional-properties-placeholder")
         const newPropIndex = placeholder.childElementCount;
 
+        // Handle max number of properties and show a warning
+        if (newPropIndex === maxNumberProperties) {
+            placeholder.innerHTML += warningMaxNumberProperties;
+            return;
+        }
+
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
         try {
@@ -85,6 +93,14 @@ const deleteAdditionalProperty = () => {
     elem.addEventListener("click", () => {
         const placeholder = document.getElementById("additional-properties-placeholder");
         const newPropIndex = placeholder.childElementCount;
+
+        // Remove the warning for the max number of properties
+        if (newPropIndex === maxNumberProperties + 1) {
+            placeholder.innerHTML = placeholder.innerHTML.replace(warningMaxNumberProperties, "");
+            document.getElementById(`additional-properties-${newPropIndex - 2}-row`).remove();
+            return;
+        }
+
         // Select the row div element that contains the last entry and delete it
         if (newPropIndex > 0) {
             document.getElementById(`additional-properties-${newPropIndex - 1}-row`).remove();
