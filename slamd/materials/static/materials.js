@@ -3,37 +3,35 @@ const host = window.location.host;
 const warningMaxNumberProperties = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
 const maxNumberProperties = 10;
 
-const selectMaterialType = () => {
+async function fetchEmbedTemplateInPlaceholder(url, placeholderID) {
+    try {
+        const response = await fetch(url);
+        const form = await response.json();
+        document.getElementById(placeholderID).innerHTML = form["template"];
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function selectMaterialType() {
     const elem = document.getElementById("material_type");
 
-    elem.addEventListener("change", async () => {
-        try {
-            const url = `${protocol}//${host}/materials/${elem.value.toLowerCase()}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            document.getElementById("template-placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
+    elem.addEventListener("change", () => {
+        const url = `${protocol}//${host}/materials/${elem.value.toLowerCase()}`;
+        fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
     });
 }
 
-const showAllMaterialsForType = () => {
+function showAllMaterialsForType() {
     const elem = document.getElementById("show_all_materials_for_type_dropdown");
 
-    elem.addEventListener("change", async () => {
-        try {
-            const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
+    elem.addEventListener("change", () => {
+        const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
+        fetchEmbedTemplateInPlaceholder(url, "base_materials_table_placeholder");
     });
 }
 
-const collectAdditionalProperties = (newPropIndex) => {
+function collectAdditionalProperties(newPropIndex) {
     usersInputs = [];
     if (newPropIndex <= 0) {
         return usersInputs;
@@ -50,17 +48,17 @@ const collectAdditionalProperties = (newPropIndex) => {
     return usersInputs;
 }
 
-const restoreAdditionalProperties = (usersInputs) => {
+function restoreAdditionalProperties(usersInputs) {
     for (let i = 0; i < usersInputs.length; i++) {
         document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
         document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
     }
 }
 
-const addAdditionalProperty = () => {
+function addAdditionalProperty() {
     const elem = document.getElementById("add-property-button");
 
-    elem.addEventListener("click", async () => {
+    elem.addEventListener("click", () => {
         // Each additional property form is contained in one single div.
         // We index the additional properties starting from zero.
         const placeholder = document.getElementById("additional-properties-placeholder")
@@ -74,20 +72,13 @@ const addAdditionalProperty = () => {
 
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
-        try {
-            const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            placeholder.innerHTML += form["template"];
-        } catch (error) {
-            console.log(error);
-        }
-
+        const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
+        fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder");
         restoreAdditionalProperties(usersInputs);
     });
 }
 
-const deleteAdditionalProperty = () => {
+function deleteAdditionalProperty() {
     const elem = document.getElementById("delete-property-button");
 
     elem.addEventListener("click", () => {
