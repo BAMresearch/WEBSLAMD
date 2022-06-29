@@ -55,7 +55,7 @@ class PowderStrategy(BaseMaterialStrategy):
         for property in additional_properties:
             further_information += f' {property.name}: {property.value},'
 
-        displayed_information = further_information[:-1]
+        displayed_information = further_information[:-1].strip()
         dto.further_information = displayed_information
         return dto
 
@@ -63,5 +63,4 @@ class PowderStrategy(BaseMaterialStrategy):
         return [self._include(symbol_of('Fe2O3'), powder.composition.feo),
                 self._include(symbol_of('SiO2'), powder.composition.sio),
                 self._include('Fine modules', powder.structure.fine),
-                self._include(symbol_of('Specific Gravity'), powder.structure.gravity)
-                ]
+                self._include(symbol_of('Specific gravity'), powder.structure.gravity)]

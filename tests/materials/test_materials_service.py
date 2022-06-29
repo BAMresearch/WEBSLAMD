@@ -10,7 +10,11 @@ from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
+from slamd.materials.material_type import MaterialType
+from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.materials_service import MaterialsService
+from slamd.materials.model.additional_property import AdditionalProperty
+from slamd.materials.model.powder import Powder, Composition, Structure
 from slamd.materials.strategies.powder_strategy import PowderStrategy
 
 app = create_app('testing', with_session=False)
@@ -82,3 +86,30 @@ def test_save_material_creates_powder():
                                    ('gravity', ''),
                                    ('submit', 'Add material')])
         MaterialsService().save_material(form)
+
+
+def test_find_all_creates_all_materials_for_view(monkeypatch):
+    def mock_get_all_types():
+        return ['powder']
+
+    def mock_find_by_type(input):
+        powder = Powder()
+        powder.name = 'test powder'
+        powder.type = 'Powder'
+
+        powder.composition = Composition(feo='23.3', sio=None)
+
+        powder.structure = Structure(fine=None, gravity='12')
+        powder.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
+        return [powder]
+
+    monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
+    monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
+
+    result = MaterialsService().find_all()
+    assert len(result) == 1
+
+    dto = result[0]
+    assert dto.name == 'test powder'
+    assert dto.type == 'Powder'
+    assert dto.further_information == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
