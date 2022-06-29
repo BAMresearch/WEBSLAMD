@@ -48,8 +48,8 @@ def test_slamd_selects_aggregates(client):
     template = response.json['template']
     assert 'Fine Aggregates' in template
     assert 'Coarse Aggregates' in template
-    assert 'Type' in template
-    assert 'Grading Curve' in template
+    assert 'FA Density' in template
+    assert 'CA Density' in template
 
 
 def test_slamd_selects_admixture(client):
