@@ -1,3 +1,4 @@
+from flask import session
 from wtforms import ValidationError
 
 from slamd.materials.materials_persistence import MaterialsPersistence
