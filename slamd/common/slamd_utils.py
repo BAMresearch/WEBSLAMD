@@ -7,6 +7,8 @@ def not_empty(input):
 
 
 def join_all(input_list):
+    if input_list is None:
+        return ''
     return ''.join(input for input in input_list)
 
 
