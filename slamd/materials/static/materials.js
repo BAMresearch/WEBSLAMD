@@ -22,15 +22,6 @@ function selectMaterialType() {
     });
 }
 
-function showAllMaterialsForType() {
-    const elem = document.getElementById("show_all_materials_for_type_dropdown");
-
-    elem.addEventListener("change", () => {
-        const url = `${protocol}//${host}/materials/all/${elem.value.toLowerCase()}`;
-        fetchEmbedTemplateInPlaceholder(url, "base_materials_table_placeholder");
-    });
-}
-
 function collectAdditionalProperties(newPropIndex) {
     usersInputs = [];
     if (newPropIndex <= 0) {
@@ -99,7 +90,7 @@ function deleteAdditionalProperty() {
     });
 }
 
+
 window.addEventListener("load", selectMaterialType);
-window.addEventListener("load", showAllMaterialsForType);
 window.addEventListener("load", addAdditionalProperty);
 window.addEventListener("load", deleteAdditionalProperty);

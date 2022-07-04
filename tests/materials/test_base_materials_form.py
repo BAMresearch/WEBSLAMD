@@ -1,5 +1,5 @@
 def test_slamd_base_materials_form_contains_costs(client):
-    response = client.get("/materials")
+    response = client.get('/materials')
 
     assert response.status_code == 200
     assert b'Name' in response.data

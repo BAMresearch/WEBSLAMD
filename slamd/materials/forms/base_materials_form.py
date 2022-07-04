@@ -12,7 +12,7 @@ class BaseMaterialsForm(Form):
     material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(
-            message="Material name cannot be empty"), name_is_unique]
+            message='Material name cannot be empty'), name_is_unique]
     )
 
     material_type = SelectField(
