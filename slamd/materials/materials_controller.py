@@ -14,7 +14,7 @@ materials_service = MaterialsService()
 
 @materials.route('', methods=['GET'])
 def material_page():
-    all_materials = materials_service.find_all()
+    all_materials = materials_service.list_all()
     return render_template('materials.html', form=PowderForm(), all_materials=all_materials)
 
 
@@ -44,6 +44,6 @@ def submit_material():
     if valid:
         return redirect('/')
 
-    all_materials = materials_service.find_all()
+    all_materials = materials_service.list_all()
     return render_template('materials.html', form=form, all_materials=all_materials)
 

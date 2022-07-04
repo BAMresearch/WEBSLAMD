@@ -88,7 +88,7 @@ def test_save_material_creates_powder():
         MaterialsService().save_material(form)
 
 
-def test_find_all_creates_all_materials_for_view(monkeypatch):
+def test_list_all_creates_all_materials_for_view(monkeypatch):
     def mock_get_all_types():
         return ['powder']
 
@@ -98,7 +98,7 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
-    result = MaterialsService().find_all()
+    result = MaterialsService().list_all()
     assert len(result) == 2
 
     dto = result[0]

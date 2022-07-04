@@ -5,8 +5,8 @@ from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
 
 
-@patch.object(MaterialsService, 'find_all', MagicMock(return_value=[{'name': 'test powder'}]))
-def test_slamd_shows_form_and_table(client):
+def test_slamd_shows_form_and_table(client, mocker):
+    mocker.patch.object(MaterialsService, 'list_all', autospec=True, return_value=[{'name': 'test powder'}])
     response = client.get("/materials")
 
     assert response.status_code == 200

@@ -12,7 +12,7 @@ class MaterialsService:
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
-    def find_all(self):
+    def list_all(self):
         all_material_types = MaterialType.get_all_types()
 
         all_material_dtos = []
