@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import join_all, molecular_formula_of
+from slamd.common.slamd_utils import join_all
 from slamd.materials.base_material_dto import BaseMaterialDto
 from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.model.base_material import Costs
