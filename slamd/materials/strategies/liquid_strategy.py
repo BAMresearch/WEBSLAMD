@@ -38,31 +38,6 @@ class LiquidStrategy:
 
         MaterialsPersistence.save('liquid', liquid)
 
-    def create_dto(self, liquid):
-        dto = BaseMaterialDto()
-        dto.name = liquid.name
-        dto.type = liquid.type
-
-        all_properties = join_all(self._gather_composition_information(liquid))
-
-        additional_properties = liquid.additional_properties
-        if len(additional_properties) == 0:
-            return self._set_all_properties(dto, all_properties)
-
-        return self._add_additional_properties(all_properties, additional_properties, dto)
-
-    def _add_additional_properties(self, all_properties, additional_properties, dto):
-        additional_property_to_be_displayed = ''
-        for property in additional_properties:
-            additional_property_to_be_displayed += f'{property.name}: {property.value}, '
-        all_properties += additional_property_to_be_displayed
-        return self._set_all_properties(dto, all_properties)
-
-    def _set_all_properties(self, dto, all_properties):
-        displayed_properties = all_properties.strip()[:-1]
-        dto.all_properties = displayed_properties
-        return dto
-
     def _gather_composition_information(self, liquid):
         return [self._include('Na₂SiO₃', liquid.composition.na2_si_o3),
                 self._include('NaOH', liquid.composition.na_o_h),
