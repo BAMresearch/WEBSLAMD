@@ -6,21 +6,21 @@ from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 class PowderForm(BaseMaterialsForm):
 
     fe3_o2 = DecimalField(
-        label='Fe2O3 (m%)',
+        label='Fe₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     si_o2 = DecimalField(
-        label='SiO2 (m%)',
+        label='SiO₂ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     al2_o3 = DecimalField(
-        label='Al2O3 (m%)',
+        label='Al₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]
@@ -41,35 +41,35 @@ class PowderForm(BaseMaterialsForm):
     )
 
     na2_o = DecimalField(
-        label='Na2O (m%)',
+        label='Na₂O (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     k2_o = DecimalField(
-        label='K2O (m%)',
+        label='K₂O (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     s_o3 = DecimalField(
-        label='SO3 (m%)',
+        label='SO₃ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     ti_o2 = DecimalField(
-        label='TiO2 (m%)',
+        label='TiO₂ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     p2_o5 = DecimalField(
-        label='P2O5 (m%)',
+        label='P₂O₅ (m%)',
         validators=[
             validators.Optional()
         ]
@@ -83,7 +83,7 @@ class PowderForm(BaseMaterialsForm):
     )
 
     mn2_o3 = DecimalField(
-        label='Mn2O3 (m%)',
+        label='Mn₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]

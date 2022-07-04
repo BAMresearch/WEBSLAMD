@@ -24,34 +24,34 @@ def test_slamd_selects_powder(client):
     response = client.get('/materials/powder')
 
     assert response.status_code == 200
-    assert 'Fe2O3' in response.json['template']
-    assert 'SiO2' in response.json['template']
-    assert 'Al2O3' in response.json['template']
+    assert 'Fe₂O₃' in response.json['template']
+    assert 'SiO₂' in response.json['template']
+    assert 'Al₂O₃' in response.json['template']
     assert 'CaO' in response.json['template']
     assert 'MgO' in response.json['template']
-    assert 'Na2O' in response.json['template']
-    assert 'K2O' in response.json['template']
-    assert 'SO3' in response.json['template']
-    assert 'TiO2' in response.json['template']
-    assert 'P2O5' in response.json['template']
+    assert 'Na₂O' in response.json['template']
+    assert 'K₂O' in response.json['template']
+    assert 'SO₃' in response.json['template']
+    assert 'TiO₂' in response.json['template']
+    assert 'P₂O₅' in response.json['template']
     assert 'SrO' in response.json['template']
-    assert 'Mn2O3' in response.json['template']
+    assert 'Mn₂O₃' in response.json['template']
 
 
 def test_slamd_selects_liquid(client):
     response = client.get('/materials/liquid')
 
     assert response.status_code == 200
-    assert 'Na2SiO3' in response.json['template']
+    assert 'Na₂SiO₃' in response.json['template']
     assert 'NaOH' in response.json['template']
-    assert 'Na2SiO3 specific' in response.json['template']
+    assert 'Na₂SiO₃ specific' in response.json['template']
     assert 'NaOH specific' in response.json['template']
     assert 'Total solution' in response.json['template']
-    assert 'Na2O (I)' in response.json['template']
-    assert 'SiO2 (I)' in response.json['template']
-    assert 'H2O' in response.json['template']
-    assert 'Na2O (dry)' in response.json['template']
-    assert 'SiO2 (dry)' in response.json['template']
+    assert 'Na₂O (I)' in response.json['template']
+    assert 'SiO₂ (I)' in response.json['template']
+    assert 'H₂O' in response.json['template']
+    assert 'Na₂O (dry)' in response.json['template']
+    assert 'SiO₂ (dry)' in response.json['template']
     assert 'Water' in response.json['template']
     assert 'Total NaOH' in response.json['template']
 

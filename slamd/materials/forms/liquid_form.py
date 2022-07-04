@@ -5,7 +5,7 @@ from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 class LiquidForm(BaseMaterialsForm):
     na2_si_o3 = DecimalField(
-        label='Na2SiO3 (m%)',
+        label='Na₂SiO₃ (m%)',
         validators=[
             validators.Optional()
         ]
@@ -19,7 +19,7 @@ class LiquidForm(BaseMaterialsForm):
     )
 
     na2_si_o3_specific = DecimalField(
-        label='Na2SiO3 specific (m%)',
+        label='Na₂SiO₃ specific (m%)',
         validators=[
             validators.Optional()
         ]
@@ -40,35 +40,35 @@ class LiquidForm(BaseMaterialsForm):
     )
 
     na2_o = DecimalField(
-        label='Na2O (I) (%)',
+        label='Na₂O (I) (%)',
         validators=[
             validators.Optional()
         ]
     )
 
     si_o2 = DecimalField(
-        label='SiO2 (I) (%)',
+        label='SiO₂ (I) (%)',
         validators=[
             validators.Optional()
         ]
     )
 
     h2_o = DecimalField(
-        label='H2O (%)',
+        label='H₂O (%)',
         validators=[
             validators.Optional()
         ]
     )
 
     na2_o_dry = DecimalField(
-        label='Na2O (dry) (m%)',
+        label='Na₂O (dry) (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     si_o2_dry = DecimalField(
-        label='SiO2 (dry) (m%)',
+        label='SiO₂ (dry) (m%)',
         validators=[
             validators.Optional()
         ]
