@@ -15,6 +15,7 @@ from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.materials_service import MaterialsService
 from slamd.materials.model.additional_property import AdditionalProperty
 from slamd.materials.model.powder import Powder, Composition, Structure
+from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
 
 app = create_app('testing', with_session=False)
@@ -83,6 +84,27 @@ def test_save_material_creates_powder():
                                    ('mn2_o3', ''),
                                    ('fine', ''),
                                    ('gravity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(LiquidStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_liquid():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test liquid'),
+                                   ('material_type', 'Liquid'),
+                                   ('na2_si_o3', ''),
+                                   ('na_o_h', ''),
+                                   ('na2_si_o3_specific', ''),
+                                   ('na_o_h_specific', ''),
+                                   ('total', ''),
+                                   ('na2_o', ''),
+                                   ('si_o2', ''),
+                                   ('h2_o', ''),
+                                   ('na2_o_dry', ''),
+                                   ('si_o2_dry', ''),
+                                   ('water', ''),
+                                   ('na_o_h_total', ''),
                                    ('submit', 'Add material')])
         MaterialsService().save_material(form)
 
