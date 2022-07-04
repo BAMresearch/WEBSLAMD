@@ -41,9 +41,13 @@ def test_join_all_create_string_when_list_with_multiple_items_is_passed():
     assert join_all(['item 1', 'item 2']) == 'item 1item 2'
 
 
-def test_symbol_of_returns_original_input_if_no_numbers_are_present():
+def test_molecular_formula_of_returns_original_input_if_no_numbers_are_present():
     assert molecular_formula_of('NaO') == 'NaO'
 
 
-def test_symbol_of_returns_subsripted_numbers():
+def test_molecular_formula_of_returns_subscripted_numbers():
     assert molecular_formula_of('Fe2O3') == u'Fe\u2082O\u2083'
+
+
+def test_molecular_formula_of_returns_subsripted_numbers_for_complex_molecules():
+    assert molecular_formula_of('C6H12') == u'C\u2086H\u2081\u2082'

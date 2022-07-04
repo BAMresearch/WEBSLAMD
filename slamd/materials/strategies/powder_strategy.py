@@ -38,20 +38,20 @@ class PowderStrategy(BaseMaterialStrategy):
         dto.name = powder.name
         dto.type = powder.type
 
-        further_information = join_all(self._gather_composition_information(powder))
+        all_properties = join_all(self._gather_composition_information(powder))
 
         additional_properties = powder.additional_properties
         if len(additional_properties) == 0:
-            return self._set_further_information(dto, further_information)
+            return self._set_all_properties(dto, all_properties)
 
         for property in additional_properties:
-            further_information += f' {property.name}: {property.value},'
+            all_properties += f' {property.name}: {property.value},'
 
-        return self._set_further_information(dto, further_information)
+        return self._set_all_properties(dto, all_properties)
 
-    def _set_further_information(self, dto, further_information):
-        displayed_information = further_information[:-1].strip()
-        dto.further_information = displayed_information
+    def _set_all_properties(self, dto, all_properties):
+        displayed_properties = all_properties[:-1].strip()
+        dto.all_properties = displayed_properties
         return dto
 
     def _gather_composition_information(self, powder):

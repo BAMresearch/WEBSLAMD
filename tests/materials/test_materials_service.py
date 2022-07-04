@@ -104,12 +104,12 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
     dto = result[0]
     assert dto.name == 'my powder'
     assert dto.type == 'Powder'
-    assert dto.further_information == ''
+    assert dto.all_properties == ''
 
     dto = result[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.further_information == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
 
 
 def _create_test_powders():

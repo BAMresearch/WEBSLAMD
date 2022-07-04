@@ -1,7 +1,7 @@
 class BaseMaterialDto:
 
-    def __init__(self, name='', type='', further_information=''):
+    def __init__(self, name='', type='', all_properties=''):
         self.type = type
         self.name = name
-        self.further_information = further_information
+        self.all_properties = all_properties
 
