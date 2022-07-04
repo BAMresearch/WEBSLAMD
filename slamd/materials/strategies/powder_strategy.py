@@ -10,8 +10,8 @@ class PowderStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
         composition = Composition()
-        composition.feo = submitted_material['feo']
-        composition.sio = submitted_material['sio']
+        composition.fe3_o2 = submitted_material['fe3_o2']
+        composition.si_o2 = submitted_material['si_o2']
 
         costs = Costs()
         costs.co2_footprint = submitted_material['co2_footprint']
@@ -59,7 +59,8 @@ class PowderStrategy(BaseMaterialStrategy):
         return dto
 
     def _gather_composition_information(self, powder):
-        return [self._include(molecular_formula_of('Fe2O3'), powder.composition.feo),
-                self._include(molecular_formula_of('SiO2'), powder.composition.sio),
+        return [self._include(molecular_formula_of('Fe2O3'), powder.composition.fe3_o2),
+                self._include(molecular_formula_of(
+                    'SiO2'), powder.composition.si_o2),
                 self._include('Fine modules', powder.structure.fine),
                 self._include('Specific gravity', powder.structure.gravity)]

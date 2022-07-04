@@ -5,82 +5,84 @@ from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 class PowderForm(BaseMaterialsForm):
 
-    feo = DecimalField(
+    fe3_o2 = DecimalField(
         label='Fe2O3 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    sio = DecimalField(
+    si_o2 = DecimalField(
         label='SiO2 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    alo = DecimalField(
+    al2_o3 = DecimalField(
         label='Al2O3 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    cao = DecimalField(
+    ca_o = DecimalField(
         label='CaO (%m)',
         validators=[
             validators.Optional()
         ]
     )
-    mgo = DecimalField(
+
+    mg_o = DecimalField(
         label='MgO (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    nao = DecimalField(
+    na2_o = DecimalField(
         label='Na2O (%m)',
         validators=[
             validators.Optional()
         ]
     )
-    ko = DecimalField(
+
+    k2_o = DecimalField(
         label='K2O (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    so = DecimalField(
+    s_o3 = DecimalField(
         label='SO3 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    tio = DecimalField(
+    ti_o2 = DecimalField(
         label='TiO2 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    po = DecimalField(
+    p2_o5 = DecimalField(
         label='P2O5 (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    sro = DecimalField(
+    sr_o = DecimalField(
         label='SrO (%m)',
         validators=[
             validators.Optional()
         ]
     )
 
-    mno = DecimalField(
+    mn2_o3 = DecimalField(
         label='Mn2O3 (%m)',
         validators=[
             validators.Optional()

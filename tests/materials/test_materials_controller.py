@@ -4,7 +4,8 @@ from slamd.materials.materials_service import MaterialsService
 
 
 def test_slamd_shows_form_and_table(client, mocker):
-    mocker.patch.object(MaterialsService, 'list_all', autospec=True, return_value=[{'name': 'test powder'}])
+    mocker.patch.object(MaterialsService, 'list_all',
+                        autospec=True, return_value=[{'name': 'test powder'}])
     response = client.get('/materials')
 
     assert response.status_code == 200
@@ -89,7 +90,8 @@ def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):
     app = create_app('testing', with_session=False)
 
     with app.test_request_context('/materials'):
-        mocker.patch.object(MaterialsService, 'save_material', autospec=True, return_value=(True, None))
+        mocker.patch.object(MaterialsService, 'save_material',
+                            autospec=True, return_value=(True, None))
         form = PowderForm(material_name='test powder', material_type='Powder')
 
         response = client.post('/materials', data=form.data)

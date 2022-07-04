@@ -10,9 +10,9 @@ class Powder(BaseMaterial):
 
 class Composition:
 
-    def __init__(self, feo=0, sio=0):
-        self.feo = feo
-        self.sio = sio
+    def __init__(self, fe3_o2=0, si_o2=0):
+        self.fe3_o2 = fe3_o2
+        self.si_o2 = si_o2
 
 
 class Structure:
