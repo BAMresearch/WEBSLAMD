@@ -44,9 +44,13 @@ class PowderStrategy(BaseMaterialStrategy):
         if len(additional_properties) == 0:
             return self._set_all_properties(dto, all_properties)
 
-        for property in additional_properties:
-            all_properties += f'{property.name}: {property.value}, '
+        return self._add_additional_properties(all_properties, additional_properties, dto)
 
+    def _add_additional_properties(self, all_properties, additional_properties, dto):
+        additioal_property_to_be_displayed = ''
+        for property in additional_properties:
+            additioal_property_to_be_displayed += f'{property.name}: {property.value}, '
+        all_properties += additioal_property_to_be_displayed
         return self._set_all_properties(dto, all_properties)
 
     def _set_all_properties(self, dto, all_properties):
