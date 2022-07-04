@@ -3,11 +3,15 @@ const host = window.location.host;
 const warningMaxNumberProperties = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
 const maxNumberProperties = 10;
 
-async function fetchEmbedTemplateInPlaceholder(url, placeholderID) {
+async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     try {
         const response = await fetch(url);
         const form = await response.json();
-        document.getElementById(placeholderID).innerHTML = form["template"];
+        if (append) {
+            document.getElementById(placeholderID).innerHTML += form["template"];
+        } else {
+            document.getElementById(placeholderID).innerHTML = form["template"];
+        }
     } catch (error) {
         console.log(error);
     }
@@ -64,7 +68,7 @@ function addAdditionalProperty() {
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
         const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
-        fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder");
+        fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
         restoreAdditionalProperties(usersInputs);
     });
 }
@@ -89,7 +93,6 @@ function deleteAdditionalProperty() {
         }
     });
 }
-
 
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", addAdditionalProperty);
