@@ -18,17 +18,24 @@ class MaterialFactory:
             type = submitted_material['material_type'].lower()
 
         if type == MaterialType.POWDER.value:
-            return PowderForm() if submitted_material is None else PowderForm(submitted_material)
+            cls = PowderForm
         elif type == MaterialType.LIQUID.value:
-            return LiquidForm() if submitted_material is None else LiquidForm(submitted_material)
+            cls = LiquidForm
         elif type == MaterialType.AGGREGATES.value:
-            return AggregatesForm() if submitted_material is None else AggregatesForm(submitted_material)
+            cls = AggregatesForm
         elif type == MaterialType.PROCESS.value:
-            return ProcessForm() if submitted_material is None else ProcessForm(submitted_material)
+            cls = ProcessForm
         elif type == MaterialType.ADMIXTURE.value:
-            return AdmixtureForm() if submitted_material is None else AdmixtureForm(submitted_material)
+            cls = AdmixtureForm
         else:
             raise NotFound
+        
+        if submitted_material is None:
+            # Create an empty form
+            return cls()
+        else:
+            # Populate a form with user data
+            return cls(submitted_material)
 
     # TODO: add remaining strategies
     @classmethod
