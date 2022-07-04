@@ -17,7 +17,7 @@ class MaterialsService:
 
         all_material_dtos = []
         for material_type in all_material_types:
-            materials = MaterialsPersistence.find_by_type(material_type)
+            materials = MaterialsPersistence.query_by_type(material_type)
             strategy = MaterialFactory.create_strategy(material_type)
             for material in materials:
                 dto = strategy.create_dto(material)

@@ -9,7 +9,7 @@ from slamd.materials.model.powder import Powder
 
 
 def test_name_is_unique_is_not_successful_when_name_is_already_used(monkeypatch):
-    def mock_find_by_type(input):
+    def mock_query_by_type(input):
         powder = Powder()
         powder.name = 'test material'
         return [powder]
@@ -18,7 +18,7 @@ def test_name_is_unique_is_not_successful_when_name_is_already_used(monkeypatch)
 
     with app.test_request_context('/materials'):
         test_form = PowderForm(material_type=SelectField(data='Powder'))
-        monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
+        monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
         test_field = StringField()
         test_field.data = 'test material'
@@ -30,7 +30,7 @@ def test_name_is_unique_is_successful_when_name_is_not_already_used(monkeypatch)
     """
     No explicit assertion here. That is intentional as we simply want to make sure that no exception is thrown
     """
-    def mock_find_by_type(input):
+    def mock_query_by_type(input):
         powder = Powder()
         powder.name = 'test material'
         return [powder]
@@ -39,7 +39,7 @@ def test_name_is_unique_is_successful_when_name_is_not_already_used(monkeypatch)
 
     with app.test_request_context('/materials'):
         test_form = PowderForm(material_type=SelectField(data='Powder'))
-        monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
+        monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
         test_field = StringField()
         test_field.data = 'other material'

@@ -15,7 +15,7 @@ class MaterialsPersistence:
 
     @classmethod
     def save(cls, material_type, material):
-        before = cls.find_by_type(material_type)
+        before = cls.query_by_type(material_type)
 
         if not before:
             session[f'{material_type.lower()}_list'] = [material]
@@ -23,5 +23,5 @@ class MaterialsPersistence:
             session[f'{material_type.lower()}_list'].append(material)
 
     @classmethod
-    def find_by_type(cls, material_type):
+    def query_by_type(cls, material_type):
         return session.get(f'{material_type.lower()}_list', [])

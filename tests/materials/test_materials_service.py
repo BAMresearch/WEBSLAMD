@@ -92,11 +92,11 @@ def test_find_all_creates_all_materials_for_view(monkeypatch):
     def mock_get_all_types():
         return ['powder']
 
-    def mock_find_by_type(input):
+    def mock_query_by_type(input):
         return _create_test_powders()
 
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
-    monkeypatch.setattr(MaterialsPersistence, 'find_by_type', mock_find_by_type)
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
     result = MaterialsService().find_all()
     assert len(result) == 2
