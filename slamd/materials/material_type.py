@@ -8,3 +8,4 @@ class MaterialType(Enum):
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
     COSTS = 'costs'
+    CUSTOM = 'custom'
