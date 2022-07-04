@@ -23,7 +23,7 @@ class BaseMaterialsForm(Form):
     )
 
     co2_footprint = DecimalField(
-        label='CO2-Footprint (kg)',
+        label='CO₂ footprint (kg)',
         validators=[
             validators.Optional()
         ]

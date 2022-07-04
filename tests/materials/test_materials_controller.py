@@ -12,7 +12,7 @@ def test_slamd_shows_form_and_table(client, mocker):
 
     assert b'Name' in response.data
     assert b'Material type' in response.data
-    assert b'CO2-Footprint' in response.data
+    assert bytes('CO₂ footprint', 'utf-8') in response.data
     assert b'Costs' in response.data
     assert b'Delivery time' in response.data
 
