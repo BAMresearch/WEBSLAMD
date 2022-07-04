@@ -4,6 +4,10 @@
 WEBSLAMD is an app which allows users to improve the search for new materials by using sequential learning.
 
 ### Installation
+
+Prerequisite: In order to run the app you need python >= 3.5. The most up-to-date version can be downloaded here: 
+[Python Download](https://www.python.org/)
+
 For the setup it is assumed that you first navigate to the root directory of the project. Otherwise you need
 to adjust the paths below accordingly.
 
