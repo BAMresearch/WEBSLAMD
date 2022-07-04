@@ -12,6 +12,16 @@ class PowderStrategy(BaseMaterialStrategy):
         composition = Composition()
         composition.fe3_o2 = submitted_material['fe3_o2']
         composition.si_o2 = submitted_material['si_o2']
+        composition.al2_o3 = submitted_material['al2_o3']
+        composition.ca_o = submitted_material['ca_o']
+        composition.mg_o = submitted_material['mg_o']
+        composition.na2_o = submitted_material['na2_o']
+        composition.k2_o = submitted_material['k2_o']
+        composition.s_o3 = submitted_material['s_o3']
+        composition.ti_o2 = submitted_material['ti_o2']
+        composition.p2_o5 = submitted_material['p2_o5']
+        composition.sr_o = submitted_material['sr_o']
+        composition.mn2_o3 = submitted_material['mn2_o3']
 
         costs = Costs()
         costs.co2_footprint = submitted_material['co2_footprint']
@@ -59,8 +69,29 @@ class PowderStrategy(BaseMaterialStrategy):
         return dto
 
     def _gather_composition_information(self, powder):
-        return [self._include(molecular_formula_of('Fe2O3'), powder.composition.fe3_o2),
-                self._include(molecular_formula_of(
-                    'SiO2'), powder.composition.si_o2),
+        return [self._include(molecular_formula_of('Fe2O3'),
+                              powder.composition.fe3_o2),
+                self._include(molecular_formula_of('SiO2'),
+                              powder.composition.si_o2),
+                self._include(molecular_formula_of('Al2O3'),
+                              powder.composition.al2_o3),
+                self._include(molecular_formula_of('CaO'),
+                              powder.composition.ca_o),
+                self._include(molecular_formula_of('MgO'),
+                              powder.composition.mg_o),
+                self._include(molecular_formula_of('Na2O'),
+                              powder.composition.na2_o),
+                self._include(molecular_formula_of('K2O'),
+                              powder.composition.k2_o),
+                self._include(molecular_formula_of('SO3'),
+                              powder.composition.s_o3),
+                self._include(molecular_formula_of('TiO2'),
+                              powder.composition.ti_o2),
+                self._include(molecular_formula_of('P2O5'),
+                              powder.composition.p2_o5),
+                self._include(molecular_formula_of('SrO'),
+                              powder.composition.sr_o),
+                self._include(molecular_formula_of('Mn2O3'),
+                              powder.composition.mn2_o3),
                 self._include('Fine modules', powder.structure.fine),
                 self._include('Specific gravity', powder.structure.gravity)]
