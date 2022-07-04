@@ -45,12 +45,12 @@ class PowderStrategy(BaseMaterialStrategy):
             return self._set_all_properties(dto, all_properties)
 
         for property in additional_properties:
-            all_properties += f' {property.name}: {property.value},'
+            all_properties += f'{property.name}: {property.value}, '
 
         return self._set_all_properties(dto, all_properties)
 
     def _set_all_properties(self, dto, all_properties):
-        displayed_properties = all_properties[:-1].strip()
+        displayed_properties = all_properties.strip()[:-1]
         dto.all_properties = displayed_properties
         return dto
 
@@ -58,4 +58,4 @@ class PowderStrategy(BaseMaterialStrategy):
         return [self._include(molecular_formula_of('Fe2O3'), powder.composition.feo),
                 self._include(molecular_formula_of('SiO2'), powder.composition.sio),
                 self._include('Fine modules', powder.structure.fine),
-                self._include(molecular_formula_of('Specific gravity'), powder.structure.gravity)]
+                self._include('Specific gravity', powder.structure.gravity)]

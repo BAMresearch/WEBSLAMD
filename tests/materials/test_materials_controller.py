@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock, patch
-
 from slamd import create_app
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.materials_service import MaterialsService
@@ -7,7 +5,7 @@ from slamd.materials.materials_service import MaterialsService
 
 def test_slamd_shows_form_and_table(client, mocker):
     mocker.patch.object(MaterialsService, 'list_all', autospec=True, return_value=[{'name': 'test powder'}])
-    response = client.get("/materials")
+    response = client.get('/materials')
 
     assert response.status_code == 200
 
@@ -22,7 +20,7 @@ def test_slamd_shows_form_and_table(client, mocker):
 
 
 def test_slamd_selects_powder(client):
-    response = client.get("/materials/powder")
+    response = client.get('/materials/powder')
 
     assert response.status_code == 200
     assert 'Fe2O3' in response.json['template']
@@ -40,7 +38,7 @@ def test_slamd_selects_powder(client):
 
 
 def test_slamd_selects_liquid(client):
-    response = client.get("/materials/liquid")
+    response = client.get('/materials/liquid')
 
     assert response.status_code == 200
     assert 'Na2SiO3' in response.json['template']
@@ -58,7 +56,7 @@ def test_slamd_selects_liquid(client):
 
 
 def test_slamd_selects_aggregates(client):
-    response = client.get("/materials/aggregates")
+    response = client.get('/materials/aggregates')
 
     assert response.status_code == 200
     template = response.json['template']
@@ -69,7 +67,7 @@ def test_slamd_selects_aggregates(client):
 
 
 def test_slamd_selects_admixture(client):
-    response = client.get("/materials/admixture")
+    response = client.get('/materials/admixture')
 
     assert response.status_code == 200
     template = response.json['template']
@@ -78,7 +76,7 @@ def test_slamd_selects_admixture(client):
 
 
 def test_slamd_selects_process(client):
-    response = client.get("/materials/process")
+    response = client.get('/materials/process')
 
     template = response.json['template']
     assert response.status_code == 200
@@ -98,4 +96,4 @@ def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):
 
     assert response.status_code == 302
     assert b'test powder' not in response.data
-    assert response.request.path == "/materials"
+    assert response.request.path == '/materials'

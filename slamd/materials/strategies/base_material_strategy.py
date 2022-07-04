@@ -16,4 +16,4 @@ class BaseMaterialStrategy(ABC):
     def _include(self, displayed_name, property):
         if empty(property):
             return ''
-        return f' {displayed_name}: {property},'
+        return f'{displayed_name}: {property}, '
