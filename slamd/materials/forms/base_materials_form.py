@@ -26,19 +26,22 @@ class BaseMaterialsForm(Form):
         label='CO2-Footprint (kg)',
         validators=[
             validators.Optional()
-        ])
+        ]
+    )
 
     costs = DecimalField(
         label='Costs (€/kg)',
         validators=[
             validators.Optional()
-        ])
+        ]
+    )
 
     delivery_time = IntegerField(
         label='Delivery time (days)',
         validators=[
             validators.Optional()
-        ])
+        ]
+    )
 
     additional_properties = FieldList(FormField(AddPropertyForm),
                                       label='Custom Property',
