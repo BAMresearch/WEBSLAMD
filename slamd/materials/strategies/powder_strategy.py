@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import join_all, symbol_of
+from slamd.common.slamd_utils import join_all, molecular_formula_of
 from slamd.materials.base_material_dto import BaseMaterialDto
 from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.model.base_material import Costs
@@ -55,7 +55,7 @@ class PowderStrategy(BaseMaterialStrategy):
         return dto
 
     def _gather_composition_information(self, powder):
-        return [self._include(symbol_of('Fe2O3'), powder.composition.feo),
-                self._include(symbol_of('SiO2'), powder.composition.sio),
+        return [self._include(molecular_formula_of('Fe2O3'), powder.composition.feo),
+                self._include(molecular_formula_of('SiO2'), powder.composition.sio),
                 self._include('Fine modules', powder.structure.fine),
-                self._include(symbol_of('Specific gravity'), powder.structure.gravity)]
+                self._include(molecular_formula_of('Specific gravity'), powder.structure.gravity)]

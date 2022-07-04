@@ -12,7 +12,7 @@ def join_all(input_list):
     return ''.join(input for input in input_list)
 
 
-def symbol_of(input_molecule):
+def molecular_formula_of(input_molecule):
     """
     input_molecule: pass molecule as simple string such as H20 to get in back in proper chemical notation
     """

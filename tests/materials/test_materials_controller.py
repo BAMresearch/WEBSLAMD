@@ -87,12 +87,11 @@ def test_slamd_selects_process(client):
     assert 'Relative Humidity' in template
 
 
-@patch.object(MaterialsService, 'save_material', MagicMock(return_value=(True, None)))
-def test_slamd_creates_new_powder_when_saving_is_successful(client):
+def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):
     app = create_app('testing', with_session=False)
 
     with app.test_request_context('/materials'):
-
+        mocker.patch.object(MaterialsService, 'save_material', autospec=True, return_value=(True, None))
         form = PowderForm(material_name='test powder', material_type='Powder')
 
         response = client.post('/materials', data=form.data)
