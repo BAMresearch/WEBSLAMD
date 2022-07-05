@@ -136,36 +136,14 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
 
 
 def _create_test_powders():
-    powder1 = Powder(Composition(fe3_o2='23.3',
-                                 si_o2=None,
-                                 al2_o3=None,
-                                 ca_o=None,
-                                 mg_o=None,
-                                 na2_o=None,
-                                 k2_o=None,
-                                 s_o3=None,
-                                 ti_o2=None,
-                                 p2_o5=None,
-                                 sr_o=None,
-                                 mn2_o3=None),
-                     Structure(fine=None, gravity='12'))
+    powder1 = Powder(Composition(fe3_o2='23.3'),
+                     Structure(gravity='12'))
     powder1.name = 'test powder'
     powder1.type = 'Powder'
     powder1.additional_properties = [
         AdditionalProperty(name='test prop', value='test value')]
-    powder2 = Powder(Composition(fe3_o2=None,
-                                 si_o2=None,
-                                 al2_o3=None,
-                                 ca_o=None,
-                                 mg_o=None,
-                                 na2_o=None,
-                                 k2_o=None,
-                                 s_o3=None,
-                                 ti_o2=None,
-                                 p2_o5=None,
-                                 sr_o=None,
-                                 mn2_o3=None),
-                     Structure(fine=None, gravity=None))
+    powder2 = Powder(Composition(),
+                     Structure())
     powder2.name = 'my powder'
     powder2.type = 'Powder'
     powder2.additional_properties = []

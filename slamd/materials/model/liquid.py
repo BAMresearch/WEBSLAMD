@@ -9,9 +9,9 @@ class Liquid(BaseMaterial):
 
 class Composition:
 
-    def __init__(self, na2_si_o3=0, na_o_h=0, na2_si_o3_specific=0,
-                 na_o_h_specific=0, total=0, na2_o=0, si_o2=0, h2_o=0,
-                 na2_o_dry=0, si_o2_dry=0, water=0, na_o_h_total=0):
+    def __init__(self, na2_si_o3=None, na_o_h=None, na2_si_o3_specific=None,
+                 na_o_h_specific=None, total=None, na2_o=None, si_o2=None, h2_o=None,
+                 na2_o_dry=None, si_o2_dry=None, water=None, na_o_h_total=None):
         self.na2_si_o3 = na2_si_o3
         self.na_o_h = na_o_h
         self.na2_si_o3_specific = na2_si_o3_specific

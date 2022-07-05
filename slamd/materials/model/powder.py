@@ -10,8 +10,8 @@ class Powder(BaseMaterial):
 
 class Composition:
 
-    def __init__(self, fe3_o2=0, si_o2=0, al2_o3=0, ca_o=0, mg_o=0, na2_o=0,
-                 k2_o=0, s_o3=0, ti_o2=0, p2_o5=0, sr_o=0, mn2_o3=0):
+    def __init__(self, fe3_o2=None, si_o2=None, al2_o3=None, ca_o=None, mg_o=None, na2_o=None,
+                 k2_o=None, s_o3=None, ti_o2=None, p2_o5=None, sr_o=None, mn2_o3=None):
         self.fe3_o2 = fe3_o2
         self.si_o2 = si_o2
         self.al2_o3 = al2_o3
@@ -28,6 +28,6 @@ class Composition:
 
 class Structure:
 
-    def __init__(self, fine=0, gravity=0):
+    def __init__(self, fine=None, gravity=None):
         self.fine = fine
         self.gravity = gravity
