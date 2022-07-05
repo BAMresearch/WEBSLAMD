@@ -74,6 +74,12 @@ def test_slamd_selects_admixture(client):
     assert 'Composition' in template
     assert 'Type' in template
 
+def test_slamd_selects_custom(client):
+    response = client.get("/materials/custom")
+    assert response.status_code == 200
+    template = response.json['template']
+    assert 'Name' in template
+    assert 'Value' in template
 
 def test_slamd_selects_process(client):
     response = client.get('/materials/process')

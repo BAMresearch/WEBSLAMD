@@ -9,6 +9,7 @@ from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
 from slamd.materials.materials_persistence import MaterialsPersistence
@@ -53,6 +54,12 @@ def test_create_material_form_creates_admixture():
         file, form = MaterialsService().create_material_form('admixture')
         assert file == 'admixture_form.html'
         assert isinstance(form, AdmixtureForm)
+
+def test_create_material_form_creates_custom():
+    with app.test_request_context('/materials/custom'):
+        file, for = MaterialsService().create_material_form('custom')
+        assert file == 'custom_form.html'
+        assert isinstance(form, CustomForm)
 
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
