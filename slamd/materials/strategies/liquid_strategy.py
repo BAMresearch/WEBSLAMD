@@ -6,7 +6,7 @@ from slamd.materials.model.liquid import Liquid, Composition
 from slamd.materials.strategies.base_material_strategy import BaseMaterialStrategy
 
 
-class LiquidStrategy:
+class LiquidStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
         composition = Composition()
