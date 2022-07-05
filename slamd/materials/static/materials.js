@@ -70,6 +70,10 @@ const addAdditionalProperty = () => {
     });
 }
 
+function deleteMaterial(id){
+    console.log(id)
+}
 
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", addAdditionalProperty);
+window.addEventListener("load", deleteMaterial);
