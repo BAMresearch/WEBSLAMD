@@ -114,10 +114,12 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
 
 def _create_test_powders():
     powder1 = Powder(Composition(feo='23.3', sio=None), Structure(fine=None, gravity='12'))
+    powder1.uuid = 'test uuid1'
     powder1.name = 'test powder'
     powder1.type = 'Powder'
     powder1.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
     powder2 = Powder(Composition(feo=None, sio=None), Structure(fine=None, gravity=None))
+    powder2.uuid = 'test uuid2'
     powder2.name = 'my powder'
     powder2.type = 'Powder'
     powder2.additional_properties = []
