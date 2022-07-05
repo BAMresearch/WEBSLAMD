@@ -24,7 +24,7 @@ these should be generate e.g. using python's urandom. Execute the corresponding 
 - ``run.bat <KEY>`` (Windows)
 - ``./run.sh <KEY>`` (Unix / Mac)
 
-In a local deployment "<KEY>" can be replaced by /ABC, i.e.: "run.bat/ABC" or "./run.sh/ABC"
+In a local deployment ''<KEY>'' can be replaced by /ABC, i.e.: "run.bat ABC" or "./run.sh ABC"
 
 ### Running Tests
 Go to root directory and run ``pytest`` to run all tests. If you want to have a nice report showing coverage, run
