@@ -1,6 +1,6 @@
 const PROTOCOL = window.location.protocol
 const HOST = window.location.host;
-const ACTION_BUTTON_DELIMITER = "|"
+const ACTION_BUTTON_DELIMITER = "DELIMITER"
 
 const selectMaterialType = () => {
     const elem = document.getElementById("material_type");
@@ -81,8 +81,6 @@ const addAdditionalProperty = () => {
 async function deleteMaterial(id, material_type) {
     if (material_type !== undefined) {
         let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-        console.log(material_type)
-        console.log(uuid)
         try {
             const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
             const response = await fetch(url);
