@@ -1,4 +1,5 @@
-{% from 'delete_button.html' import create_delete_button -%}
+{% from 'action_buttons.html' import create_delete_button -%}
+{% from 'action_buttons.html' import create_edit_button -%}
 <table id="base_materials_table" class="table table-bordered table-striped">
     <thead>
     <tr>
@@ -12,8 +13,8 @@
     {% for item in all_materials %}
     <tr>
         <td>
-            {{ create_delete_button("delete_base_material_button" + "|" + item.uuid, 12, 12) }}
-            {{ create_delete_button("edit_base_material_button" + "-" + item.uuid, 12, 12) }}
+            {{ create_delete_button("delete_base_material_button" + "|" + item.uuid, item.type, 12, 12) }}
+            {{ create_edit_button("edit_base_material_button" + "|" + item.uuid, item.type, 12, 12) }}
         </td>
         <td>{{ item.name }}</td>
         <td>{{ item.type }}</td>

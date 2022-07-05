@@ -47,3 +47,12 @@ def submit_material():
     all_materials = materials_service.list_all()
     return render_template('materials.html', form=form, all_materials=all_materials)
 
+
+@materials.route('/<material_type>/<uuid>', methods=['DELETE'])
+def delete_material(material_type, uuid):
+    print('I am here')
+    all_materials = materials_service.delete_material(material_type, uuid)
+
+    body = {'template': render_template('base_materials_table.html', all_materials=all_materials)}
+    return make_response(jsonify(body), 200)
+

@@ -44,6 +44,10 @@ class MaterialsService:
             return True, None
         return False, form
 
+    def delete_material(self, type, uuid):
+        MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
+        return self.list_all()
+
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional-properties' in k and label in k]
