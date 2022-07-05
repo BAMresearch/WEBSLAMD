@@ -79,19 +79,18 @@ const addAdditionalProperty = () => {
  * @param id
  */
 async function deleteMaterial(id, material_type) {
-    id = id + ''
-    let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-    console.log(material_type)
-    console.log(uuid)
-    try {
-        const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
-        const response = await fetch(url, {
-            method: 'DELETE'
-        });
-        const form = await response.json();
-        document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
-    } catch (error) {
-        console.log(error);
+    if (material_type !== undefined) {
+        let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
+        console.log(material_type)
+        console.log(uuid)
+        try {
+            const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
+            const response = await fetch(url);
+            const form = await response.json();
+            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 }
