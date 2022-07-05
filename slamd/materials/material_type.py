@@ -9,3 +9,8 @@ class MaterialType(Enum):
     ADMIXTURE = 'admixture'
     COSTS = 'costs'
     CUSTOM = 'custom'
+
+    # TODO: add remaining types
+    @staticmethod
+    def get_all_types():
+        return [MaterialType.POWDER.value]

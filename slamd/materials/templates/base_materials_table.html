@@ -1,7 +1,24 @@
-<table style="width:100%">
-  {% for item in all_materials %}
-  <tr>
-    <td>{{ item.name }}</td>
-  </tr>
-  {% endfor %}
+{% from 'delete_button.html' import create_delete_button -%}
+<table id="base_materials_table" class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Actions</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Properties</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in all_materials %}
+    <tr>
+        <td>
+            {{ create_delete_button(delete_base_material_button, 12, 12) }}
+            {{ create_delete_button(edit_base_material_button, 12, 12) }}
+        </td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.all_properties }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
