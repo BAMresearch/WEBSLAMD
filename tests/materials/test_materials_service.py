@@ -55,9 +55,10 @@ def test_create_material_form_creates_admixture():
         assert file == 'admixture_form.html'
         assert isinstance(form, AdmixtureForm)
 
+
 def test_create_material_form_creates_custom():
     with app.test_request_context('/materials/custom'):
-        file, for = MaterialsService().create_material_form('custom')
+        file, form = MaterialsService().create_material_form('custom')
         assert file == 'custom_form.html'
         assert isinstance(form, CustomForm)
 
