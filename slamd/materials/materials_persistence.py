@@ -27,7 +27,7 @@ class MaterialsPersistence:
         return session.get(f'{material_type.lower()}_list', [])
 
     @classmethod
-    def delete_by_type_and_uuid(cls, material_name, uuid):
-        materials = cls.query_by_type(material_name)
+    def delete_by_type_and_uuid(cls, material_type, uuid):
+        materials = cls.query_by_type(material_type)
         remaining_materials = list(filter(lambda material: str(material.uuid) != uuid, materials))
-        session[f'{material_name.lower()}_list'] = remaining_materials
+        session[f'{material_type.lower()}_list'] = remaining_materials
