@@ -15,14 +15,6 @@ class MaterialsPersistence:
             cls.extend_session_property(material_type, material)
 
     @classmethod
-    def find_all(cls):
-        all_materials = []
-        all_material_types = MaterialType.get_all_types()
-        for material_type in all_material_types:
-            all_materials.extend(MaterialsPersistence.get_session_property(material_type))
-        return all_materials
-
-    @classmethod
     def query_by_type(cls, material_type):
         return MaterialsPersistence.get_session_property(material_type)
 
