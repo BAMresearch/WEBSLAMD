@@ -33,7 +33,8 @@ def add_property(new_property_index):
     We use indexes starting from zero to name them differently.
     The format matches what WTForms does when rendering a FieldList.
     """
-    body = {'template': render_template('add_property_form.html', index=new_property_index)}
+    body = {'template': render_template(
+        'add_property_form.html', index=new_property_index)}
     return make_response(jsonify(body), 200)
 
 
@@ -52,6 +53,6 @@ def submit_material():
 def delete_material(material_type, uuid):
     all_materials = materials_service.delete_material(material_type, uuid)
 
-    body = {'template': render_template('base_materials_table.html', all_materials=all_materials)}
+    body = {'template': render_template(
+        'base_materials_table.html', all_materials=all_materials)}
     return make_response(jsonify(body), 200)
-

@@ -10,7 +10,8 @@ def test_query_by_type_calls_session(monkeypatch):
         mock_get_session_property_called_with = input
         return [{'name': 'test name'}]
 
-    monkeypatch.setattr(MaterialsPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'get_session_property', mock_get_session_property)
     result = MaterialsPersistence.query_by_type('powder')
 
     assert result == [{'name': 'test name'}]
@@ -29,8 +30,10 @@ def test_saves_sets_new_material_for_type(monkeypatch):
         mock_set_session_property_called_with = type, materials
         return None
 
-    monkeypatch.setattr(MaterialsPersistence, 'get_session_property', mock_get_session_property)
-    monkeypatch.setattr(MaterialsPersistence, 'set_session_property', mock_set_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'set_session_property', mock_set_session_property)
 
     powder = Powder()
     MaterialsPersistence.save('powder', powder)
@@ -38,7 +41,6 @@ def test_saves_sets_new_material_for_type(monkeypatch):
 
 
 def test_adds_material_to_existing_ones_of_same_type(monkeypatch):
-
     def mock_get_session_property(input):
         if input == 'powder':
             return [{'name': 'test name'}]
@@ -51,8 +53,10 @@ def test_adds_material_to_existing_ones_of_same_type(monkeypatch):
         mock_extend_session_property_called_with = type, material
         return None
 
-    monkeypatch.setattr(MaterialsPersistence, 'get_session_property', mock_get_session_property)
-    monkeypatch.setattr(MaterialsPersistence, 'extend_session_property', mock_extend_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'extend_session_property', mock_extend_session_property)
 
     powder = Powder()
     MaterialsPersistence.save('powder', powder)
@@ -79,8 +83,10 @@ def test_delete_by_type_and_uuid_removes_material_of_specified_type(monkeypatch)
         mock_set_session_property_called_with = type, materials
         return None
 
-    monkeypatch.setattr(MaterialsPersistence, 'get_session_property', mock_get_session_property)
-    monkeypatch.setattr(MaterialsPersistence, 'set_session_property', mock_set_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'set_session_property', mock_set_session_property)
 
     MaterialsPersistence.delete_by_type_and_uuid('powder', 'to be removed')
     assert mock_set_session_property_called_with == ('powder', [to_be_kept])

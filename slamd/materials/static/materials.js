@@ -1,23 +1,33 @@
 const PROTOCOL = window.location.protocol
 const HOST = window.location.host;
 const ACTION_BUTTON_DELIMITER = "___"
+const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
+const MAX_ADDITIONAL_PROPERTIES = 10;
 
-const selectMaterialType = () => {
+async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
+    try {
+        const response = await fetch(url);
+        const form = await response.json();
+        if (append) {
+            document.getElementById(placeholderID).innerHTML += form["template"];
+        } else {
+            document.getElementById(placeholderID).innerHTML = form["template"];
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function selectMaterialType() {
     const elem = document.getElementById("material_type");
 
-    elem.addEventListener("change", async () => {
-        try {
-            const url = `${PROTOCOL}//${HOST}/materials/${elem.value.toLowerCase()}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            document.getElementById("template-placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
+    elem.addEventListener("change", () => {
+        const url = `${PROTOCOL}//${HOST}/materials/${elem.value.toLowerCase()}`;
+        fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
     });
 }
 
-const collectAdditionalProperties = (newPropIndex) => {
+function collectAdditionalProperties(newPropIndex) {
     usersInputs = [];
     if (newPropIndex <= 0) {
         return usersInputs;
@@ -34,40 +44,54 @@ const collectAdditionalProperties = (newPropIndex) => {
     return usersInputs;
 }
 
-const restoreAdditionalProperties = (usersInputs) => {
+function restoreAdditionalProperties(usersInputs) {
     for (let i = 0; i < usersInputs.length; i++) {
         document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
         document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
     }
 }
 
-const addAdditionalProperty = () => {
-    const elem = document.getElementById("add_property_button");
+function addAdditionalProperty() {
+    const elem = document.getElementById("add-property-button");
 
-    elem.addEventListener("click", async () => {
+    elem.addEventListener("click", () => {
         // Each additional property form is contained in one single div.
         // We index the additional properties starting from zero.
         const placeholder = document.getElementById("additional-properties-placeholder")
         const newPropIndex = placeholder.childElementCount;
 
-        const usersInputs = collectAdditionalProperties(newPropIndex);
-
-        try {
-            const url = `${PROTOCOL}//${HOST}/materials/add_property/${newPropIndex}`;
-            const response = await fetch(url);
-            const form = await response.json();
-            placeholder.innerHTML += form["template"];
-        } catch (error) {
-            console.log(error);
+        // Handle max number of properties and show a warning
+        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES) {
+            placeholder.innerHTML += WARNING_MAX_ADDITIONAL_PROPERTIES;
+            return;
         }
 
-        restoreAdditionalProperties(usersInputs)
-        // Set up delete button
-        const deleteButton = document.getElementById(`additional-properties-${newPropIndex}-delete`)
-        deleteButton.addEventListener("click", () => {
-            // Select the row div element that contains the whole new entry and delete it
-            document.getElementById(`additional-properties-${newPropIndex}-row`).remove()
-        });
+        const usersInputs = collectAdditionalProperties(newPropIndex);
+
+        const url = `${PROTOCOL}//${HOST}/materials/add_property/${newPropIndex}`;
+        fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
+        restoreAdditionalProperties(usersInputs);
+    });
+}
+
+function deleteAdditionalProperty() {
+    const elem = document.getElementById("delete-property-button");
+
+    elem.addEventListener("click", () => {
+        const placeholder = document.getElementById("additional-properties-placeholder");
+        const newPropIndex = placeholder.childElementCount;
+
+        // Remove the warning for the max number of properties
+        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES + 1) {
+            placeholder.innerHTML = placeholder.innerHTML.replace(WARNING_MAX_ADDITIONAL_PROPERTIES, "");
+            document.getElementById(`additional-properties-${newPropIndex - 2}-row`).remove();
+            return;
+        }
+
+        // Select the row div element that contains the last entry and delete it
+        if (newPropIndex > 0) {
+            document.getElementById(`additional-properties-${newPropIndex - 1}-row`).remove();
+        }
     });
 }
 
@@ -112,5 +136,6 @@ function editMaterial(id, material_type) {
 
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", addAdditionalProperty);
+window.addEventListener("load", deleteAdditionalProperty);
 window.addEventListener("load", deleteMaterial);
 window.addEventListener("load", editMaterial);

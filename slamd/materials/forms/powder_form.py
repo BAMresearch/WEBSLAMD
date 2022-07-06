@@ -5,83 +5,85 @@ from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 class PowderForm(BaseMaterialsForm):
 
-    feo = DecimalField(
-        label='Fe2O3 (%m)',
+    fe3_o2 = DecimalField(
+        label='Fe₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    sio = DecimalField(
-        label='SiO2 (%m)',
+    si_o2 = DecimalField(
+        label='SiO₂ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    alo = DecimalField(
-        label='Al2O3 (%m)',
+    al2_o3 = DecimalField(
+        label='Al₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    cao = DecimalField(
-        label='CaO (%m)',
-        validators=[
-            validators.Optional()
-        ]
-    )
-    mgo = DecimalField(
-        label='MgO (%m)',
+    ca_o = DecimalField(
+        label='CaO (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    nao = DecimalField(
-        label='Na2O (%m)',
-        validators=[
-            validators.Optional()
-        ]
-    )
-    ko = DecimalField(
-        label='K2O (%m)',
+    mg_o = DecimalField(
+        label='MgO (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    so = DecimalField(
-        label='SO3 (%m)',
+    na2_o = DecimalField(
+        label='Na₂O (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    tio = DecimalField(
-        label='TiO2 (%m)',
+    k2_o = DecimalField(
+        label='K₂O (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    po = DecimalField(
-        label='P2O5 (%m)',
+    s_o3 = DecimalField(
+        label='SO₃ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    sro = DecimalField(
-        label='SrO (%m)',
+    ti_o2 = DecimalField(
+        label='TiO₂ (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    mno = DecimalField(
-        label='Mn2O3 (%m)',
+    p2_o5 = DecimalField(
+        label='P₂O₅ (m%)',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    sr_o = DecimalField(
+        label='SrO (m%)',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    mn2_o3 = DecimalField(
+        label='Mn₂O₃ (m%)',
         validators=[
             validators.Optional()
         ]
@@ -95,7 +97,7 @@ class PowderForm(BaseMaterialsForm):
     )
 
     gravity = DecimalField(
-        label='Specific gravity (%m)',
+        label='Specific gravity (m%)',
         validators=[
             validators.Optional()
         ]

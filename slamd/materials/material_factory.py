@@ -7,8 +7,12 @@ from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
+from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
+from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
+from slamd.materials.strategies.custom_strategy import CustomStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
+from slamd.materials.strategies.process_strategy import ProcessStrategy
 
 
 class MaterialFactory:
@@ -19,26 +23,40 @@ class MaterialFactory:
             type = submitted_material['material_type'].lower()
 
         if type == MaterialType.POWDER.value:
-            return PowderForm() if submitted_material is None else PowderForm(submitted_material)
+            cls = PowderForm
         elif type == MaterialType.LIQUID.value:
-            return LiquidForm() if submitted_material is None else LiquidForm(submitted_material)
+            cls = LiquidForm
         elif type == MaterialType.AGGREGATES.value:
-            return AggregatesForm() if submitted_material is None else AggregatesForm(submitted_material)
+            cls = AggregatesForm
         elif type == MaterialType.PROCESS.value:
-            return ProcessForm() if submitted_material is None else ProcessForm(submitted_material)
+            cls = ProcessForm
         elif type == MaterialType.ADMIXTURE.value:
-            return AdmixtureForm() if submitted_material is None else AdmixtureForm(submitted_material)
+            cls = AdmixtureForm
         elif type == MaterialType.CUSTOM.value:
-            return CustomForm() if submitted_material is None else CustomForm(submitted_material)
+            cls = CustomForm
         else:
             raise NotFound
 
-    # TODO: add remaining strategies
+        if submitted_material is None:
+            # Create an empty form
+            return cls()
+        else:
+            # Populate a form with user data
+            return cls(submitted_material)
+
     @classmethod
     def create_strategy(cls, type):
         if type == MaterialType.POWDER.value:
             return PowderStrategy()
         if type == MaterialType.LIQUID.value:
             return LiquidStrategy()
+        if type == MaterialType.AGGREGATES.value:
+            return AggregatesStrategy()
+        if type == MaterialType.PROCESS.value:
+            return ProcessStrategy()
+        if type == MaterialType.ADMIXTURE.value:
+            return AdmixtureStrategy()
+        if type == MaterialType.CUSTOM.value:
+            return CustomStrategy()
         else:
             raise BadRequest

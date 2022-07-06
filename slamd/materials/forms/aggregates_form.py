@@ -1,14 +1,24 @@
-from wtforms import DecimalField, StringField
+from wtforms import DecimalField, StringField, validators
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 
 class AggregatesForm(BaseMaterialsForm):
 
-    fine_aggregates = DecimalField(label='Fine Aggregates')
+    fine_aggregates = DecimalField(
+        label='Fine Aggregates',
+        validators=[
+            validators.Optional()
+        ]
+    )
 
-    coarse_aggregates = DecimalField(label='Coarse Aggregates')
+    coarse_aggregates = DecimalField(
+        label='Coarse Aggregates',
+        validators=[
+            validators.Optional()
+        ]
+    )
 
-    type = StringField(label='Type')
+    fa_density = StringField(label='FA Density')
 
-    grading_curve = StringField(label='Grading Curve')
+    ca_density = StringField(label='CA Density')

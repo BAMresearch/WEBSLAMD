@@ -1,42 +1,89 @@
-from wtforms import DecimalField
+from wtforms import DecimalField, validators
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 
 class LiquidForm(BaseMaterialsForm):
-    nasio = DecimalField(
-        label='Na2SiO3 (%m)'
+    na2_si_o3 = DecimalField(
+        label='Na₂SiO₃ (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    naoh = DecimalField(
-        label='NaOH (%m)'
+
+    na_o_h = DecimalField(
+        label='NaOH (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    nasio_specific = DecimalField(
-        label='Na2SiO3 specific (%m)'
+
+    na2_si_o3_specific = DecimalField(
+        label='Na₂SiO₃ specific (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    naoh_specific = DecimalField(
-        label='NaOH specific (%m)'
+
+    na_o_h_specific = DecimalField(
+        label='NaOH specific (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
+
     total = DecimalField(
-        label='Total solution (%m)'
+        label='Total solution (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    nao = DecimalField(
-        label='Na2O (I) (%)'
+
+    na2_o = DecimalField(
+        label='Na₂O (I) (%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    sio = DecimalField(
-        label='SiO2 (I) (%)'
+
+    si_o2 = DecimalField(
+        label='SiO₂ (I) (%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    ho = DecimalField(
-        label='H2O (%)'
+
+    h2_o = DecimalField(
+        label='H₂O (%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    nao_dry = DecimalField(
-        label='Na2O (dry) (%m)'
+
+    na2_o_dry = DecimalField(
+        label='Na₂O (dry) (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    sio_dry = DecimalField(
-        label='SiO2 (dry) (%m)'
+
+    si_o2_dry = DecimalField(
+        label='SiO₂ (dry) (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
+
     water = DecimalField(
-        label='Water (%m)'
+        label='Water (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )
-    naoh_total = DecimalField(
-        label='Total NaOH (%m)'
+
+    na_o_h_total = DecimalField(
+        label='Total NaOH (m%)',
+        validators=[
+            validators.Optional()
+        ]
     )

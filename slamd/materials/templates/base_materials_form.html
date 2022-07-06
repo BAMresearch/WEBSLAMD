@@ -1,5 +1,6 @@
 {{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
+{% from 'render_material_type_form.j2' import render_material_type_form -%}
 
 <h3>New base material</h3>
 <form class="row g-3" action="" method="post" novalidate>
@@ -14,7 +15,7 @@
         {{ form.material_type(class_="form-control form-select") }}
     </div>
 
-    <div class="accordion accordion-flush" id="accordionBaseMaterialsForm">
+    <div class="accordion accordion-flush" id="accordion-base-materials-form">
         <div class="accordion-item">
             <h2 class="accordion-header" id="flush-headingOne">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -50,7 +51,7 @@
             </h2>
             <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
                 <div class="accordion-body" id="template-placeholder">
-                    {% include 'powder_form.html' %}
+                    {{ render_material_type_form(form) }}
                 </div>
             </div>
         </div>
@@ -65,8 +66,24 @@
                 <div class="accordion-body">
                     <div class="additional-properties">
                         <div id="additional-properties-placeholder"></div>
-                        <button class="btn btn-secondary" type="button" id="add_property_button">
+
+                        <button class="btn btn-secondary" type="button" id="add-property-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg>
                             Add property
+                        </button>
+                        <button class="btn btn-danger" id="delete-property-button" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fill-rule="evenodd"
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg>
+                            Delete last property
                         </button>
                     </div>
                 </div>
@@ -75,7 +92,19 @@
     </div>
     <div class="form-group mb-3">
         <div class="col-sm-offset-2 col-sm-10">
-            {{ form.submit(class_="btn btn-primary") }}
+            {{ form.submit(class_="btn btn-primary", data_bs_toggle="modal", data_bs_target="#submitFormModal") }}
+        </div>
+    </div>
+    <!-- Submit form modal -->
+    <div class="modal fade" id="submitFormModal" tabindex="-1" aria-labelledby="submitFormModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitFormModalLabel">New base material submitted</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
         </div>
     </div>
 </form>

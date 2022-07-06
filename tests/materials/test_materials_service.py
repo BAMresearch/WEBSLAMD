@@ -16,7 +16,11 @@ from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.materials_service import MaterialsService
 from slamd.materials.model.additional_property import AdditionalProperty
 from slamd.materials.model.powder import Powder, Composition, Structure
+from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
+from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
+from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
+from slamd.materials.strategies.process_strategy import ProcessStrategy
 
 app = create_app('testing', with_session=False)
 
@@ -77,21 +81,77 @@ def test_save_material_creates_powder():
                                    ('co2_footprint', ''),
                                    ('costs', ''),
                                    ('delivery_time', ''),
-                                   ('feo', ''),
-                                   ('sio', ''),
-                                   ('alo', ''),
-                                   ('alo', ''),
-                                   ('cao', ''),
-                                   ('mgo', ''),
-                                   ('nao', ''),
-                                   ('ko', ''),
-                                   ('so', ''),
-                                   ('po', ''),
-                                   ('tio', ''),
-                                   ('sro', ''),
-                                   ('mno', ''),
+                                   ('fe3_o2', ''),
+                                   ('si_o2', ''),
+                                   ('al2_o3', ''),
+                                   ('ca_o', ''),
+                                   ('mg_o', ''),
+                                   ('na2_o', ''),
+                                   ('k2_o', ''),
+                                   ('s_o3', ''),
+                                   ('p2_o5', ''),
+                                   ('ti_o2', ''),
+                                   ('sr_o', ''),
+                                   ('mn2_o3', ''),
                                    ('fine', ''),
                                    ('gravity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(LiquidStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_liquid():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test liquid'),
+                                   ('material_type', 'Liquid'),
+                                   ('na2_si_o3', ''),
+                                   ('na_o_h', ''),
+                                   ('na2_si_o3_specific', ''),
+                                   ('na_o_h_specific', ''),
+                                   ('total', ''),
+                                   ('na2_o', ''),
+                                   ('si_o2', ''),
+                                   ('h2_o', ''),
+                                   ('na2_o_dry', ''),
+                                   ('si_o2_dry', ''),
+                                   ('water', ''),
+                                   ('na_o_h_total', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_aggregates():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test aggregates'),
+                                   ('material_type', 'Aggregates'),
+                                   ('fine_aggregates', ''),
+                                   ('coarse_aggregates', ''),
+                                   ('fa_density', ''),
+                                   ('ca_density', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(ProcessStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_process():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test process'),
+                                   ('material_type', 'Process'),
+                                   ('duration', ''),
+                                   ('temperature', ''),
+                                   ('relative_humidity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(AdmixtureStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_admixture():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test process'),
+                                   ('material_type', 'Admixture'),
+                                   ('composition', ''),
+                                   ('type', ''),
                                    ('submit', 'Add material')])
         MaterialsService().save_material(form)
 
@@ -108,7 +168,8 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
         return _create_test_powders()
 
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'query_by_type', mock_query_by_type)
 
     result = MaterialsService().list_all()
 
@@ -130,23 +191,29 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     def mock_query_by_type(input):
         return _create_test_powders()
 
-    monkeypatch.setattr(MaterialsPersistence, 'delete_by_type_and_uuid', mock_delete_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'delete_by_type_and_uuid', mock_delete_by_type_and_uuid)
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'query_by_type', mock_query_by_type)
 
     result = MaterialsService().delete_material('powder', 'uuid to delete')
 
     assert_test_powders(result)
-    assert mock_delete_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
+    assert mock_delete_by_type_and_uuid_called_with == (
+        'powder', 'uuid to delete')
 
 
 def _create_test_powders():
-    powder1 = Powder(Composition(feo='23.3', sio=None), Structure(fine=None, gravity='12'))
+    powder1 = Powder(Composition(fe3_o2='23.3', si_o2=None),
+                     Structure(fine=None, gravity='12'))
     powder1.uuid = 'test uuid1'
     powder1.name = 'test powder'
     powder1.type = 'Powder'
-    powder1.additional_properties = [AdditionalProperty(name='test prop', value='test value')]
-    powder2 = Powder(Composition(feo=None, sio=None), Structure(fine=None, gravity=None))
+    powder1.additional_properties = [
+        AdditionalProperty(name='test prop', value='test value')]
+    powder2 = Powder(Composition(fe3_o2=None, si_o2=None),
+                     Structure(fine=None, gravity=None))
     powder2.uuid = 'test uuid2'
     powder2.name = 'my powder'
     powder2.type = 'Powder'
@@ -164,4 +231,5 @@ def assert_test_powders(result):
     dto = result[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == u'Fe\u2082O\u2083' + ': 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == u'Fe\u2082O\u2083' + \
+        ': 23.3, Specific gravity: 12, test prop: test value'
