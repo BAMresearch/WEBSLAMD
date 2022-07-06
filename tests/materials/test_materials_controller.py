@@ -11,7 +11,6 @@ def test_slamd_shows_form_and_table(client, mocker):
     mock_response = [{'uuid': 'test', 'name': 'test powder'}]
     mocker.patch.object(MaterialsService, 'list_all',
                         autospec=True, return_value=mock_response)
-
     response = client.get('/materials')
 
     assert response.status_code == 200
