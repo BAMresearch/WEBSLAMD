@@ -4,6 +4,7 @@ from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
@@ -27,6 +28,8 @@ class MaterialFactory:
             return ProcessForm() if submitted_material is None else ProcessForm(submitted_material)
         elif type == MaterialType.ADMIXTURE.value:
             return AdmixtureForm() if submitted_material is None else AdmixtureForm(submitted_material)
+        elif type == MaterialType.CUSTOM.value:
+            return CustomForm() if submitted_material is None else CustomForm(submitted_material)
         else:
             raise NotFound
 
