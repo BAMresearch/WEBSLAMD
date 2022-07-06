@@ -6,6 +6,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
+from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
 
@@ -29,7 +30,7 @@ class MaterialFactory:
             cls = AdmixtureForm
         else:
             raise NotFound
-        
+
         if submitted_material is None:
             # Create an empty form
             return cls()
@@ -44,5 +45,7 @@ class MaterialFactory:
             return PowderStrategy()
         if type == MaterialType.LIQUID.value:
             return LiquidStrategy()
+        if type == MaterialType.AGGREGATES.value:
+            return AggregatesStrategy()
         else:
             raise BadRequest

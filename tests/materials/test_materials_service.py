@@ -15,6 +15,7 @@ from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.materials_service import MaterialsService
 from slamd.materials.model.additional_property import AdditionalProperty
 from slamd.materials.model.powder import Powder, Composition, Structure
+from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
 
@@ -105,6 +106,19 @@ def test_save_material_creates_liquid():
                                    ('si_o2_dry', ''),
                                    ('water', ''),
                                    ('na_o_h_total', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_aggregates():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test aggregates'),
+                                   ('material_type', 'Aggregates'),
+                                   ('fine_aggregates', ''),
+                                   ('coarse_aggregates', ''),
+                                   ('fa_density', ''),
+                                   ('ca_density', ''),
                                    ('submit', 'Add material')])
         MaterialsService().save_material(form)
 
