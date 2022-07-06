@@ -74,7 +74,7 @@ const addAdditionalProperty = () => {
 /**
  * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
  * For consistency, it is constructed from a part describing the action, here 'delete_base_material_button' and a uuid
- * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter '|'
+ * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id
  */
@@ -96,13 +96,12 @@ async function deleteMaterial(id, material_type) {
 /**
  * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
  * For consistency, it is constructed from a part describing the action, e.g. 'edit_base_material_button' and a uuid
- * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter '|'
+ * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id
  */
 function editMaterial(id, material_type) {
     console.log("EDIT")
-    console.log(id)
 }
 
 window.addEventListener("load", selectMaterialType);
