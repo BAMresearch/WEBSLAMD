@@ -11,4 +11,7 @@ class MaterialType(Enum):
     # TODO: add remaining types
     @staticmethod
     def get_all_types():
-        return [MaterialType.POWDER.value, MaterialType.LIQUID.value, MaterialType.AGGREGATES.value]
+        return [MaterialType.POWDER.value,
+                MaterialType.LIQUID.value,
+                MaterialType.AGGREGATES.value,
+                MaterialType.PROCESS.value]

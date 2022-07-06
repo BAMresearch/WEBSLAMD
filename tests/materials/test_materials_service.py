@@ -123,6 +123,18 @@ def test_save_material_creates_aggregates():
         MaterialsService().save_material(form)
 
 
+@patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_process():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test process'),
+                                   ('material_type', 'Process'),
+                                   ('duration', ''),
+                                   ('temperature', ''),
+                                   ('relative_humidity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
 def test_list_all_creates_all_materials_for_view(monkeypatch):
     def mock_get_all_types():
         return ['powder']

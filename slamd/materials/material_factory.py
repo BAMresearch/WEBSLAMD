@@ -9,6 +9,7 @@ from slamd.materials.material_type import MaterialType
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
+from slamd.materials.strategies.process_strategy import ProcessStrategy
 
 
 class MaterialFactory:
@@ -47,5 +48,7 @@ class MaterialFactory:
             return LiquidStrategy()
         if type == MaterialType.AGGREGATES.value:
             return AggregatesStrategy()
+        if type == MaterialType.PROCESS.value:
+            return ProcessStrategy()
         else:
             raise BadRequest

@@ -1,7 +1,8 @@
 from slamd import create_app
-from slamd.materials.forms.powder_form import PowderForm
-from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
+from slamd.materials.forms.liquid_form import LiquidForm
+from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.materials_service import MaterialsService
 
 
@@ -131,4 +132,20 @@ def test_slamd_creates_new_aggregates_when_saving_is_successful(client, mocker):
 
     assert response.status_code == 302
     assert b'test aggregates' not in response.data
+    assert response.request.path == '/materials'
+
+
+def test_slamd_creates_new_process_when_saving_is_successful(client, mocker):
+    app = create_app('testing', with_session=False)
+
+    with app.test_request_context('/materials'):
+        mocker.patch.object(MaterialsService, 'save_material',
+                            autospec=True, return_value=(True, None))
+        form = ProcessForm(
+            material_name='test process', material_type='Process')
+
+        response = client.post('/materials', data=form.data)
+
+    assert response.status_code == 302
+    assert b'test process' not in response.data
     assert response.request.path == '/materials'
