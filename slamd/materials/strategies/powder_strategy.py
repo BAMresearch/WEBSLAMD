@@ -1,3 +1,5 @@
+import uuid
+
 from slamd.common.slamd_utils import join_all, molecular_formula_of
 from slamd.materials.base_material_dto import BaseMaterialDto
 from slamd.materials.materials_persistence import MaterialsPersistence
@@ -24,6 +26,7 @@ class PowderStrategy(BaseMaterialStrategy):
 
         powder = Powder()
 
+        powder.uuid = uuid.uuid1()
         powder.name = submitted_material['material_name']
         powder.type = submitted_material['material_type']
         powder.costs = costs
@@ -35,6 +38,7 @@ class PowderStrategy(BaseMaterialStrategy):
 
     def create_dto(self, powder):
         dto = BaseMaterialDto()
+        dto.uuid = str(powder.uuid)
         dto.name = powder.name
         dto.type = powder.type
 

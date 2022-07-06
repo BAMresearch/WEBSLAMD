@@ -1,6 +1,7 @@
 class BaseMaterial:
 
-    def _init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False):
+    def _init__(self, uuid=None, name='', type='', costs=None, additional_properties=None, is_blended=False):
+        self.uuid = uuid
         self.name = name
         self.type = type
         self.costs = costs
