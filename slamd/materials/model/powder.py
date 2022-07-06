@@ -4,6 +4,7 @@ from slamd.materials.model.base_material import BaseMaterial
 class Powder(BaseMaterial):
 
     def __init__(self, composition=None, structure=None):
+        super().__init__()
         self.structure = structure
         self.composition = composition
 

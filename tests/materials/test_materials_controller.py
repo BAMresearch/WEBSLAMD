@@ -8,8 +8,10 @@ from slamd.materials.materials_service import MaterialsService
 
 
 def test_slamd_shows_form_and_table(client, mocker):
+    mock_response = [{'uuid': 'test', 'name': 'test powder'}]
     mocker.patch.object(MaterialsService, 'list_all',
-                        autospec=True, return_value=[{'name': 'test powder'}])
+                        autospec=True, return_value=mock_response)
+
     response = client.get('/materials')
 
     assert response.status_code == 200
@@ -78,6 +80,14 @@ def test_slamd_selects_admixture(client):
     template = response.json['template']
     assert 'Composition' in template
     assert 'Type' in template
+
+
+def test_slamd_selects_custom(client):
+    response = client.get("/materials/custom")
+    assert response.status_code == 200
+    template = response.json['template']
+    assert 'Name' in template
+    assert 'Value' in template
 
 
 def test_slamd_selects_process(client):
@@ -166,3 +176,24 @@ def test_slamd_creates_new_admixture_when_saving_is_successful(client, mocker):
     assert response.status_code == 302
     assert b'test admixture' not in response.data
     assert response.request.path == '/materials'
+
+
+def test_slamd_deletes_powder_and_returns_new_table_but_does_not_rerender_complete_page(client, mocker):
+    mock_response = [{'uuid': 'test', 'name': 'test powder'}]
+    mocker.patch.object(MaterialsService, 'delete_material',
+                        autospec=True, return_value=mock_response)
+
+    response = client.delete('/materials/powder/123')
+
+    template = response.json['template']
+    assert response.status_code == 200
+    assert 'Actions' in template
+    assert 'Name' in template
+    assert 'Type' in template
+    assert 'Properties' in template
+
+    # Some sample fields which are part of the form but not returned by the delete
+    # request as only the table is updated after deleting
+    assert 'Material type' not in template
+    assert 'CO2-Footprint' not in template
+    assert 'Costs' not in template

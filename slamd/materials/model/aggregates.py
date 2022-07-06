@@ -4,6 +4,7 @@ from slamd.materials.model.base_material import BaseMaterial
 class Aggregates(BaseMaterial):
 
     def __init__(self, composition=None):
+        super().__init__()
         self.composition = composition
 
 

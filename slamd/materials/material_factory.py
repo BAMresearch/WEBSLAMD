@@ -4,10 +4,12 @@ from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
+from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
 from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
+from slamd.materials.strategies.custom_strategy import CustomStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
 from slamd.materials.strategies.process_strategy import ProcessStrategy
@@ -30,6 +32,8 @@ class MaterialFactory:
             cls = ProcessForm
         elif type == MaterialType.ADMIXTURE.value:
             cls = AdmixtureForm
+        elif type == MaterialType.CUSTOM.value:
+            cls = CustomForm
         else:
             raise NotFound
 
@@ -52,5 +56,7 @@ class MaterialFactory:
             return ProcessStrategy()
         if type == MaterialType.ADMIXTURE.value:
             return AdmixtureStrategy()
+        if type == MaterialType.CUSTOM.value:
+            return CustomStrategy()
         else:
             raise BadRequest

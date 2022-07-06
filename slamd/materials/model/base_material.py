@@ -1,6 +1,10 @@
+import uuid
+
+
 class BaseMaterial:
 
-    def _init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False):
+    def __init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False):
+        self.uuid = uuid.uuid1()
         self.name = name
         self.type = type
         self.costs = costs

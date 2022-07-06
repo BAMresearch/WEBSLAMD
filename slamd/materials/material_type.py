@@ -7,6 +7,7 @@ class MaterialType(Enum):
     AGGREGATES = 'aggregates'
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
+    CUSTOM = 'custom'
 
     @staticmethod
     def get_all_types():

@@ -1,7 +1,8 @@
-const protocol = window.location.protocol
-const host = window.location.host;
-const warningMaxNumberProperties = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
-const maxNumberProperties = 10;
+const PROTOCOL = window.location.protocol
+const HOST = window.location.host;
+const ACTION_BUTTON_DELIMITER = "___"
+const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
+const MAX_ADDITIONAL_PROPERTIES = 10;
 
 async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     try {
@@ -21,7 +22,7 @@ function selectMaterialType() {
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", () => {
-        const url = `${protocol}//${host}/materials/${elem.value.toLowerCase()}`;
+        const url = `${PROTOCOL}//${HOST}/materials/${elem.value.toLowerCase()}`;
         fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
     });
 }
@@ -60,14 +61,14 @@ function addAdditionalProperty() {
         const newPropIndex = placeholder.childElementCount;
 
         // Handle max number of properties and show a warning
-        if (newPropIndex === maxNumberProperties) {
-            placeholder.innerHTML += warningMaxNumberProperties;
+        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES) {
+            placeholder.innerHTML += WARNING_MAX_ADDITIONAL_PROPERTIES;
             return;
         }
 
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
-        const url = `${protocol}//${host}/materials/add_property/${newPropIndex}`;
+        const url = `${PROTOCOL}//${HOST}/materials/add_property/${newPropIndex}`;
         fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
         restoreAdditionalProperties(usersInputs);
     });
@@ -81,8 +82,8 @@ function deleteAdditionalProperty() {
         const newPropIndex = placeholder.childElementCount;
 
         // Remove the warning for the max number of properties
-        if (newPropIndex === maxNumberProperties + 1) {
-            placeholder.innerHTML = placeholder.innerHTML.replace(warningMaxNumberProperties, "");
+        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES + 1) {
+            placeholder.innerHTML = placeholder.innerHTML.replace(WARNING_MAX_ADDITIONAL_PROPERTIES, "");
             document.getElementById(`additional-properties-${newPropIndex - 2}-row`).remove();
             return;
         }
@@ -94,6 +95,47 @@ function deleteAdditionalProperty() {
     });
 }
 
+/**
+ * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
+ * For consistency, it is constructed from a part describing the action, here 'delete_base_material_button' and a uuid
+ * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
+ *
+ * @param id
+ */
+async function deleteMaterial(id, material_type, token) {
+    if (material_type) {
+        token = document.getElementById("csrf_token").value
+        let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
+        try {
+            const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
+            const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': token
+                }
+            });
+            const form = await response.json();
+            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+}
+
+/**
+ * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
+ * For consistency, it is constructed from a part describing the action, e.g. 'edit_base_material_button' and a uuid
+ * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
+ *
+ * @param id
+ */
+function editMaterial(id, material_type) {
+    console.log("EDIT")
+}
+
 window.addEventListener("load", selectMaterialType);
 window.addEventListener("load", addAdditionalProperty);
 window.addEventListener("load", deleteAdditionalProperty);
+window.addEventListener("load", deleteMaterial);
+window.addEventListener("load", editMaterial);

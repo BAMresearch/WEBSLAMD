@@ -18,6 +18,7 @@ class BaseMaterialStrategy(ABC):
 
     def create_dto(self, material):
         dto = BaseMaterialDto()
+        dto.uuid = str(material.uuid)
         dto.name = material.name
         dto.type = material.type
 
