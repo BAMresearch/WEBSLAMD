@@ -78,12 +78,18 @@ const addAdditionalProperty = () => {
  *
  * @param id
  */
-async function deleteMaterial(id, material_type) {
+async function deleteMaterial(id, material_type, token) {
     if (material_type !== undefined) {
+        token = document.getElementById("csrf_token").value
         let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
         try {
             const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': token
+                }
+            });
             const form = await response.json();
             document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
         } catch (error) {

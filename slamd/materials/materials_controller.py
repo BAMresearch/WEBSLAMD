@@ -48,7 +48,7 @@ def submit_material():
     return render_template('materials.html', form=form, all_materials=all_materials)
 
 
-@materials.route('/<material_type>/<uuid>', methods=['GET'])
+@materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_material(material_type, uuid):
     print('I am here')
     all_materials = materials_service.delete_material(material_type, uuid)
