@@ -8,10 +8,6 @@ class MaterialType(Enum):
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
 
-    # TODO: add remaining types
     @staticmethod
     def get_all_types():
-        return [MaterialType.POWDER.value,
-                MaterialType.LIQUID.value,
-                MaterialType.AGGREGATES.value,
-                MaterialType.PROCESS.value]
+        return [e.value for e in MaterialType]

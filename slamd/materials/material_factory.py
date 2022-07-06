@@ -6,6 +6,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.process_form import ProcessForm
 from slamd.materials.material_type import MaterialType
+from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
@@ -39,7 +40,6 @@ class MaterialFactory:
             # Populate a form with user data
             return cls(submitted_material)
 
-    # TODO: add remaining strategies
     @classmethod
     def create_strategy(cls, type):
         if type == MaterialType.POWDER.value:
@@ -50,5 +50,7 @@ class MaterialFactory:
             return AggregatesStrategy()
         if type == MaterialType.PROCESS.value:
             return ProcessStrategy()
+        if type == MaterialType.ADMIXTURE.value:
+            return AdmixtureStrategy()
         else:
             raise BadRequest

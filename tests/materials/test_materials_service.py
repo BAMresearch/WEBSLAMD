@@ -15,6 +15,7 @@ from slamd.materials.materials_persistence import MaterialsPersistence
 from slamd.materials.materials_service import MaterialsService
 from slamd.materials.model.additional_property import AdditionalProperty
 from slamd.materials.model.powder import Powder, Composition, Structure
+from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
@@ -131,6 +132,17 @@ def test_save_material_creates_process():
                                    ('duration', ''),
                                    ('temperature', ''),
                                    ('relative_humidity', ''),
+                                   ('submit', 'Add material')])
+        MaterialsService().save_material(form)
+
+
+@patch.object(AdmixtureStrategy, 'create_model', MagicMock(return_value=None))
+def test_save_material_creates_admixture():
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test process'),
+                                   ('material_type', 'Admixture'),
+                                   ('composition', ''),
+                                   ('type', ''),
                                    ('submit', 'Add material')])
         MaterialsService().save_material(form)
 

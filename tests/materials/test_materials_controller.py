@@ -1,4 +1,5 @@
 from slamd import create_app
+from slamd.materials.forms.admixture_form import AdmixtureForm
 from slamd.materials.forms.aggregates_form import AggregatesForm
 from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
@@ -148,4 +149,20 @@ def test_slamd_creates_new_process_when_saving_is_successful(client, mocker):
 
     assert response.status_code == 302
     assert b'test process' not in response.data
+    assert response.request.path == '/materials'
+
+
+def test_slamd_creates_new_admixture_when_saving_is_successful(client, mocker):
+    app = create_app('testing', with_session=False)
+
+    with app.test_request_context('/materials'):
+        mocker.patch.object(MaterialsService, 'save_material',
+                            autospec=True, return_value=(True, None))
+        form = AdmixtureForm(
+            material_name='test admixture', material_type='admixture')
+
+        response = client.post('/materials', data=form.data)
+
+    assert response.status_code == 302
+    assert b'test admixture' not in response.data
     assert response.request.path == '/materials'
