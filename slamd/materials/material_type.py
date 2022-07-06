@@ -7,6 +7,8 @@ class MaterialType(Enum):
     AGGREGATES = 'aggregates'
     PROCESS = 'process'
     ADMIXTURE = 'admixture'
+    COSTS = 'costs'
+    CUSTOM = 'custom'
 
     # TODO: add remaining types
     @staticmethod
