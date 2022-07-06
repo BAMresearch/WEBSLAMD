@@ -23,9 +23,9 @@ class MaterialsService:
                 dto = strategy.create_dto(material)
                 all_material_dtos.append(dto)
 
-        sorted_by_type = sorted(all_material_dtos, key=lambda material: material.type)
-        sorted_by_name = sorted(sorted_by_type, key=lambda material: material.name)
-        return sorted_by_name
+        sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
+        sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
+        return sorted_by_type
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
