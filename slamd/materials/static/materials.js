@@ -1,6 +1,6 @@
 const PROTOCOL = window.location.protocol
 const HOST = window.location.host;
-const ACTION_BUTTON_DELIMITER = "DELIMITER"
+const ACTION_BUTTON_DELIMITER = "___"
 
 const selectMaterialType = () => {
     const elem = document.getElementById("material_type");
@@ -79,7 +79,7 @@ const addAdditionalProperty = () => {
  * @param id
  */
 async function deleteMaterial(id, material_type, token) {
-    if (material_type !== undefined) {
+    if (material_type) {
         token = document.getElementById("csrf_token").value
         let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
         try {
