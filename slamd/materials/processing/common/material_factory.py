@@ -6,7 +6,7 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
-from slamd.materials.material_type import MaterialType
+from slamd.materials.processing.common.material_type import MaterialType
 from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.custom_strategy import CustomStrategy

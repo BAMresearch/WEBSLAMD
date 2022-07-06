@@ -11,11 +11,11 @@ from slamd.materials.forms.liquid_form import LiquidForm
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.custom_form import CustomForm
 from slamd.materials.forms.process_form import ProcessForm
-from slamd.materials.material_type import MaterialType
-from slamd.materials.materials_persistence import MaterialsPersistence
-from slamd.materials.materials_service import MaterialsService
-from slamd.materials.model.additional_property import AdditionalProperty
-from slamd.materials.model.powder import Powder, Composition, Structure
+from slamd.materials.processing.common.material_type import MaterialType
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.base.base_materials_service import BaseMaterialService
+from slamd.materials.models.additional_property import AdditionalProperty
+from slamd.materials.models.powder import Powder, Composition, Structure
 from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
@@ -26,51 +26,51 @@ app = create_app('testing', with_session=False)
 
 
 def test_create_material_form_creates_powder():
-    with app.test_request_context('/materials/powder'):
-        file, form = MaterialsService().create_material_form('powder')
+    with app.test_request_context('/materials/base/powder'):
+        file, form = BaseMaterialService().create_material_form('powder')
         assert file == 'powder_form.html'
         assert isinstance(form, PowderForm)
 
 
 def test_create_material_form_creates_liquid():
-    with app.test_request_context('/materials/liquid'):
-        file, form = MaterialsService().create_material_form('liquid')
+    with app.test_request_context('/materials/base/liquid'):
+        file, form = BaseMaterialService().create_material_form('liquid')
         assert file == 'liquid_form.html'
         assert isinstance(form, LiquidForm)
 
 
 def test_create_material_form_creates_aggregates():
-    with app.test_request_context('/materials/aggregates'):
-        file, form = MaterialsService().create_material_form('aggregates')
+    with app.test_request_context('/materials/base/aggregates'):
+        file, form = BaseMaterialService().create_material_form('aggregates')
         assert file == 'aggregates_form.html'
         assert isinstance(form, AggregatesForm)
 
 
 def test_create_material_form_creates_process():
-    with app.test_request_context('/materials/process'):
-        file, form = MaterialsService().create_material_form('process')
+    with app.test_request_context('/materials/base/process'):
+        file, form = BaseMaterialService().create_material_form('process')
         assert file == 'process_form.html'
         assert isinstance(form, ProcessForm)
 
 
 def test_create_material_form_creates_admixture():
-    with app.test_request_context('/materials/admixture'):
-        file, form = MaterialsService().create_material_form('admixture')
+    with app.test_request_context('/materials/base/admixture'):
+        file, form = BaseMaterialService().create_material_form('admixture')
         assert file == 'admixture_form.html'
         assert isinstance(form, AdmixtureForm)
 
 
 def test_create_material_form_creates_custom():
-    with app.test_request_context('/materials/custom'):
-        file, form = MaterialsService().create_material_form('custom')
+    with app.test_request_context('/materials/base/custom'):
+        file, form = BaseMaterialService().create_material_form('custom')
         assert file == 'custom_form.html'
         assert isinstance(form, CustomForm)
 
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
-    with app.test_request_context('/materials/invalid'):
+    with app.test_request_context('/materials/base/invalid'):
         with pytest.raises(NotFound):
-            MaterialsService().create_material_form('invalid')
+            BaseMaterialService().create_material_form('invalid')
 
 
 @patch.object(PowderStrategy, 'create_model', MagicMock(return_value=None))
@@ -96,7 +96,7 @@ def test_save_material_creates_powder():
                                    ('fine', ''),
                                    ('gravity', ''),
                                    ('submit', 'Add material')])
-        MaterialsService().save_material(form)
+        BaseMaterialService().save_material(form)
 
 
 @patch.object(LiquidStrategy, 'create_model', MagicMock(return_value=None))
@@ -117,7 +117,7 @@ def test_save_material_creates_liquid():
                                    ('water', ''),
                                    ('na_o_h_total', ''),
                                    ('submit', 'Add material')])
-        MaterialsService().save_material(form)
+        BaseMaterialService().save_material(form)
 
 
 @patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
@@ -130,7 +130,7 @@ def test_save_material_creates_aggregates():
                                    ('fa_density', ''),
                                    ('ca_density', ''),
                                    ('submit', 'Add material')])
-        MaterialsService().save_material(form)
+        BaseMaterialService().save_material(form)
 
 
 @patch.object(ProcessStrategy, 'create_model', MagicMock(return_value=None))
@@ -142,7 +142,7 @@ def test_save_material_creates_process():
                                    ('temperature', ''),
                                    ('relative_humidity', ''),
                                    ('submit', 'Add material')])
-        MaterialsService().save_material(form)
+        BaseMaterialService().save_material(form)
 
 
 @patch.object(AdmixtureStrategy, 'create_model', MagicMock(return_value=None))
@@ -153,7 +153,7 @@ def test_save_material_creates_admixture():
                                    ('composition', ''),
                                    ('type', ''),
                                    ('submit', 'Add material')])
-        MaterialsService().save_material(form)
+        BaseMaterialService().save_material(form)
 
 
 def test_list_all_creates_all_materials_for_view(monkeypatch):
@@ -171,7 +171,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = MaterialsService().list_all()
+    result = BaseMaterialService().list_all()
 
     assert_test_powders(result)
     assert mock_query_by_type_called_with == 'powder'
@@ -197,7 +197,7 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = MaterialsService().delete_material('powder', 'uuid to delete')
+    result = BaseMaterialService().delete_material('powder', 'uuid to delete')
 
     assert_test_powders(result)
     assert mock_delete_by_type_and_uuid_called_with == (

@@ -1,6 +1,6 @@
 from wtforms import ValidationError
 
-from slamd.materials.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
 
 
 def name_is_unique(form, field):

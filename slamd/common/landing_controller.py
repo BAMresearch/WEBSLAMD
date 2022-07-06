@@ -5,4 +5,4 @@ landing = Blueprint('landing', __name__)
 
 @landing.route('/', methods=['GET'])
 def landing_page():
-    return redirect('/materials')
+    return redirect('/materials/base')

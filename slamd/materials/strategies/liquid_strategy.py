@@ -1,8 +1,6 @@
-from slamd.common.slamd_utils import join_all
-from slamd.materials.base_material_dto import BaseMaterialDto
-from slamd.materials.materials_persistence import MaterialsPersistence
-from slamd.materials.model.base_material import Costs
-from slamd.materials.model.liquid import Liquid, Composition
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
+from slamd.materials.models.material import Costs
+from slamd.materials.models.liquid import Liquid, Composition
 from slamd.materials.strategies.base_material_strategy import BaseMaterialStrategy
 
 

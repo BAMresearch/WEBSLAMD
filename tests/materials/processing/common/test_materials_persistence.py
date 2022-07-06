@@ -1,5 +1,5 @@
-from slamd.materials.materials_persistence import MaterialsPersistence
-from slamd.materials.model.powder import Powder
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
+from slamd.materials.models.powder import Powder
 
 
 def test_query_by_type_calls_session(monkeypatch):

@@ -4,8 +4,8 @@ from wtforms import ValidationError, StringField, SelectField
 from slamd import create_app
 from slamd.materials.forms.powder_form import PowderForm
 from slamd.materials.forms.validation import name_is_unique
-from slamd.materials.materials_persistence import MaterialsPersistence
-from slamd.materials.model.powder import Powder
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
+from slamd.materials.models.powder import Powder
 
 
 def test_name_is_unique_is_not_successful_when_name_is_already_used(monkeypatch):

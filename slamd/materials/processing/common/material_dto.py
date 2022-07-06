@@ -1,4 +1,4 @@
-class BaseMaterialDto:
+class MaterialDto:
 
     def __init__(self, uuid='', name='', type='', all_properties=''):
         self.uuid = uuid

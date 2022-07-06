@@ -1,7 +1,7 @@
-from slamd.materials.model.base_material import BaseMaterial
+from slamd.materials.models.material import Material
 
 
-class Process(BaseMaterial):
+class Process(Material):
 
     def __init__(self, duration=None, temperature=None, relative_humidity=None):
         super().__init__()

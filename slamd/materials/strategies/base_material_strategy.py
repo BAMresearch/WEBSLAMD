@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from slamd.common.slamd_utils import empty
 from slamd.common.slamd_utils import join_all
-from slamd.materials.base_material_dto import BaseMaterialDto
+from slamd.materials.processing.common.material_dto import MaterialDto
 
 
 class BaseMaterialStrategy(ABC):
@@ -17,7 +17,7 @@ class BaseMaterialStrategy(ABC):
         return f'{displayed_name}: {property}, '
 
     def create_dto(self, material):
-        dto = BaseMaterialDto()
+        dto = MaterialDto()
         dto.uuid = str(material.uuid)
         dto.name = material.name
         dto.type = material.type

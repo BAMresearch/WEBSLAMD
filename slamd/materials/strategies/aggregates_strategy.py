@@ -1,6 +1,6 @@
-from slamd.materials.materials_persistence import MaterialsPersistence
-from slamd.materials.model.base_material import Costs
-from slamd.materials.model.aggregates import Aggregates, Composition
+from slamd.materials.processing.common.materials_persistence import MaterialsPersistence
+from slamd.materials.models.material import Costs
+from slamd.materials.models.aggregates import Aggregates, Composition
 from slamd.materials.strategies.base_material_strategy import BaseMaterialStrategy
 
 

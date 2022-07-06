@@ -1,7 +1,7 @@
-from slamd.materials.model.base_material import BaseMaterial
+from slamd.materials.models.material import Material
 
 
-class Powder(BaseMaterial):
+class Powder(Material):
 
     def __init__(self, composition=None, structure=None):
         super().__init__()

@@ -1,7 +1,7 @@
-from slamd.materials.model.base_material import BaseMaterial
+from slamd.materials.models.material import Material
 
 
-class Custom(BaseMaterial):
+class Custom(Material):
 
     def __init__(self, name=None, value=None):
         super().__init__()

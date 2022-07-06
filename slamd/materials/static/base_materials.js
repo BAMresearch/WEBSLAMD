@@ -22,7 +22,7 @@ function selectMaterialType() {
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", () => {
-        const url = `${PROTOCOL}//${HOST}/materials/${elem.value.toLowerCase()}`;
+        const url = `${PROTOCOL}//${HOST}/materials/base/${elem.value.toLowerCase()}`;
         fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
     });
 }
@@ -68,7 +68,7 @@ function addAdditionalProperty() {
 
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
-        const url = `${PROTOCOL}//${HOST}/materials/add_property/${newPropIndex}`;
+        const url = `${PROTOCOL}//${HOST}/materials/base/add_property/${newPropIndex}`;
         fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
         restoreAdditionalProperties(usersInputs);
     });
@@ -97,7 +97,7 @@ function deleteAdditionalProperty() {
 
 /**
  * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
- * For consistency, it is constructed from a part describing the action, here 'delete_base_material_button' and a uuid
+ * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
  * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id
@@ -107,7 +107,7 @@ async function deleteMaterial(id, material_type, token) {
         token = document.getElementById("csrf_token").value
         let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
         try {
-            const url = `${PROTOCOL}//${HOST}/materials/${material_type.toLowerCase()}/${uuid}`;
+            const url = `${PROTOCOL}//${HOST}/materials/base/${material_type.toLowerCase()}/${uuid}`;
             const response = await fetch(url, {
                 method: "DELETE",
                 headers: {
@@ -115,7 +115,7 @@ async function deleteMaterial(id, material_type, token) {
                 }
             });
             const form = await response.json();
-            document.getElementById("base_materials_table_placeholder").innerHTML = form["template"];
+            document.getElementById("materials_table_placeholder").innerHTML = form["template"];
         } catch (error) {
             console.log(error);
         }
@@ -125,7 +125,7 @@ async function deleteMaterial(id, material_type, token) {
 
 /**
  * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
- * For consistency, it is constructed from a part describing the action, e.g. 'edit_base_material_button' and a uuid
+ * For consistency, it is constructed from a part describing the action, e.g. 'edit_material_button' and a uuid
  * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id

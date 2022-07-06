@@ -1,7 +1,7 @@
-from slamd.materials.model.base_material import BaseMaterial
+from slamd.materials.models.material import Material
 
 
-class Aggregates(BaseMaterial):
+class Aggregates(Material):
 
     def __init__(self, composition=None):
         super().__init__()

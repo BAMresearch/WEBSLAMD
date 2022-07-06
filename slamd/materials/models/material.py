@@ -1,7 +1,7 @@
 import uuid
 
 
-class BaseMaterial:
+class Material:
 
     def __init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False):
         self.uuid = uuid.uuid1()
