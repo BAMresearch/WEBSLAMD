@@ -1,20 +1,10 @@
-from wtforms import DecimalField, validators
+from wtforms import StringField
 
 from slamd.materials.forms.base_materials_form import BaseMaterialsForm
 
 
 class CustomForm(BaseMaterialsForm):
 
-    name = DecimalField(
-        label='Name:',
-        validators=[
-            validators.Optional()
-        ]
-    )
+    name = StringField(label='Name:')
 
-    value = DecimalField(
-        label='Value:',
-        validators=[
-            validators.Optional()
-        ]
-    )
+    value = StringField(label='Value:')
