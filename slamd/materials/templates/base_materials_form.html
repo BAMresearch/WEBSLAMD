@@ -1,5 +1,6 @@
 {{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
+{% from 'render_material_type_form.j2' import render_material_type_form -%}
 
 <h3>New base material</h3>
 <form class="row g-3" action="" method="post" novalidate>
@@ -50,7 +51,7 @@
             </h2>
             <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
                 <div class="accordion-body" id="template-placeholder">
-                    {% include 'powder_form.html' %}
+                    {{ render_material_type_form(form) }}
                 </div>
             </div>
         </div>
