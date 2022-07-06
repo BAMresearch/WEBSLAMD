@@ -59,7 +59,7 @@ def test_adds_material_to_existing_ones_of_same_type(monkeypatch):
     assert mock_extend_session_property_called_with == ('powder', powder)
 
 
-# In real usecases a UUID object is used. For simplicity and sake of this test can a simple string.
+# In real usecases a UUID object is used. For simplicity and sake of this test it can be a simple string.
 def test_delete_by_type_and_uuid_removes_material_of_specified_type(monkeypatch):
     to_be_removed = Powder()
     to_be_removed.uuid = 'to be removed'

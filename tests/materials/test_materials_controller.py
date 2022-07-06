@@ -108,7 +108,7 @@ def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):
     assert response.request.path == '/materials'
 
 
-def test_slamd_deletes_powder_and_return_new_table_but_does_not_rerender_comple_page(client, mocker):
+def test_slamd_deletes_powder_and_returns_new_table_but_does_not_rerender_complete_page(client, mocker):
     mock_response = [{'uuid': 'test', 'name': 'test powder'}]
     mocker.patch.object(MaterialsService, 'delete_material', autospec=True, return_value=mock_response)
 

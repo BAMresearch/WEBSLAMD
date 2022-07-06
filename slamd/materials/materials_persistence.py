@@ -1,7 +1,5 @@
 from flask import session
 
-from slamd.materials.material_type import MaterialType
-
 
 class MaterialsPersistence:
 
