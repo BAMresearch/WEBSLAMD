@@ -20,6 +20,7 @@ from slamd.materials.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.strategies.powder_strategy import PowderStrategy
+from slamd.materials.strategies.process_strategy import ProcessStrategy
 
 app = create_app('testing', with_session=False)
 
@@ -132,7 +133,7 @@ def test_save_material_creates_aggregates():
         MaterialsService().save_material(form)
 
 
-@patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
+@patch.object(ProcessStrategy, 'create_model', MagicMock(return_value=None))
 def test_save_material_creates_process():
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
