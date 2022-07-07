@@ -25,15 +25,14 @@ function selectBaseMaterialType() {
 }
 
 function createFieldsForSelectedBaseMaterial() {
-        const elem = document.getElementById("base_material_selection")
-
+    const elem = document.getElementById("base_material_selection")
 
     elem.addEventListener("click", () => {
         const placeholder = document.getElementById("min-max-placeholder");
         const newPropIndex = placeholder.childElementCount;
 
         const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${newPropIndex}`;
-        fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder");
+        fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
     })
 }
 
