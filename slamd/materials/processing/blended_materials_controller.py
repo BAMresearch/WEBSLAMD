@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, make_response, 
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.blending_form import BlendingForm
+from slamd.materials.processing.material_type import MaterialType
 
 blended_materials = Blueprint('blended_materials', __name__,
                               template_folder='../templates',
@@ -15,9 +16,10 @@ blended_materials_service = BlendedMaterialsService()
 
 @blended_materials.route('', methods=['GET'])
 def blended_material_page():
+    base_material_selection_form = blended_materials_service.list_material_selection_by_type(MaterialType.POWDER.value)
     return render_template('blended_materials.html',
                            form=BlendingForm(),
-                           base_material_selection_form=BaseMaterialSelectionForm())
+                           base_material_selection_form=base_material_selection_form)
 
 
 @blended_materials.route('/<type>', methods=['GET'])
