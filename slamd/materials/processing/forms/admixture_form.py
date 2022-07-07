@@ -1,9 +1,9 @@
 from wtforms import DecimalField, StringField, validators
 
-from slamd.materials.processing.forms.base_materials_form import BaseMaterialsForm
+from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 
-class AdmixtureForm(BaseMaterialsForm):
+class AdmixtureForm(MaterialsForm):
 
     composition = DecimalField(
         label='Composition',

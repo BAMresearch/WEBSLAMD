@@ -1,9 +1,9 @@
 from wtforms import DecimalField, validators
 
-from slamd.materials.processing.forms.base_materials_form import BaseMaterialsForm
+from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 
-class PowderForm(BaseMaterialsForm):
+class PowderForm(MaterialsForm):
 
     fe3_o2 = DecimalField(
         label='Fe₂O₃ (m%)',

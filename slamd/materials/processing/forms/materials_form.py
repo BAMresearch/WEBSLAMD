@@ -7,7 +7,7 @@ from slamd.materials.processing.forms.validation import name_is_unique
 from slamd.materials.processing.forms.add_property_form import AddPropertyForm
 
 
-class BaseMaterialsForm(Form):
+class MaterialsForm(Form):
 
     material_name = StringField(
         label='Name',

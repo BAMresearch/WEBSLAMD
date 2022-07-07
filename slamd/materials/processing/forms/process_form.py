@@ -1,9 +1,9 @@
 from wtforms import DecimalField, validators
 
-from slamd.materials.processing.forms.base_materials_form import BaseMaterialsForm
+from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 
-class ProcessForm(BaseMaterialsForm):
+class ProcessForm(MaterialsForm):
 
     duration = DecimalField(
         label='Duration',

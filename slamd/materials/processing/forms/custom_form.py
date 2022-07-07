@@ -1,9 +1,9 @@
 from wtforms import StringField
 
-from slamd.materials.processing.forms.base_materials_form import BaseMaterialsForm
+from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 
-class CustomForm(BaseMaterialsForm):
+class CustomForm(MaterialsForm):
 
     name = StringField(label='Name:')
 
