@@ -25,4 +25,13 @@ function selectBaseMaterialType() {
     });
 }
 
+function createFieldsForSelectedBaseMaterial() {
+    const elem = document.getElementById("base_material_selection")
+
+    elem.addEventListener("change", () => {
+        document.getElementById("ratios-placeholder").innerHTML += "<p> html </p>";
+        })
+}
+
 window.addEventListener("load", selectBaseMaterialType);
+window.addEventListener("load", createFieldsForSelectedBaseMaterial);
