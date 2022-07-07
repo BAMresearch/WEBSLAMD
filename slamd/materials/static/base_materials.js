@@ -1,5 +1,5 @@
-const PROTOCOL = window.location.protocol
-const HOST = window.location.host;
+
+const BASE_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/base`
 const ACTION_BUTTON_DELIMITER = "___"
 const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
 const MAX_ADDITIONAL_PROPERTIES = 10;
@@ -24,7 +24,7 @@ function selectMaterialType() {
     const elem = document.getElementById("material_type");
 
     elem.addEventListener("change", () => {
-        const url = `${PROTOCOL}//${HOST}/materials/base/${elem.value.toLowerCase()}`;
+        const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
         fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
     });
 }
@@ -70,7 +70,7 @@ function addAdditionalProperty() {
 
         const usersInputs = collectAdditionalProperties(newPropIndex);
 
-        const url = `${PROTOCOL}//${HOST}/materials/base/add_property/${newPropIndex}`;
+        const url = `${BASE_MATERIALS_URL}/add_property/${newPropIndex}`;
         fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
         restoreAdditionalProperties(usersInputs);
     });
@@ -109,7 +109,7 @@ async function deleteMaterial(id, material_type, token) {
         token = document.getElementById("csrf_token").value
         let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
         try {
-            const url = `${PROTOCOL}//${HOST}/materials/base/${material_type.toLowerCase()}/${uuid}`;
+            const url = `${BASE_MATERIALS_URL}/${material_type.toLowerCase()}/${uuid}`;
             const response = await fetch(url, {
                 method: "DELETE",
                 headers: {

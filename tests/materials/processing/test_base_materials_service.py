@@ -170,7 +170,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = BaseMaterialService().list_all()
+    result = BaseMaterialService().list_all_base_materials()
 
     _assert_test_powders(result)
     assert mock_query_by_type_called_with == 'powder'

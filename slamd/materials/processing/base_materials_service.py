@@ -12,7 +12,7 @@ class BaseMaterialService:
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
-    def list_all(self):
+    def list_all_base_materials(self):
         all_material_types = MaterialType.get_all_types()
 
         all_material_dtos = []
@@ -20,8 +20,9 @@ class BaseMaterialService:
             materials = MaterialsPersistence.query_by_type(material_type)
             strategy = MaterialFactory.create_strategy(material_type)
             for material in materials:
-                dto = strategy.create_dto(material)
-                all_material_dtos.append(dto)
+                if not material.is_blended:
+                    dto = strategy.create_dto(material)
+                    all_material_dtos.append(dto)
 
         sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
@@ -46,7 +47,7 @@ class BaseMaterialService:
 
     def delete_material(self, type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
-        return self.list_all()
+        return self.list_all_base_materials()
 
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
