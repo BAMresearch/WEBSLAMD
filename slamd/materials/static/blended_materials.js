@@ -9,8 +9,7 @@ async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = fals
         } else {
             document.getElementById(placeholderID).innerHTML = form["template"];
         }
-    }
-    else {
+    } else {
         const error = await response.text()
         document.write(error)
     }
@@ -26,11 +25,16 @@ function selectBaseMaterialType() {
 }
 
 function createFieldsForSelectedBaseMaterial() {
-    const elem = document.getElementById("base_material_selection")
+        const elem = document.getElementById("base_material_selection")
 
-    elem.addEventListener("change", () => {
-        document.getElementById("ratios-placeholder").innerHTML += "<p> html </p>";
-        })
+
+    elem.addEventListener("click", () => {
+        const placeholder = document.getElementById("min-max-placeholder");
+        const newPropIndex = placeholder.childElementCount;
+
+        const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${newPropIndex}`;
+        fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder");
+    })
 }
 
 window.addEventListener("load", selectBaseMaterialType);
