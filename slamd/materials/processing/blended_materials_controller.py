@@ -41,3 +41,10 @@ def submit_blending():
     return render_template('blended_materials.html',
                            form=blending_data,
                            base_material_selection_form=BaseMaterialSelectionForm())
+
+
+@blended_materials.route('/add_min_max_entry/<index>', methods=['GET'])
+def add_min_max_entry(index):
+
+    body = {'template': render_template('min_max_form.html', index=index)}
+    return make_response(jsonify(body), 200)
