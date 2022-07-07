@@ -5,6 +5,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.exceptions import NotFound
 
 from slamd import create_app
+from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.forms.admixture_form import AdmixtureForm
 from slamd.materials.processing.forms.aggregates_form import AggregatesForm
 from slamd.materials.processing.forms.custom_form import CustomForm
@@ -13,14 +14,12 @@ from slamd.materials.processing.forms.powder_form import PowderForm
 from slamd.materials.processing.forms.process_form import ProcessForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.base_materials_service import BaseMaterialService
-from slamd.materials.processing.models.additional_property import AdditionalProperty
-from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.processing.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.processing.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
+from tests.materials.materials_test_data import create_test_powders
 
 app = create_app('testing', with_session=False)
 
@@ -165,7 +164,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     def mock_query_by_type(input):
         nonlocal mock_query_by_type_called_with
         mock_query_by_type_called_with = input
-        return _create_test_powders()
+        return create_test_powders()
 
     monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
     monkeypatch.setattr(MaterialsPersistence,
@@ -173,7 +172,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
 
     result = BaseMaterialService().list_all()
 
-    assert_test_powders(result)
+    _assert_test_powders(result)
     assert mock_query_by_type_called_with == 'powder'
 
 
@@ -189,7 +188,7 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
         return ['powder']
 
     def mock_query_by_type(input):
-        return _create_test_powders()
+        return create_test_powders()
 
     monkeypatch.setattr(MaterialsPersistence,
                         'delete_by_type_and_uuid', mock_delete_by_type_and_uuid)
@@ -199,29 +198,12 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
 
     result = BaseMaterialService().delete_material('powder', 'uuid to delete')
 
-    assert_test_powders(result)
+    _assert_test_powders(result)
     assert mock_delete_by_type_and_uuid_called_with == (
         'powder', 'uuid to delete')
 
 
-def _create_test_powders():
-    powder1 = Powder(Composition(fe3_o2='23.3', si_o2=None),
-                     Structure(fine=None, gravity='12'))
-    powder1.uuid = 'test uuid1'
-    powder1.name = 'test powder'
-    powder1.type = 'Powder'
-    powder1.additional_properties = [
-        AdditionalProperty(name='test prop', value='test value')]
-    powder2 = Powder(Composition(fe3_o2=None, si_o2=None),
-                     Structure(fine=None, gravity=None))
-    powder2.uuid = 'test uuid2'
-    powder2.name = 'my powder'
-    powder2.type = 'Powder'
-    powder2.additional_properties = []
-    return [powder1, powder2]
-
-
-def assert_test_powders(result):
+def _assert_test_powders(result):
     assert len(result) == 2
 
     dto = result[0]

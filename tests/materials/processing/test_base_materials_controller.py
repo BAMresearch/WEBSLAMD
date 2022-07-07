@@ -64,8 +64,9 @@ def test_slamd_selects_liquid(client):
 def test_slamd_selects_aggregates(client):
     response = client.get('/materials/base/aggregates')
 
-    assert response.status_code == 200
     template = response.json['template']
+
+    assert response.status_code == 200
     assert 'Fine Aggregates' in template
     assert 'Coarse Aggregates' in template
     assert 'FA Density' in template
@@ -75,16 +76,19 @@ def test_slamd_selects_aggregates(client):
 def test_slamd_selects_admixture(client):
     response = client.get('/materials/base/admixture')
 
-    assert response.status_code == 200
     template = response.json['template']
+
+    assert response.status_code == 200
     assert 'Composition' in template
     assert 'Type' in template
 
 
 def test_slamd_selects_custom(client):
     response = client.get("/materials/base/custom")
-    assert response.status_code == 200
+
     template = response.json['template']
+
+    assert response.status_code == 200
     assert 'Name' in template
     assert 'Value' in template
 
@@ -94,6 +98,7 @@ def test_slamd_selects_process(client):
 
     template = response.json['template']
     assert response.status_code == 200
+
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
