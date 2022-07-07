@@ -104,6 +104,15 @@ def test_slamd_selects_process(client):
     assert 'Relative Humidity' in template
 
 
+def test_slamd_selects_invalid_type_and_shows_error_page(client):
+    response = client.get('/materials/base/invalid')
+
+    html = response.data.decode('utf-8')
+    assert response.status_code == 404
+
+    assert 'Resource not found: The requested type is not supported!' in html
+
+
 def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):
     app = create_app('testing', with_session=False)
 

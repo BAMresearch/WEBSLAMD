@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, make_response, jsonify, redirect
 
-from slamd.materials.processing.forms.powder_form import PowderForm
 from slamd.materials.processing.base_materials_service import BaseMaterialService
+from slamd.materials.processing.forms.powder_form import PowderForm
 
 base_materials = Blueprint('materials', __name__,
                            template_folder='../templates',

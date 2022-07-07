@@ -5,16 +5,18 @@ const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may def
 const MAX_ADDITIONAL_PROPERTIES = 10;
 
 async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
-    try {
-        const response = await fetch(url);
+    const response = await fetch(url);
+    if (response.ok) {
         const form = await response.json();
         if (append) {
             document.getElementById(placeholderID).innerHTML += form["template"];
         } else {
             document.getElementById(placeholderID).innerHTML = form["template"];
         }
-    } catch (error) {
-        console.log(error);
+    }
+    else {
+        const error = await response.text()
+        document.write(error)
     }
 }
 
