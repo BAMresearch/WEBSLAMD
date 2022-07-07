@@ -1,3 +1,4 @@
+{{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 
 <h3>Blended base materials</h3>
@@ -7,6 +8,11 @@
         {{ form.blended_material_name.label(class_="control-label") }}
         {{ form.blended_material_name(class_="form-control") }}
         {{ with_errors(form.blended_material_name) }}
+    </div>
+    <div class="col-md-6">
+        {{ form.increment.label(class_="control-label") }}
+        {{ form.increment(class_="form-control") }}
+        {{ with_errors(form.increment) }}
     </div>
 
     <div class="form-group mb-3">
