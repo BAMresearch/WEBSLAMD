@@ -13,13 +13,13 @@ base_materials_service = BaseMaterialService()
 
 
 @base_materials.route('', methods=['GET'])
-def material_page():
+def base_material_page():
     all_materials = base_materials_service.list_all()
     return render_template('base_materials.html', form=PowderForm(), all_materials=all_materials)
 
 
 @base_materials.route('/<type>', methods=['GET'])
-def select_material_type(type):
+def select_base_material_type(type):
     template_file, form = base_materials_service.create_material_form(type)
     body = {'template': render_template(template_file, form=form)}
     return make_response(jsonify(body), 200)
@@ -33,13 +33,12 @@ def add_property(new_property_index):
     We use indexes starting from zero to name them differently.
     The format matches what WTForms does when rendering a FieldList.
     """
-    body = {'template': render_template(
-        'add_property_form.html', index=new_property_index)}
+    body = {'template': render_template('add_property_form.html', index=new_property_index)}
     return make_response(jsonify(body), 200)
 
 
 @base_materials.route('', methods=['POST'])
-def submit_material():
+def submit_base_material():
     valid, form = base_materials_service.save_material(request.form)
 
     if valid:
@@ -50,8 +49,8 @@ def submit_material():
 
 
 @base_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
-def delete_material(material_type, uuid):
-    all_materials = base_materials_service.delete_material(material_type, uuid)
+def delete_base_material(material_type, uuid):
+    all_base_materials = base_materials_service.delete_material(material_type, uuid)
 
-    body = {'template': render_template('materials_table.html', all_materials=all_materials)}
+    body = {'template': render_template('materials_table.html', all_materials=all_base_materials)}
     return make_response(jsonify(body), 200)

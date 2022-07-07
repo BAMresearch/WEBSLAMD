@@ -19,7 +19,7 @@ class BaseMaterialsForm(Form):
         label='Material type',
         validators=[validators.DataRequired()],
         choices=['Powder', 'Liquid', 'Aggregates',
-                 'Admixture', 'Additive', 'Process', 'Custom']
+                 'Admixture', 'Process', 'Custom']
     )
 
     co2_footprint = DecimalField(
