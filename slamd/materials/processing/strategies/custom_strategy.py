@@ -16,7 +16,7 @@ class CustomStrategy(BaseMaterialStrategy):
 
         custom.name = submitted_material['material_name']
         custom.type = submitted_material['material_type']
-        custom.name = submitted_material['name']
+        custom.custom_property_name = submitted_material['name']
         custom.value = submitted_material['value']
         custom.additional_properties = additional_properties
         custom.costs = costs
