@@ -17,7 +17,11 @@ async function selectBaseMaterialType() {
 }
 
 async function createFieldsForSelectedBaseMaterial(event) {
-    let userInputs = collectMinMaxInputs(event)
+    const placeholder = document.getElementById("min-max-placeholder")
+    let userInputs = [];
+    if (placeholder.childElementCount !== 0) {
+        userInputs = collectMinMaxInputs(event);
+    }
 
     for (let option of allSelectedOptions) {
         console.log(option.innerHTML)
@@ -26,13 +30,31 @@ async function createFieldsForSelectedBaseMaterial(event) {
     let clicked_material = event.target.options[selectedIndex];
 
 
-    const placeholder = document.getElementById("min-max-placeholder");
-
     const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${selectedIndex}`;
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
 
     document.getElementById(`min-max-properties-${selectedIndex}-name`).value = clicked_material.innerHTML;
-    restoreAdditionalProperties(userInputs)
+
+    if (userInputs.length !== 0) {
+        restoreAdditionalProperties(userInputs)
+    }
+}
+
+async function confirmSelection() {
+    count = 0
+    const placeholder = document.getElementById("base_material_selection")
+    if (placeholder.childElementCount !== 0) {
+        let options = placeholder.children;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                count++
+            }
+        }
+    }
+
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${count}`;
+    await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
+
 }
 
 function collectMinMaxInputs(event) {
@@ -46,9 +68,7 @@ function collectMinMaxInputs(event) {
             let max = document.getElementById(`min-max-properties-${i}-max`).value;
 
             usersInputs.push({
-                name: name,
-                min: min,
-                max: max
+                name: name, min: min, max: max
             });
         }
     }
@@ -58,12 +78,13 @@ function collectMinMaxInputs(event) {
 function restoreAdditionalProperties(usersInputs) {
     for (let i = 0; i < usersInputs.length; i++) {
         document.getElementById(`min-max-properties-${i}-name`).value = usersInputs[i].name;
-        document.getElementById(`min-max-properties-${i}-min`).value = usersInputs[i].min;
-        document.getElementById(`min-max-properties-${i}-max`).value = usersInputs[i].max;
+        document.getElementById(`min-max-properties-${i}-min`).value = usersInputs[i].min !== undefined ? usersInputs[i].min : '';
+        document.getElementById(`min-max-properties-${i}-max`).value = usersInputs[i].max !== undefined ? usersInputs[i].max : '';
     }
 }
 
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType)
-    document.getElementById("base_material_selection").addEventListener("change", createFieldsForSelectedBaseMaterial)
+    // document.getElementById("base_material_selection").addEventListener("change", createFieldsForSelectedBaseMaterial)
+    document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 });
