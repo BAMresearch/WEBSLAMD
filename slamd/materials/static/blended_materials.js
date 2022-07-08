@@ -17,15 +17,9 @@ async function selectBaseMaterialType() {
 }
 
 async function createFieldsForSelectedBaseMaterial(event) {
-    let previouslySelectedOptions = [...allSelectedOptions]
+    let userInputs = collectMinMaxInputs(event)
 
-    for(let option of event.target.options){
-        if (option.selected){
-            allSelectedOptions.push(option)
-        }
-    }
-
-    for(let option of allSelectedOptions){
+    for (let option of allSelectedOptions) {
         console.log(option.innerHTML)
     }
     let selectedIndex = event.target.options.selectedIndex;
@@ -38,6 +32,35 @@ async function createFieldsForSelectedBaseMaterial(event) {
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
 
     document.getElementById(`min-max-properties-${selectedIndex}-name`).value = clicked_material.innerHTML;
+    restoreAdditionalProperties(userInputs)
+}
+
+function collectMinMaxInputs(event) {
+    usersInputs = [];
+
+    let options = event.target.options;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].selected && i !== options.selectedIndex) {
+            let name = document.getElementById(`min-max-properties-${i}-name`).value;
+            let min = document.getElementById(`min-max-properties-${i}-min`).value;
+            let max = document.getElementById(`min-max-properties-${i}-max`).value;
+
+            usersInputs.push({
+                name: name,
+                min: min,
+                max: max
+            });
+        }
+    }
+    return usersInputs;
+}
+
+function restoreAdditionalProperties(usersInputs) {
+    for (let i = 0; i < usersInputs.length; i++) {
+        document.getElementById(`min-max-properties-${i}-name`).value = usersInputs[i].name;
+        document.getElementById(`min-max-properties-${i}-min`).value = usersInputs[i].min;
+        document.getElementById(`min-max-properties-${i}-max`).value = usersInputs[i].max;
+    }
 }
 
 window.addEventListener("load", function () {
