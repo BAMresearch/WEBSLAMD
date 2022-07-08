@@ -4,6 +4,9 @@ from wtforms import StringField
 
 
 class MinMaxEntriesForm(Form):
+
+    uuid_field = StringField(label='UUID')
+
     blended_material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(message='Name cannot be empty')]

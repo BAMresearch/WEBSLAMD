@@ -20,7 +20,7 @@ async function createFieldsForSelectedBaseMaterial(event) {
     const placeholder = document.getElementById("min-max-placeholder")
     let userInputs = [];
     if (placeholder.childElementCount !== 0) {
-        userInputs = collectMinMaxInputs(event);
+        userInputs = collectSelectedMaterials(event);
     }
 
     for (let option of allSelectedOptions) {
@@ -42,12 +42,17 @@ async function createFieldsForSelectedBaseMaterial(event) {
 
 async function confirmSelection() {
     count = 0
+    selectedMaterials = []
     const placeholder = document.getElementById("base_material_selection")
     if (placeholder.childElementCount !== 0) {
         let options = placeholder.children;
         for (let i = 0; i < options.length; i++) {
             if (options[i].selected) {
                 count++
+                selectedMaterials.push({
+                    uuid: options[i].value,
+                    name: options[i].innerHTML
+                })
             }
         }
     }
@@ -55,20 +60,25 @@ async function confirmSelection() {
     const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${count}`;
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
 
+    if (placeholder.childElementCount !== 0) {
+        for (let i = 0; i < selectedMaterials.length; i++) {
+            document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
+            document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
+        }
+    }
+
 }
 
-function collectMinMaxInputs(event) {
+function collectSelectedMaterials(event) {
     usersInputs = [];
 
     let options = event.target.options;
     for (let i = 0; i < options.length; i++) {
         if (options[i].selected && i !== options.selectedIndex) {
             let name = document.getElementById(`min-max-properties-${i}-name`).value;
-            let min = document.getElementById(`min-max-properties-${i}-min`).value;
-            let max = document.getElementById(`min-max-properties-${i}-max`).value;
 
             usersInputs.push({
-                name: name, min: min, max: max
+                name: name
             });
         }
     }
@@ -78,8 +88,6 @@ function collectMinMaxInputs(event) {
 function restoreAdditionalProperties(usersInputs) {
     for (let i = 0; i < usersInputs.length; i++) {
         document.getElementById(`min-max-properties-${i}-name`).value = usersInputs[i].name;
-        document.getElementById(`min-max-properties-${i}-min`).value = usersInputs[i].min !== undefined ? usersInputs[i].min : '';
-        document.getElementById(`min-max-properties-${i}-max`).value = usersInputs[i].max !== undefined ? usersInputs[i].max : '';
     }
 }
 
