@@ -1,5 +1,6 @@
 {{ form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
+{% from 'action_buttons.html' import change_selection_button -%}
 
 <h3>Blended base materials</h3>
 <form class="row g-3" action="" method="post" novalidate>
@@ -14,8 +15,13 @@
         {{ form.base_type(class_="form-control form-select") }}
     </div>
 
+    <div class="form-group mb-3">
     <div id="base-material-selection-placeholder" class="row g-3 mb-3 align-items-end">
         {% include 'base_material_selection.html' %}
+    </div>
+    <div class="col-md-3">
+        {{ change_selection_button("change_selection_button", 12, 12) }}
+    </div>
     </div>
     <div id="min-max-placeholder" class="row g-3 mb-3 align-items-end"></div>
     <div class="form-group mb-3">

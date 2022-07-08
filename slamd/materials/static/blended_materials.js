@@ -56,5 +56,4 @@ function prefillMinMaxNamesFromSelection(selectedMaterials) {
 
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType)
-    document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 });
