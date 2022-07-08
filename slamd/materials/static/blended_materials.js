@@ -1,5 +1,7 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
+let allSelectedOptions = []
+
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
  * related to choosing from this selection must be reattached to it.
@@ -14,12 +16,28 @@ async function selectBaseMaterialType() {
     document.getElementById("base_material_selection").addEventListener("change", createFieldsForSelectedBaseMaterial)
 }
 
-async function createFieldsForSelectedBaseMaterial() {
-    const placeholder = document.getElementById("min-max-placeholder");
-    const newPropIndex = placeholder.childElementCount;
+async function createFieldsForSelectedBaseMaterial(event) {
+    let previouslySelectedOptions = [...allSelectedOptions]
 
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${newPropIndex}`;
+    for(let option of event.target.options){
+        if (option.selected){
+            allSelectedOptions.push(option)
+        }
+    }
+
+    for(let option of allSelectedOptions){
+        console.log(option.innerHTML)
+    }
+    let selectedIndex = event.target.options.selectedIndex;
+    let clicked_material = event.target.options[selectedIndex];
+
+
+    const placeholder = document.getElementById("min-max-placeholder");
+
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${selectedIndex}`;
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
+
+    document.getElementById(`min-max-properties-${selectedIndex}-name`).value = clicked_material.innerHTML;
 }
 
 window.addEventListener("load", function () {
