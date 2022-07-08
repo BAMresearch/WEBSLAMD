@@ -1,7 +1,5 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
-let allSelectedOptions = []
-
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
  * related to choosing from this selection must be reattached to it.
@@ -18,10 +16,22 @@ async function selectBaseMaterialType() {
 
 async function confirmSelection() {
     document.getElementById("min-max-placeholder").innerHTML = ""
+    const placeholder = document.getElementById("base_material_selection")
 
+    const {count, selectedMaterials} = collectBaseMaterialSelection(placeholder);
+
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${count}`;
+    await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
+
+    if (placeholder.childElementCount !== 0) {
+        prefillMinMaxNamesFromSelection(selectedMaterials);
+    }
+
+}
+
+function collectBaseMaterialSelection(placeholder) {
     count = 0
     selectedMaterials = []
-    const placeholder = document.getElementById("base_material_selection")
     if (placeholder.childElementCount !== 0) {
         let options = placeholder.children;
         for (let i = 0; i < options.length; i++) {
@@ -34,17 +44,14 @@ async function confirmSelection() {
             }
         }
     }
+    return {count, selectedMaterials};
+}
 
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${count}`;
-    await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
-
-    if (placeholder.childElementCount !== 0) {
-        for (let i = 0; i < selectedMaterials.length; i++) {
-            document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
-            document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
-        }
+function prefillMinMaxNamesFromSelection(selectedMaterials) {
+    for (let i = 0; i < selectedMaterials.length; i++) {
+        document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
+        document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
     }
-
 }
 
 window.addEventListener("load", function () {
