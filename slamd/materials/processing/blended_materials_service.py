@@ -1,4 +1,4 @@
-from slamd.common.error_handling import MaterialNotFoundException
+from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.material_type import MaterialType
@@ -22,6 +22,9 @@ class BlendedMaterialsService:
         return form
 
     def create_min_max_form(self, count):
+        if not count.isnumeric():
+            raise ValueNotSupportedException('Cannot process selection!')
+
         min_max_form = MinMaxForm()
         for i in range(int(count)):
             min_max_form.all_min_max_entries.append_entry()
