@@ -18,13 +18,13 @@ class AggregatesStrategy(BaseMaterialStrategy):
         costs.delivery_time = submitted_material['delivery_time']
         costs.costs = submitted_material['costs']
 
-        aggregates = Aggregates()
-
-        aggregates.name = submitted_material['material_name']
-        aggregates.type = submitted_material['material_type']
-        aggregates.costs = costs
-        aggregates.composition = composition
-        aggregates.additional_properties = additional_properties
+        aggregates = Aggregates(
+            name=submitted_material['material_name'],
+            type=submitted_material['material_type'],
+            costs=costs,
+            composition=composition,
+            additional_properties=additional_properties
+        )
 
         MaterialsPersistence.save('aggregates', aggregates)
 

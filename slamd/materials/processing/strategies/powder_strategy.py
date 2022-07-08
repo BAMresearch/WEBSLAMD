@@ -30,14 +30,14 @@ class PowderStrategy(BaseMaterialStrategy):
         structure.gravity = submitted_material['gravity']
         structure.fine = submitted_material['fine']
 
-        powder = Powder()
-
-        powder.name = submitted_material['material_name']
-        powder.type = submitted_material['material_type']
-        powder.costs = costs
-        powder.composition = composition
-        powder.structure = structure
-        powder.additional_properties = additional_properties
+        powder = Powder(
+            name=submitted_material['material_name'],
+            type=submitted_material['material_type'],
+            costs=costs,
+            composition=composition,
+            structure=structure,
+            additional_properties=additional_properties
+        )
 
         MaterialsPersistence.save('powder', powder)
 

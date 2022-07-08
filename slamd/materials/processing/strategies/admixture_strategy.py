@@ -12,17 +12,17 @@ class AdmixtureStrategy(BaseMaterialStrategy):
         costs.delivery_time = submitted_material['delivery_time']
         costs.costs = submitted_material['costs']
 
-        admixture = Admixture()
-
-        admixture.name = submitted_material['material_name']
-        admixture.type = submitted_material['material_type']
-        admixture.composition = submitted_material['composition']
-        admixture.type = submitted_material['type']
-        admixture.additional_properties = additional_properties
-        admixture.costs = costs
+        admixture = Admixture(
+            name=submitted_material['material_name'],
+            type=submitted_material['material_type'],
+            costs=costs,
+            composition=submitted_material['composition'],
+            admixture_type=submitted_material['type'],
+            additional_properties=additional_properties
+        )
 
         MaterialsPersistence.save('admixture', admixture)
 
     def _gather_composition_information(self, admixture):
         return [self._include('Composition', admixture.composition),
-                self._include('Type', admixture.type)]
+                self._include('Type', admixture.admixture_type)]

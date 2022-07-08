@@ -12,15 +12,15 @@ class ProcessStrategy(BaseMaterialStrategy):
         costs.delivery_time = submitted_material['delivery_time']
         costs.costs = submitted_material['costs']
 
-        process = Process()
-
-        process.name = submitted_material['material_name']
-        process.type = submitted_material['material_type']
-        process.duration = submitted_material['duration']
-        process.temperature = submitted_material['temperature']
-        process.relative_humidity = submitted_material['relative_humidity']
-        process.additional_properties = additional_properties
-        process.costs = costs
+        process = Process(
+            name=submitted_material['material_name'],
+            type=submitted_material['material_type'],
+            costs=costs,
+            duration=submitted_material['duration'],
+            temperature=submitted_material['temperature'],
+            relative_humidity=submitted_material['relative_humidity'],
+            additional_properties=additional_properties
+        )
 
         MaterialsPersistence.save('process', process)
 

@@ -3,9 +3,10 @@ from slamd.materials.processing.models.material import Material
 
 class Aggregates(Material):
 
-    def __init__(self, composition=None):
-        super().__init__()
+    def __init__(self, name='', type='', costs=None, composition=None, additional_properties=None):
+        super().__init__(name=name, type=type, costs=None)
         self.composition = composition
+        self.additional_properties = additional_properties
 
 
 class Composition:

@@ -26,13 +26,13 @@ class LiquidStrategy(BaseMaterialStrategy):
         costs.delivery_time = submitted_material['delivery_time']
         costs.costs = submitted_material['costs']
 
-        liquid = Liquid()
-
-        liquid.name = submitted_material['material_name']
-        liquid.type = submitted_material['material_type']
-        liquid.costs = costs
-        liquid.composition = composition
-        liquid.additional_properties = additional_properties
+        liquid = Liquid(
+            name=submitted_material['material_name'],
+            type=submitted_material['material_type'],
+            costs=costs,
+            composition=composition,
+            additional_properties=additional_properties
+        )
 
         MaterialsPersistence.save('liquid', liquid)
 

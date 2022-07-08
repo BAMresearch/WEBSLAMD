@@ -3,10 +3,11 @@ from slamd.materials.processing.models.material import Material
 
 class Powder(Material):
 
-    def __init__(self, composition=None, structure=None):
-        super().__init__()
+    def __init__(self, name='', type='', costs=None, composition=None, structure=None, additional_properties=None):
+        super().__init__(name=name, type=type, costs=costs)
         self.structure = structure
         self.composition = composition
+        self.additional_properties = additional_properties
 
 
 class Composition:
