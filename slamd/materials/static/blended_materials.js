@@ -16,31 +16,9 @@ async function selectBaseMaterialType() {
     document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 }
 
-async function createFieldsForSelectedBaseMaterial(event) {
-    const placeholder = document.getElementById("min-max-placeholder")
-    let userInputs = [];
-    if (placeholder.childElementCount !== 0) {
-        userInputs = collectSelectedMaterials(event);
-    }
-
-    for (let option of allSelectedOptions) {
-        console.log(option.innerHTML)
-    }
-    let selectedIndex = event.target.options.selectedIndex;
-    let clicked_material = event.target.options[selectedIndex];
-
-
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entry/${selectedIndex}`;
-    await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
-
-    document.getElementById(`min-max-properties-${selectedIndex}-name`).value = clicked_material.innerHTML;
-
-    if (userInputs.length !== 0) {
-        restoreAdditionalProperties(userInputs)
-    }
-}
-
 async function confirmSelection() {
+    document.getElementById("min-max-placeholder").innerHTML = ""
+
     count = 0
     selectedMaterials = []
     const placeholder = document.getElementById("base_material_selection")
@@ -69,30 +47,7 @@ async function confirmSelection() {
 
 }
 
-function collectSelectedMaterials(event) {
-    usersInputs = [];
-
-    let options = event.target.options;
-    for (let i = 0; i < options.length; i++) {
-        if (options[i].selected && i !== options.selectedIndex) {
-            let name = document.getElementById(`min-max-properties-${i}-name`).value;
-
-            usersInputs.push({
-                name: name
-            });
-        }
-    }
-    return usersInputs;
-}
-
-function restoreAdditionalProperties(usersInputs) {
-    for (let i = 0; i < usersInputs.length; i++) {
-        document.getElementById(`min-max-properties-${i}-name`).value = usersInputs[i].name;
-    }
-}
-
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType)
-    // document.getElementById("base_material_selection").addEventListener("change", createFieldsForSelectedBaseMaterial)
     document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 });
