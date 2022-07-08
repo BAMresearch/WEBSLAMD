@@ -14,10 +14,11 @@ class AggregatesStrategy(BaseMaterialStrategy):
             ca_density=submitted_material['ca_density']
         )
 
-        costs = Costs()
-        costs.co2_footprint = submitted_material['co2_footprint']
-        costs.delivery_time = submitted_material['delivery_time']
-        costs.costs = submitted_material['costs']
+        costs = Costs(
+            co2_footprint=submitted_material['co2_footprint'],
+            delivery_time=submitted_material['delivery_time'],
+            costs=submitted_material['costs']
+        )
 
         aggregates = Aggregates(
             name=submitted_material['material_name'],

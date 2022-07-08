@@ -22,10 +22,11 @@ class LiquidStrategy(BaseMaterialStrategy):
             na_o_h_total=submitted_material['na_o_h_total']
         )
 
-        costs = Costs()
-        costs.co2_footprint = submitted_material['co2_footprint']
-        costs.delivery_time = submitted_material['delivery_time']
-        costs.costs = submitted_material['costs']
+        costs = Costs(
+            co2_footprint=submitted_material['co2_footprint'],
+            delivery_time=submitted_material['delivery_time'],
+            costs=submitted_material['costs']
+        )
 
         liquid = Liquid(
             name=submitted_material['material_name'],

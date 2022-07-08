@@ -7,10 +7,11 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 class CustomStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
-        costs = Costs()
-        costs.co2_footprint = submitted_material['co2_footprint']
-        costs.delivery_time = submitted_material['delivery_time']
-        costs.costs = submitted_material['costs']
+        costs = Costs(
+            co2_footprint=submitted_material['co2_footprint'],
+            delivery_time=submitted_material['delivery_time'],
+            costs=submitted_material['costs']
+        )
 
         custom = Custom(
             name=submitted_material['material_name'],

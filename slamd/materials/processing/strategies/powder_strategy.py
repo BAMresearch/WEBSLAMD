@@ -22,10 +22,11 @@ class PowderStrategy(BaseMaterialStrategy):
             mn2_o3=submitted_material['mn2_o3']
         )
 
-        costs = Costs()
-        costs.co2_footprint = submitted_material['co2_footprint']
-        costs.delivery_time = submitted_material['delivery_time']
-        costs.costs = submitted_material['costs']
+        costs = Costs(
+            co2_footprint=submitted_material['co2_footprint'],
+            delivery_time=submitted_material['delivery_time'],
+            costs=submitted_material['costs']
+        )
 
         structure = Structure()
         structure.gravity = submitted_material['gravity']
