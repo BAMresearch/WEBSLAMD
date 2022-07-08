@@ -72,8 +72,10 @@ def test_create_material_form_raises_bad_request_when_invalid_form_is_requested(
             BaseMaterialService().create_material_form('invalid')
 
 
-@patch.object(PowderStrategy, 'create_model', MagicMock(return_value=None))
-def test_save_material_creates_powder():
+def test_save_material_creates_powder(mocker):
+    mocker.patch.object(PowderStrategy, 'create_model',
+                        autospec=True, return_value=None)
+
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
                                    ('material_type', 'Powder'),
@@ -98,8 +100,10 @@ def test_save_material_creates_powder():
         BaseMaterialService().save_material(form)
 
 
-@patch.object(LiquidStrategy, 'create_model', MagicMock(return_value=None))
-def test_save_material_creates_liquid():
+def test_save_material_creates_liquid(mocker):
+    mocker.patch.object(LiquidStrategy, 'create_model',
+                        autospec=True, return_value=None)
+
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test liquid'),
                                    ('material_type', 'Liquid'),
@@ -119,8 +123,10 @@ def test_save_material_creates_liquid():
         BaseMaterialService().save_material(form)
 
 
-@patch.object(AggregatesStrategy, 'create_model', MagicMock(return_value=None))
-def test_save_material_creates_aggregates():
+def test_save_material_creates_aggregates(mocker):
+    mocker.patch.object(AggregatesStrategy, 'create_model',
+                        autospec=True, return_value=None)
+
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
                                    ('material_type', 'Aggregates'),
@@ -132,8 +138,10 @@ def test_save_material_creates_aggregates():
         BaseMaterialService().save_material(form)
 
 
-@patch.object(ProcessStrategy, 'create_model', MagicMock(return_value=None))
-def test_save_material_creates_process():
+def test_save_material_creates_process(mocker):
+    mocker.patch.object(ProcessStrategy, 'create_model',
+                        autospec=True, return_value=None)
+
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
                                    ('material_type', 'Process'),
@@ -144,8 +152,10 @@ def test_save_material_creates_process():
         BaseMaterialService().save_material(form)
 
 
-@patch.object(AdmixtureStrategy, 'create_model', MagicMock(return_value=None))
-def test_save_material_creates_admixture():
+def test_save_material_creates_admixture(mocker):
+    mocker.patch.object(AdmixtureStrategy, 'create_model',
+                        autospec=True, return_value=None)
+
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
                                    ('material_type', 'Admixture'),
