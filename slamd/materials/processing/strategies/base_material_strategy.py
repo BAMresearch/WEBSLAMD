@@ -25,10 +25,20 @@ class BaseMaterialStrategy(ABC):
         dto.all_properties = join_all(
             self._gather_composition_information(material))
 
+        self._append_cost_properties(dto, material.costs)
         self._append_additional_properties(dto, material.additional_properties)
         # Remove trailing comma and whitespace
         dto.all_properties = dto.all_properties.strip()[:-1]
         return dto
+
+    def _append_cost_properties(self, dto, costs):
+        if costs is None:
+            return
+        dto.all_properties += self._include('Costs (€/kg)', costs.costs)
+        dto.all_properties += self._include('CO₂ footprint (kg)',
+                                            costs.co2_footprint)
+        dto.all_properties += self._include(
+            'Delivery time (days)', costs.delivery_time)
 
     def _append_additional_properties(self, dto, additional_properties):
         if len(additional_properties) == 0:
