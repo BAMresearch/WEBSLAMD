@@ -7,11 +7,12 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 class AggregatesStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
-        composition = Composition()
-        composition.fine_aggregates = submitted_material['fine_aggregates']
-        composition.coarse_aggregates = submitted_material['coarse_aggregates']
-        composition.fa_density = submitted_material['fa_density']
-        composition.ca_density = submitted_material['ca_density']
+        composition = Composition(
+            fine_aggregates=submitted_material['fine_aggregates'],
+            coarse_aggregates=submitted_material['coarse_aggregates'],
+            fa_density=submitted_material['fa_density'],
+            ca_density=submitted_material['ca_density']
+        )
 
         costs = Costs()
         costs.co2_footprint = submitted_material['co2_footprint']

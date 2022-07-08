@@ -7,19 +7,20 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 class PowderStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
-        composition = Composition()
-        composition.fe3_o2 = submitted_material['fe3_o2']
-        composition.si_o2 = submitted_material['si_o2']
-        composition.al2_o3 = submitted_material['al2_o3']
-        composition.ca_o = submitted_material['ca_o']
-        composition.mg_o = submitted_material['mg_o']
-        composition.na2_o = submitted_material['na2_o']
-        composition.k2_o = submitted_material['k2_o']
-        composition.s_o3 = submitted_material['s_o3']
-        composition.ti_o2 = submitted_material['ti_o2']
-        composition.p2_o5 = submitted_material['p2_o5']
-        composition.sr_o = submitted_material['sr_o']
-        composition.mn2_o3 = submitted_material['mn2_o3']
+        composition = Composition(
+            fe3_o2=submitted_material['fe3_o2'],
+            si_o2=submitted_material['si_o2'],
+            al2_o3=submitted_material['al2_o3'],
+            ca_o=submitted_material['ca_o'],
+            mg_o=submitted_material['mg_o'],
+            na2_o=submitted_material['na2_o'],
+            k2_o=submitted_material['k2_o'],
+            s_o3=submitted_material['s_o3'],
+            ti_o2=submitted_material['ti_o2'],
+            p2_o5=submitted_material['p2_o5'],
+            sr_o=submitted_material['sr_o'],
+            mn2_o3=submitted_material['mn2_o3']
+        )
 
         costs = Costs()
         costs.co2_footprint = submitted_material['co2_footprint']

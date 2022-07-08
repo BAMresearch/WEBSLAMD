@@ -7,19 +7,20 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 class LiquidStrategy(BaseMaterialStrategy):
 
     def create_model(self, submitted_material, additional_properties):
-        composition = Composition()
-        composition.na2_si_o3 = submitted_material['na2_si_o3']
-        composition.na_o_h = submitted_material['na_o_h']
-        composition.na2_si_o3_specific = submitted_material['na2_si_o3_specific']
-        composition.na_o_h_specific = submitted_material['na_o_h_specific']
-        composition.total = submitted_material['total']
-        composition.na2_o = submitted_material['na2_o']
-        composition.si_o2 = submitted_material['si_o2']
-        composition.h2_o = submitted_material['h2_o']
-        composition.na2_o_dry = submitted_material['na2_o_dry']
-        composition.si_o2_dry = submitted_material['si_o2_dry']
-        composition.water = submitted_material['water']
-        composition.na_o_h_total = submitted_material['na_o_h_total']
+        composition = Composition(
+            na2_si_o3=submitted_material['na2_si_o3'],
+            na_o_h=submitted_material['na_o_h'],
+            na2_si_o3_specific=submitted_material['na2_si_o3_specific'],
+            na_o_h_specific=submitted_material['na_o_h_specific'],
+            total=submitted_material['total'],
+            na2_o=submitted_material['na2_o'],
+            si_o2=submitted_material['si_o2'],
+            h2_o=submitted_material['h2_o'],
+            na2_o_dry=submitted_material['na2_o_dry'],
+            si_o2_dry=submitted_material['si_o2_dry'],
+            water=submitted_material['water'],
+            na_o_h_total=submitted_material['na_o_h_total']
+        )
 
         costs = Costs()
         costs.co2_footprint = submitted_material['co2_footprint']
