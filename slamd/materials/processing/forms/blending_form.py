@@ -17,8 +17,4 @@ class BlendingForm(Form):
                  'Admixture', 'Process', 'Custom']
     )
 
-    increment = DecimalField(
-        label='Increment (%)'
-    )
-
     submit = SubmitField('Create blended materials')

@@ -1,4 +1,22 @@
+{% from 'errors.html' import with_errors -%}
 
 {% for entry in min_max_form.all_min_max_entries %}
 <li>{{ entry.name }}</li>
+    <div class="col-md-6">
+        {{ entry.name.label(class_="control-label") }}
+        {{ entry.name(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ entry.increment.label(class_="control-label") }}
+        {{ entry.increment(class_="form-control") }}
+        {{ with_errors(form.increment) }}
+    </div>
+    <div class="col-md-6">
+        {{ entry.min.label(class_="control-label") }}
+        {{ entry.min(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ entry.max.label(class_="control-label") }}
+        {{ entry.max(class_="form-control form-select") }}
+    </div>
 {% endfor %}

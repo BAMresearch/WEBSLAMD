@@ -20,7 +20,6 @@ class BlendedMaterialsService:
 
     def create_min_max_form(self, count):
         min_max_form = MinMaxForm()
-        min_max_entry = MinMaxEntriesForm()
         for i in range(int(count)):
-            min_max_form.all_min_max_entries.append_entry(FormField(min_max_entry))
+            min_max_form.all_min_max_entries.append_entry()
         return min_max_form

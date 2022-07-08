@@ -13,11 +13,7 @@
         {{ form.base_type.label(class_="control-label") }}
         {{ form.base_type(class_="form-control form-select") }}
     </div>
-    <div class="col-md-6">
-        {{ form.increment.label(class_="control-label") }}
-        {{ form.increment(class_="form-control") }}
-        {{ with_errors(form.increment) }}
-    </div>
+
     <div id="base-material-selection-placeholder">
         {% include 'base_material_selection.html' %}
     </div>
