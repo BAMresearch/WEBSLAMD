@@ -7,13 +7,13 @@ let allSelectedOptions = []
  * related to choosing from this selection must be reattached to it.
  */
 async function selectBaseMaterialType() {
-    document.getElementById("base_material_selection").removeEventListener("change", createFieldsForSelectedBaseMaterial)
+    document.getElementById("confirm_selection_for_blending_button").removeEventListener("click", confirmSelection)
 
     const elem = document.getElementById("base_type");
     const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
     await fetchEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
 
-    document.getElementById("base_material_selection").addEventListener("change", createFieldsForSelectedBaseMaterial)
+    document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 }
 
 async function createFieldsForSelectedBaseMaterial(event) {

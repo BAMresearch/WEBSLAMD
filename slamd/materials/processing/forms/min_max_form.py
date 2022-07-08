@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import FieldList, FormField, DecimalField
+from wtforms import FieldList, FormField, DecimalField, validators
 from wtforms import StringField
 
 
 class MinMaxEntriesForm(Form):
-    name = StringField('Name')
+    blended_material_name = StringField(
+        label='Name',
+        validators=[validators.DataRequired(message='Name cannot be empty')]
+    )
     increment = DecimalField('Increment (%)')
     min = DecimalField('Min (%)')
     max = DecimalField('Max (%)')
