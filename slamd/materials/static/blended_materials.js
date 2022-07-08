@@ -1,20 +1,9 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
-async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
-    const response = await fetch(url);
-    if (response.ok) {
-        const form = await response.json();
-        if (append) {
-            document.getElementById(placeholderID).innerHTML += form["template"];
-        } else {
-            document.getElementById(placeholderID).innerHTML = form["template"];
-        }
-    } else {
-        const error = await response.text()
-        document.write(error)
-    }
-}
-
+/**
+ * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
+ * related to choosing from this selection must be reattached to it.
+ */
 async function selectBaseMaterialType() {
     document.getElementById("base_material_selection").removeEventListener("change", createFieldsForSelectedBaseMaterial)
 
