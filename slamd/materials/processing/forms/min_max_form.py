@@ -3,13 +3,11 @@ from wtforms import FieldList, FormField
 from wtforms import StringField
 
 
-class MinMaxEntriesForm:
-
+class MinMaxEntriesForm(Form):
     name = StringField('Name')
     min = StringField('Min')
     max = StringField('Name')
 
 
 class MinMaxForm(Form):
-
-    all_min_max_entries = FieldList(FormField(MinMaxEntriesForm))
+    all_min_max_entries = FieldList(FormField(MinMaxEntriesForm), min_entries=0)
