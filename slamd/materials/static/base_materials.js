@@ -1,4 +1,3 @@
-
 const BASE_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/base`
 const ACTION_BUTTON_DELIMITER = "___"
 const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
@@ -13,8 +12,7 @@ async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = fals
         } else {
             document.getElementById(placeholderID).innerHTML = form["template"];
         }
-    }
-    else {
+    } else {
         const error = await response.text()
         document.write(error)
     }
@@ -22,11 +20,8 @@ async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = fals
 
 function selectMaterialType() {
     const elem = document.getElementById("material_type");
-
-    elem.addEventListener("change", () => {
-        const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
-        fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
-    });
+    const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
+    fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
 }
 
 function collectAdditionalProperties(newPropIndex) {
@@ -53,48 +48,40 @@ function restoreAdditionalProperties(usersInputs) {
     }
 }
 
-function addAdditionalProperty() {
-    const elem = document.getElementById("add-property-button");
+async function addAdditionalProperty() {
+    // Each additional property form is contained in one single div.
+    // We index the additional properties starting from zero.
+    const placeholder = document.getElementById("additional-properties-placeholder")
+    const newPropIndex = placeholder.childElementCount;
 
-    elem.addEventListener("click", () => {
-        // Each additional property form is contained in one single div.
-        // We index the additional properties starting from zero.
-        const placeholder = document.getElementById("additional-properties-placeholder")
-        const newPropIndex = placeholder.childElementCount;
+    // Handle max number of properties and show a warning
+    if (newPropIndex === MAX_ADDITIONAL_PROPERTIES) {
+        placeholder.innerHTML += WARNING_MAX_ADDITIONAL_PROPERTIES;
+        return;
+    }
 
-        // Handle max number of properties and show a warning
-        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES) {
-            placeholder.innerHTML += WARNING_MAX_ADDITIONAL_PROPERTIES;
-            return;
-        }
+    const usersInputs = collectAdditionalProperties(newPropIndex);
 
-        const usersInputs = collectAdditionalProperties(newPropIndex);
-
-        const url = `${BASE_MATERIALS_URL}/add_property/${newPropIndex}`;
-        fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
-        restoreAdditionalProperties(usersInputs);
-    });
+    const url = `${BASE_MATERIALS_URL}/add_property/${newPropIndex}`;
+    await fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
+    restoreAdditionalProperties(usersInputs);
 }
 
 function deleteAdditionalProperty() {
-    const elem = document.getElementById("delete-property-button");
+    const placeholder = document.getElementById("additional-properties-placeholder");
+    const newPropIndex = placeholder.childElementCount;
 
-    elem.addEventListener("click", () => {
-        const placeholder = document.getElementById("additional-properties-placeholder");
-        const newPropIndex = placeholder.childElementCount;
+    // Remove the warning for the max number of properties
+    if (newPropIndex === MAX_ADDITIONAL_PROPERTIES + 1) {
+        placeholder.innerHTML = placeholder.innerHTML.replace(WARNING_MAX_ADDITIONAL_PROPERTIES, "");
+        document.getElementById(`additional-properties-${newPropIndex - 2}-row`).remove();
+        return;
+    }
 
-        // Remove the warning for the max number of properties
-        if (newPropIndex === MAX_ADDITIONAL_PROPERTIES + 1) {
-            placeholder.innerHTML = placeholder.innerHTML.replace(WARNING_MAX_ADDITIONAL_PROPERTIES, "");
-            document.getElementById(`additional-properties-${newPropIndex - 2}-row`).remove();
-            return;
-        }
-
-        // Select the row div element that contains the last entry and delete it
-        if (newPropIndex > 0) {
-            document.getElementById(`additional-properties-${newPropIndex - 1}-row`).remove();
-        }
-    });
+    // Select the row div element that contains the last entry and delete it
+    if (newPropIndex > 0) {
+        document.getElementById(`additional-properties-${newPropIndex - 1}-row`).remove();
+    }
 }
 
 /**
@@ -105,24 +92,21 @@ function deleteAdditionalProperty() {
  * @param id
  */
 async function deleteMaterial(id, material_type, token) {
-    if (material_type) {
-        token = document.getElementById("csrf_token").value
-        let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-        try {
-            const url = `${BASE_MATERIALS_URL}/${material_type.toLowerCase()}/${uuid}`;
-            const response = await fetch(url, {
-                method: "DELETE",
-                headers: {
-                    'X-CSRF-TOKEN': token
-                }
-            });
-            const form = await response.json();
-            document.getElementById("materials_table_placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
+    token = document.getElementById("csrf_token").value
+    let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
+    try {
+        const url = `${BASE_MATERIALS_URL}/${material_type.toLowerCase()}/${uuid}`;
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        });
+        const form = await response.json();
+        document.getElementById("materials_table_placeholder").innerHTML = form["template"];
+    } catch (error) {
+        console.log(error);
     }
-
 }
 
 /**
@@ -136,8 +120,8 @@ function editMaterial(id, material_type) {
     console.log("EDIT")
 }
 
-window.addEventListener("load", selectMaterialType);
-window.addEventListener("load", addAdditionalProperty);
-window.addEventListener("load", deleteAdditionalProperty);
-window.addEventListener("load", deleteMaterial);
-window.addEventListener("load", editMaterial);
+window.addEventListener("load", function () {
+    document.getElementById("material_type").addEventListener("change", selectMaterialType);
+    document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty)
+    document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty)
+});
