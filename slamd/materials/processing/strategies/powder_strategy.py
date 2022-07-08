@@ -28,9 +28,10 @@ class PowderStrategy(BaseMaterialStrategy):
             costs=submitted_material['costs']
         )
 
-        structure = Structure()
-        structure.gravity = submitted_material['gravity']
-        structure.fine = submitted_material['fine']
+        structure = Structure(
+            gravity=submitted_material['gravity'],
+            fine=submitted_material['fine']
+        )
 
         powder = Powder(
             name=submitted_material['material_name'],
