@@ -2,9 +2,9 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
-from werkzeug.exceptions import NotFound
 
 from slamd import create_app
+from slamd.common.error_handling import MaterialNotFoundException
 from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.forms.admixture_form import AdmixtureForm
 from slamd.materials.processing.forms.aggregates_form import AggregatesForm
@@ -68,7 +68,7 @@ def test_create_material_form_creates_custom():
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
     with app.test_request_context('/materials/base/invalid'):
-        with pytest.raises(NotFound):
+        with pytest.raises(MaterialNotFoundException):
             BaseMaterialService().create_material_form('invalid')
 
 
