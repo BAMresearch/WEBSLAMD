@@ -8,9 +8,18 @@ class MinMaxEntriesForm(Form):
         label='Name',
         validators=[validators.DataRequired(message='Name cannot be empty')]
     )
-    increment = DecimalField('Increment (%)')
-    min = DecimalField('Min (%)')
-    max = DecimalField('Max (%)')
+
+    increment = DecimalField(
+        'Increment (%)',
+        validators=[validators.NumberRange(min=0, max=100, message='Increment must be a number between 0 and 100')])
+
+    min = DecimalField(
+        'Min (%)',
+        validators=[validators.NumberRange(min=0, max=100, message='Min must be a number between 0 and 100')])
+
+    max = DecimalField(
+        'Max (%)',
+        validators=[validators.NumberRange(min=0, max=100, message='Max must be a number between 0 and 100')])
 
 
 class MinMaxForm(Form):
