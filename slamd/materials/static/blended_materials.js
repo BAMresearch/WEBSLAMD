@@ -15,7 +15,6 @@ async function selectBaseMaterialType() {
 async function confirmSelection() {
     let minMaxPlaceholder = document.getElementById("min-max-placeholder");
     minMaxPlaceholder.innerHTML = "";
-    // removeKeyboardEventsToMinMaxInputFields(minMaxPlaceholder)
 
     const placeholder = document.getElementById("base_material_selection");
 
@@ -57,61 +56,52 @@ function prefillMinMaxNamesFromSelection(selectedMaterials) {
 }
 
 function assignKeyboardEventsToMinMaxInputFields() {
-    let minMaxItems = document.querySelectorAll('[id$="-min"]');
+    let {numberOfIndependentRows, independentMinMaxInputFields} = collectIndependentMaxMinInputFields();
 
+    for (let item of independentMinMaxInputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentMinValue(independentMinMaxInputFields, numberOfIndependentRows);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentMaxValue(independentMinMaxInputFields, numberOfIndependentRows);
+        });
+    }
+}
+
+/**
+ * The method extracts all min and max input fields except the last one as the latter will be computed dynamically in terms
+ * of all the other min/max values. We number of min items always equals the number of min items. Therefore we can get the
+ */
+function collectIndependentMaxMinInputFields() {
+    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let independentMinMaxInputFields = []
-    let allButTheLastMinFieldIsFilled = true;
-    let allButTheLastMaxFieldIsFilled = true;
-    for (let i = 0; i < minMaxItems.length; i++) {
-        if (i !== minMaxItems.length - 1) {
+    for (let i = 0; i <= numberOfIndependentRows; i++) {
+        if (i !== numberOfIndependentRows) {
             let min = document.getElementById(`all_min_max_entries-${i}-min`)
             let max = document.getElementById(`all_min_max_entries-${i}-max`)
-            // if ((min.value === undefined || min.value === "")) {
-            //     allButTheLastMinFieldIsFilled = false;
-            // }
-            // if ((max.value === undefined || max.value === "")) {
-            //     allButTheLastMinFieldIsFilled = false;
-            // }
             independentMinMaxInputFields.push({
                 min: min,
                 max: max
             })
         }
     }
-
-    for (let item of independentMinMaxInputFields) {
-        item.min.addEventListener("keyup", () => {
-            let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === undefined || item.min.value === "");
-            if (unfilledMinFields.length === 0 ) {
-                const lastMinItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-min`);
-                lastMinItem.value = 100 - independentMinMaxInputFields.map(item => parseFloat(item.min.value)).reduce((x, y) => x + y)
-            }
-        });
-        item.max.addEventListener("keyup", () => {
-            const lastMaxItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-max`);
-            if (lastMaxItem.value !== "") {
-                lastMaxItem.value -= item.min.value
-            } else {
-                lastMaxItem.value = 100 - item.min.value
-            }
-        });
-    }
-
+    return {numberOfIndependentRows, independentMinMaxInputFields};
 }
 
-function removeKeyboardEventsToMinMaxInputFields(placeholder) {
-    if (placeholder.childElementCount !== 0) {
-        let options = minMaxPlaceholder.children;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                count++
-                selectedMaterials.push({
-                    uuid: options[i].value,
-                    name: options[i].innerHTML
-                })
-            }
-        }
+function computeDependentMinValue(independentMinMaxInputFields, numberOfIndependentRows) {
+    let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === undefined || item.min.value === "");
+    if (unfilledMinFields.length === 0) {
+        const lastMinItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-min`);
+        lastMinItem.value = 100 - independentMinMaxInputFields.map(item => parseFloat(item.min.value)).reduce((x, y) => x + y)
+    }
+}
+
+function computeDependentMaxValue(independentMinMaxInputFields, numberOfIndependentRows) {
+    let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === undefined || item.min.value === "");
+    if (unfilledMinFields.length === 0) {
+        const lastMinItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-max`);
+        lastMinItem.value = 100 - independentMinMaxInputFields.map(item => parseFloat(item.max.value)).reduce((x, y) => x + y)
     }
 }
 
