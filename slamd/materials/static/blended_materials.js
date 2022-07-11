@@ -5,7 +5,7 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
  */
 async function selectBaseMaterialType() {
-    document.getElementById("min-max-placeholder").innerHTML = ""
+    document.getElementById("min-max-placeholder").innerHTML = "";
 
     const elem = document.getElementById("base_type");
     const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
@@ -13,8 +13,11 @@ async function selectBaseMaterialType() {
 }
 
 async function confirmSelection() {
-    document.getElementById("min-max-placeholder").innerHTML = ""
-    const placeholder = document.getElementById("base_material_selection")
+    let minMaxPlaceholder = document.getElementById("min-max-placeholder");
+    minMaxPlaceholder.innerHTML = "";
+    // removeKeyboardEventsToMinMaxInputFields(minMaxPlaceholder)
+
+    const placeholder = document.getElementById("base_material_selection");
 
     const {count, selectedMaterials} = collectBaseMaterialSelection(placeholder);
 
@@ -23,6 +26,7 @@ async function confirmSelection() {
 
     if (placeholder.childElementCount !== 0) {
         prefillMinMaxNamesFromSelection(selectedMaterials);
+        assignKeyboardEventsToMinMaxInputFields();
     }
 
 }
@@ -52,6 +56,66 @@ function prefillMinMaxNamesFromSelection(selectedMaterials) {
     }
 }
 
+function assignKeyboardEventsToMinMaxInputFields() {
+    let minMaxItems = document.querySelectorAll('[id$="-min"]');
+
+
+    let independentMinMaxInputFields = []
+    let allButTheLastMinFieldIsFilled = true;
+    let allButTheLastMaxFieldIsFilled = true;
+    for (let i = 0; i < minMaxItems.length; i++) {
+        if (i !== minMaxItems.length - 1) {
+            let min = document.getElementById(`all_min_max_entries-${i}-min`)
+            let max = document.getElementById(`all_min_max_entries-${i}-max`)
+            // if ((min.value === undefined || min.value === "")) {
+            //     allButTheLastMinFieldIsFilled = false;
+            // }
+            // if ((max.value === undefined || max.value === "")) {
+            //     allButTheLastMinFieldIsFilled = false;
+            // }
+            independentMinMaxInputFields.push({
+                min: min,
+                max: max
+            })
+        }
+    }
+
+    for (let item of independentMinMaxInputFields) {
+        item.min.addEventListener("keydown", () => {
+            const lastMinItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-min`);
+            if (lastMinItem.value !== "") {
+                lastMinItem.value -= item.min.value
+            } else {
+                lastMinItem.value = 100 - item.min.value
+            }
+        });
+        item.max.addEventListener("keydown", () => {
+            const lastMaxItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-max`);
+            if (lastMaxItem.value !== "") {
+                lastMaxItem.value -= item.min.value
+            } else {
+                lastMaxItem.value = 100 - item.min.value
+            }
+        });
+    }
+
+}
+
+function removeKeyboardEventsToMinMaxInputFields(placeholder) {
+    if (placeholder.childElementCount !== 0) {
+        let options = minMaxPlaceholder.children;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                count++
+                selectedMaterials.push({
+                    uuid: options[i].value,
+                    name: options[i].innerHTML
+                })
+            }
+        }
+    }
+}
+
 window.addEventListener("load", function () {
-    document.getElementById("base_type").addEventListener("change", selectBaseMaterialType)
+    document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
 });
