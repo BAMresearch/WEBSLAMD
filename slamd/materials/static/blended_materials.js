@@ -106,7 +106,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     let sum = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
         .map(item => parseFloat(item[type].value))
-        .reduce((x, y) => x + y);
+        .reduce((x, y) => x + y, 0);
 
 
     if (sum > 100) {
