@@ -47,17 +47,18 @@
 </div>
 {% endmacro %}
 
-{% macro change_selection_button(type, width, height) -%}
-<div class="slamd_tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm Selection" >
-    <button class="btn btn-danger" id="confirm_selection_for_blending_button" type="button" data-bs-toggle="modal" data-bs-target="#change_modal_">Confirm Selection
+{% macro create_change_selection_button(id, width, height) -%}
+<div class="slamd_tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm Selection">
+    <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+            data-bs-target={{'#change_modal_' + id}}>Confirm Selection
     </button>
 </div>
-<div class="modal fade" id="change_modal_" tabindex="-1" aria-labelledby="change_modal_label_"
+<div class="modal fade" id="{{'change_modal_' + id}}" tabindex="-1" aria-labelledby="{{'change_modal_label_' + id }}"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="delete_modal_label_">Change Properties</h5>
+                <h5 class="modal-title" id="{{'change_modal_label_' + id }}">Change Selection</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

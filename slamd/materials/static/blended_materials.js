@@ -2,16 +2,14 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
 
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
- * related to choosing from this selection must be reattached to it.
+ * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
  */
 async function selectBaseMaterialType() {
-    document.getElementById("confirm_selection_for_blending_button").removeEventListener("click", confirmSelection)
+    document.getElementById("min-max-placeholder").innerHTML = ""
 
     const elem = document.getElementById("base_type");
     const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
     await fetchEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
-
-    document.getElementById("confirm_selection_for_blending_button").addEventListener("click", confirmSelection)
 }
 
 async function confirmSelection() {

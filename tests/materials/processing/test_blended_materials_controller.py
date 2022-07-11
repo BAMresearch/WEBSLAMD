@@ -1,6 +1,5 @@
 import json
 
-from slamd import create_app
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from tests.materials.materials_test_data import create_test_powders, create_test_aggregates
 
