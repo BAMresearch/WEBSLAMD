@@ -41,7 +41,7 @@ class BaseMaterialStrategy(ABC):
             'Delivery time (days)', costs.delivery_time)
 
     def _append_additional_properties(self, dto, additional_properties):
-        if len(additional_properties) == 0:
+        if additional_properties is None or len(additional_properties) == 0:
             return
 
         additional_property_to_be_displayed = ''
