@@ -4,9 +4,9 @@ from slamd.materials.processing.models.material import Material
 class Liquid(Material):
 
     def __init__(self, name='', type='', costs=None, composition=None, additional_properties=None):
-        super().__init__(name=name, type=type, costs=None)
+        super().__init__(name=name, type=type, costs=costs,
+                         additional_properties=additional_properties)
         self.composition = composition
-        self.additional_properties = additional_properties
 
 
 class Composition:
