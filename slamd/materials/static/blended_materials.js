@@ -26,8 +26,66 @@ async function confirmSelection() {
     if (placeholder.childElementCount !== 0) {
         prefillMinMaxNamesFromSelection(selectedMaterials);
         assignKeyboardEventsToMinMaxInputFields();
+        assignConfirmBlendingConfigurationEvent();
     }
+}
 
+function assignConfirmBlendingConfigurationEvent() {
+    elem = document.getElementById("confirm_blending_configuration_button");
+
+    elem.addEventListener("click", () => {
+        const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+
+        let minMaxValuesWithIncrements = []
+        for (let i = 0; i <= numberOfIndependentRows; i++) {
+            let min = document.getElementById(`all_min_max_entries-${i}-min`)
+            let max = document.getElementById(`all_min_max_entries-${i}-max`)
+            let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
+            minMaxValuesWithIncrements.push({
+                idx: i,
+                min: min,
+                max: max,
+                increment: increment
+            })
+        }
+        createRatios(minMaxValuesWithIncrements);
+
+    })
+
+}
+
+function createRatios(minMaxValuesWithIncrements) {
+    let allRatios = []
+    for (let i = 0; i < minMaxValuesWithIncrements.length - 1; i++) {
+        let fixedForCurrentIteration = minMaxValuesWithIncrements.filter(value => value.idx !== i)
+        let currentIncrement = minMaxValuesWithIncrements[i].increment.value;
+
+        let max = minMaxValuesWithIncrements[i].max.value;
+
+        let currentValue = parseFloat(minMaxValuesWithIncrements[i].min.value)
+
+        while (currentValue <= max) {
+            let fixedForCurrentIterationMemory = [...fixedForCurrentIteration]
+
+            let remainder = fixedForCurrentIteration.splice(i);
+            const beforeCurrentValue = remainder.map(item => parseFloat(item.min.value))
+            const withCurrentValue = beforeCurrentValue.concat([currentValue])
+            const withAllCurrentRatios = withCurrentValue.concat(fixedForCurrentIteration.map(item => parseFloat(item.min.value)))
+
+            allRatios.push(withAllCurrentRatios.join("/"));
+
+            currentValue += parseFloat(currentIncrement);
+
+            fixedForCurrentIteration = [...fixedForCurrentIterationMemory]
+        }
+
+        let blending_ratios = document.getElementById("blending_ratio_placeholder")
+        for (let ratio of allRatios) {
+            blending_ratios.innerHTML += ratio + "\n"
+        }
+
+
+    }
 }
 
 function collectBaseMaterialSelection(placeholder) {
@@ -73,7 +131,7 @@ function assignKeyboardEventsToMinMaxInputFields() {
  * of all the other min/max values. We number of min items always equals the number of min items. Therefore we can get the
  */
 function collectIndependentMaxMinInputFields() {
-    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+    const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let independentMinMaxInputFields = []
     for (let i = 0; i <= numberOfIndependentRows; i++) {
