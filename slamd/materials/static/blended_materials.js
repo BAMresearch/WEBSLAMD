@@ -90,13 +90,16 @@ function collectIndependentMaxMinInputFields() {
 }
 
 function computeDependentMinValue(currentField, independentMinMaxInputFields, numberOfIndependentRows) {
-
-
     let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === "");
+    if(currentField.min.value < 0){
+        currentField.min.value = 0;
+    }
+
     let sum = independentMinMaxInputFields
         .filter(item => item.min.value !== "")
         .map(item => parseFloat(item.min.value))
         .reduce((x, y) => x + y);
+
 
     if (sum > 100) {
         currentField.min.value = (100 - (sum - currentField.min.value)).toFixed(2)
@@ -110,6 +113,11 @@ function computeDependentMinValue(currentField, independentMinMaxInputFields, nu
 
 function computeDependentMaxValue(currentField, independentMinMaxInputFields, numberOfIndependentRows) {
     let unfilledMinFields = independentMinMaxInputFields.filter(item => item.max.value === "");
+
+    if(currentField.max.value < 0){
+        currentField.max.value = 0;
+    }
+
     let sum = independentMinMaxInputFields
         .filter(item => item.max.value !== "")
         .map(item => parseFloat(item.max.value))
