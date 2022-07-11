@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.models.material import Costs
 
@@ -19,7 +20,8 @@ def test_admixture_constructor_sets_properties():
         name='test admixture',
         type='Admixture',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         composition=10.4,
         admixture_type='test type'
     )
@@ -27,6 +29,6 @@ def test_admixture_constructor_sets_properties():
     assert admixture.name == 'test admixture'
     assert admixture.type == 'Admixture'
     assert admixture.costs == costs
-    assert admixture.additional_properties == 'name: test property, value: test value'
+    assert len(admixture.additional_properties) == 1
     assert admixture.composition == 10.4
     assert admixture.admixture_type == 'test type'

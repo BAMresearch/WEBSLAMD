@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.models.material import Costs
 
@@ -19,14 +20,15 @@ def test_aggregates_constructor_sets_properties():
         name='test aggregates',
         type='Aggregates',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         composition=composition,
     )
 
     assert aggregates.name == 'test aggregates'
     assert aggregates.type == 'Aggregates'
     assert aggregates.costs == costs
-    assert aggregates.additional_properties == 'name: test property, value: test value'
+    assert len(aggregates.additional_properties) == 1
     assert aggregates.composition == composition
 
 

@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.models.material import Costs
 
@@ -21,7 +22,8 @@ def test_powder_constructor_sets_properties():
         name='test powder',
         type='Powder',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         composition=composition,
         structure=structure
     )
@@ -29,7 +31,7 @@ def test_powder_constructor_sets_properties():
     assert powder.name == 'test powder'
     assert powder.type == 'Powder'
     assert powder.costs == costs
-    assert powder.additional_properties == 'name: test property, value: test value'
+    assert len(powder.additional_properties) == 1
     assert powder.composition == composition
     assert powder.structure == structure
 

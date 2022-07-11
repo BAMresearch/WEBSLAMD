@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.models.material import Costs
 
@@ -19,14 +20,15 @@ def test_liquid_constructor_sets_properties():
         name='test liquid',
         type='Liquid',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         composition=composition,
     )
 
     assert liquid.name == 'test liquid'
     assert liquid.type == 'Liquid'
     assert liquid.costs == costs
-    assert liquid.additional_properties == 'name: test property, value: test value'
+    assert len(liquid.additional_properties) == 1
     assert liquid.composition == composition
 
 

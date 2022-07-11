@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Material, Costs
 
 
@@ -17,14 +18,15 @@ def test_material_constructor_sets_properties():
         name='test material',
         type='Material',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         is_blended=True
     )
 
     assert material.name == 'test material'
     assert material.type == 'Material'
     assert material.costs == costs
-    assert material.additional_properties == 'name: test property, value: test value'
+    assert len(material.additional_properties) == 1
     assert material.is_blended == True
 
 

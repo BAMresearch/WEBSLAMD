@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.material import Costs
 
@@ -19,7 +20,8 @@ def test_custom_constructor_sets_properties():
         name='test custom',
         type='Custom',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         custom_name='test custom name',
         custom_value='test custom value'
     )
@@ -27,6 +29,6 @@ def test_custom_constructor_sets_properties():
     assert custom.name == 'test custom'
     assert custom.type == 'Custom'
     assert custom.costs == costs
-    assert custom.additional_properties == 'name: test property, value: test value'
+    assert len(custom.additional_properties) == 1
     assert custom.custom_name == 'test custom name'
     assert custom.custom_value == 'test custom value'

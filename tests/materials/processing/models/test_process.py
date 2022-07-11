@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.process import Process
 from slamd.materials.processing.models.material import Costs
 
@@ -20,7 +21,8 @@ def test_process_constructor_sets_properties():
         name='test process',
         type='Process',
         costs=costs,
-        additional_properties='name: test property, value: test value',
+        additional_properties=[AdditionalProperty(
+            name='test prop', value='test value')],
         duration=3.21,
         temperature=6.54,
         relative_humidity=9.87,
@@ -29,7 +31,7 @@ def test_process_constructor_sets_properties():
     assert process.name == 'test process'
     assert process.type == 'Process'
     assert process.costs == costs
-    assert process.additional_properties == 'name: test property, value: test value'
+    assert len(process.additional_properties) == 1
     assert process.duration == 3.21
     assert process.temperature == 6.54
     assert process.relative_humidity == 9.87
