@@ -56,36 +56,31 @@ function assignConfirmBlendingConfigurationEvent() {
 
 function createRatios(minMaxValuesWithIncrements) {
     let allRatios = []
-    for (let i = 0; i < minMaxValuesWithIncrements.length - 1; i++) {
-        let fixedForCurrentIteration = minMaxValuesWithIncrements.filter(value => value.idx !== i)
-        let currentIncrement = minMaxValuesWithIncrements[i].increment.value;
 
-        let max = minMaxValuesWithIncrements[i].max.value;
-
-        let currentValue = parseFloat(minMaxValuesWithIncrements[i].min.value)
-
-        while (currentValue <= max) {
-            let fixedForCurrentIterationMemory = [...fixedForCurrentIteration]
-
-            let remainder = fixedForCurrentIteration.splice(i);
-            const beforeCurrentValue = remainder.map(item => parseFloat(item.min.value))
-            const withCurrentValue = beforeCurrentValue.concat([currentValue])
-            const withAllCurrentRatios = withCurrentValue.concat(fixedForCurrentIteration.map(item => parseFloat(item.min.value)))
-
-            allRatios.push(withAllCurrentRatios.join("/"));
-
-            currentValue += parseFloat(currentIncrement);
-
-            fixedForCurrentIteration = [...fixedForCurrentIterationMemory]
+    let allValues = []
+    for (let i = 0; i < minMaxValuesWithIncrements.length -1; i++){
+        let valuesForGivenMaterial = [];
+        let current = parseFloat(minMaxValuesWithIncrements[i].min.value)
+        let max = parseFloat(minMaxValuesWithIncrements[i].max.value)
+        let increment = parseFloat(minMaxValuesWithIncrements[i].increment.value)
+        while(current <= max){
+            valuesForGivenMaterial.push(current)
+            current += increment
         }
-
-        let blending_ratios = document.getElementById("blending_ratio_placeholder")
-        for (let ratio of allRatios) {
-            blending_ratios.innerHTML += ratio + "\n"
-        }
-
-
+        allValues.push(valuesForGivenMaterial)
     }
+
+    const cartesian =
+        (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+
+    let result = cartesian(allValues)[0]
+
+
+    let blending_ratios = document.getElementById("blending_ratio_placeholder")
+    for (let ratio of cartesian(allValues)) {
+        blending_ratios.innerHTML += ratio + "\n"
+    }
+
 }
 
 function collectBaseMaterialSelection(placeholder) {
