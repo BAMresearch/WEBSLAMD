@@ -1,4 +1,3 @@
-import slamd
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates, Composition as AggregatesComposition
 from slamd.materials.processing.models.powder import Composition, Structure, Powder
