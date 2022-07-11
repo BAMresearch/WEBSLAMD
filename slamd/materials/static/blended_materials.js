@@ -81,15 +81,14 @@ function assignKeyboardEventsToMinMaxInputFields() {
     }
 
     for (let item of independentMinMaxInputFields) {
-        item.min.addEventListener("keydown", () => {
-            const lastMinItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-min`);
-            if (lastMinItem.value !== "") {
-                lastMinItem.value -= item.min.value
-            } else {
-                lastMinItem.value = 100 - item.min.value
+        item.min.addEventListener("keyup", () => {
+            let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === undefined || item.min.value === "");
+            if (unfilledMinFields.length === 0 ) {
+                const lastMinItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-min`);
+                lastMinItem.value = 100 - independentMinMaxInputFields.map(item => parseFloat(item.min.value)).reduce((x, y) => x + y)
             }
         });
-        item.max.addEventListener("keydown", () => {
+        item.max.addEventListener("keyup", () => {
             const lastMaxItem = document.getElementById(`all_min_max_entries-${minMaxItems.length - 1}-max`);
             if (lastMaxItem.value !== "") {
                 lastMaxItem.value -= item.min.value
