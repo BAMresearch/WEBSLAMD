@@ -1,9 +1,14 @@
+from slamd.materials.processing.material_dto import MaterialDto
+from slamd.materials.processing.models.material import Material
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
 
 class MockStrategy(BaseMaterialStrategy):
     def create_model(self, submitted_material, additional_properties):
         return None
+
+    def _gather_composition_information(self, material):
+        return
 
 
 def test_base_material_strategy_include_returns_formatted_string():
@@ -26,3 +31,18 @@ def test_base_material_strategy_include_returns_empty_string_if_empty_property()
     result = strategy._include('test name', '')
 
     assert result == ''
+
+
+def test_base_material_strategy_create_dto_without_properties():
+    material = Material(
+        name='test name',
+        type='test type'
+    )
+    strategy = MockStrategy()
+    dto = strategy.create_dto(material)
+
+    assert isinstance(dto, MaterialDto)
+    assert dto.uuid == str(material.uuid)
+    assert dto.name == 'test name'
+    assert dto.type == 'test type'
+    assert dto.all_properties == ''
