@@ -60,10 +60,10 @@ function assignKeyboardEventsToMinMaxInputFields() {
 
     for (let item of independentMinMaxInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentMinValue(item.min, independentMinMaxInputFields, numberOfIndependentRows);
+            computeDependentValue("min", item.min, independentMinMaxInputFields, numberOfIndependentRows);
         });
         item.max.addEventListener("keyup", () => {
-            computeDependentMaxValue(item.max, independentMinMaxInputFields, numberOfIndependentRows);
+            computeDependentValue("max", item.max, independentMinMaxInputFields, numberOfIndependentRows);
         });
     }
 }
@@ -89,10 +89,15 @@ function collectIndependentMaxMinInputFields() {
     return {numberOfIndependentRows, independentMinMaxInputFields};
 }
 
-function computeDependentMinValue(currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
-    const type = "min"
+function computeDependentValue(type, currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
     const unfilledMinFields = independentMinMaxInputFields.filter(item => item[type].value === "");
 
+    const moreThanTwoDigitsDotSeperated = /^\d*\.\d{3,}$/;
+    const moreThanTwoDigitsColonSeperated = /^\d*\\,\d{3,}$/;
+
+    if (moreThanTwoDigitsDotSeperated.test(currentInputField.value) || moreThanTwoDigitsColonSeperated.test(currentInputField.value)) {
+        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
+    }
 
     if (currentInputField.value < 0) {
         currentInputField.value = 0;
@@ -100,7 +105,7 @@ function computeDependentMinValue(currentInputField, independentMinMaxInputField
 
     let sum = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
-        .map(item => parseFloat(item.min.value))
+        .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y);
 
 
@@ -111,29 +116,6 @@ function computeDependentMinValue(currentInputField, independentMinMaxInputField
     if (unfilledMinFields.length === 0) {
         const lastMinItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-${type}`);
         lastMinItem.value = (100 - sum).toFixed(2)
-    }
-}
-
-function computeDependentMaxValue(currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
-    const type = "max";
-    const unfilledMinFields = independentMinMaxInputFields.filter(item => item[type].value === "");
-
-    if (currentInputField.value < 0) {
-        currentInputField.value = 0;
-    }
-
-    let sum = independentMinMaxInputFields
-        .filter(item => item[type].value !== "")
-        .map(item => parseFloat(item.max.value))
-        .reduce((x, y) => x + y);
-
-    if (sum > 100) {
-        currentInputField.value = (100 - (sum - currentInputField.value)).toFixed(2)
-        sum = 100
-    }
-    if (unfilledMinFields.length === 0) {
-        const lastMaxItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-${type}`);
-        lastMaxItem.value = (100 - sum).toFixed(2)
     }
 }
 
