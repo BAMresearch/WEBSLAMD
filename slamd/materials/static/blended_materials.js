@@ -90,44 +90,38 @@ function collectIndependentMaxMinInputFields() {
 }
 
 function computeDependentMinValue(currentField, independentMinMaxInputFields, numberOfIndependentRows) {
-    if (parseFloat(currentField.min.value) > 100) {
-        currentField.min.value = 100
-    }
 
-    let unfilledMinFields = independentMinMaxInputFields.filter(item => isNaN(item.min.value));
+
+    let unfilledMinFields = independentMinMaxInputFields.filter(item => item.min.value === "");
     let sum = independentMinMaxInputFields
-        .filter(item => !isNaN(item.min.value))
+        .filter(item => item.min.value !== "")
         .map(item => parseFloat(item.min.value))
         .reduce((x, y) => x + y);
 
     if (sum > 100) {
-        currentField.min.value = 100 - (sum - currentField.min.value)
+        currentField.min.value = (100 - (sum - currentField.min.value)).toFixed(2)
         sum = 100
     }
     if (unfilledMinFields.length === 0) {
         const lastMinItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-min`);
-        lastMinItem.value = 100 - sum
+        lastMinItem.value = (100 - sum).toFixed(2)
     }
 }
 
 function computeDependentMaxValue(currentField, independentMinMaxInputFields, numberOfIndependentRows) {
-    if (parseFloat(currentField.max.value) > 100) {
-        currentField.max.value = 100
-    }
-
-    let unfilledMinFields = independentMinMaxInputFields.filter(item => isNaN(item.max.value));
+    let unfilledMinFields = independentMinMaxInputFields.filter(item => item.max.value === "");
     let sum = independentMinMaxInputFields
-        .filter(item => !isNaN(item.max.value))
+        .filter(item => item.max.value !== "")
         .map(item => parseFloat(item.max.value))
         .reduce((x, y) => x + y);
 
     if (sum > 100) {
-        currentField.max.value = 100 - (sum - currentField.max.value)
+        currentField.max.value = (100 - (sum - currentField.max.value)).toFixed(2)
         sum = 100
     }
     if (unfilledMinFields.length === 0) {
         const lastMaxItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-max`);
-        lastMaxItem.value = 100 - sum
+        lastMaxItem.value = (100 - sum).toFixed(2)
     }
 }
 
