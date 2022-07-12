@@ -17,6 +17,12 @@
 
     <div id="base-material-selection-placeholder" class="row g-3 mb-3 align-items-end">
         {% include 'base_material_selection.html' %}
+        <div class="blending_explanation_text col-md-6">
+            Select at least two base materials for creating blended materials. After selection configure mixture ratios
+            in terms of minimal and maximal values of each base material and the increments which define the step size from
+            minimal to maximal value. The last material's configuration will be determined automatically by the values used
+            in the other base materials. Values above 100% in total as well as negative values are not allowed.
+        </div>
     </div>
     <div>
         {{ create_change_selection_button("change_selection_button") }}
