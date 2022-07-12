@@ -12,58 +12,60 @@ def test_slamd_shows_form_and_table(client, mocker):
     mocker.patch.object(BaseMaterialService, 'list_all_base_materials',
                         autospec=True, return_value=mock_response)
     response = client.get('/materials/base')
+    html = response.data.decode('utf-8')
 
     assert response.status_code == 200
 
-    assert b'Name' in response.data
-    assert b'Material type' in response.data
-    assert bytes('CO₂ footprint', 'utf-8') in response.data
-    assert b'Costs' in response.data
-    assert b'Delivery time' in response.data
+    assert 'Name' in html
+    assert 'Material type' in html
+    assert 'CO₂ footprint' in html
+    assert 'Costs' in html
+    assert 'Delivery time' in html
 
-    assert b'All base materials' in response.data
-    assert b'test powder' in response.data
+    assert 'All base materials' in html
+    assert 'test powder' in html
 
 
 def test_slamd_selects_powder(client):
     response = client.get('/materials/base/powder')
+    template = response.json['template']
 
     assert response.status_code == 200
-    assert 'Fe₂O₃' in response.json['template']
-    assert 'SiO₂' in response.json['template']
-    assert 'Al₂O₃' in response.json['template']
-    assert 'CaO' in response.json['template']
-    assert 'MgO' in response.json['template']
-    assert 'Na₂O' in response.json['template']
-    assert 'K₂O' in response.json['template']
-    assert 'SO₃' in response.json['template']
-    assert 'TiO₂' in response.json['template']
-    assert 'P₂O₅' in response.json['template']
-    assert 'SrO' in response.json['template']
-    assert 'Mn₂O₃' in response.json['template']
+    assert 'Fe₂O₃' in template
+    assert 'SiO₂' in template
+    assert 'Al₂O₃' in template
+    assert 'CaO' in template
+    assert 'MgO' in template
+    assert 'Na₂O' in template
+    assert 'K₂O' in template
+    assert 'SO₃' in template
+    assert 'TiO₂' in template
+    assert 'P₂O₅' in template
+    assert 'SrO' in template
+    assert 'Mn₂O₃' in template
 
 
 def test_slamd_selects_liquid(client):
     response = client.get('/materials/base/liquid')
+    template = response.json['template']
 
     assert response.status_code == 200
-    assert 'Na₂SiO₃' in response.json['template']
-    assert 'NaOH' in response.json['template']
-    assert 'Na₂SiO₃ specific' in response.json['template']
-    assert 'NaOH specific' in response.json['template']
-    assert 'Total solution' in response.json['template']
-    assert 'Na₂O (I)' in response.json['template']
-    assert 'SiO₂ (I)' in response.json['template']
-    assert 'H₂O' in response.json['template']
-    assert 'Na₂O (dry)' in response.json['template']
-    assert 'SiO₂ (dry)' in response.json['template']
-    assert 'Water' in response.json['template']
-    assert 'Total NaOH' in response.json['template']
+    assert 'Na₂SiO₃' in template
+    assert 'NaOH' in template
+    assert 'Na₂SiO₃ specific' in template
+    assert 'NaOH specific' in template
+    assert 'Total solution' in template
+    assert 'Na₂O (I)' in template
+    assert 'SiO₂ (I)' in template
+    assert 'H₂O' in template
+    assert 'Na₂O (dry)' in template
+    assert 'SiO₂ (dry)' in template
+    assert 'Water' in template
+    assert 'Total NaOH' in template
 
 
 def test_slamd_selects_aggregates(client):
     response = client.get('/materials/base/aggregates')
-
     template = response.json['template']
 
     assert response.status_code == 200
@@ -75,7 +77,6 @@ def test_slamd_selects_aggregates(client):
 
 def test_slamd_selects_admixture(client):
     response = client.get('/materials/base/admixture')
-
     template = response.json['template']
 
     assert response.status_code == 200
@@ -85,7 +86,6 @@ def test_slamd_selects_admixture(client):
 
 def test_slamd_selects_custom(client):
     response = client.get("/materials/base/custom")
-
     template = response.json['template']
 
     assert response.status_code == 200
@@ -95,10 +95,9 @@ def test_slamd_selects_custom(client):
 
 def test_slamd_selects_process(client):
     response = client.get('/materials/base/process')
-
     template = response.json['template']
-    assert response.status_code == 200
 
+    assert response.status_code == 200
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
@@ -197,8 +196,8 @@ def test_slamd_deletes_powder_and_returns_new_table_but_does_not_rerender_comple
                         autospec=True, return_value=mock_response)
 
     response = client.delete('/materials/base/powder/123')
-
     template = response.json['template']
+
     assert response.status_code == 200
     assert 'Actions' in template
     assert 'Name' in template
