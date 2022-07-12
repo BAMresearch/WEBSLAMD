@@ -31,9 +31,10 @@ async function confirmSelection() {
 }
 
 function assignConfirmBlendingConfigurationEvent() {
-    elem = document.getElementById("confirm_blending_configuration_button");
+    const elem = document.getElementById("confirm_blending_configuration_button");
+    const token = document.getElementById("csrf_token").value
 
-    elem.addEventListener("click", () => {
+    elem.addEventListener("click", async () => {
         const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
         let minMaxValuesWithIncrements = []
@@ -43,12 +44,28 @@ function assignConfirmBlendingConfigurationEvent() {
             let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
             minMaxValuesWithIncrements.push({
                 idx: i,
-                min: min,
-                max: max,
-                increment: increment
+                min: parseFloat(min.value),
+                max: parseFloat(max.value),
+                increment: parseFloat(increment.value)
             })
         }
-        createRatios(minMaxValuesWithIncrements);
+        try {
+            const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(minMaxValuesWithIncrements)
+            });
+            const form = await response.json();
+            document.getElementById("blending_ratio_placeholder").innerHTML = form["template"];
+        } catch (error) {
+            console.log(error);
+        }
+
+
+        // createRatios(minMaxValuesWithIncrements);
 
     })
 
@@ -130,7 +147,8 @@ function assignKeyboardEventsToMinMaxInputFields() {
 
 /**
  * The method extracts all min and max input fields except the last one as the latter will be computed dynamically in terms
- * of all the other min/max values. We number of min items always equals the number of min items. Therefore we can get the
+ * of all the other min/max values. The number of min items always equals the number of min items. Therefore we can get the
+ * total number of rows simply by extracting the tags with id ending on -min.
  */
 function collectIndependentMaxMinInputFields() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
@@ -167,7 +185,6 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
         .filter(item => item[type].value !== "")
         .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y, 0);
-
 
     if (sum > 100) {
         currentInputField.value = (100 - (sum - currentInputField.value)).toFixed(2)
