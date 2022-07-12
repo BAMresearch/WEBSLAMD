@@ -35,20 +35,7 @@ function assignConfirmBlendingConfigurationEvent() {
     const token = document.getElementById("csrf_token").value
 
     elem.addEventListener("click", async () => {
-        const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
-
-        let minMaxValuesWithIncrements = []
-        for (let i = 0; i <= numberOfIndependentRows; i++) {
-            let min = document.getElementById(`all_min_max_entries-${i}-min`)
-            let max = document.getElementById(`all_min_max_entries-${i}-max`)
-            let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
-            minMaxValuesWithIncrements.push({
-                idx: i,
-                min: parseFloat(min.value),
-                max: parseFloat(max.value),
-                increment: parseFloat(increment.value)
-            })
-        }
+        const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
         try {
             const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
             const response = await fetch(url, {
@@ -64,47 +51,26 @@ function assignConfirmBlendingConfigurationEvent() {
             console.log(error);
         }
 
-
-        // createRatios(minMaxValuesWithIncrements);
-
     })
 
 }
 
-function createRatios(minMaxValuesWithIncrements) {
+function createMinMaxValuesWithIncrements() {
+    const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-    let allValues = []
-    for (let i = 0; i < minMaxValuesWithIncrements.length - 1; i++) {
-        let valuesForGivenMaterial = [];
-        let current = parseFloat(minMaxValuesWithIncrements[i].min.value)
-        let max = parseFloat(minMaxValuesWithIncrements[i].max.value)
-        let increment = parseFloat(minMaxValuesWithIncrements[i].increment.value)
-        while (current <= max) {
-            valuesForGivenMaterial.push(current)
-            current += increment
-        }
-        allValues.push(valuesForGivenMaterial)
+    let minMaxValuesWithIncrements = []
+    for (let i = 0; i <= numberOfIndependentRows; i++) {
+        let min = document.getElementById(`all_min_max_entries-${i}-min`)
+        let max = document.getElementById(`all_min_max_entries-${i}-max`)
+        let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
+        minMaxValuesWithIncrements.push({
+            idx: i,
+            min: parseFloat(min.value),
+            max: parseFloat(max.value),
+            increment: parseFloat(increment.value)
+        })
     }
-    let blending_ratios = document.getElementById("blending_ratio_placeholder")
-    if (allValues.length === 1) {
-        for (let item of allValues[0]) {
-            const remainder = 100 - item
-            blending_ratios.innerHTML += `${item}/${remainder} `
-        }
-    } else {
-        const cartesian =
-            (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-
-
-        let cartesianProduct = cartesian(...allValues)
-
-        for (let item of cartesianProduct) {
-            const sum = item.reduce((x, y) => x + y);
-            const remainder = 100 - sum;
-            blending_ratios.innerHTML += `${item.join("/")}/${remainder} `
-        }
-    }
-
+    return minMaxValuesWithIncrements;
 }
 
 function collectBaseMaterialSelection(placeholder) {
