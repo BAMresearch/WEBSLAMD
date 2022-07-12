@@ -8,11 +8,11 @@ def test_process_constructor_sets_default_values():
 
     assert process.name == ''
     assert process.type == ''
-    assert process.costs == None
-    assert process.additional_properties == None
-    assert process.duration == None
-    assert process.temperature == None
-    assert process.relative_humidity == None
+    assert process.costs is None
+    assert process.additional_properties is None
+    assert process.duration is None
+    assert process.temperature is None
+    assert process.relative_humidity is None
 
 
 def test_process_constructor_sets_properties():

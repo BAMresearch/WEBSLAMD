@@ -8,9 +8,9 @@ def test_liquid_constructor_sets_default_values():
 
     assert liquid.name == ''
     assert liquid.type == ''
-    assert liquid.costs == None
-    assert liquid.additional_properties == None
-    assert liquid.composition == None
+    assert liquid.costs is None
+    assert liquid.additional_properties is None
+    assert liquid.composition is None
 
 
 def test_liquid_constructor_sets_properties():
@@ -35,18 +35,18 @@ def test_liquid_constructor_sets_properties():
 def test_liquid_composition_constructor_sets_default_values():
     composition = Composition()
 
-    assert composition.na2_si_o3 == None
-    assert composition.na_o_h == None
-    assert composition.na2_si_o3_specific == None
-    assert composition.na_o_h_specific == None
-    assert composition.total == None
-    assert composition.na2_o == None
-    assert composition.si_o2 == None
-    assert composition.h2_o == None
-    assert composition.na2_o_dry == None
-    assert composition.si_o2_dry == None
-    assert composition.water == None
-    assert composition.na_o_h_total == None
+    assert composition.na2_si_o3 is None
+    assert composition.na_o_h is None
+    assert composition.na2_si_o3_specific is None
+    assert composition.na_o_h_specific is None
+    assert composition.total is None
+    assert composition.na2_o is None
+    assert composition.si_o2 is None
+    assert composition.h2_o is None
+    assert composition.na2_o_dry is None
+    assert composition.si_o2_dry is None
+    assert composition.water is None
+    assert composition.na_o_h_total is None
 
 
 def test_liquid_composition_constructor_sets_properties():

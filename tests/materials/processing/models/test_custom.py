@@ -8,10 +8,10 @@ def test_custom_constructor_sets_default_values():
 
     assert custom.name == ''
     assert custom.type == ''
-    assert custom.costs == None
-    assert custom.additional_properties == None
-    assert custom.custom_name == None
-    assert custom.custom_value == None
+    assert custom.costs is None
+    assert custom.additional_properties is None
+    assert custom.custom_name is None
+    assert custom.custom_value is None
 
 
 def test_custom_constructor_sets_properties():

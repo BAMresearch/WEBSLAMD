@@ -7,8 +7,8 @@ def test_material_constructor_sets_default_values():
 
     assert material.name == ''
     assert material.type == ''
-    assert material.costs == None
-    assert material.additional_properties == None
+    assert material.costs is None
+    assert material.additional_properties is None
     assert material.is_blended == False
 
 

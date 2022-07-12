@@ -8,9 +8,9 @@ def test_aggregates_constructor_sets_default_values():
 
     assert aggregates.name == ''
     assert aggregates.type == ''
-    assert aggregates.costs == None
-    assert aggregates.additional_properties == None
-    assert aggregates.composition == None
+    assert aggregates.costs is None
+    assert aggregates.additional_properties is None
+    assert aggregates.composition is None
 
 
 def test_aggregates_constructor_sets_properties():
@@ -35,10 +35,10 @@ def test_aggregates_constructor_sets_properties():
 def test_aggregates_composition_constructor_sets_default_values():
     composition = Composition()
 
-    assert composition.fine_aggregates == None
-    assert composition.coarse_aggregates == None
-    assert composition.fa_density == None
-    assert composition.ca_density == None
+    assert composition.fine_aggregates is None
+    assert composition.coarse_aggregates is None
+    assert composition.fa_density is None
+    assert composition.ca_density is None
 
 
 def test_aggregates_composition_constructor_sets_properties():

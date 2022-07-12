@@ -8,10 +8,10 @@ def test_powder_constructor_sets_default_values():
 
     assert powder.name == ''
     assert powder.type == ''
-    assert powder.costs == None
-    assert powder.additional_properties == None
-    assert powder.composition == None
-    assert powder.structure == None
+    assert powder.costs is None
+    assert powder.additional_properties is None
+    assert powder.composition is None
+    assert powder.structure is None
 
 
 def test_powder_constructor_sets_properties():
@@ -39,18 +39,18 @@ def test_powder_constructor_sets_properties():
 def test_powder_composition_constructor_sets_default_values():
     composition = Composition()
 
-    assert composition.fe3_o2 == None
-    assert composition.si_o2 == None
-    assert composition.al2_o3 == None
-    assert composition.ca_o == None
-    assert composition.mg_o == None
-    assert composition.na2_o == None
-    assert composition.k2_o == None
-    assert composition.s_o3 == None
-    assert composition.ti_o2 == None
-    assert composition.p2_o5 == None
-    assert composition.sr_o == None
-    assert composition.mn2_o3 == None
+    assert composition.fe3_o2 is None
+    assert composition.si_o2 is None
+    assert composition.al2_o3 is None
+    assert composition.ca_o is None
+    assert composition.mg_o is None
+    assert composition.na2_o is None
+    assert composition.k2_o is None
+    assert composition.s_o3 is None
+    assert composition.ti_o2 is None
+    assert composition.p2_o5 is None
+    assert composition.sr_o is None
+    assert composition.mn2_o3 is None
 
 
 def test_powder_composition_constructor_sets_properties():
@@ -86,8 +86,8 @@ def test_powder_composition_constructor_sets_properties():
 def test_powder_structure_constructor_sets_default_values():
     structure = Structure()
 
-    assert structure.fine == None
-    assert structure.gravity == None
+    assert structure.fine is None
+    assert structure.gravity is None
 
 
 def test_powder_structure_constructor_sets_properties():

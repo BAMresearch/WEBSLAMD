@@ -8,10 +8,10 @@ def test_admixture_constructor_sets_default_values():
 
     assert admixture.name == ''
     assert admixture.type == ''
-    assert admixture.costs == None
-    assert admixture.additional_properties == None
-    assert admixture.composition == None
-    assert admixture.admixture_type == None
+    assert admixture.costs is None
+    assert admixture.additional_properties is None
+    assert admixture.composition is None
+    assert admixture.admixture_type is None
 
 
 def test_admixture_constructor_sets_properties():
