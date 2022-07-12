@@ -79,11 +79,12 @@ function createRatios(minMaxValuesWithIncrements) {
             (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
 
-        let result = cartesian(allValues[0], allValues[1])
+        let cartesianProduct = cartesian(...allValues)
 
-
-        for (let ratio of cartesian(allValues)) {
-            blending_ratios.innerHTML += ratio + "\n"
+        for (let item of cartesianProduct) {
+            const sum = item.reduce((x, y) => x + y);
+            const remainder = 100 - sum;
+            blending_ratios.innerHTML += `${item.join("/")}/${remainder} `
         }
     }
 
