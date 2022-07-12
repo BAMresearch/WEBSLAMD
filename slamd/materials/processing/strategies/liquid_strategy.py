@@ -1,5 +1,4 @@
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -22,16 +21,10 @@ class LiquidStrategy(BaseMaterialStrategy):
             na_o_h_total=submitted_material['na_o_h_total']
         )
 
-        costs = Costs(
-            co2_footprint=submitted_material['co2_footprint'],
-            delivery_time=submitted_material['delivery_time'],
-            costs=submitted_material['costs']
-        )
-
         liquid = Liquid(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=costs,
+            costs=self.extract_costs_properties(submitted_material),
             composition=composition,
             additional_properties=additional_properties
         )

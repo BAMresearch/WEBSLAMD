@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from slamd.common.slamd_utils import empty
 from slamd.common.slamd_utils import join_all
 from slamd.materials.processing.material_dto import MaterialDto
+from slamd.materials.processing.models.material import Costs
 
 
 class BaseMaterialStrategy(ABC):
@@ -19,6 +20,13 @@ class BaseMaterialStrategy(ABC):
         if empty(property):
             return ''
         return f'{displayed_name}: {property}, '
+
+    def extract_cost_properties(self, submitted_material):
+        return Costs(
+            co2_footprint=submitted_material['co2_footprint'],
+            delivery_time=submitted_material['delivery_time'],
+            costs=submitted_material['costs']
+        )
 
     def create_dto(self, material):
         dto = MaterialDto()

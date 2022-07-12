@@ -1,5 +1,4 @@
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -22,12 +21,6 @@ class PowderStrategy(BaseMaterialStrategy):
             mn2_o3=submitted_material['mn2_o3']
         )
 
-        costs = Costs(
-            co2_footprint=submitted_material['co2_footprint'],
-            delivery_time=submitted_material['delivery_time'],
-            costs=submitted_material['costs']
-        )
-
         structure = Structure(
             gravity=submitted_material['gravity'],
             fine=submitted_material['fine']
@@ -36,7 +29,7 @@ class PowderStrategy(BaseMaterialStrategy):
         powder = Powder(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=costs,
+            costs=self.extract_costs_properties(submitted_material),
             composition=composition,
             structure=structure,
             additional_properties=additional_properties
