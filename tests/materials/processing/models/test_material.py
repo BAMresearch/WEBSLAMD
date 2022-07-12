@@ -9,7 +9,7 @@ def test_material_constructor_sets_default_values():
     assert material.type == ''
     assert material.costs is None
     assert material.additional_properties is None
-    assert material.is_blended == False
+    assert material.is_blended is False
 
 
 def test_material_constructor_sets_properties():
@@ -27,7 +27,7 @@ def test_material_constructor_sets_properties():
     assert material.type == 'Material'
     assert material.costs == costs
     assert len(material.additional_properties) == 1
-    assert material.is_blended == True
+    assert material.is_blended is True
 
 
 def test_material_constructor_generates_uuid():
