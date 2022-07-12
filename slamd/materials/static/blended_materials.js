@@ -55,30 +55,36 @@ function assignConfirmBlendingConfigurationEvent() {
 }
 
 function createRatios(minMaxValuesWithIncrements) {
-    let allRatios = []
 
     let allValues = []
-    for (let i = 0; i < minMaxValuesWithIncrements.length -1; i++){
+    for (let i = 0; i < minMaxValuesWithIncrements.length - 1; i++) {
         let valuesForGivenMaterial = [];
         let current = parseFloat(minMaxValuesWithIncrements[i].min.value)
         let max = parseFloat(minMaxValuesWithIncrements[i].max.value)
         let increment = parseFloat(minMaxValuesWithIncrements[i].increment.value)
-        while(current <= max){
+        while (current <= max) {
             valuesForGivenMaterial.push(current)
             current += increment
         }
         allValues.push(valuesForGivenMaterial)
     }
-
-    const cartesian =
-        (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
-
-    let result = cartesian(allValues)[0]
-
-
     let blending_ratios = document.getElementById("blending_ratio_placeholder")
-    for (let ratio of cartesian(allValues)) {
-        blending_ratios.innerHTML += ratio + "\n"
+    if (allValues.length === 1) {
+        for (let item of allValues[0]) {
+            const remainder = 100 - item
+            blending_ratios.innerHTML += `${item}/${remainder} `
+        }
+    } else {
+        const cartesian =
+            (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+
+
+        let result = cartesian(allValues[0], allValues[1])
+
+
+        for (let ratio of cartesian(allValues)) {
+            blending_ratios.innerHTML += ratio + "\n"
+        }
     }
 
 }
