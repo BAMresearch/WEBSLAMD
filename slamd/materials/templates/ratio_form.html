@@ -3,7 +3,7 @@
 {% for entry in ratio_form.all_ratio_entries %}
 <div class="col-md-3">
     {{ entry.ratio.label(class_="control-label") }}
-    {{ entry.blended_material_name(class_="form-control", disabled=True) }}
+    {{ entry.ratio(class_="form-control") }}
 </div>
 {% endfor %}
 <button class="btn btn-secondary" type="button" id="add_custom_blend_button">

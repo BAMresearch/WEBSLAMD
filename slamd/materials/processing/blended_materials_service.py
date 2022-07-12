@@ -3,6 +3,7 @@ from functools import reduce
 from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
+from slamd.materials.processing.forms.ratio_form import RatioForm, RatioEntriesForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from itertools import product
@@ -49,13 +50,16 @@ class BlendedMaterialsService:
         cartesian_product_list = list(cartesian_product)
 
         all_ratios = []
+        ratio_form = RatioForm()
         for entry in cartesian_product_list:
             entry_list = list(entry)
             sum_of_independent_ratios = reduce(lambda x, y: x + y, entry_list)
             dependent_ratio_value = 100 - sum_of_independent_ratios
             independent_ratio_values = "/".join(map(lambda entry: str(entry), entry_list))
             all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
-            all_ratios.append(all_ratios_for_entry)
-        return None
+            ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
+            ratio_form_entry.ratio.data = all_ratios_for_entry
+            #all_ratios.append(all_ratios_for_entry)
+        return ratio_form
 
 
