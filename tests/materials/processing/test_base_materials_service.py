@@ -72,9 +72,15 @@ def test_create_material_form_raises_bad_request_when_invalid_form_is_requested(
             BaseMaterialService().create_material_form('invalid')
 
 
-def test_save_material_creates_powder(mocker):
-    mocker.patch.object(PowderStrategy, 'create_model',
-                        autospec=True, return_value=None)
+def test_save_material_creates_powder(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(PowderStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
@@ -99,10 +105,18 @@ def test_save_material_creates_powder(mocker):
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
 
+    assert mock_create_model_called_with == (form, [])
 
-def test_save_material_creates_liquid(mocker):
-    mocker.patch.object(LiquidStrategy, 'create_model',
-                        autospec=True, return_value=None)
+
+def test_save_material_creates_liquid(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(LiquidStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test liquid'),
@@ -122,10 +136,18 @@ def test_save_material_creates_liquid(mocker):
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
 
+    assert mock_create_model_called_with == (form, [])
 
-def test_save_material_creates_aggregates(mocker):
-    mocker.patch.object(AggregatesStrategy, 'create_model',
-                        autospec=True, return_value=None)
+
+def test_save_material_creates_aggregates(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(AggregatesStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
@@ -137,10 +159,18 @@ def test_save_material_creates_aggregates(mocker):
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
 
+    assert mock_create_model_called_with == (form, [])
 
-def test_save_material_creates_process(mocker):
-    mocker.patch.object(ProcessStrategy, 'create_model',
-                        autospec=True, return_value=None)
+
+def test_save_material_creates_process(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(ProcessStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
@@ -151,10 +181,18 @@ def test_save_material_creates_process(mocker):
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
 
+    assert mock_create_model_called_with == (form, [])
 
-def test_save_material_creates_admixture(mocker):
-    mocker.patch.object(AdmixtureStrategy, 'create_model',
-                        autospec=True, return_value=None)
+
+def test_save_material_creates_admixture(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(AdmixtureStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
@@ -163,6 +201,8 @@ def test_save_material_creates_admixture(mocker):
                                    ('type', ''),
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
+
+    assert mock_create_model_called_with == (form, [])
 
 
 def test_list_all_creates_all_materials_for_view(monkeypatch):
