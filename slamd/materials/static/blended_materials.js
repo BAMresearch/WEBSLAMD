@@ -13,8 +13,7 @@ async function selectBaseMaterialType() {
 }
 
 async function confirmSelection() {
-    let minMaxPlaceholder = document.getElementById("min-max-placeholder");
-    minMaxPlaceholder.innerHTML = "";
+    resetConfiguration();
 
     const placeholder = document.getElementById("base_material_selection");
 
@@ -53,6 +52,13 @@ function assignConfirmBlendingConfigurationEvent() {
 
     })
 
+}
+
+function resetConfiguration() {
+    let minMaxPlaceholder = document.getElementById("min-max-placeholder");
+    let ratioPlaceholder = document.getElementById("blending_ratio_placeholder");
+    minMaxPlaceholder.innerHTML = "";
+    ratioPlaceholder.innerHTML = "";
 }
 
 function createMinMaxValuesWithIncrements() {
