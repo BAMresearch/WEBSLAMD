@@ -1,4 +1,6 @@
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.aggregates import Aggregates
+from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 
 
@@ -90,3 +92,30 @@ def test_delete_by_type_and_uuid_removes_material_of_specified_type(monkeypatch)
 
     MaterialsPersistence.delete_by_type_and_uuid('powder', 'to be removed')
     assert mock_set_session_property_called_with == ('powder', [to_be_kept])
+
+# In real usecases a UUID object is used. For simplicity and sake of this test it can be a simple string.
+def test_query_by_uuid(monkeypatch):
+    to_be_returned = Powder()
+    to_be_returned.uuid = 'to be returned'
+
+    def mock_get_session_property(input):
+        if input == 'powder':
+            return [to_be_returned, Powder()]
+        elif input == 'liquid':
+            return [Liquid(), Liquid(), Liquid()]
+        elif input == 'aggregates':
+            return [Aggregates(), Aggregates(), Aggregates()]
+        else:
+            return []
+
+    def mock_query_all_saved_materials_types():
+        return ['powder', 'liquid', 'aggregates']
+
+    monkeypatch.setattr(MaterialsPersistence,
+                        'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'query_all_saved_materials_types', mock_query_all_saved_materials_types)
+
+    result = MaterialsPersistence.query_by_uuid('to be returned')
+    assert len(result) == 1
+    assert result[0] == to_be_returned
