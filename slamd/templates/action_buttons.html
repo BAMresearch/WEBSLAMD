@@ -47,9 +47,9 @@
 </div>
 {% endmacro %}
 
-{% macro create_change_selection_button(id, width, height) -%}
-<div class="slamd_tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm Selection">
-    <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+{% macro create_change_selection_button(id) -%}
+<div>
+    <button class="btn btn-success col-12" type="button" data-bs-toggle="modal"
             data-bs-target={{'#change_modal_' + id}}>Confirm Selection
     </button>
 </div>
