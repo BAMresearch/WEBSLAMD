@@ -24,7 +24,7 @@ async function confirmSelection() {
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
 
     if (placeholder.childElementCount !== 0) {
-        prefillMinMaxNamesFromSelection(selectedMaterials);
+        prepareMinMaxInputFieldsFromSelection(selectedMaterials);
         assignKeyboardEventsToMinMaxInputFields();
         assignConfirmBlendingConfigurationEvent();
     }
@@ -91,10 +91,15 @@ function collectBaseMaterialSelection(placeholder) {
     return {count, selectedMaterials};
 }
 
-function prefillMinMaxNamesFromSelection(selectedMaterials) {
+function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
         document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
+        if (i === selectedMaterials.length - 1 ){
+            document.getElementById(`all_min_max_entries-${i}-increment`).disabled = true;
+            document.getElementById(`all_min_max_entries-${i}-max`).disabled = true;
+            document.getElementById(`all_min_max_entries-${i}-min`).disabled = true;
+        }
     }
 }
 
