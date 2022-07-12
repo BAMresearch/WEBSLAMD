@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -15,7 +14,7 @@ class CustomStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('custom', custom)
+        self.save_material(custom)
 
     def gather_composition_information(self, custom):
         return [self.include('Name', custom.custom_name),

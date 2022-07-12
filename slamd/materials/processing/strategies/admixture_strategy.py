@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -15,7 +14,7 @@ class AdmixtureStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('admixture', admixture)
+        self.save_material(admixture)
 
     def gather_composition_information(self, admixture):
         return [self.include('Composition', admixture.composition),

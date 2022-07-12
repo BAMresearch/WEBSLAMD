@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.process import Process
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -16,7 +15,7 @@ class ProcessStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('process', process)
+        self.save_material(process)
 
     def gather_composition_information(self, process):
         return [self.include('Duration', process.duration),

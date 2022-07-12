@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -35,7 +34,7 @@ class PowderStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('powder', powder)
+        self.save_material(powder)
 
     def gather_composition_information(self, powder):
         return [self.include('Fe₂O₃', powder.composition.fe3_o2),

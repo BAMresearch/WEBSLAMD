@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -21,7 +20,7 @@ class AggregatesStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('aggregates', aggregates)
+        self.save_material(aggregates)
 
     def gather_composition_information(self, aggregates):
         return [self.include('Fine Aggregates', aggregates.composition.fine_aggregates),

@@ -1,4 +1,3 @@
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -29,7 +28,7 @@ class LiquidStrategy(BaseMaterialStrategy):
             additional_properties=additional_properties
         )
 
-        MaterialsPersistence.save('liquid', liquid)
+        self.save_material(liquid)
 
     def gather_composition_information(self, liquid):
         return [self.include('Na₂SiO₃', liquid.composition.na2_si_o3),
