@@ -30,9 +30,9 @@ class AggregatesStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('aggregates', aggregates)
 
-    def _gather_composition_information(self, aggregates):
-        return [self._include('Fine Aggregates', aggregates.composition.fine_aggregates),
-                self._include('Coarse Aggregates',
-                              aggregates.composition.coarse_aggregates),
-                self._include('FA Density', aggregates.composition.fa_density),
-                self._include('CA Density', aggregates.composition.ca_density)]
+    def gather_composition_information(self, aggregates):
+        return [self.include('Fine Aggregates', aggregates.composition.fine_aggregates),
+                self.include('Coarse Aggregates',
+                             aggregates.composition.coarse_aggregates),
+                self.include('FA Density', aggregates.composition.fa_density),
+                self.include('CA Density', aggregates.composition.ca_density)]

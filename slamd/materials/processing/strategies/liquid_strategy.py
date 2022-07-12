@@ -38,18 +38,18 @@ class LiquidStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('liquid', liquid)
 
-    def _gather_composition_information(self, liquid):
-        return [self._include('Na₂SiO₃', liquid.composition.na2_si_o3),
-                self._include('NaOH', liquid.composition.na_o_h),
-                self._include('Na₂SiO₃ specific',
-                              liquid.composition.na2_si_o3_specific),
-                self._include('NaOH specific',
-                              liquid.composition.na_o_h_specific),
-                self._include('Total solution', liquid.composition.total),
-                self._include('Na₂O', liquid.composition.na2_o),
-                self._include('SiO₂', liquid.composition.si_o2),
-                self._include('H₂O', liquid.composition.h2_o),
-                self._include('Na₂O', liquid.composition.na2_o_dry),
-                self._include('SiO₂', liquid.composition.si_o2_dry),
-                self._include('Water', liquid.composition.water),
-                self._include('Total NaOH', liquid.composition.na_o_h_total)]
+    def gather_composition_information(self, liquid):
+        return [self.include('Na₂SiO₃', liquid.composition.na2_si_o3),
+                self.include('NaOH', liquid.composition.na_o_h),
+                self.include('Na₂SiO₃ specific',
+                             liquid.composition.na2_si_o3_specific),
+                self.include('NaOH specific',
+                             liquid.composition.na_o_h_specific),
+                self.include('Total solution', liquid.composition.total),
+                self.include('Na₂O', liquid.composition.na2_o),
+                self.include('SiO₂', liquid.composition.si_o2),
+                self.include('H₂O', liquid.composition.h2_o),
+                self.include('Na₂O', liquid.composition.na2_o_dry),
+                self.include('SiO₂', liquid.composition.si_o2_dry),
+                self.include('Water', liquid.composition.water),
+                self.include('Total NaOH', liquid.composition.na_o_h_total)]

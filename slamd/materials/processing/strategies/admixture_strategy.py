@@ -24,6 +24,6 @@ class AdmixtureStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('admixture', admixture)
 
-    def _gather_composition_information(self, admixture):
-        return [self._include('Composition', admixture.composition),
-                self._include('Type', admixture.admixture_type)]
+    def gather_composition_information(self, admixture):
+        return [self.include('Composition', admixture.composition),
+                self.include('Type', admixture.admixture_type)]

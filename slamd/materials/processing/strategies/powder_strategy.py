@@ -44,18 +44,18 @@ class PowderStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('powder', powder)
 
-    def _gather_composition_information(self, powder):
-        return [self._include('Fe₂O₃', powder.composition.fe3_o2),
-                self._include('SiO₂', powder.composition.si_o2),
-                self._include('Al₂O₃', powder.composition.al2_o3),
-                self._include('CaO', powder.composition.ca_o),
-                self._include('MgO', powder.composition.mg_o),
-                self._include('Na₂O', powder.composition.na2_o),
-                self._include('K₂O', powder.composition.k2_o),
-                self._include('SO₃', powder.composition.s_o3),
-                self._include('TiO₂', powder.composition.ti_o2),
-                self._include('P₂O₅', powder.composition.p2_o5),
-                self._include('SrO', powder.composition.sr_o),
-                self._include('Mn₂O₃', powder.composition.mn2_o3),
-                self._include('Fine modules', powder.structure.fine),
-                self._include('Specific gravity', powder.structure.gravity)]
+    def gather_composition_information(self, powder):
+        return [self.include('Fe₂O₃', powder.composition.fe3_o2),
+                self.include('SiO₂', powder.composition.si_o2),
+                self.include('Al₂O₃', powder.composition.al2_o3),
+                self.include('CaO', powder.composition.ca_o),
+                self.include('MgO', powder.composition.mg_o),
+                self.include('Na₂O', powder.composition.na2_o),
+                self.include('K₂O', powder.composition.k2_o),
+                self.include('SO₃', powder.composition.s_o3),
+                self.include('TiO₂', powder.composition.ti_o2),
+                self.include('P₂O₅', powder.composition.p2_o5),
+                self.include('SrO', powder.composition.sr_o),
+                self.include('Mn₂O₃', powder.composition.mn2_o3),
+                self.include('Fine modules', powder.structure.fine),
+                self.include('Specific gravity', powder.structure.gravity)]

@@ -11,7 +11,11 @@ class BaseMaterialStrategy(ABC):
     def create_model(self, submitted_material, additional_properties):
         pass
 
-    def _include(self, displayed_name, property):
+    @abstractmethod
+    def gather_composition_information(self, material):
+        pass
+
+    def include(self, displayed_name, property):
         if empty(property):
             return ''
         return f'{displayed_name}: {property}, '
@@ -23,7 +27,7 @@ class BaseMaterialStrategy(ABC):
         dto.type = material.type
 
         dto.all_properties = join_all(
-            self._gather_composition_information(material))
+            self.gather_composition_information(material))
 
         self._append_cost_properties(dto, material.costs)
         self._append_additional_properties(dto, material.additional_properties)
@@ -34,10 +38,10 @@ class BaseMaterialStrategy(ABC):
     def _append_cost_properties(self, dto, costs):
         if costs is None:
             return
-        dto.all_properties += self._include('Costs (€/kg)', costs.costs)
-        dto.all_properties += self._include('CO₂ footprint (kg)',
-                                            costs.co2_footprint)
-        dto.all_properties += self._include(
+        dto.all_properties += self.include('Costs (€/kg)', costs.costs)
+        dto.all_properties += self.include('CO₂ footprint (kg)',
+                                           costs.co2_footprint)
+        dto.all_properties += self.include(
             'Delivery time (days)', costs.delivery_time)
 
     def _append_additional_properties(self, dto, additional_properties):

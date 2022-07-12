@@ -25,7 +25,7 @@ class ProcessStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('process', process)
 
-    def _gather_composition_information(self, process):
-        return [self._include('Duration', process.duration),
-                self._include('Temperature', process.temperature),
-                self._include('Relative Humidity', process.relative_humidity)]
+    def gather_composition_information(self, process):
+        return [self.include('Duration', process.duration),
+                self.include('Temperature', process.temperature),
+                self.include('Relative Humidity', process.relative_humidity)]

@@ -24,6 +24,6 @@ class CustomStrategy(BaseMaterialStrategy):
 
         MaterialsPersistence.save('custom', custom)
 
-    def _gather_composition_information(self, custom):
-        return [self._include('Name', custom.custom_name),
-                self._include('Value', custom.custom_value)]
+    def gather_composition_information(self, custom):
+        return [self.include('Name', custom.custom_name),
+                self.include('Value', custom.custom_value)]
