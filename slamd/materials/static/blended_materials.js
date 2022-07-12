@@ -25,7 +25,7 @@ async function confirmSelection() {
 
     if (placeholder.childElementCount !== 0) {
         prepareMinMaxInputFieldsFromSelection(selectedMaterials);
-        assignKeyboardEventsToMinMaxInputFields();
+        assignKeyboardEventsToMinMaxForm();
         assignConfirmBlendingConfigurationEvent();
     }
 }
@@ -103,39 +103,60 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
     }
 }
 
-function assignKeyboardEventsToMinMaxInputFields() {
-    let {numberOfIndependentRows, independentMinMaxInputFields} = collectIndependentMaxMinInputFields();
+function validateIncrementValue(increment) {
+    const moreThanTwoDigitsDotSeperated = /^\d*\.\d{3,}$/;
+    const moreThanTwoDigitsColonSeperated = /^\d*\\,\d{3,}$/;
 
-    for (let item of independentMinMaxInputFields) {
+    if (moreThanTwoDigitsDotSeperated.test(increment.value) || moreThanTwoDigitsColonSeperated.test(increment.value)) {
+        increment.value = parseFloat(increment.value).toFixed(2);
+    }
+
+    if (increment.value < 0){
+        increment.value = 0;
+    }
+    if (increment.value > 100){
+        increment.value = 100;
+    }
+}
+
+function assignKeyboardEventsToMinMaxForm() {
+    let {numberOfIndependentRows, independentInputFields} = collectIndependentInputFields();
+
+    for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentMinMaxInputFields, numberOfIndependentRows);
+            computeDependentValue("min", item.min, independentInputFields, numberOfIndependentRows);
         });
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentMinMaxInputFields, numberOfIndependentRows);
+            computeDependentValue("max", item.max, independentInputFields, numberOfIndependentRows);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
         });
     }
 }
 
 /**
- * The method extracts all min and max input fields except the last one as the latter will be computed dynamically in terms
+ * The method extracts all min, max and increment input fields except the last one as the latter will be computed dynamically in terms
  * of all the other min/max values. The number of min items always equals the number of min items. Therefore we can get the
  * total number of rows simply by extracting the tags with id ending on -min.
  */
-function collectIndependentMaxMinInputFields() {
+function collectIndependentInputFields() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-    let independentMinMaxInputFields = []
+    let independentInputFields = []
     for (let i = 0; i <= numberOfIndependentRows; i++) {
         if (i !== numberOfIndependentRows) {
             let min = document.getElementById(`all_min_max_entries-${i}-min`)
             let max = document.getElementById(`all_min_max_entries-${i}-max`)
-            independentMinMaxInputFields.push({
+            let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
+            independentInputFields.push({
                 min: min,
-                max: max
+                max: max,
+                increment : increment
             })
         }
     }
-    return {numberOfIndependentRows, independentMinMaxInputFields};
+    return {numberOfIndependentRows, independentInputFields};
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
