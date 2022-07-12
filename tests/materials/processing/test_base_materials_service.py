@@ -16,6 +16,7 @@ from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.processing.strategies.aggregates_strategy import AggregatesStrategy
+from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
 from slamd.materials.processing.strategies.liquid_strategy import LiquidStrategy
 from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
@@ -195,10 +196,31 @@ def test_save_material_creates_admixture(monkeypatch):
     monkeypatch.setattr(AdmixtureStrategy, 'create_model', mock_create_model)
 
     with app.test_request_context('/materials'):
-        form = ImmutableMultiDict([('material_name', 'test process'),
+        form = ImmutableMultiDict([('material_name', 'test admixture'),
                                    ('material_type', 'Admixture'),
                                    ('composition', ''),
                                    ('type', ''),
+                                   ('submit', 'Add material')])
+        BaseMaterialService().save_material(form)
+
+    assert mock_create_model_called_with == (form, [])
+
+
+def test_save_material_creates_custom(monkeypatch):
+    mock_create_model_called_with = None
+
+    def mock_create_model(self, submitted_material, additional_properties):
+        nonlocal mock_create_model_called_with
+        mock_create_model_called_with = submitted_material, additional_properties
+        return None
+
+    monkeypatch.setattr(CustomStrategy, 'create_model', mock_create_model)
+
+    with app.test_request_context('/materials'):
+        form = ImmutableMultiDict([('material_name', 'test custom'),
+                                   ('material_type', 'Custom'),
+                                   ('custom_name', ''),
+                                   ('custom_value', ''),
                                    ('submit', 'Add material')])
         BaseMaterialService().save_material(form)
 
