@@ -47,18 +47,19 @@
 </div>
 {% endmacro %}
 
-{% macro create_change_selection_button(id) -%}
+{% macro create_change_selection_button() -%}
+
 <div>
-    <button class="btn btn-success col-12" type="button" data-bs-toggle="modal"
-            data-bs-target={{'#change_modal_' + id}}>Confirm Selection
+    <button id="change_base_material_selection_button" class="btn btn-success col-12" type="button" data-bs-toggle="modal" disabled
+            data-bs-target="#change_modal" >Confirm Selection
     </button>
 </div>
-<div class="modal fade" id="{{'change_modal_' + id}}" tabindex="-1" aria-labelledby="{{'change_modal_label_' + id }}"
+<div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="change_modal_label"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="{{'change_modal_label_' + id }}">Change Selection</h5>
+                <h5 class="modal-title" id="change_modal_label">Change Selection</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -67,7 +68,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
-                <button type="button" id="{{ id }}" class="btn btn-primary"
+                <button type="button" id="confirm_base_material_selection_button" class="btn btn-primary"
                         onclick="confirmSelection()"
                         data-bs-dismiss="modal">Confirm
                 </button>

@@ -194,6 +194,13 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     }
 }
 
+function toggleConfirmationButton() {
+    const placeholder = document.getElementById("base_material_selection");
+    const {count, selectedMaterials} = collectBaseMaterialSelection(placeholder);
+    document.getElementById("change_base_material_selection_button").disabled = count < 2;
+}
+
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
+    document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
 });
