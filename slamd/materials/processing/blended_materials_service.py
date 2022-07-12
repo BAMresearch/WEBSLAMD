@@ -53,8 +53,8 @@ class BlendedMaterialsService:
         for entry in cartesian_product_list:
             entry_list = list(entry)
             sum_of_independent_ratios = reduce(lambda x, y: x + y, entry_list)
-            dependent_ratio_value = 100 - sum_of_independent_ratios
-            independent_ratio_values = "/".join(map(lambda entry: str(entry), entry_list))
+            dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
+            independent_ratio_values = "/".join(map(lambda entry: str(round(entry, 2)), entry_list))
             all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
             ratio_form_entry.ratio.data = all_ratios_for_entry
