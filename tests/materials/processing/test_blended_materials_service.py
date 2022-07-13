@@ -18,7 +18,7 @@ def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
 
         monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
-        form = BlendedMaterialsService().list_material_selection_by_type('powder')
+        form = BlendedMaterialsService().list_base_material_selection_by_type('powder')
 
         assert len(form.base_material_selection.choices) == 2
         assert form.base_material_selection.choices[0] == ('test uuid1', 'test powder')
@@ -28,4 +28,4 @@ def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
 def test_list_material_selection_by_type_raises_not_found_exception():
     with app.test_request_context('/materials/blended/invalid'):
         with pytest.raises(MaterialNotFoundException):
-            BlendedMaterialsService().list_material_selection_by_type('invalid')
+            BlendedMaterialsService().list_base_material_selection_by_type('invalid')

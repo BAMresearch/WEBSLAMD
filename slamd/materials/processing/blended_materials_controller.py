@@ -21,7 +21,7 @@ blended_materials_service = BlendedMaterialsService()
 @blended_materials.route('', methods=['GET'])
 def blended_material_page():
     material_response = blended_materials_service.list_materials(blended=True)
-    base_material_selection_form = blended_materials_service.list_material_selection_by_type(MaterialType.POWDER.value)
+    base_material_selection_form = blended_materials_service.list_base_material_selection_by_type(MaterialType.POWDER.value)
     return render_template('blended_materials.html',
                            form=BlendingForm(),
                            base_material_selection_form=base_material_selection_form,
@@ -32,7 +32,7 @@ def blended_material_page():
 
 @blended_materials.route('/<type>', methods=['GET'])
 def select_base_material_type(type):
-    base_material_selection_form = blended_materials_service.list_material_selection_by_type(type)
+    base_material_selection_form = blended_materials_service.list_base_material_selection_by_type(type)
     body = {'template': render_template('base_material_selection.html',
                                         base_material_selection_form=base_material_selection_form)}
     return make_response(jsonify(body), 200)

@@ -15,14 +15,15 @@ class BlendedMaterialsService(MaterialsService):
     def create_materials_response(self, materials):
         return MaterialsResponse(materials, 'blended')
 
-    def list_material_selection_by_type(self, material_type):
+    def list_base_material_selection_by_type(self, material_type):
         if material_type not in MaterialType.get_all_types():
             raise MaterialNotFoundException('The requested type is not supported!')
 
         materials_by_type = MaterialsPersistence.query_by_type(material_type)
+        base_materials = list(filter(lambda m: m.is_blended is False, materials_by_type))
 
         material_selection = []
-        for material in materials_by_type:
+        for material in base_materials:
             material_selection.append((material.uuid, material.name))
 
         form = BaseMaterialSelectionForm()
