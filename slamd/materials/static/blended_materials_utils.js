@@ -189,8 +189,8 @@ function assignAddCustomBlendEvent() {
         input.className = "form-control";
         div.appendChild(input);
 
-        const button = document.getElementById("add_custom_blend_button");
-        placeholder.insertBefore(div, button);
+        const button_wrapper = document.getElementById("add_custom_blend_button_wrapper");
+        placeholder.insertBefore(div, button_wrapper);
 
         document.getElementById("submit").disabled = true;
         assignKeyboardEventsToRatiosForm()
