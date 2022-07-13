@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, make_response, 
 
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
-from slamd.materials.processing.forms.blending_form import BlendingForm
+from slamd.materials.processing.forms.blending_form import BlendingNameAndTypeForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
 from slamd.materials.processing.material_type import MaterialType
@@ -23,7 +23,7 @@ def blended_material_page():
     material_response = blended_materials_service.list_materials(blended=True)
     base_material_selection_form = blended_materials_service.list_base_material_selection_by_type(MaterialType.POWDER.value)
     return render_template('blended_materials.html',
-                           form=BlendingForm(),
+                           form=BlendingNameAndTypeForm(),
                            base_material_selection_form=base_material_selection_form,
                            min_max_form=MinMaxForm(),
                            ratio_form=RatioForm(),
@@ -40,7 +40,7 @@ def select_base_material_type(type):
 
 @blended_materials.route('', methods=['POST'])
 def submit_blending():
-    blending_data = BlendingForm(request.form)
+    blending_data = BlendingNameAndTypeForm(request.form)
     base_material_selection = request.form.getlist('base_material_selection')
 
     if blending_data.validate():

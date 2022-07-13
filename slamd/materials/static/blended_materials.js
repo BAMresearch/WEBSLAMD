@@ -5,30 +5,31 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
  */
 async function selectBaseMaterialType() {
-    resetConfiguration()
+    removeInnerHtmlFromPlaceholder("min-max-placeholder")
+    removeInnerHtmlFromPlaceholder("blending_ratio_placeholder")
     document.getElementById("change_base_material_selection_button").disabled = true;
 
     const elem = document.getElementById("base_type");
     const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
     await fetchEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
+
     document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
 }
 
 async function confirmSelection() {
-    resetConfiguration();
+    removeInnerHtmlFromPlaceholder("min-max-placeholder")
+    removeInnerHtmlFromPlaceholder("blending_ratio_placeholder")
 
     const placeholder = document.getElementById("base_material_selection");
 
-    const {count, selectedMaterials} = collectBaseMaterialSelection(placeholder);
+    const selectedMaterials = collectBaseMaterialSelection(placeholder);
 
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${count}`;
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}`;
     await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
 
-    if (placeholder.childElementCount !== 0) {
-        prepareMinMaxInputFieldsFromSelection(selectedMaterials);
-        assignKeyboardEventsToMinMaxForm();
-        assignConfirmBlendingConfigurationEvent();
-    }
+    prepareMinMaxInputFieldsFromSelection(selectedMaterials);
+    assignKeyboardEventsToMinMaxForm();
+    assignConfirmBlendingConfigurationEvent();
 }
 
 function assignConfirmBlendingConfigurationEvent() {

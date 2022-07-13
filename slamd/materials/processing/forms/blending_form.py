@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, validators, SubmitField, DecimalField, SelectField
 
 
-class BlendingForm(Form):
+class BlendingNameAndTypeForm(Form):
     # TODO: custom validator
     blended_material_name = StringField(
         label='Name',

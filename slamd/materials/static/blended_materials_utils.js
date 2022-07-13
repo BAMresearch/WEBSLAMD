@@ -1,39 +1,25 @@
 function collectBaseMaterialSelection(placeholder) {
-    count = 0
-    selectedMaterials = []
-    if (placeholder.childElementCount !== 0) {
-        let options = placeholder.children;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                count++
-                selectedMaterials.push({
-                    uuid: options[i].value,
-                    name: options[i].innerHTML
-                })
+    return Array.from(placeholder.children)
+        .filter(option => option.selected)
+        .map(option => {
+            return {
+                uuid: option.value,
+                name: option.innerHTML
             }
-        }
-    }
-    return {count, selectedMaterials};
+        });
 }
 
 function countSelectedBaseMaterials(placeholder) {
-    count = 0
+    let count = 0;
     if (placeholder.childElementCount !== 0) {
-        let options = placeholder.children;
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                count++
-            }
-        }
+        return Array.from(placeholder.children).filter(option => option.selected).length
     }
     return count;
 }
 
-function resetConfiguration() {
-    let minMaxPlaceholder = document.getElementById("min-max-placeholder");
-    let ratioPlaceholder = document.getElementById("blending_ratio_placeholder");
-    minMaxPlaceholder.innerHTML = "";
-    ratioPlaceholder.innerHTML = "";
+function removeInnerHtmlFromPlaceholder(placeholderID) {
+    let placeholder = document.getElementById(placeholderID);
+    placeholder.innerHTML = "";
 }
 
 function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
@@ -86,15 +72,15 @@ function collectRatioFields() {
 }
 
 function assignKeyboardEventsToMinMaxForm() {
-    let {numberOfIndependentRows, independentInputFields} = collectIndependentInputFields();
+    let independentInputFields = collectIndependentInputFields();
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields, numberOfIndependentRows);
+            computeDependentValue("min", item.min, independentInputFields, independentInputFields.length);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields, numberOfIndependentRows);
+            computeDependentValue("max", item.max, independentInputFields, independentInputFields.length);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
@@ -113,19 +99,17 @@ function collectIndependentInputFields() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let independentInputFields = []
-    for (let i = 0; i <= numberOfIndependentRows; i++) {
-        if (i !== numberOfIndependentRows) {
-            let min = document.getElementById(`all_min_max_entries-${i}-min`)
-            let max = document.getElementById(`all_min_max_entries-${i}-max`)
-            let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
-            independentInputFields.push({
-                min: min,
-                max: max,
-                increment: increment
-            })
-        }
+    for (let i = 0; i < numberOfIndependentRows; i++) {
+        let min = document.getElementById(`all_min_max_entries-${i}-min`)
+        let max = document.getElementById(`all_min_max_entries-${i}-max`)
+        let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
+        independentInputFields.push({
+            min: min,
+            max: max,
+            increment: increment
+        })
     }
-    return {numberOfIndependentRows, independentInputFields};
+    return independentInputFields;
 }
 
 function createMinMaxValuesWithIncrements() {
