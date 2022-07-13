@@ -8,6 +8,7 @@
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
     {% include 'blending_form.html' %}
+    {% include 'materials_table_container.html' %}
 </main>
 <script src="{{url_for('blended_materials.static', filename='blended_materials_utils.js')}}"></script>
 <script src="{{url_for('blended_materials.static', filename='blended_materials.js')}}"></script>

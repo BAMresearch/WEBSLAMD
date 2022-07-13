@@ -1,32 +1,16 @@
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
-from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.materials_service import MaterialsService
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 
 
-class BaseMaterialService:
+class BaseMaterialService(MaterialsService):
 
     def create_material_form(self, type):
         template_file = f'{type}_form.html'
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
-
-    def list_all_base_materials(self):
-        all_material_types = MaterialType.get_all_types()
-
-        all_material_dtos = []
-        for material_type in all_material_types:
-            materials = MaterialsPersistence.query_by_type(material_type)
-            strategy = MaterialFactory.create_strategy(material_type)
-            for material in materials:
-                if not material.is_blended:
-                    dto = strategy.create_dto(material)
-                    all_material_dtos.append(dto)
-
-        sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
-        sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
-        return sorted_by_type
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
@@ -47,7 +31,7 @@ class BaseMaterialService:
 
     def delete_material(self, type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
-        return self.list_all_base_materials()
+        return self.list_materials(blended=False)
 
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
