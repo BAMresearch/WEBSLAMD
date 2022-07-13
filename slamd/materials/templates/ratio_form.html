@@ -1,0 +1,18 @@
+{% from 'errors.html' import with_errors -%}
+
+<span class="border border-light bg-light">
+<div>
+    In case you want to edit the fields below, follow the pattern number/number/number... N times where N is the number
+    of selected base materials. For example, in case you selected from 3 base materials a valid entry would be 10/20/70
+</div>
+</span>
+{% for entry in ratio_form.all_ratio_entries %}
+<div class="col-md-3">
+    {{ entry.ratio(class_="form-control") }}
+</div>
+{% endfor %}
+<div id="add_custom_blend_button_wrapper" title="Add additional blend configurations manually">
+    <button class="btn btn-secondary col-12" type="button" id="add_custom_blend_button">
+        Add custom blend
+    </button>
+</div>

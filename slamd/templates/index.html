@@ -6,11 +6,11 @@
     <title>SLAMD Dashboard</title>
     <!-- Favicon -->
     <link rel="icon" type="imgae/x-icon"
-        href="https://media.glassdoor.com/sqll/1258242/bundesanstalt-f%C3%BCr-materialforschung-und-pr%C3%BCfung-squarelogo-1475059914794.png">
+          href="https://media.glassdoor.com/sqll/1258242/bundesanstalt-f%C3%BCr-materialforschung-und-pr%C3%BCfung-squarelogo-1475059914794.png">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
     <!-- Custom -->
     <link rel="stylesheet" href="{{url_for('static', filename='global.css')}}">
@@ -18,25 +18,29 @@
 
 <body class="background">
 
-    <nav class="navbar navbar-dark bg-primary p-3">
-        <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
-            <button class="btn btn-default" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+<nav class="navbar navbar-dark bg-primary p-3">
+    <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
+        <button class="btn btn-default" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
                 aria-controls="sidebar">
-                <span class="navbar-toggler-icon my-toggler"></span>
-            </button>
-            <a class="navbar-brand text-white" href="/materials">
-                SLAMD Dashboard
-            </a>
-        </div>
-    </nav>
+            <span class="navbar-toggler-icon my-toggler"></span>
+        </button>
+        <a class="navbar-brand text-white" href="/materials">
+            SLAMD Dashboard
+        </a>
+    </div>
+</nav>
 
-    {% include 'navigation.html' %}
-    {% block content %}
-    {% endblock %}
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+{% include 'navigation.html' %}
+{% block content %}
+{% endblock %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
         crossorigin="anonymous"></script>
+
+<!--slamd js files-->
+<script src="{{url_for('static', filename='global.js')}}"></script>
+
 </body>
 
 </html>

@@ -5,11 +5,12 @@ from slamd.materials.processing.forms.liquid_form import LiquidForm
 from slamd.materials.processing.forms.powder_form import PowderForm
 from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.forms.process_form import ProcessForm
+from slamd.materials.processing.materials_service import MaterialsResponse
 
 
 def test_slamd_shows_form_and_table(client, mocker):
-    mock_response = [{'uuid': 'test', 'name': 'test powder'}]
-    mocker.patch.object(BaseMaterialService, 'list_all',
+    mock_response = MaterialsResponse([{'uuid': 'test', 'name': 'test powder'}], 'base')
+    mocker.patch.object(BaseMaterialService, 'list_materials',
                         autospec=True, return_value=mock_response)
     response = client.get('/materials/base')
     html = response.data.decode('utf-8')
@@ -101,6 +102,15 @@ def test_slamd_selects_process(client):
     assert 'Duration' in template
     assert 'Temperature' in template
     assert 'Relative Humidity' in template
+
+
+def test_slamd_selects_invalid_type_and_shows_error_page(client):
+    response = client.get('/materials/base/invalid')
+
+    html = response.data.decode('utf-8')
+    assert response.status_code == 404
+
+    assert 'Resource not found: The requested type is not supported!' in html
 
 
 def test_slamd_creates_new_powder_when_saving_is_successful(client, mocker):

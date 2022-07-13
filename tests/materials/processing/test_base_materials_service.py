@@ -2,9 +2,9 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
-from werkzeug.exceptions import NotFound
 
 from slamd import create_app
+from slamd.common.error_handling import MaterialNotFoundException
 from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.forms.admixture_form import AdmixtureForm
 from slamd.materials.processing.forms.aggregates_form import AggregatesForm
@@ -69,7 +69,7 @@ def test_create_material_form_creates_custom():
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
     with app.test_request_context('/materials/base/invalid'):
-        with pytest.raises(NotFound):
+        with pytest.raises(MaterialNotFoundException):
             BaseMaterialService().create_material_form('invalid')
 
 
@@ -242,9 +242,10 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = BaseMaterialService().list_all()
+    result = BaseMaterialService().list_materials(blended=False)
 
-    _assert_test_powders(result)
+    _assert_test_powders(result.all_materials)
+    assert result.ctx == 'base'
     assert mock_query_by_type_called_with == 'powder'
 
 
@@ -270,7 +271,8 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
 
     result = BaseMaterialService().delete_material('powder', 'uuid to delete')
 
-    _assert_test_powders(result)
+    _assert_test_powders(result.all_materials)
+    assert result.ctx == 'base'
     assert mock_delete_by_type_and_uuid_called_with == (
         'powder', 'uuid to delete')
 

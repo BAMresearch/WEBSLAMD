@@ -65,7 +65,10 @@ h3, h5 {
     font-family: Arial, Helvetica, sans-serif
 }
 
-
 .slamd_tooltip {
     display: inline-block;
+}
+
+.slamd_navigation_link:hover {
+    color: #0d6efd
 }

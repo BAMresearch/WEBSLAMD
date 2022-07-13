@@ -46,3 +46,34 @@
     </button>
 </div>
 {% endmacro %}
+
+{% macro create_change_selection_button() -%}
+
+<div data-bs-toggle="tooltip" data-bs-placement="top" title="Select at least two base materials">
+    <button id="change_base_material_selection_button" class="btn btn-success col-12" type="button" data-bs-toggle="modal" disabled
+            data-bs-target="#change_modal" >Confirm Selection
+    </button>
+</div>
+<div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="change_modal_label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="change_modal_label">Change Selection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really want to change the chosen selection?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                </button>
+                <button type="button" id="confirm_base_material_selection_button" class="btn btn-primary"
+                        onclick="confirmSelection()"
+                        data-bs-dismiss="modal">Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
