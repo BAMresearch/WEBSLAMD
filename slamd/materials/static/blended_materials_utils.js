@@ -64,18 +64,17 @@ function assignKeyboardEventsToRatiosForm() {
         ratioInputFields.push(ratio)
     }
 
-    let numberOfBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-    for(let ratioInput of ratioInputFields){
+    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    for (let ratioInput of ratioInputFields) {
         ratioInput.addEventListener("keyup", () => {
 
+            let regex = new RegExp("\^\\d+(/\\d+){" + numberOfIndependentBaseMaterials + "}$");
+            let nonMatchingInputs = ratioInputFields
+                .map(input => input.value)
+                .filter(value => !regex.test(value))
+                .length
 
-            let regex = new RegExp("\^\\d+(/\\d+){" + numberOfBaseMaterials + "}$");
-            if(regex.test(ratioInput.value)){
-                console.log("MATCHES")
-            }
-            else{
-                console.log("DOES NOT MATCHES")
-            }
+            document.getElementById("submit").disabled = nonMatchingInputs > 0;
 
         })
     }
