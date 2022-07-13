@@ -56,13 +56,7 @@ function toggleConfirmBlendingButton(independentInputFields) {
 }
 
 function assignKeyboardEventsToRatiosForm() {
-    const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
-
-    let ratioInputFields = []
-    for (let i = 0; i < numberOfRatioFields; i++) {
-        let ratio = document.getElementById(`all_ratio_entries-${i}-ratio`)
-        ratioInputFields.push(ratio)
-    }
+    let ratioInputFields = collectRatioFields();
 
     let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
     for (let ratioInput of ratioInputFields) {
@@ -75,10 +69,19 @@ function assignKeyboardEventsToRatiosForm() {
                 .length
 
             document.getElementById("submit").disabled = nonMatchingInputs > 0;
-
         })
     }
+}
 
+function collectRatioFields() {
+    const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
+
+    let ratioInputFields = []
+    for (let i = 0; i < numberOfRatioFields; i++) {
+        let ratio = document.getElementById(`all_ratio_entries-${i}-ratio`)
+        ratioInputFields.push(ratio)
+    }
+    return ratioInputFields;
 }
 
 function assignKeyboardEventsToMinMaxForm() {
@@ -98,24 +101,6 @@ function assignKeyboardEventsToMinMaxForm() {
             toggleConfirmBlendingButton(independentInputFields);
         });
     }
-}
-
-function createMinMaxValuesWithIncrements() {
-    const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
-
-    let minMaxValuesWithIncrements = []
-    for (let i = 0; i <= numberOfIndependentRows; i++) {
-        let min = document.getElementById(`all_min_max_entries-${i}-min`)
-        let max = document.getElementById(`all_min_max_entries-${i}-max`)
-        let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
-        minMaxValuesWithIncrements.push({
-            idx: i,
-            min: parseFloat(min.value),
-            max: parseFloat(max.value),
-            increment: parseFloat(increment.value)
-        })
-    }
-    return minMaxValuesWithIncrements;
 }
 
 /**
@@ -140,6 +125,24 @@ function collectIndependentInputFields() {
         }
     }
     return {numberOfIndependentRows, independentInputFields};
+}
+
+function createMinMaxValuesWithIncrements() {
+    const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+
+    let minMaxValuesWithIncrements = []
+    for (let i = 0; i <= numberOfIndependentRows; i++) {
+        let min = document.getElementById(`all_min_max_entries-${i}-min`)
+        let max = document.getElementById(`all_min_max_entries-${i}-max`)
+        let increment = document.getElementById(`all_min_max_entries-${i}-increment`)
+        minMaxValuesWithIncrements.push({
+            idx: i,
+            min: parseFloat(min.value),
+            max: parseFloat(max.value),
+            increment: parseFloat(increment.value)
+        })
+    }
+    return minMaxValuesWithIncrements;
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
@@ -185,4 +188,24 @@ function validateIncrementValue(increment) {
     if (increment.value > 100) {
         increment.value = 100;
     }
+}
+
+function assignAddCustomBlendEvent() {
+    const placeholder = document.getElementById("blending_ratio_placeholder");
+
+    document.getElementById("add_custom_blend_button").addEventListener("click", () => {
+        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
+        let div = document.createElement("div");
+        div.className = "col-md-3"
+
+        let input = document.createElement("input");
+        input.id = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+        input.name = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+        input.type = "text";
+        input.className = "form-control";
+        div.appendChild(input);
+
+        const button = document.getElementById("add_custom_blend_button");
+        placeholder.insertBefore(div, button);
+    })
 }

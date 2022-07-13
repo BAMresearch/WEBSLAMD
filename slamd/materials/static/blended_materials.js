@@ -49,10 +49,11 @@ function assignConfirmBlendingConfigurationEvent() {
             const form = await response.json();
             document.getElementById("blending_ratio_placeholder").innerHTML = form["template"];
 
-            assignKeyboardEventsToRatiosForm();
         } catch (error) {
             console.log(error);
         }
+        assignKeyboardEventsToRatiosForm();
+        assignAddCustomBlendEvent()
 
     })
 
