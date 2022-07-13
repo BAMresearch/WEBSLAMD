@@ -8,7 +8,7 @@ class ProcessStrategy(BaseMaterialStrategy):
         process = Process(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_costs_properties(submitted_material),
+            costs=self.extract_cost_properties(submitted_material),
             duration=submitted_material['duration'],
             temperature=submitted_material['temperature'],
             relative_humidity=submitted_material['relative_humidity'],

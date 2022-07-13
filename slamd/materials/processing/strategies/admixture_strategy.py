@@ -8,7 +8,7 @@ class AdmixtureStrategy(BaseMaterialStrategy):
         admixture = Admixture(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_costs_properties(submitted_material),
+            costs=self.extract_cost_properties(submitted_material),
             composition=submitted_material['composition'],
             admixture_type=submitted_material['type'],
             additional_properties=additional_properties
