@@ -48,18 +48,28 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
     }
 }
 
+function toggleConfirmBlendingButton(independentInputFields) {
+    let allIncrementsFilled = independentInputFields.filter(item => item['increment'].value === "").length === 0;
+    let allMinFilled = independentInputFields.filter(item => item['min'].value === "").length === 0;
+    let allMaxFilled = independentInputFields.filter(item => item['max'].value === "").length === 0;
+    document.getElementById("confirm_blending_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
+}
+
 function assignKeyboardEventsToMinMaxForm() {
     let {numberOfIndependentRows, independentInputFields} = collectIndependentInputFields();
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
             computeDependentValue("min", item.min, independentInputFields, numberOfIndependentRows);
+            toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
             computeDependentValue("max", item.max, independentInputFields, numberOfIndependentRows);
+            toggleConfirmBlendingButton(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
             validateIncrementValue(item.increment)
+            toggleConfirmBlendingButton(independentInputFields);
         });
     }
 }
