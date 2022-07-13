@@ -32,32 +32,16 @@ async function confirmSelection() {
     assignConfirmBlendingConfigurationEvent();
 }
 
-function assignConfirmBlendingConfigurationEvent() {
+async function assignConfirmBlendingConfigurationEvent() {
     const elem = document.getElementById("confirm_blending_configuration_button");
-    const token = document.getElementById("csrf_token").value
 
     elem.addEventListener("click", async () => {
         const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
-        try {
-            const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify(minMaxValuesWithIncrements)
-            });
-            const form = await response.json();
-            document.getElementById("blending_ratio_placeholder").innerHTML = form["template"];
-
-        } catch (error) {
-            console.log(error);
-        }
+        const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
+        await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements)
         assignKeyboardEventsToRatiosForm();
-        assignAddCustomBlendEvent()
-
+        assignAddCustomBlendEvent();
     })
-
 }
 
 function toggleConfirmationButton() {
