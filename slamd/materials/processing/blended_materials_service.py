@@ -40,6 +40,9 @@ class BlendedMaterialsService:
         return min_max_form
 
     def create_ratio_form(self, min_max_values_with_increments):
+        if not self._ratio_input_is_valid(min_max_values_with_increments):
+            raise ValueNotSupportedException('Configuration of ratios is not valid!')
+
         all_values = []
         for i in range(len(min_max_values_with_increments) - 1):
             values_for_given_base_material = []
@@ -64,5 +67,8 @@ class BlendedMaterialsService:
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
+
+    def _ratio_input_is_valid(self, min_max_values_with_increments):
+        return True
 
 
