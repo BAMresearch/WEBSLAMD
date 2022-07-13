@@ -49,7 +49,7 @@
 
 {% macro create_change_selection_button() -%}
 
-<div>
+<div data-bs-toggle="tooltip" data-bs-placement="top" title="Select at least two base materials">
     <button id="change_base_material_selection_button" class="btn btn-success col-12" type="button" data-bs-toggle="modal" disabled
             data-bs-target="#change_modal" >Confirm Selection
     </button>

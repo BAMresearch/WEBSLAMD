@@ -1,29 +1,29 @@
 {% from 'errors.html' import with_errors -%}
 
 {% for entry in min_max_form.all_min_max_entries %}
-    <div class="d-none">
-        {{ entry.uuid_field(class_="form-control", hidden=True) }}
-    </div>
-    <div class="col-md-3">
-        {{ entry.blended_material_name.label(class_="control-label") }}
-        {{ entry.blended_material_name(class_="form-control", disabled=True) }}
-    </div>
-    <div class="col-md-3">
-        {{ entry.increment.label(class_="control-label") }}
-        {{ entry.increment(class_="form-control") }}
-        {{ with_errors(entry.increment) }}
-    </div>
-    <div class="col-md-3">
-        {{ entry.min.label(class_="control-label") }}
-        {{ entry.min(class_="form-control") }}
-    </div>
-    <div class="col-md-3">
-        {{ entry.max.label(class_="control-label") }}
-        {{ entry.max(class_="form-control") }}
-    </div>
+<div class="d-none">
+    {{ entry.uuid_field(class_="form-control", hidden=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.blended_material_name.label(class_="control-label") }}
+    {{ entry.blended_material_name(class_="form-control", disabled=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.increment.label(class_="control-label") }}
+    {{ entry.increment(class_="form-control") }}
+    {{ with_errors(entry.increment) }}
+</div>
+<div class="col-md-3">
+    {{ entry.min.label(class_="control-label") }}
+    {{ entry.min(class_="form-control") }}
+</div>
+<div class="col-md-3">
+    {{ entry.max.label(class_="control-label") }}
+    {{ entry.max(class_="form-control") }}
+</div>
 {% endfor %}
-<div>
-<button class="btn btn-success col-12" type="button" id="confirm_blending_configuration_button" disabled>
-    Confirm configuration
-</button>
+<div data-bs-toggle="tooltip" data-bs-placement="top" title="Fill in all editable fields">
+    <button class="btn btn-success col-12" type="button" id="confirm_blending_configuration_button" disabled>
+        Confirm configuration
+    </button>
 </div>
