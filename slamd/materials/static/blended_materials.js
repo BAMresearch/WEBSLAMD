@@ -97,11 +97,24 @@ function collectBaseMaterialSelection(placeholder) {
     return {count, selectedMaterials};
 }
 
+function countSelectedBaseMaterials(placeholder) {
+    count = 0
+    if (placeholder.childElementCount !== 0) {
+        let options = placeholder.children;
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                count++
+            }
+        }
+    }
+    return count;
+}
+
 function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
         document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
-        if (i === selectedMaterials.length - 1 ){
+        if (i === selectedMaterials.length - 1) {
             document.getElementById(`all_min_max_entries-${i}-increment`).disabled = true;
             document.getElementById(`all_min_max_entries-${i}-max`).disabled = true;
             document.getElementById(`all_min_max_entries-${i}-min`).disabled = true;
@@ -117,10 +130,10 @@ function validateIncrementValue(increment) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
-    if (increment.value < 0){
+    if (increment.value < 0) {
         increment.value = 0;
     }
-    if (increment.value > 100){
+    if (increment.value > 100) {
         increment.value = 100;
     }
 }
@@ -158,7 +171,7 @@ function collectIndependentInputFields() {
             independentInputFields.push({
                 min: min,
                 max: max,
-                increment : increment
+                increment: increment
             })
         }
     }
@@ -196,7 +209,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 
 function toggleConfirmationButton() {
     const placeholder = document.getElementById("base_material_selection");
-    const {count, selectedMaterials} = collectBaseMaterialSelection(placeholder);
+    const count = countSelectedBaseMaterials(placeholder);
     document.getElementById("change_base_material_selection_button").disabled = count < 2;
 }
 

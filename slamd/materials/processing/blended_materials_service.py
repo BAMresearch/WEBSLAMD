@@ -29,8 +29,13 @@ class BlendedMaterialsService:
         if not count.isnumeric():
             raise ValueNotSupportedException('Cannot process selection!')
 
+        count = int(count)
+
+        if count < 2:
+            raise ValueNotSupportedException('At least two items must be selected!')
+
         min_max_form = MinMaxForm()
-        for i in range(int(count)):
+        for i in range(count):
             min_max_form.all_min_max_entries.append_entry()
         return min_max_form
 
