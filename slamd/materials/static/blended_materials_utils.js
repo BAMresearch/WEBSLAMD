@@ -1,3 +1,5 @@
+const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
+
 function collectBaseMaterialSelection(placeholder) {
     return Array.from(placeholder.children)
         .filter(option => option.selected)
@@ -76,11 +78,11 @@ function assignKeyboardEventsToMinMaxForm() {
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields, independentInputFields.length);
+            computeDependentValue("min", item.min, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields, independentInputFields.length);
+            computeDependentValue("max", item.max, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
@@ -130,13 +132,10 @@ function createMinMaxValuesWithIncrements() {
     return minMaxValuesWithIncrements;
 }
 
-function computeDependentValue(type, currentInputField, independentMinMaxInputFields, numberOfIndependentRows) {
+function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
     const unfilledMinFields = independentMinMaxInputFields.filter(item => item[type].value === "");
 
-    const moreThanTwoDigitsDotSeperated = /^\d*\.\d{3,}$/;
-    const moreThanTwoDigitsColonSeperated = /^\d*\\,\d{3,}$/;
-
-    if (moreThanTwoDigitsDotSeperated.test(currentInputField.value) || moreThanTwoDigitsColonSeperated.test(currentInputField.value)) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
         currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
     }
 
@@ -154,16 +153,13 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
         sum = 100
     }
     if (unfilledMinFields.length === 0) {
-        const lastMinItem = document.getElementById(`all_min_max_entries-${numberOfIndependentRows}-${type}`);
+        const lastMinItem = document.getElementById(`all_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
         lastMinItem.value = (100 - sum).toFixed(2)
     }
 }
 
 function validateIncrementValue(increment) {
-    const moreThanTwoDigitsDotSeperated = /^\d*\.\d{3,}$/;
-    const moreThanTwoDigitsColonSeperated = /^\d*\\,\d{3,}$/;
-
-    if (moreThanTwoDigitsDotSeperated.test(increment.value) || moreThanTwoDigitsColonSeperated.test(increment.value)) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(increment.value)) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
