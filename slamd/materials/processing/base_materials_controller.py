@@ -14,8 +14,8 @@ base_materials_service = BaseMaterialService()
 
 @base_materials.route('', methods=['GET'])
 def base_material_page():
-    all_base_materials = base_materials_service.list_materials(blended=False)
-    return render_template('base_materials.html', form=PowderForm(), all_materials=all_base_materials)
+    materials_response = base_materials_service.list_materials(blended=False)
+    return render_template('base_materials.html', form=PowderForm(), materials_response=materials_response)
 
 
 @base_materials.route('/<type>', methods=['GET'])
@@ -44,13 +44,13 @@ def submit_base_material():
     if valid:
         return redirect('/')
 
-    all_materials = base_materials_service.list_materials(blended=False)
-    return render_template('base_materials.html', form=form, all_materials=all_materials)
+    materials_response = base_materials_service.list_materials(blended=False)
+    return render_template('base_materials.html', form=form, materials_response=materials_response)
 
 
 @base_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_base_material(material_type, uuid):
     all_base_materials = base_materials_service.delete_material(material_type, uuid)
 
-    body = {'template': render_template('materials_table.html', all_materials=all_base_materials)}
+    body = {'template': render_template('materials_table.html', materials_response=all_base_materials)}
     return make_response(jsonify(body), 200)

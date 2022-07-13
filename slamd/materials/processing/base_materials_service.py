@@ -1,11 +1,14 @@
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.materials_service import MaterialsService
+from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 
 
 class BaseMaterialService(MaterialsService):
+
+    def create_materials_response(self, materials):
+        return MaterialsResponse(materials, 'base')
 
     def create_material_form(self, type):
         template_file = f'{type}_form.html'

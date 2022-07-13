@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
+
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 
 
-class MaterialsService:
+class MaterialsService(ABC):
 
     def list_materials(self, blended):
         all_material_types = MaterialType.get_all_types()
@@ -21,4 +23,15 @@ class MaterialsService:
 
         sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
-        return sorted_by_type
+        return self.create_materials_response(sorted_by_type)
+
+    @abstractmethod
+    def create_materials_response(self, materials):
+        pass
+
+
+class MaterialsResponse:
+
+    def __init__(self, all_materials, ctx):
+        self.all_materials = all_materials
+        self.ctx = ctx

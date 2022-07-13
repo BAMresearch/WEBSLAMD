@@ -7,10 +7,13 @@ from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.materials_service import MaterialsService
+from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
 
 
 class BlendedMaterialsService(MaterialsService):
+
+    def create_materials_response(self, materials):
+        return MaterialsResponse(materials, 'blended')
 
     def list_material_selection_by_type(self, material_type):
         if material_type not in MaterialType.get_all_types():

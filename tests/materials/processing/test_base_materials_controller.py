@@ -5,10 +5,11 @@ from slamd.materials.processing.forms.liquid_form import LiquidForm
 from slamd.materials.processing.forms.powder_form import PowderForm
 from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.forms.process_form import ProcessForm
+from slamd.materials.processing.materials_service import MaterialsResponse
 
 
 def test_slamd_shows_form_and_table(client, mocker):
-    mock_response = [{'uuid': 'test', 'name': 'test powder'}]
+    mock_response = MaterialsResponse([{'uuid': 'test', 'name': 'test powder'}], 'base')
     mocker.patch.object(BaseMaterialService, 'list_materials',
                         autospec=True, return_value=mock_response)
     response = client.get('/materials/base')
