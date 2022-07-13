@@ -16,9 +16,8 @@ class MaterialsService:
 
             strategy = MaterialFactory.create_strategy(material_type)
             for material in materials:
-                if not material.is_blended:
-                    dto = strategy.create_dto(material)
-                    all_material_dtos.append(dto)
+                dto = strategy.create_dto(material)
+                all_material_dtos.append(dto)
 
         sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
