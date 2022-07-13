@@ -5,7 +5,7 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
  */
 async function selectBaseMaterialType() {
-    document.getElementById("min-max-placeholder").innerHTML = "";
+    resetConfiguration()
     document.getElementById("change_base_material_selection_button").disabled = true;
 
     const elem = document.getElementById("base_type");
