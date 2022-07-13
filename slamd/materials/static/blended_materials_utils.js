@@ -55,6 +55,33 @@ function toggleConfirmBlendingButton(independentInputFields) {
     document.getElementById("confirm_blending_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
+function assignKeyboardEventsToRatiosForm() {
+    const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
+
+    let ratioInputFields = []
+    for (let i = 0; i < numberOfRatioFields; i++) {
+        let ratio = document.getElementById(`all_ratio_entries-${i}-ratio`)
+        ratioInputFields.push(ratio)
+    }
+
+    let numberOfBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    for(let ratioInput of ratioInputFields){
+        ratioInput.addEventListener("keyup", () => {
+
+
+            let regex = new RegExp("\^\\d+(/\\d+){" + numberOfBaseMaterials + "}$");
+            if(regex.test(ratioInput.value)){
+                console.log("MATCHES")
+            }
+            else{
+                console.log("DOES NOT MATCHES")
+            }
+
+        })
+    }
+
+}
+
 function assignKeyboardEventsToMinMaxForm() {
     let {numberOfIndependentRows, independentInputFields} = collectIndependentInputFields();
 
@@ -72,31 +99,6 @@ function assignKeyboardEventsToMinMaxForm() {
             toggleConfirmBlendingButton(independentInputFields);
         });
     }
-}
-
-function assignConfirmBlendingConfigurationEvent() {
-    const elem = document.getElementById("confirm_blending_configuration_button");
-    const token = document.getElementById("csrf_token").value
-
-    elem.addEventListener("click", async () => {
-        const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
-        try {
-            const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify(minMaxValuesWithIncrements)
-            });
-            const form = await response.json();
-            document.getElementById("blending_ratio_placeholder").innerHTML = form["template"];
-        } catch (error) {
-            console.log(error);
-        }
-
-    })
-
 }
 
 function createMinMaxValuesWithIncrements() {

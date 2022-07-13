@@ -31,6 +31,33 @@ async function confirmSelection() {
     }
 }
 
+function assignConfirmBlendingConfigurationEvent() {
+    const elem = document.getElementById("confirm_blending_configuration_button");
+    const token = document.getElementById("csrf_token").value
+
+    elem.addEventListener("click", async () => {
+        const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
+        try {
+            const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify(minMaxValuesWithIncrements)
+            });
+            const form = await response.json();
+            document.getElementById("blending_ratio_placeholder").innerHTML = form["template"];
+
+            assignKeyboardEventsToRatiosForm();
+        } catch (error) {
+            console.log(error);
+        }
+
+    })
+
+}
+
 function toggleConfirmationButton() {
     const placeholder = document.getElementById("base_material_selection");
     const count = countSelectedBaseMaterials(placeholder);

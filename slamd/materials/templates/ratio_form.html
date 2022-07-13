@@ -1,5 +1,6 @@
 {% from 'errors.html' import with_errors -%}
 
+<div>In case you want to edit the fields below, follow the pattern number/number/number...</div>
 {% for entry in ratio_form.all_ratio_entries %}
 <div class="col-md-3">
     {{ entry.ratio.label(class_="control-label") }}
