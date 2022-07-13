@@ -190,6 +190,9 @@ function validateIncrementValue(increment) {
     }
 }
 
+/**
+ * After adding a new field we need to reassign the ratio events as new input fields must be registered
+ */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
 
@@ -207,5 +210,8 @@ function assignAddCustomBlendEvent() {
 
         const button = document.getElementById("add_custom_blend_button");
         placeholder.insertBefore(div, button);
+
+        document.getElementById("submit").disabled = true;
+        assignKeyboardEventsToRatiosForm()
     })
 }
