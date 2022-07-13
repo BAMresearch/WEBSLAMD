@@ -9,7 +9,7 @@ from slamd.materials.processing.forms.process_form import ProcessForm
 
 def test_slamd_shows_form_and_table(client, mocker):
     mock_response = [{'uuid': 'test', 'name': 'test powder'}]
-    mocker.patch.object(BaseMaterialService, 'list_all_base_materials',
+    mocker.patch.object(BaseMaterialService, 'list_materials',
                         autospec=True, return_value=mock_response)
     response = client.get('/materials/base')
     html = response.data.decode('utf-8')
