@@ -17,23 +17,9 @@ class MaterialsPersistence:
         return MaterialsPersistence.get_session_property(material_type)
 
     @classmethod
-    def query_by_uuid(cls, uuid):
-        material_types = MaterialsPersistence.query_all_saved_materials_types()
-
-        matching_uuid = []
-        for type in material_types:
-            materials = MaterialsPersistence.get_session_property(type)
-            matching_uuid.extend(list(
-                filter(lambda material: str(material.uuid) == uuid, materials)))
-
-        if len(matching_uuid) > 1:
-            raise RuntimeError('Found two elements with the same UUID')
-        else:
-            return matching_uuid
-
-    @classmethod
-    def query_all_saved_materials_types():
-        return [key.replace('_list', '') for key in session.keys() if key.endswith('_list')]
+    def query_by_type_and_uuid(cls, material_type, uuid):
+        materials = MaterialsPersistence.get_session_property(material_type)
+        return list(filter(lambda material: str(material.uuid) == uuid, materials))
 
     @classmethod
     def delete_by_type_and_uuid(cls, material_type, uuid):
