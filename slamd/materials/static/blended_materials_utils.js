@@ -51,7 +51,7 @@ function assignKeyboardEventsToRatiosForm() {
     for (let ratioInput of ratioInputFields) {
         ratioInput.addEventListener("keyup", () => {
 
-            let regex = new RegExp("\^\\d+(/\\d+){" + numberOfIndependentBaseMaterials + "}$");
+            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
             let nonMatchingInputs = ratioInputFields
                 .map(input => input.value)
                 .filter(value => !regex.test(value))
