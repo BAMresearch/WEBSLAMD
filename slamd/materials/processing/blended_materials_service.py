@@ -78,13 +78,14 @@ class BlendedMaterialsService(MaterialsService):
         return all_ratios_for_entry
 
     def _ratio_input_is_valid(self, min_max_increments_values):
-        for i in range(len(min_max_increments_values) - 1):
+        for i in range(len(min_max_increments_values)- 1):
             min_value = min_max_increments_values[i]['min']
             max_value = min_max_increments_values[i]['max']
             increment = min_max_increments_values[i]['increment']
+            print(increment, max_value, min_value)
             if self._validate_ranges(increment, max_value, min_value):
                 return False
-            return True
+        return True
 
     def _validate_ranges(self, increment, max_value, min_value):
         return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
