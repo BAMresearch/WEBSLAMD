@@ -82,7 +82,6 @@ class BlendedMaterialsService(MaterialsService):
             min_value = min_max_increments_values[i]['min']
             max_value = min_max_increments_values[i]['max']
             increment = min_max_increments_values[i]['increment']
-            print(increment, max_value, min_value)
             if self._validate_ranges(increment, max_value, min_value):
                 return False
         return True

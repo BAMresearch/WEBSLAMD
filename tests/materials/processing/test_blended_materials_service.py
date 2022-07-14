@@ -31,7 +31,7 @@ def test_list_material_selection_by_type_raises_not_found_exception():
             BlendedMaterialsService().list_base_material_selection_by_type('invalid')
 
 
-def test_create_ratio_form_creates_all_ratios():
+def test_create_ratio_form_creates_all_ratios_for_integer_values():
     with app.test_request_context('/materials/blended/add_ratios'):
         ratio_request = [{'idx': 0, 'min': 45, 'max': 55, 'increment': 5},
                          {'idx': 1, 'min': 2, 'max': 6, 'increment': 2},
@@ -45,3 +45,29 @@ def test_create_ratio_form_creates_all_ratios():
         assert data == [{'ratio': '45/2/53'}, {'ratio': '45/4/51'}, {'ratio': '45/6/49'},
                         {'ratio': '50/2/48'}, {'ratio': '50/4/46'}, {'ratio': '50/6/44'},
                         {'ratio': '55/2/43'}, {'ratio': '55/4/41'}, {'ratio': '55/6/39'}]
+
+
+def test_create_ratio_form_creates_all_ratios_for_decimal_values():
+    with app.test_request_context('/materials/blended/add_ratios'):
+        ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 5},
+                         {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
+
+        form = BlendedMaterialsService().create_ratio_form(ratio_request)
+
+        data = form.all_ratio_entries.data
+
+        assert len(data) == 2
+        assert data == [{'ratio': '10/90'}, {'ratio': '15/85'}]
+
+
+def test_create_ratio_form_creates_all_ratios_for_large_increment_value():
+    with app.test_request_context('/materials/blended/add_ratios'):
+        ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 30},
+                         {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
+
+        form = BlendedMaterialsService().create_ratio_form(ratio_request)
+
+        data = form.all_ratio_entries.data
+
+        assert len(data) == 1
+        assert data == [{'ratio': '10/90'}]

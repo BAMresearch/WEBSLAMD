@@ -78,12 +78,10 @@ function assignKeyboardEventsToMinMaxForm() {
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-
             computeDependentValue("min", item.min, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
-            
             computeDependentValue("max", item.max, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
@@ -170,9 +168,10 @@ function validateIncrementValue(increment) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
-    if (increment.value < 0) {
-        increment.value = 0;
+    if (increment.value <= 0) {
+        increment.value = "";
     }
+
     if (increment.value > 100) {
         increment.value = 100;
     }
