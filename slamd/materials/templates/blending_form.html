@@ -1,18 +1,18 @@
-{{ form.hidden_tag() }}
+{{ blending_name_and_type_form.hidden_tag() }}
 {% from 'errors.html' import with_errors -%}
 {% from 'action_buttons.html' import create_change_selection_button -%}
 
 <h3>Blended base materials</h3>
 <form class="row g-3" action="" method="post" novalidate>
-    {{ form.csrf_token }}
+    {{ blending_name_and_type_form.csrf_token }}
     <div class="col-md-6">
-        {{ form.blended_material_name.label(class_="control-label") }}
-        {{ form.blended_material_name(class_="form-control") }}
-        {{ with_errors(form.blended_material_name) }}
+        {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
+        {{ blending_name_and_type_form.blended_material_name(class_="form-control") }}
+        {{ with_errors(blending_name_and_type_form.blended_material_name) }}
     </div>
     <div class="col-md-6">
-        {{ form.base_type.label(class_="control-label") }}
-        {{ form.base_type(class_="form-control form-select") }}
+        {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
+        {{ blending_name_and_type_form.base_type(class_="form-control form-select") }}
     </div>
 
     <div id="base-material-selection-placeholder" class="row g-3 mb-3 align-items-end">
@@ -33,10 +33,10 @@
 
     <div class="form-group mb-12">
         <div class="col-sm-offset-2 col-sm-10" id="submit_bracket">
-            {{ form.submit(class_="btn btn-primary", data_bs_toggle="modal", data_bs_target="#submit_blending_modal", disabled=True) }}
+            {{ blending_name_and_type_form.submit(class_="btn btn-primary", data_bs_toggle="modal", data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>
     </div>
-    <!-- Submit form modal -->
+
     <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
          aria-hidden="true">
         <div class="modal-dialog">

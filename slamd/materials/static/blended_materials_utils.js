@@ -51,7 +51,7 @@ function assignKeyboardEventsToRatiosForm() {
     for (let ratioInput of ratioInputFields) {
         ratioInput.addEventListener("keyup", () => {
 
-            let regex = new RegExp("\^\\d+(/\\d+){" + numberOfIndependentBaseMaterials + "}$");
+            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
             let nonMatchingInputs = ratioInputFields
                 .map(input => input.value)
                 .filter(value => !regex.test(value))
@@ -133,8 +133,16 @@ function createMinMaxValuesWithIncrements() {
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
-    const unfilledMinFields = independentMinMaxInputFields.filter(item => item[type].value === "");
+    let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, type, currentInputField);
 
+    const unfilledFields = independentMinMaxInputFields.filter(item => item[type].value === "");
+    if (unfilledFields.length === 0) {
+        const lastMinItem = document.getElementById(`all_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
+        lastMinItem.value = (100 - sumOfIndependentFields).toFixed(2)
+    }
+}
+
+function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
     if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
         currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
     }
@@ -143,19 +151,16 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
         currentInputField.value = 0;
     }
 
-    let sum = independentMinMaxInputFields
+    let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
         .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y, 0);
 
-    if (sum > 100) {
-        currentInputField.value = (100 - (sum - currentInputField.value)).toFixed(2)
-        sum = 100
+    if (sumOfIndependentFields > 100) {
+        currentInputField.value = (100 - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
+        sumOfIndependentFields = 100
     }
-    if (unfilledMinFields.length === 0) {
-        const lastMinItem = document.getElementById(`all_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
-        lastMinItem.value = (100 - sum).toFixed(2)
-    }
+    return sumOfIndependentFields;
 }
 
 function validateIncrementValue(increment) {
@@ -163,9 +168,6 @@ function validateIncrementValue(increment) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
-    if (increment.value < 0) {
-        increment.value = 0;
-    }
     if (increment.value > 100) {
         increment.value = 100;
     }

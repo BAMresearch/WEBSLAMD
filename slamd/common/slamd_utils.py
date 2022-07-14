@@ -18,3 +18,9 @@ def molecular_formula_of(input_molecule):
     """
     subscript = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     return input_molecule.translate(subscript)
+
+
+def not_numeric(input_value):
+    if isinstance(input_value, (int,float)):
+        return False
+    return not input_value.isnumeric()
