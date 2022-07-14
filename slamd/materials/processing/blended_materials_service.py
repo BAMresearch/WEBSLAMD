@@ -1,6 +1,7 @@
 from itertools import product
 
-from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException
+from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException, \
+    SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
@@ -62,6 +63,9 @@ class BlendedMaterialsService(MaterialsService):
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
 
+        if len(cartesian_product_list) > 100:
+            raise SlamdRequestTooLargeException('Too many blends were requested. Try again with another configuration!')
+
         ratio_form = RatioForm()
         for entry in cartesian_product_list:
             all_ratios_for_entry = self._create_entry_value(entry)
@@ -88,5 +92,5 @@ class BlendedMaterialsService(MaterialsService):
 
     def _validate_ranges(self, increment, max_value, min_value):
         return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
-               or max_value < 0 or increment < 0 or not_numeric(max_value) \
+               or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
