@@ -78,10 +78,16 @@ function assignKeyboardEventsToMinMaxForm() {
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
+            if (parseFloat(item.min.value) > parseFloat(item.max.value)){
+                item.min.value = item.max.value;
+            }
             computeDependentValue("min", item.min, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
+            if (parseFloat(item.max.value) < parseFloat(item.min.value)){
+                item.max.value = item.min.value;
+            }
             computeDependentValue("max", item.max, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
@@ -133,8 +139,16 @@ function createMinMaxValuesWithIncrements() {
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
-    const unfilledMinFields = independentMinMaxInputFields.filter(item => item[type].value === "");
+    let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, type, currentInputField);
 
+    const unfilledFields = independentMinMaxInputFields.filter(item => item[type].value === "");
+    if (unfilledFields.length === 0) {
+        const lastMinItem = document.getElementById(`all_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
+        lastMinItem.value = (100 - sumOfIndependentFields).toFixed(2)
+    }
+}
+
+function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
     if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
         currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
     }
@@ -143,19 +157,16 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
         currentInputField.value = 0;
     }
 
-    let sum = independentMinMaxInputFields
+    let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
         .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y, 0);
 
-    if (sum > 100) {
-        currentInputField.value = (100 - (sum - currentInputField.value)).toFixed(2)
-        sum = 100
+    if (sumOfIndependentFields > 100) {
+        currentInputField.value = (100 - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
+        sumOfIndependentFields = 100
     }
-    if (unfilledMinFields.length === 0) {
-        const lastMinItem = document.getElementById(`all_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
-        lastMinItem.value = (100 - sum).toFixed(2)
-    }
+    return sumOfIndependentFields;
 }
 
 function validateIncrementValue(increment) {
