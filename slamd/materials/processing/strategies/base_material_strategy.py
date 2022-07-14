@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from werkzeug.datastructures import MultiDict
 
 from slamd.common.slamd_utils import empty
 from slamd.common.slamd_utils import join_all
@@ -47,6 +48,18 @@ class BaseMaterialStrategy(ABC):
     def save_material(self, material):
         material_type = material.type.lower()
         MaterialsPersistence.save(material_type, material)
+
+    def convert_to_dict(self, material):
+        return MultiDict([
+            ('uuid', material.uuid),
+            ('name', material.name),
+            ('type', material.type),
+            ('delivery_time', material.costs.delivery_time),
+            ('costs', material.costs.costs),
+            ('co2_footprint', material.costs.co2_footprint),
+            ('additional_properties', material.additional_properties),
+            ('is_blended', material.is_blended)
+        ])
 
     def _append_cost_properties(self, dto, costs):
         if costs is None:

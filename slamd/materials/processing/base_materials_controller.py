@@ -47,6 +47,11 @@ def submit_base_material():
     all_materials = base_materials_service.list_all()
     return render_template('base_materials.html', form=form, all_materials=all_materials)
 
+@base_materials.route('/<material_type>/<uuid>', methods=['GET'])
+def populate_base_material_form(material_type, uuid):
+    form = base_materials_service.populate_form(material_type, uuid)
+    all_materials = base_materials_service.list_all()
+    return render_template('base_materials.html', form=form, all_materials=all_materials)
 
 @base_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_base_material(material_type, uuid):

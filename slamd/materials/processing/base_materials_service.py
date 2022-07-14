@@ -29,14 +29,12 @@ class BaseMaterialService:
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
         return sorted_by_type
 
-    def find_material(self, uuid):
-        all_material_types = MaterialType.get_all_types()
-        for material_type in all_material_types:
-            match = MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
-            if match:
-                return match
-        # Nothing found
-        raise NotFound
+    def populate_form(self, material_type, uuid):
+        material = self._find_material(material_type, uuid)
+        strategy = MaterialFactory.create_strategy(material.type.lower())
+        form_data = strategy.convert_to_dict(material)
+        form = MaterialFactory.create_material_form(submitted_material=form_data)
+        return form
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
@@ -66,3 +64,13 @@ class BaseMaterialService:
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         strategy.create_model(submitted_material, additional_properties)
+
+    def _find_material(self, uuid):
+        all_material_types = MaterialType.get_all_types()
+        for material_type in all_material_types:
+            match = MaterialsPersistence.query_by_type_and_uuid(
+                material_type, uuid)
+            if match:
+                return match
+        # Nothing found
+        raise NotFound
