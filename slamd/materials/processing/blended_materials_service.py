@@ -50,28 +50,28 @@ class BlendedMaterialsService(MaterialsService):
 
         all_values = []
         for i in range(len(min_max_values_with_increments) - 1):
-            values_for_given_base_material = []
-            current_value = min_max_values_with_increments[i]['min']
+            min = min_max_values_with_increments[i]['min']
             max = min_max_values_with_increments[i]['max']
             increment = min_max_values_with_increments[i]['increment']
-            while current_value <= max:
-                values_for_given_base_material.append(current_value)
-                current_value += increment
-            all_values.append(values_for_given_base_material)
+            all_values.append(range(min, max + 1, increment))
 
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
 
         ratio_form = RatioForm()
         for entry in cartesian_product_list:
-            entry_list = list(entry)
-            sum_of_independent_ratios = reduce(lambda x, y: x + y, entry_list)
-            dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
-            independent_ratio_values = "/".join(map(lambda entry: str(round(entry, 2)), entry_list))
-            all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
+            all_ratios_for_entry = self._create_entry_value(entry)
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
+
+    def _create_entry_value(self, entry):
+        entry_list = list(entry)
+        sum_of_independent_ratios = sum(entry_list)
+        dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
+        independent_ratio_values = "/".join(map(lambda entry: str(round(entry, 2)), entry_list))
+        all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
+        return all_ratios_for_entry
 
     def _ratio_input_is_valid(self, min_max_values_with_increments):
         return True
