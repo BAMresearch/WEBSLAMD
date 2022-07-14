@@ -73,5 +73,11 @@ class BlendedMaterialsService(MaterialsService):
         all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
         return all_ratios_for_entry
 
-    def _ratio_input_is_valid(self, min_max_values_with_increments):
-        return True
+    def _ratio_input_is_valid(self, min_max_increments_values):
+        for i in range(len(min_max_increments_values) - 1):
+            min_values = min_max_increments_values[i]['min']
+            max_values = min_max_increments_values[i]['max']
+            increment = min_max_increments_values[i]['increment']
+            if min_values < 0 or max_values > 100 or min_values > max_values or max_values < 0 or increment < 0:
+                return False
+            return True
