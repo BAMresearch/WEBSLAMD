@@ -10,6 +10,8 @@ from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
 
+MAX_NUMBER_OF_RATIOS = 1000
+
 
 class BlendedMaterialsService(MaterialsService):
 
@@ -63,7 +65,7 @@ class BlendedMaterialsService(MaterialsService):
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
 
-        if len(cartesian_product_list) > 100:
+        if len(cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException('Too many blends were requested. Try again with another configuration!')
 
         ratio_form = RatioForm()

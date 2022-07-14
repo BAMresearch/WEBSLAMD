@@ -1,7 +1,8 @@
 import pytest
 
 from slamd import create_app
-from slamd.common.error_handling import MaterialNotFoundException
+from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestTooLargeException, \
+    ValueNotSupportedException
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from tests.materials.materials_test_data import create_test_powders
@@ -71,3 +72,21 @@ def test_create_ratio_form_creates_all_ratios_for_large_increment_value():
 
         assert len(data) == 1
         assert data == [{'ratio': '10/90'}]
+
+
+def test_create_ratio_form_raises_exception_when_too_many_ratios_are_requested():
+    with app.test_request_context('/materials/blended/add_ratios'):
+        with pytest.raises(SlamdRequestTooLargeException):
+            ratio_request = [{'idx': 0, 'min': 10, 'max': 90, 'increment': 0.01},
+                             {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
+
+            BlendedMaterialsService().create_ratio_form(ratio_request)
+
+
+def test_create_ratio_form_raises_exception_when_min_value_is_invalid():
+    with app.test_request_context('/materials/blended/add_ratios'):
+        with pytest.raises(ValueNotSupportedException):
+            ratio_request = [{'idx': 0, 'min': -2, 'max': 90, 'increment': 0.01},
+                             {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
+
+            BlendedMaterialsService().create_ratio_form(ratio_request)
