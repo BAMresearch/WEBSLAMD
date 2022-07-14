@@ -1,7 +1,7 @@
-from functools import reduce
 from itertools import product
 
 from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException
+from slamd.common.slamd_utils import not_numeric
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
@@ -31,7 +31,7 @@ class BlendedMaterialsService(MaterialsService):
         return form
 
     def create_min_max_form(self, count):
-        if not count.isnumeric():
+        if not_numeric(count):
             raise ValueNotSupportedException('Cannot process selection!')
 
         count = int(count)
@@ -50,10 +50,14 @@ class BlendedMaterialsService(MaterialsService):
 
         all_values = []
         for i in range(len(min_max_values_with_increments) - 1):
-            min = min_max_values_with_increments[i]['min']
+            values_for_given_base_material = []
+            current_value = min_max_values_with_increments[i]['min']
             max = min_max_values_with_increments[i]['max']
             increment = min_max_values_with_increments[i]['increment']
-            all_values.append(range(min, max + 1, increment))
+            while current_value <= max:
+                values_for_given_base_material.append(current_value)
+                current_value += increment
+            all_values.append(values_for_given_base_material)
 
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
@@ -75,9 +79,14 @@ class BlendedMaterialsService(MaterialsService):
 
     def _ratio_input_is_valid(self, min_max_increments_values):
         for i in range(len(min_max_increments_values) - 1):
-            min_values = min_max_increments_values[i]['min']
-            max_values = min_max_increments_values[i]['max']
+            min_value = min_max_increments_values[i]['min']
+            max_value = min_max_increments_values[i]['max']
             increment = min_max_increments_values[i]['increment']
-            if min_values < 0 or max_values > 100 or min_values > max_values or max_values < 0 or increment < 0:
+            if self._validate_ranges(increment, max_value, min_value):
                 return False
             return True
+
+    def _validate_ranges(self, increment, max_value, min_value):
+        return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
+               or max_value < 0 or increment < 0 or not_numeric(max_value) \
+               or not_numeric(min_value) or not_numeric(increment)

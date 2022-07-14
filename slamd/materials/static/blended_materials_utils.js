@@ -78,16 +78,12 @@ function assignKeyboardEventsToMinMaxForm() {
 
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            if (parseFloat(item.min.value) > parseFloat(item.max.value)){
-                item.min.value = item.max.value;
-            }
+
             computeDependentValue("min", item.min, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
-            if (parseFloat(item.max.value) < parseFloat(item.min.value)){
-                item.max.value = item.min.value;
-            }
+            
             computeDependentValue("max", item.max, independentInputFields);
             toggleConfirmBlendingButton(independentInputFields);
         });
