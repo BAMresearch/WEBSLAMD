@@ -27,6 +27,19 @@ class BaseMaterialService:
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
         return sorted_by_type
 
+    def find_material(self, uuid):
+        """
+        Return the first material matching the given uuid and material_type.
+        Return None if no matching element was found.
+        """
+        all_material_types = MaterialType.get_all_types()
+        for material_type in all_material_types:
+            match = MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
+            if match:
+                return match
+        # Nothing found
+        return None
+
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
 

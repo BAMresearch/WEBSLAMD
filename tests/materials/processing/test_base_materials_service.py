@@ -1,5 +1,3 @@
-from unittest.mock import patch, MagicMock
-
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.exceptions import NotFound
@@ -14,6 +12,7 @@ from slamd.materials.processing.forms.powder_form import PowderForm
 from slamd.materials.processing.forms.process_form import ProcessForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.strategies.admixture_strategy import AdmixtureStrategy
 from slamd.materials.processing.strategies.aggregates_strategy import AggregatesStrategy
 from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
@@ -287,3 +286,23 @@ def _assert_test_powders(result):
     assert dto.type == 'Powder'
     assert dto.all_properties == u'Fe\u2082O\u2083' + \
         ': 23.3, Specific gravity: 12, test prop: test value'
+
+def test_find_material_calls_persistence_and_returns_matching_material(monkeypatch):
+    mock_query_by_type_and_uuid_called_with = None
+
+    def mock_query_by_type_and_uuid(type, uuid):
+        nonlocal mock_query_by_type_and_uuid_called_with
+        mock_query_by_type_and_uuid_called_with = type, uuid
+        powder = Powder()
+        powder.uuid = uuid
+        return powder
+
+    def mock_get_all_types():
+        return ['powder']
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
+
+    result = BaseMaterialService().find_material('uuid to delete')
+    assert result.uuid == 'uuid to delete'
+    assert mock_query_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
