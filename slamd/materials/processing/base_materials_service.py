@@ -30,10 +30,6 @@ class BaseMaterialService:
         return sorted_by_type
 
     def find_material(self, uuid):
-        """
-        Return the first material matching the given uuid and material_type.
-        Raise a NotFound exception if no matching element was found.
-        """
         all_material_types = MaterialType.get_all_types()
         for material_type in all_material_types:
             match = MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
