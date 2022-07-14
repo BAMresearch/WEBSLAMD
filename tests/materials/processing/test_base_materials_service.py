@@ -306,3 +306,8 @@ def test_find_material_calls_persistence_and_returns_matching_material(monkeypat
     result = BaseMaterialService().find_material('uuid to delete')
     assert result.uuid == 'uuid to delete'
     assert mock_query_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
+
+def test_find_material_raises_not_found_when_invalid_uuid_is_provided():
+    with app.test_request_context('/materials/invalid'):
+        with pytest.raises(NotFound):
+            BaseMaterialService().find_material('invalid')

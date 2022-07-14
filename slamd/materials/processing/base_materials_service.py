@@ -1,3 +1,5 @@
+from werkzeug.exceptions import NotFound
+
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
@@ -30,7 +32,7 @@ class BaseMaterialService:
     def find_material(self, uuid):
         """
         Return the first material matching the given uuid and material_type.
-        Return None if no matching element was found.
+        Raise a NotFound exception if no matching element was found.
         """
         all_material_types = MaterialType.get_all_types()
         for material_type in all_material_types:
@@ -38,7 +40,7 @@ class BaseMaterialService:
             if match:
                 return match
         # Nothing found
-        return None
+        raise NotFound
 
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
