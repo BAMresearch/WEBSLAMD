@@ -106,8 +106,7 @@ def test_query_by_type_and_uuid(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'get_session_property', mock_get_session_property)
 
     correct_type = MaterialsPersistence.query_by_type_and_uuid('powder', 'to be returned')
-    assert len(correct_type) == 1
-    assert correct_type[0] == to_be_returned
+    assert correct_type == to_be_returned
 
     incorrect_type = MaterialsPersistence.query_by_type_and_uuid('liquid', 'to be returned')
-    assert len(incorrect_type) == 0
+    assert incorrect_type == None
