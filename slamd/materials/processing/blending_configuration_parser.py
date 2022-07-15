@@ -4,8 +4,8 @@ from slamd.common.slamd_utils import string_to_number
 class RatioParser:
 
     @classmethod
-    def create_ratio_list(cls, all_ratios, delimiter):
-        return list(map(lambda ratio: cls._to_ratio_list(ratio, delimiter), all_ratios))
+    def create_list_of_normalized_ratio_lists(cls, all_ratios, delimiter):
+        return list(map(lambda ratio: cls._to_normalized_ratio_list(ratio, delimiter), all_ratios))
 
     @classmethod
     def create_ratio_string(cls, entry):
@@ -17,9 +17,10 @@ class RatioParser:
         return all_ratios_for_entry
 
     @classmethod
-    def _to_ratio_list(cls, ratio, delimiter):
+    def _to_normalized_ratio_list(cls, ratio, delimiter):
         pieces = ratio.split(delimiter)
         ratio_list = []
         for piece in pieces:
             ratio_list.append(string_to_number(piece))
-        return ratio_list
+        normalized_ratio_list = list(map(lambda ratio: ratio / sum(ratio_list), ratio_list))
+        return normalized_ratio_list
