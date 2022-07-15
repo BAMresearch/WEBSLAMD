@@ -1,3 +1,6 @@
+from slamd.common.error_handling import ValueNotSupportedException
+
+
 def empty(input):
     return input is None or input == ''
 
@@ -30,6 +33,17 @@ def numeric(input_value):
     if _pieces_are_numeric(input_value, '.') or _pieces_are_numeric(input_value, ','):
         return True
     return False
+
+
+def string_to_number(input_value):
+    if not_numeric(input_value):
+        raise ValueNotSupportedException(f'Cannot process input. {input_value} should be a number!')
+    if isinstance(input_value, (int, float)):
+        return float(input_value)
+    if ',' not in input_value:
+        return float(input_value)
+    input_as_number = input_value.replace(',', '.')
+    return float(input_as_number)
 
 
 def _pieces_are_numeric(input_value, separator):
