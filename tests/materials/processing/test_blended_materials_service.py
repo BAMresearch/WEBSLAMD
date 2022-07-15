@@ -1,4 +1,5 @@
 import pytest
+from werkzeug.datastructures import MultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestTooLargeException, \
@@ -90,3 +91,41 @@ def test_create_ratio_form_raises_exception_when_min_value_is_invalid():
                              {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
 
             BlendedMaterialsService().create_ratio_form(ratio_request)
+
+
+def test_save_blended_materials_throws_exception_when_name_is_not_set():
+    with app.test_request_context('/materials/blended'):
+        form = MultiDict()
+        form.add('base_type', 'Powder')
+
+        with pytest.raises(ValueNotSupportedException):
+            BlendedMaterialsService().save_blended_materials(form)
+
+
+def test_save_blended_materials_throws_exception_when_too_many_ratios_are_passed():
+    with app.test_request_context('/materials/blended'):
+        form = MultiDict()
+        form.add('blended_material_name', 'test blend')
+        form.add('base_type', 'Powder')
+        number_larger_than_max_allowed_ratios = 150
+        for i in range(0, number_larger_than_max_allowed_ratios):
+            form.add(f'all_ratio_entries-{i}-ratio', '10/10')
+
+        with pytest.raises(SlamdRequestTooLargeException):
+            BlendedMaterialsService().save_blended_materials(form)
+
+
+def test_save_blended_materials_throws_exception_when_ratios_have_not_enough_pieces():
+    with app.test_request_context('/materials/blended'):
+        form = MultiDict()
+        form.add('blended_material_name', 'test blend')
+        form.add('base_type', 'Powder')
+        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
+        number_larger_than_max_allowed_ratios = 10
+        for i in range(0, number_larger_than_max_allowed_ratios):
+            form.add(f'all_ratio_entries-{i}-ratio', '10/15/20')
+
+        form['all_ratio_entries-5-ratio'] = '10/15'
+
+        with pytest.raises(ValueNotSupportedException):
+            BlendedMaterialsService().save_blended_materials(form)

@@ -11,6 +11,7 @@ from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
 
+RATIO_DELIMITER = '/'
 MAX_NUMBER_OF_RATIOS = 100
 
 
@@ -58,7 +59,8 @@ class BlendedMaterialsService(MaterialsService):
         cartesian_product_list = list(cartesian_product)
 
         if len(cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
-            raise SlamdRequestTooLargeException('Too many blends were requested. Try again with another configuration!')
+            raise SlamdRequestTooLargeException(
+                f'Too many blends were requested. At most {MAX_NUMBER_OF_RATIOS} ratios can be created!')
 
         ratio_form = RatioForm()
         for entry in cartesian_product_list:
@@ -69,11 +71,18 @@ class BlendedMaterialsService(MaterialsService):
 
     def save_blended_materials(self, submitted_blending_configuration):
         blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)
-
+        base_material_uuids = submitted_blending_configuration.getlist('base_material_selection')
         if not blending_name_any_type_form.validate():
             raise ValueNotSupportedException("The blending name is empty or already used!")
-        # Other validations and creation
 
+        all_ratios = [value for key, value in submitted_blending_configuration.items() if 'all_ratio_entries-' in key]
+
+        if len(all_ratios) > MAX_NUMBER_OF_RATIOS:
+            raise SlamdRequestTooLargeException(
+                f'Too many ratios were passed! At most {MAX_NUMBER_OF_RATIOS} can be processed!')
+
+        if not self._ratios_are_valid(all_ratios, len(base_material_uuids)):
+            raise ValueNotSupportedException("There are invalid ratios. Make sure they satisfy the correct pattern!")
 
     def _prepare_values_for_cartesian_product(self, min_max_values_with_increments):
         all_values = []
@@ -108,4 +117,13 @@ class BlendedMaterialsService(MaterialsService):
             increment = min_max_increments_values[i]['increment']
             if self._validate_ranges(increment, max_value, min_value):
                 return False
+        return True
+
+    def _ratios_are_valid(self, all_ratios, number_of_base_materials):
+        for ratio in all_ratios:
+            pieces_of_a_ratio = ratio.split(RATIO_DELIMITER)
+            if len(pieces_of_a_ratio) != number_of_base_materials:
+                return False
+            # TODO more validations
+
         return True

@@ -5,7 +5,7 @@ from slamd.materials.processing.forms.validation import blending_name_is_unique
 
 
 class BlendingNameAndTypeForm(Form):
-    # TODO: custom validator
+
     blended_material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(), blending_name_is_unique]
