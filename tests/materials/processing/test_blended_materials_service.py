@@ -117,10 +117,7 @@ def test_save_blended_materials_throws_exception_when_too_many_ratios_are_passed
 
 def test_save_blended_materials_throws_exception_when_ratios_have_not_enough_pieces():
     with app.test_request_context('/materials/blended'):
-        form = MultiDict()
-        form.add('blended_material_name', 'test blend')
-        form.add('base_type', 'Powder')
-        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
+        form = _create_basic_submission_data()
         number_larger_than_max_allowed_ratios = 10
         for i in range(0, number_larger_than_max_allowed_ratios):
             form.add(f'all_ratio_entries-{i}-ratio', '10/15/20')
@@ -129,3 +126,26 @@ def test_save_blended_materials_throws_exception_when_ratios_have_not_enough_pie
 
         with pytest.raises(ValueNotSupportedException):
             BlendedMaterialsService().save_blended_materials(form)
+
+
+def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric_parts():
+    with app.test_request_context('/materials/blended'):
+        form = _create_basic_submission_data()
+        number_larger_than_max_allowed_ratios = 10
+        for i in range(0, number_larger_than_max_allowed_ratios):
+            form.add(f'all_ratio_entries-{i}-ratio', '10/15/20')
+
+        form['all_ratio_entries-5-ratio'] = '10.3/15/20'
+        form['all_ratio_entries-6-ratio'] = '10/15,7/8'
+        form['all_ratio_entries-7-ratio'] = '10/ab/8'
+
+        with pytest.raises(ValueNotSupportedException):
+            BlendedMaterialsService().save_blended_materials(form)
+
+
+def _create_basic_submission_data():
+    form = MultiDict()
+    form.add('blended_material_name', 'test blend')
+    form.add('base_type', 'Powder')
+    form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
+    return form

@@ -21,6 +21,22 @@ def molecular_formula_of(input_molecule):
 
 
 def not_numeric(input_value):
-    if isinstance(input_value, (int,float)):
-        return False
-    return not input_value.isnumeric()
+    return not numeric(input_value)
+
+
+def numeric(input_value):
+    if isinstance(input_value, (int, float)):
+        return True
+    if _pieces_are_numeric(input_value, '.') or _pieces_are_numeric(input_value, ','):
+        return True
+    return False
+
+
+def _pieces_are_numeric(input_value, separator):
+    pieces = input_value.split(separator)
+    if len(pieces) == 1:
+        return input_value.isnumeric()
+    if len(pieces) == 2:
+        return pieces[0].isnumeric() and pieces[1].isnumeric()
+    return False
+

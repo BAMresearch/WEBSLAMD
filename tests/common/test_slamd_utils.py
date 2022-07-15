@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of
+from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of, not_numeric
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -51,3 +51,27 @@ def test_molecular_formula_of_returns_subscripted_numbers():
 
 def test_molecular_formula_of_returns_subsripted_numbers_for_complex_molecules():
     assert molecular_formula_of('C6H12') == u'C\u2086H\u2081\u2082'
+
+
+def test_not_numeric_is_false_for_integer_input():
+    assert not_numeric(13) is False
+
+
+def test_not_numeric_is_false_for_float_input():
+    assert not_numeric(13.12) is False
+
+
+def test_not_numeric_is_false_for_integer_as_string_input():
+    assert not_numeric('13') is False
+
+
+def test_not_numeric_is_false_for_float_as_string_input():
+    assert not_numeric('13.5') is False
+
+
+def test_not_numeric_is_false_for_comma_float_as_string_input():
+    assert not_numeric('13,5') is False
+
+
+def test_not_numeric_is_true_for_non_number_input():
+    assert not_numeric('abc') is True

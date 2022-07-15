@@ -124,6 +124,7 @@ class BlendedMaterialsService(MaterialsService):
             pieces_of_a_ratio = ratio.split(RATIO_DELIMITER)
             if len(pieces_of_a_ratio) != number_of_base_materials:
                 return False
-            # TODO more validations
-
+            for pieces_of_a_ratio in pieces_of_a_ratio:
+                if not_numeric(pieces_of_a_ratio):
+                    return False
         return True
