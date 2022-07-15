@@ -33,10 +33,8 @@ class LiquidStrategy(BaseMaterialStrategy):
     def gather_composition_information(self, liquid):
         return [self.include('Na₂SiO₃', liquid.composition.na2_si_o3),
                 self.include('NaOH', liquid.composition.na_o_h),
-                self.include('Na₂SiO₃ specific',
-                             liquid.composition.na2_si_o3_specific),
-                self.include('NaOH specific',
-                             liquid.composition.na_o_h_specific),
+                self.include('Na₂SiO₃ specific', liquid.composition.na2_si_o3_specific),
+                self.include('NaOH specific', liquid.composition.na_o_h_specific),
                 self.include('Total solution', liquid.composition.total),
                 self.include('Na₂O', liquid.composition.na2_o),
                 self.include('SiO₂', liquid.composition.si_o2),
@@ -45,3 +43,19 @@ class LiquidStrategy(BaseMaterialStrategy):
                 self.include('SiO₂', liquid.composition.si_o2_dry),
                 self.include('Water', liquid.composition.water),
                 self.include('Total NaOH', liquid.composition.na_o_h_total)]
+
+    def convert_to_dict(self, liquid):
+        multidict = super().convert_to_dict(liquid)
+        multidict.add('na2_si_o3', liquid.composition.na2_si_o3)
+        multidict.add('na_o_h', liquid.composition.na_o_h)
+        multidict.add('na2_si_o3_specific', liquid.composition.na2_si_o3_specific)
+        multidict.add('na_o_h_specific', liquid.composition.na_o_h_specific)
+        multidict.add('total', liquid.composition.total)
+        multidict.add('na2_o', liquid.composition.na2_o)
+        multidict.add('si_o2', liquid.composition.si_o2)
+        multidict.add('h2_o', liquid.composition.h2_o)
+        multidict.add('na2_o_dry', liquid.composition.na2_o_dry)
+        multidict.add('si_o2_dry', liquid.composition.si_o2_dry)
+        multidict.add('water', liquid.composition.water)
+        multidict.add('na_o_h_total', liquid.composition.na_o_h_total)
+        return multidict

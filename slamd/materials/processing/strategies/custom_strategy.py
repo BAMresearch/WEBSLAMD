@@ -19,3 +19,9 @@ class CustomStrategy(BaseMaterialStrategy):
     def gather_composition_information(self, custom):
         return [self.include('Name', custom.custom_name),
                 self.include('Value', custom.custom_value)]
+
+    def convert_to_dict(self, custom):
+        multidict = super().convert_to_dict(custom)
+        multidict.add('name', custom.custom_name)
+        multidict.add('value', custom.custom_value)
+        return multidict

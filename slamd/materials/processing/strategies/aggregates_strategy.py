@@ -24,7 +24,14 @@ class AggregatesStrategy(BaseMaterialStrategy):
 
     def gather_composition_information(self, aggregates):
         return [self.include('Fine Aggregates', aggregates.composition.fine_aggregates),
-                self.include('Coarse Aggregates',
-                             aggregates.composition.coarse_aggregates),
+                self.include('Coarse Aggregates', aggregates.composition.coarse_aggregates),
                 self.include('FA Density', aggregates.composition.fa_density),
                 self.include('CA Density', aggregates.composition.ca_density)]
+
+    def convert_to_dict(self, aggregates):
+        multidict = super().convert_to_dict(aggregates)
+        multidict.add('fine_aggregates', aggregates.composition.fine_aggregates)
+        multidict.add('coarse_aggregates', aggregates.composition.coarse_aggregates)
+        multidict.add('fa_density', aggregates.composition.fa_density)
+        multidict.add('ca_density', aggregates.composition.ca_density)
+        return multidict
