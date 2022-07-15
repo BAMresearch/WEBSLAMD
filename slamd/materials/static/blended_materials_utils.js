@@ -51,21 +51,7 @@ function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
         document.getElementById("submit").disabled = nameIsEmpty;
     }
 
-    let ratioInputFields = collectRatioFields();
-
-    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-    for (let ratioInput of ratioInputFields) {
-        ratioInput.addEventListener("keyup", () => {
-
-            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
-            let nonMatchingInputs = ratioInputFields
-                .map(input => input.value)
-                .filter(value => !regex.test(value))
-                .length;
-            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
-            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
-        })
-    }
+    toggleSubmitButtonBasedOnRatiosAndName();
 }
 
 function collectRatioFields() {
@@ -219,19 +205,24 @@ function assignDeleteCustomBlendEvent(){
             }
         }
 
-        let ratioInputFields = collectRatioFields();
-        for (let ratioInput of ratioInputFields) {
-            ratioInput.addEventListener("keyup", () => {
-
-                let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
-                let nonMatchingInputs = ratioInputFields
-                    .map(input => input.value)
-                    .filter(value => !regex.test(value))
-                    .length;
-                allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
-                document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
-            })
-        }
+        toggleSubmitButtonBasedOnRatiosAndName();
         assignKeyboardEventsToRatiosForm()
     })
+}
+
+function toggleSubmitButtonBasedOnRatiosAndName() {
+    let ratioInputFields = collectRatioFields();
+    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    for (let ratioInput of ratioInputFields) {
+        ratioInput.addEventListener("keyup", () => {
+
+            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+            let nonMatchingInputs = ratioInputFields
+                .map(input => input.value)
+                .filter(value => !regex.test(value))
+                .length;
+            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
+        })
+    }
 }
