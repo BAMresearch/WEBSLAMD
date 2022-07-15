@@ -1,10 +1,9 @@
-from werkzeug.exceptions import BadRequest, NotFound
-
+from slamd.common.error_handling import MaterialNotFoundException
 from slamd.materials.processing.forms.admixture_form import AdmixtureForm
 from slamd.materials.processing.forms.aggregates_form import AggregatesForm
+from slamd.materials.processing.forms.custom_form import CustomForm
 from slamd.materials.processing.forms.liquid_form import LiquidForm
 from slamd.materials.processing.forms.powder_form import PowderForm
-from slamd.materials.processing.forms.custom_form import CustomForm
 from slamd.materials.processing.forms.process_form import ProcessForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.strategies.admixture_strategy import AdmixtureStrategy
@@ -35,7 +34,7 @@ class MaterialFactory:
         elif type == MaterialType.CUSTOM.value:
             cls = CustomForm
         else:
-            raise NotFound
+            raise MaterialNotFoundException('The requested type is not supported!')
 
         if submitted_material is None:
             # Create an empty form
@@ -59,4 +58,4 @@ class MaterialFactory:
         if type == MaterialType.CUSTOM.value:
             return CustomStrategy()
         else:
-            raise BadRequest
+            raise MaterialNotFoundException('The requested type is not supported!')

@@ -8,7 +8,7 @@ class CustomStrategy(BaseMaterialStrategy):
         custom = Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_costs_properties(submitted_material),
+            costs=self.extract_cost_properties(submitted_material),
             custom_name=submitted_material['name'],
             custom_value=submitted_material['value'],
             additional_properties=additional_properties
