@@ -41,7 +41,6 @@ function toggleConfirmBlendingButton(independentInputFields) {
     let allMinFilled = independentInputFields.filter(item => item['min'].value === "").length === 0;
     let allMaxFilled = independentInputFields.filter(item => item['max'].value === "").length === 0;
     document.getElementById("confirm_blending_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
-    document.getElementById("submit").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
 function assignKeyboardEventsToRatiosForm() {

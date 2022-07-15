@@ -6,7 +6,7 @@
 <form class="row g-3" action="" method="post" novalidate>
     {{ form.csrf_token }}
     <div class="col-md-6">
-        {{ form.material_name.label(class_="control-label") }}
+        {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
         {{ form.material_name(class_="form-control") }}
         {{ with_errors(form.material_name) }}
     </div>

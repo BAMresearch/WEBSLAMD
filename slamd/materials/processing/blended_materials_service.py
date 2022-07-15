@@ -51,16 +51,7 @@ class BlendedMaterialsService(MaterialsService):
         if not self._ratio_input_is_valid(min_max_values_with_increments):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
 
-        all_values = []
-        for i in range(len(min_max_values_with_increments) - 1):
-            values_for_given_base_material = []
-            current_value = min_max_values_with_increments[i]['min']
-            max = min_max_values_with_increments[i]['max']
-            increment = min_max_values_with_increments[i]['increment']
-            while current_value <= max:
-                values_for_given_base_material.append(current_value)
-                current_value += increment
-            all_values.append(values_for_given_base_material)
+        all_values = self._prepare_values_for_cartesian_product(min_max_values_with_increments)
 
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
@@ -75,6 +66,22 @@ class BlendedMaterialsService(MaterialsService):
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
 
+    def save_blended_materials(self):
+        pass
+
+    def _prepare_values_for_cartesian_product(self, min_max_values_with_increments):
+        all_values = []
+        for i in range(len(min_max_values_with_increments) - 1):
+            values_for_given_base_material = []
+            current_value = min_max_values_with_increments[i]['min']
+            max = min_max_values_with_increments[i]['max']
+            increment = min_max_values_with_increments[i]['increment']
+            while current_value <= max:
+                values_for_given_base_material.append(current_value)
+                current_value += increment
+            all_values.append(values_for_given_base_material)
+        return all_values
+
     def _create_entry_value(self, entry):
         entry_list = list(entry)
         sum_of_independent_ratios = sum(entry_list)
@@ -82,6 +89,11 @@ class BlendedMaterialsService(MaterialsService):
         independent_ratio_values = "/".join(map(lambda entry: str(round(entry, 2)), entry_list))
         all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
         return all_ratios_for_entry
+
+    def _validate_ranges(self, increment, max_value, min_value):
+        return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
+               or max_value < 0 or increment <= 0 or not_numeric(max_value) \
+               or not_numeric(min_value) or not_numeric(increment)
 
     def _ratio_input_is_valid(self, min_max_increments_values):
         for i in range(len(min_max_increments_values)- 1):
@@ -91,8 +103,3 @@ class BlendedMaterialsService(MaterialsService):
             if self._validate_ranges(increment, max_value, min_value):
                 return False
         return True
-
-    def _validate_ranges(self, increment, max_value, min_value):
-        return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
-               or max_value < 0 or increment <= 0 or not_numeric(max_value) \
-               or not_numeric(min_value) or not_numeric(increment)

@@ -50,7 +50,13 @@ function toggleConfirmationButton() {
     document.getElementById("change_base_material_selection_button").disabled = count < 2;
 }
 
+function checkNameIsNotEmpty() {
+    let nameField = document.getElementById("blended_material_name");
+    document.getElementById("submit").disabled = nameField.value === undefined || nameField.value === "";
+}
+
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
     document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
+    document.getElementById("blended_material_name").addEventListener("change", checkNameIsNotEmpty);
 });

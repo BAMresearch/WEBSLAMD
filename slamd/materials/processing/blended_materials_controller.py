@@ -40,6 +40,7 @@ def select_base_material_type(type):
 
 @blended_materials.route('', methods=['POST'])
 def submit_blending():
+    blended_materials_service.save_blended_materials()
     blending_data = BlendingNameAndTypeForm(request.form)
     base_material_selection = request.form.getlist('base_material_selection')
 
