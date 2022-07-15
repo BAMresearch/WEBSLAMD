@@ -1,0 +1,25 @@
+{% from 'action_buttons.html' import create_delete_blended_button -%}
+
+<h3>All {{ materials_response.ctx }} materials</h3>
+<table id="base_materials_table" class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Actions</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Properties</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in materials_response.all_materials %}
+        <tr>
+            <td>
+                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+            </td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.all_properties }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

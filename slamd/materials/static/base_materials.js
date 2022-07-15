@@ -75,6 +75,8 @@ function deleteAdditionalProperty() {
  * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id
+ * @param material_type
+ * @param token
  */
 async function deleteMaterial(id, material_type, token) {
     token = document.getElementById("csrf_token").value
