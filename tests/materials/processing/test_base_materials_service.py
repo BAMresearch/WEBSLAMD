@@ -288,30 +288,3 @@ def _assert_test_powders(result):
     assert dto.type == 'Powder'
     assert dto.all_properties == u'Fe\u2082O\u2083' + \
         ': 23.3, Specific gravity: 12, test prop: test value'
-
-
-def test_find_material_calls_persistence_and_returns_matching_material(monkeypatch):
-    mock_query_by_type_and_uuid_called_with = None
-
-    def mock_query_by_type_and_uuid(type, uuid):
-        nonlocal mock_query_by_type_and_uuid_called_with
-        mock_query_by_type_and_uuid_called_with = type, uuid
-        powder = Powder()
-        powder.uuid = uuid
-        return powder
-
-    def mock_get_all_types():
-        return ['powder']
-
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
-    monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
-
-    result = BaseMaterialService()._find_material('uuid to delete')
-    assert result.uuid == 'uuid to delete'
-    assert mock_query_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
-
-
-def test_find_material_raises_not_found_when_invalid_uuid_is_provided():
-    with app.test_request_context('/materials/invalid'):
-        with pytest.raises(MaterialNotFoundException):
-            BaseMaterialService()._find_material('invalid')
