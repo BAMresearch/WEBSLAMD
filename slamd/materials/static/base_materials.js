@@ -85,17 +85,6 @@ async function deleteMaterial(id, material_type, token) {
     }
 }
 
-/**
- * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
- * For consistency, it is constructed from a part describing the action, e.g. 'edit_material_button' and a uuid
- * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
- *
- * @param id
- */
-function editMaterial(id, material_type) {
-    console.log("EDIT")
-}
-
 window.addEventListener("load", function () {
     document.getElementById("material_type").addEventListener("change", selectMaterialType);
     document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty)
