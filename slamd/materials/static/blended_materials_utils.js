@@ -186,13 +186,13 @@ function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
 
     document.getElementById("add_custom_blend_button").addEventListener("click", () => {
-        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
+        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
         let div = document.createElement("div");
         div.className = "col-md-3"
 
         let input = document.createElement("input");
-        input.id = `all_ratio_entries-${numberOfRatioFields}-ratio`;
-        input.name = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+        input.id = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
+        input.name = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
         input.type = "text";
         input.className = "form-control";
         div.appendChild(input);
@@ -202,6 +202,36 @@ function assignAddCustomBlendEvent() {
 
         allRatioFieldsHaveValidInput = false;
         document.getElementById("submit").disabled = true;
+        assignKeyboardEventsToRatiosForm()
+    })
+}
+
+function assignDeleteCustomBlendEvent(){
+    const placeholder = document.getElementById("blending_ratio_placeholder");
+
+    document.getElementById("delete_custom_blend_button").addEventListener("click", () => {
+        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
+
+        for(let div of placeholder.children){
+            let input = div.children[0]
+            if(input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`){
+                placeholder.removeChild(div);
+            }
+        }
+
+        let ratioInputFields = collectRatioFields();
+        for (let ratioInput of ratioInputFields) {
+            ratioInput.addEventListener("keyup", () => {
+
+                let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+                let nonMatchingInputs = ratioInputFields
+                    .map(input => input.value)
+                    .filter(value => !regex.test(value))
+                    .length;
+                allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+                document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
+            })
+        }
         assignKeyboardEventsToRatiosForm()
     })
 }

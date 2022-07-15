@@ -43,6 +43,7 @@ async function assignConfirmBlendingConfigurationEvent() {
         await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements)
         assignKeyboardEventsToRatiosForm(true);
         assignAddCustomBlendEvent();
+        assignDeleteCustomBlendEvent();
     })
 }
 
