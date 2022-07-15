@@ -2,7 +2,8 @@ from itertools import product
 
 from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException, \
     SlamdRequestTooLargeException
-from slamd.common.slamd_utils import not_numeric, string_to_number
+from slamd.common.slamd_utils import not_numeric
+from slamd.materials.processing.blending_configuration_parser import RatioParser
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.blending_name_and_type_form import BlendingNameAndTypeForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
@@ -63,8 +64,8 @@ class BlendedMaterialsService(MaterialsService):
                 f'Too many blends were requested. At most {MAX_NUMBER_OF_RATIOS} ratios can be created!')
 
         ratio_form = RatioForm()
-        for entry in cartesian_product_list:
-            all_ratios_for_entry = self._create_entry_value(entry)
+        for ratio_as_list in cartesian_product_list:
+            all_ratios_for_entry = RatioParser.create_ratio_string(ratio_as_list)
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
@@ -75,16 +76,16 @@ class BlendedMaterialsService(MaterialsService):
         if not blending_name_any_type_form.validate():
             raise ValueNotSupportedException("The blending name is empty or already used!")
 
-        all_ratios = [value for key, value in submitted_blending_configuration.items() if 'all_ratio_entries-' in key]
+        all_ratios_as_string = [value for key, value in submitted_blending_configuration.items() if 'all_ratio_entries-' in key]
 
-        if len(all_ratios) > MAX_NUMBER_OF_RATIOS:
+        if len(all_ratios_as_string) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException(
                 f'Too many ratios were passed! At most {MAX_NUMBER_OF_RATIOS} can be processed!')
 
-        if not self._ratios_are_valid(all_ratios, len(base_material_uuids)):
+        if not self._ratios_are_valid(all_ratios_as_string, len(base_material_uuids)):
             raise ValueNotSupportedException("There are invalid ratios. Make sure they satisfy the correct pattern!")
 
-        ratios_as_list = self._convert_ratios_to_list_of_numbers(all_ratios)
+        ratios_as_list = RatioParser.create_ratio_list(all_ratios_as_string, RATIO_DELIMITER)
 
     def _prepare_values_for_cartesian_product(self, min_max_values_with_increments):
         all_values = []
@@ -98,14 +99,6 @@ class BlendedMaterialsService(MaterialsService):
                 current_value += increment
             all_values.append(values_for_given_base_material)
         return all_values
-
-    def _create_entry_value(self, entry):
-        entry_list = list(entry)
-        sum_of_independent_ratios = sum(entry_list)
-        dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
-        independent_ratio_values = "/".join(map(lambda entry: str(round(entry, 2)), entry_list))
-        all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
-        return all_ratios_for_entry
 
     def _validate_ranges(self, increment, max_value, min_value):
         return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
@@ -130,14 +123,3 @@ class BlendedMaterialsService(MaterialsService):
                 if not_numeric(pieces_of_a_ratio):
                     return False
         return True
-
-    def _convert_ratios_to_list_of_numbers(self, all_ratios):
-        return list(map(lambda ratio: self._to_ratio_list(ratio), all_ratios))
-
-    def _to_ratio_list(self, ratio):
-        pieces = ratio.split(RATIO_DELIMITER)
-        ratio_list = []
-        for piece in pieces:
-            ratio_list.append(string_to_number(piece))
-        return ratio_list
-
