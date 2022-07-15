@@ -16,21 +16,14 @@ function collectAdditionalProperties(newPropIndex) {
     }
 
     for (let i = 0; i < newPropIndex; i++) {
-        let name = document.getElementById(`additional-properties-${i}-name`).value;
-        let value = document.getElementById(`additional-properties-${i}-value`).value;
+        let name = document.getElementById(`additional_properties-${i}-property_name`).value;
+        let value = document.getElementById(`additional_properties-${i}-property_value`).value;
         usersInputs.push({
-            name: name,
-            value: value
+            property_name: name,
+            property_value: value
         });
     }
     return usersInputs;
-}
-
-function restoreAdditionalProperties(usersInputs) {
-    for (let i = 0; i < usersInputs.length; i++) {
-        document.getElementById(`additional-properties-${i}-name`).value = usersInputs[i].name;
-        document.getElementById(`additional-properties-${i}-value`).value = usersInputs[i].value;
-    }
 }
 
 async function addAdditionalProperty() {
@@ -46,10 +39,8 @@ async function addAdditionalProperty() {
     }
 
     const usersInputs = collectAdditionalProperties(newPropIndex);
-
-    const url = `${BASE_MATERIALS_URL}/add_property/${newPropIndex}`;
-    await fetchEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", true);
-    restoreAdditionalProperties(usersInputs);
+    const url = `${BASE_MATERIALS_URL}/add_property`;
+    await postDataAndEmbedTemplateInPlaceholder(url, "additional-properties-placeholder", usersInputs);
 }
 
 function deleteAdditionalProperty() {

@@ -44,8 +44,8 @@ class MaterialsForm(Form):
     )
 
     additional_properties = FieldList(FormField(AddPropertyForm),
-                                      label='Custom Property',
-                                      min_entries=1,
+                                      label='Custom Properties',
+                                      min_entries=0,
                                       max_entries=10)
 
     submit = SubmitField('Add material')

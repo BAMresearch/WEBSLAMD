@@ -1,5 +1,6 @@
 from slamd.common.error_handling import MaterialNotFoundException
 from slamd.common.slamd_utils import not_empty
+from slamd.materials.processing.forms.additional_properties_form import AdditionalPropertiesForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -16,6 +17,17 @@ class BaseMaterialService(MaterialsService):
         template_file = f'{type}_form.html'
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
+
+    def create_additional_property_form(self, additional_property_entries):
+        new_form = AdditionalPropertiesForm()
+        if (not_empty(additional_property_entries)):
+            for entry in additional_property_entries:
+                additional_property_entry = new_form.additional_properties.append_entry()
+                additional_property_entry.property_name.data = entry['property_name']
+                additional_property_entry.property_value.data = entry['property_value']
+
+        new_form.additional_properties.append_entry()
+        return new_form
 
     def populate_form(self, material_type, uuid):
         material = self._find_material(material_type, uuid)
@@ -47,7 +59,7 @@ class BaseMaterialService(MaterialsService):
 
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
-                'additional-properties' in k and label in k]
+                'additional_properties' in k and label in k]
 
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())

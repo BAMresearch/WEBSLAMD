@@ -1,0 +1,12 @@
+{% for entry in form.additional_properties %}
+<div class="row g-3 mb-3 align-items-end" id="{{ 'additional-properties-'~loop.index0~'-row' }}">
+    <div class="col-md-6">
+        {{ entry.property_name.label(class_="control-label") }}
+        {{ entry.property_name(class_="form-control") }}
+    </div>
+    <div class="col-md-6">
+        {{ entry.property_value.label(class_="control-label") }}
+        {{ entry.property_value(class_="form-control") }}
+    </div>
+</div>
+{% endfor %}
