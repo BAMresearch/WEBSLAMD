@@ -49,7 +49,7 @@ def submit_base_material():
 @base_materials.route('/<material_type>/<uuid>', methods=['GET'])
 def populate_base_material_form(material_type, uuid):
     form = base_materials_service.populate_form(material_type, uuid)
-    all_materials = base_materials_service.list_all()
+    all_materials = base_materials_service.list_materials(blended=False)
     return render_template('base_materials.html', form=form, all_materials=all_materials)
 
 
