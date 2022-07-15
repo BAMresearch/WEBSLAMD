@@ -1,5 +1,7 @@
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
+let allRatioFieldsHaveValidInput = false;
+
 function collectBaseMaterialSelection(placeholder) {
     return Array.from(placeholder.children)
         .filter(option => option.selected)
@@ -43,7 +45,12 @@ function toggleConfirmBlendingButton(independentInputFields) {
     document.getElementById("confirm_blending_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
-function assignKeyboardEventsToRatiosForm() {
+function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
+    if (initialCreationOfForm) {
+        allRatioFieldsHaveValidInput = true;
+        document.getElementById("submit").disabled = nameIsEmpty;
+    }
+
     let ratioInputFields = collectRatioFields();
 
     let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
@@ -54,9 +61,9 @@ function assignKeyboardEventsToRatiosForm() {
             let nonMatchingInputs = ratioInputFields
                 .map(input => input.value)
                 .filter(value => !regex.test(value))
-                .length
-
-            document.getElementById("submit").disabled = nonMatchingInputs > 0;
+                .length;
+            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
         })
     }
 }
@@ -193,6 +200,7 @@ function assignAddCustomBlendEvent() {
         const button_wrapper = document.getElementById("add_custom_blend_button_wrapper");
         placeholder.insertBefore(div, button_wrapper);
 
+        allRatioFieldsHaveValidInput = false;
         document.getElementById("submit").disabled = true;
         assignKeyboardEventsToRatiosForm()
     })

@@ -1,5 +1,7 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
+let nameIsEmpty = false;
+
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
@@ -39,7 +41,7 @@ async function assignConfirmBlendingConfigurationEvent() {
         const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
         const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
         await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements)
-        assignKeyboardEventsToRatiosForm();
+        assignKeyboardEventsToRatiosForm(true);
         assignAddCustomBlendEvent();
     })
 }
@@ -52,7 +54,8 @@ function toggleConfirmationButton() {
 
 function checkNameIsNotEmpty() {
     let nameField = document.getElementById("blended_material_name");
-    document.getElementById("submit").disabled = nameField.value === undefined || nameField.value === "";
+    nameIsEmpty = nameField.value === undefined || nameField.value === ""
+    document.getElementById("submit").disabled = nameIsEmpty || !allRatioFieldsHaveValidInput;
 }
 
 window.addEventListener("load", function () {
