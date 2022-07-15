@@ -52,8 +52,8 @@ class BaseMaterialStrategy(ABC):
     def convert_to_multidict(self, material):
         return MultiDict([
             ('uuid', material.uuid),
-            ('name', material.name),
-            ('type', material.type),
+            ('material_name', material.name),
+            ('material_type', material.type),
             ('delivery_time', material.costs.delivery_time),
             ('costs', material.costs.costs),
             ('co2_footprint', material.costs.co2_footprint),
