@@ -3,7 +3,7 @@ from wtforms import StringField, DecimalField, IntegerField, SelectField, Submit
 from wtforms import FieldList, FormField
 from wtforms import validators
 
-from slamd.materials.processing.forms.validation import name_is_unique
+from slamd.materials.processing.forms.validation import base_material_name_is_unique
 from slamd.materials.processing.forms.add_property_form import AddPropertyForm
 
 
@@ -12,7 +12,7 @@ class MaterialsForm(Form):
     material_name = StringField(
         label='Name',
         validators=[validators.DataRequired(
-            message='Material name cannot be empty'), name_is_unique]
+            message='Material name cannot be empty'), base_material_name_is_unique]
     )
 
     material_type = SelectField(

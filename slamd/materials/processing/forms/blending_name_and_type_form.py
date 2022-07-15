@@ -1,13 +1,14 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, validators, SubmitField, DecimalField, SelectField
+from wtforms import StringField, validators, SubmitField, SelectField
+
+from slamd.materials.processing.forms.validation import blending_name_is_unique
 
 
 class BlendingNameAndTypeForm(Form):
     # TODO: custom validator
     blended_material_name = StringField(
         label='Name',
-        validators=[validators.DataRequired(
-            message='Material name cannot be empty')]
+        validators=[validators.DataRequired(), blending_name_is_unique]
     )
 
     base_type = SelectField(

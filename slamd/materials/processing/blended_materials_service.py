@@ -4,13 +4,14 @@ from slamd.common.error_handling import MaterialNotFoundException, ValueNotSuppo
     SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
+from slamd.materials.processing.forms.blending_name_and_type_form import BlendingNameAndTypeForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
 
-MAX_NUMBER_OF_RATIOS = 1000
+MAX_NUMBER_OF_RATIOS = 100
 
 
 class BlendedMaterialsService(MaterialsService):
@@ -66,8 +67,13 @@ class BlendedMaterialsService(MaterialsService):
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
 
-    def save_blended_materials(self):
-        pass
+    def save_blended_materials(self, submitted_blending_configuration):
+        blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)
+
+        if not blending_name_any_type_form.validate():
+            raise ValueNotSupportedException("The blending name is empty or already used!")
+        # Other validations and creation
+
 
     def _prepare_values_for_cartesian_product(self, min_max_values_with_increments):
         all_values = []
@@ -96,7 +102,7 @@ class BlendedMaterialsService(MaterialsService):
                or not_numeric(min_value) or not_numeric(increment)
 
     def _ratio_input_is_valid(self, min_max_increments_values):
-        for i in range(len(min_max_increments_values)- 1):
+        for i in range(len(min_max_increments_values) - 1):
             min_value = min_max_increments_values[i]['min']
             max_value = min_max_increments_values[i]['max']
             increment = min_max_increments_values[i]['increment']
