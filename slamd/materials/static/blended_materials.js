@@ -1,6 +1,6 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
-let nameIsEmpty = false;
+let nameIsEmpty = true;
 
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
