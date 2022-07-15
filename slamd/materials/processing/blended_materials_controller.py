@@ -69,9 +69,10 @@ def add_ratios():
     body = {'template': render_template('ratio_form.html', ratio_form=ratio_form)}
     return make_response(jsonify(body), 200)
 
+
 @blended_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_blended_material(material_type, uuid):
     all_blended_materials = blended_materials_service.delete_material(material_type, uuid)
 
-    body = {'template': render_template('materials_table_blended.html', materials_response=all_blended_materials)}
+    body = {'template': render_template('materials_table.html', materials_response=all_blended_materials)}
     return make_response(jsonify(body), 200)

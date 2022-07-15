@@ -59,7 +59,7 @@ function toggleConfirmationButton() {
  * @param material_type
  * @param token
  */
-async function deleteBlendedMaterial(id, material_type, token) {
+async function deleteMaterial(id, material_type, token) {
     token = document.getElementById("csrf_token").value
     let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
     try {
