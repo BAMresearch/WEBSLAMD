@@ -32,7 +32,7 @@ class BaseMaterialService:
     def populate_form(self, material_type, uuid):
         material = self._find_material(material_type, uuid)
         strategy = MaterialFactory.create_strategy(material.type.lower())
-        form_data = strategy.convert_to_dict(material)
+        form_data = strategy.convert_to_multidict(material)
         form = MaterialFactory.create_material_form(submitted_material=form_data)
         return form
 

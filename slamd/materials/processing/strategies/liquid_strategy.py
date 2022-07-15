@@ -44,8 +44,8 @@ class LiquidStrategy(BaseMaterialStrategy):
                 self.include('Water', liquid.composition.water),
                 self.include('Total NaOH', liquid.composition.na_o_h_total)]
 
-    def convert_to_dict(self, liquid):
-        multidict = super().convert_to_dict(liquid)
+    def convert_to_multidict(self, liquid):
+        multidict = super().convert_to_multidict(liquid)
         multidict.add('na2_si_o3', liquid.composition.na2_si_o3)
         multidict.add('na_o_h', liquid.composition.na_o_h)
         multidict.add('na2_si_o3_specific', liquid.composition.na2_si_o3_specific)

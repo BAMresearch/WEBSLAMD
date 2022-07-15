@@ -20,8 +20,8 @@ class AdmixtureStrategy(BaseMaterialStrategy):
         return [self.include('Composition', admixture.composition),
                 self.include('Type', admixture.admixture_type)]
 
-    def convert_to_dict(self, admixture):
-        multidict = super().convert_to_dict(admixture)
+    def convert_to_multidict(self, admixture):
+        multidict = super().convert_to_multidict(admixture)
         multidict.add('composition', admixture.composition)
         multidict.add('type', admixture.admixture_type)
         return multidict

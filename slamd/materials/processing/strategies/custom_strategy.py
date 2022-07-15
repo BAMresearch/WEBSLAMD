@@ -20,8 +20,8 @@ class CustomStrategy(BaseMaterialStrategy):
         return [self.include('Name', custom.custom_name),
                 self.include('Value', custom.custom_value)]
 
-    def convert_to_dict(self, custom):
-        multidict = super().convert_to_dict(custom)
+    def convert_to_multidict(self, custom):
+        multidict = super().convert_to_multidict(custom)
         multidict.add('name', custom.custom_name)
         multidict.add('value', custom.custom_value)
         return multidict

@@ -49,7 +49,7 @@ class BaseMaterialStrategy(ABC):
         material_type = material.type.lower()
         MaterialsPersistence.save(material_type, material)
 
-    def convert_to_dict(self, material):
+    def convert_to_multidict(self, material):
         return MultiDict([
             ('uuid', material.uuid),
             ('name', material.name),

@@ -22,8 +22,8 @@ class ProcessStrategy(BaseMaterialStrategy):
                 self.include('Temperature', process.temperature),
                 self.include('Relative Humidity', process.relative_humidity)]
 
-    def convert_to_dict(self, process):
-        multidict = super().convert_to_dict(process)
+    def convert_to_multidict(self, process):
+        multidict = super().convert_to_multidict(process)
         multidict.add('duration', process.duration)
         multidict.add('temperature', process.temperature)
         multidict.add('relative_humidity', process.relative_humidity)

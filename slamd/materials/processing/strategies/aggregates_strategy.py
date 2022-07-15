@@ -28,8 +28,8 @@ class AggregatesStrategy(BaseMaterialStrategy):
                 self.include('FA Density', aggregates.composition.fa_density),
                 self.include('CA Density', aggregates.composition.ca_density)]
 
-    def convert_to_dict(self, aggregates):
-        multidict = super().convert_to_dict(aggregates)
+    def convert_to_multidict(self, aggregates):
+        multidict = super().convert_to_multidict(aggregates)
         multidict.add('fine_aggregates', aggregates.composition.fine_aggregates)
         multidict.add('coarse_aggregates', aggregates.composition.coarse_aggregates)
         multidict.add('fa_density', aggregates.composition.fa_density)

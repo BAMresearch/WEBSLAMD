@@ -52,8 +52,8 @@ class PowderStrategy(BaseMaterialStrategy):
                 self.include('Fine modules', powder.structure.fine),
                 self.include('Specific gravity', powder.structure.gravity)]
 
-    def convert_to_dict(self, powder):
-        multidict = super().convert_to_dict(powder)
+    def convert_to_multidict(self, powder):
+        multidict = super().convert_to_multidict(powder)
         multidict.add('fe3_o2', powder.composition.fe3_o2)
         multidict.add('si_o2', powder.composition.si_o2)
         multidict.add('al2_o3', powder.composition.al2_o3)
