@@ -1,5 +1,4 @@
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import string_to_number, empty, not_empty
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
@@ -80,20 +79,20 @@ class PowderStrategy(BaseMaterialStrategy):
         self.save_material(blended_powder)
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
-        blended_fe2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
-        blended_si_o2 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_al2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
-        blended_na2_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+        blended_fe2_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
+        blended_si_o2 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_al2_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
+        blended_na2_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
 
-        blended_ca_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
-        blended_mg_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
-        blended_k2_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
-        blended_s_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
+        blended_ca_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
+        blended_mg_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
+        blended_k2_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
+        blended_s_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
 
-        blended_ti_o2 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
-        blended_p2_o5 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
-        blended_sr_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
-        blended_mn2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
+        blended_ti_o2 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
+        blended_p2_o5 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
+        blended_sr_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
+        blended_mn2_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
 
         composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
                                   na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
@@ -103,52 +102,14 @@ class PowderStrategy(BaseMaterialStrategy):
         return composition
 
     def _compute_blended_structure(self, normalized_ratios, base_powders_as_dict):
-        blended_fine = self._compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
-        blended_gravity = self._compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
+        blended_fine = self.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
+        blended_gravity = self.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
 
     def _compute_blended_costs(self, normalized_ratios, base_powders_as_dict):
-        blended_co2_footprint = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'co2_footprint')
-        blended_costs = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'costs')
-        blended_delivery_time = self._compute_max(base_powders_as_dict, 'costs', 'delivery_time')
+        blended_co2_footprint = self.compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'co2_footprint')
+        blended_costs = self.compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'costs')
+        blended_delivery_time = self.compute_max(base_powders_as_dict, 'costs', 'delivery_time')
 
         return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
-
-    def _compute_mean(self, normalized_ratios, base_powders_as_dict, *keys):
-        all_values = self._collect_all_base_material_values_for_property(base_powders_as_dict, keys)
-
-        empty_values = [value for value in all_values if empty(value)]
-
-        if len(empty_values) > 0:
-            return None
-
-        ratios_with_property_values = zip(normalized_ratios, all_values)
-        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
-        return str(round(mean, 2))
-
-    def _compute_max(self, base_powders_as_dict, *keys):
-        all_values = self._collect_all_base_material_values_for_property(base_powders_as_dict, keys)
-        non_empty_values = [float(value) for value in all_values if not_empty(value)]
-        maximum = max(non_empty_values)
-        return str(round(maximum, 2))
-
-    def _collect_all_base_material_values_for_property(self, base_powders_as_dict, keys):
-        all_values = []
-
-        for current_powder in base_powders_as_dict:
-            value = self._extract_value_for_key(current_powder, keys)
-            all_values.append(value)
-
-        return all_values
-
-    def _extract_value_for_key(self, current_powder_as_dict, keys):
-        base = current_powder_as_dict
-        for key in keys:
-            value = base.get(key, None)
-            try:
-                base = value.__dict__
-            except AttributeError:
-                return value
-
-        raise ValueNotSupportedException('No such property!')
