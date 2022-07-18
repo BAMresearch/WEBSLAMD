@@ -102,7 +102,7 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('mn2_o3', ''),
                                    ('fine', ''),
                                    ('gravity', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
@@ -133,7 +133,7 @@ def test_save_material_creates_liquid(monkeypatch):
                                    ('si_o2_dry', ''),
                                    ('water', ''),
                                    ('na_o_h_total', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
@@ -156,7 +156,7 @@ def test_save_material_creates_aggregates(monkeypatch):
                                    ('coarse_aggregates', ''),
                                    ('fa_density', ''),
                                    ('ca_density', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
@@ -178,7 +178,7 @@ def test_save_material_creates_process(monkeypatch):
                                    ('duration', ''),
                                    ('temperature', ''),
                                    ('relative_humidity', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
@@ -199,7 +199,7 @@ def test_save_material_creates_admixture(monkeypatch):
                                    ('material_type', 'Admixture'),
                                    ('composition', ''),
                                    ('type', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
@@ -220,7 +220,7 @@ def test_save_material_creates_custom(monkeypatch):
                                    ('material_type', 'Custom'),
                                    ('custom_name', ''),
                                    ('custom_value', ''),
-                                   ('submit', 'Add material')])
+                                   ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
     assert mock_create_model_called_with == (form, [])
