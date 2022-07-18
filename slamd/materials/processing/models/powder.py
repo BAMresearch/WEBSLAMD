@@ -3,9 +3,10 @@ from slamd.materials.processing.models.material import Material
 
 class Powder(Material):
 
-    def __init__(self, name='', type='', costs=None, composition=None, structure=None, additional_properties=None):
-        super().__init__(name=name, type=type, costs=costs,
-                         additional_properties=additional_properties)
+    def __init__(self, name='', type='', costs=None, composition=None, structure=None, additional_properties=None,
+                 is_blended=False, blending_ratios=''):
+        super().__init__(name=name, type=type, costs=costs, additional_properties=additional_properties,
+                         is_blended=is_blended, blending_ratios=blending_ratios)
         self.structure = structure
         self.composition = composition
 

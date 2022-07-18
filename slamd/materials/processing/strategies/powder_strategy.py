@@ -1,5 +1,6 @@
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.common.slamd_utils import string_to_number, empty
+from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
@@ -63,27 +64,43 @@ class PowderStrategy(BaseMaterialStrategy):
         if len(normalized_ratios) != len(base_powders_as_dict):
             raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
 
-        blended_powder = Powder()
-        blended_powder.type = base_powders_as_dict[0]['type']
-        blended_powder.name = f'{blended_material_name}-{idx}'
-        blended_powder.is_blended = True
-        blended_powder.blending_ratios = RatioParser.ratio_list_to_ratio_string(normalized_ratios)
+        composition = self._compute_composition(normalized_ratios, base_powders_as_dict)
 
-        self._compute_composition(blended_powder, normalized_ratios, base_powders_as_dict)
+        blended_powder = Powder(type=base_powders_as_dict[0]['type'],
+                                name=f'{blended_material_name}-{idx}',
+                                costs=Costs(),
+                                composition=composition,
+                                structure=Structure(),
+                                additional_properties=[],
+                                is_blended=True,
+                                blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
         self.save_material(blended_powder)
 
-    def _compute_composition(self, blended_powder, normalized_ratios, base_powders_as_dict):
-        blended_fe2_o3 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
-        blended_si_o2 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_al2_o3 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
-        blended_na2_o = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+    def _compute_composition(self, normalized_ratios, base_powders_as_dict):
+        blended_fe2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
+        blended_si_o2 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_al2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
+        blended_na2_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
 
-        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3, na2_o=blended_na2_o)
+        blended_ca_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
+        blended_mg_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
+        blended_k2_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
+        blended_s_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
 
-        blended_powder.composition = composition
+        blended_ti_o2 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
+        blended_p2_o5 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
+        blended_sr_o = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
+        blended_mn2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
 
-    def _compute_mean_with_default(self, normalized_ratios, base_powders_as_dict, *keys):
+        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
+                                  na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
+                                  k2_o=blended_k2_o, s_o3=blended_s_o3, ti_o2=blended_ti_o2,
+                                  p2_o5=blended_p2_o5, sr_o=blended_sr_o, mn2_o3=blended_mn2_o3)
+
+        return composition
+
+    def _compute_mean(self, normalized_ratios, base_powders_as_dict, *keys):
         all_filled = True
         all_values = []
 
@@ -91,7 +108,7 @@ class PowderStrategy(BaseMaterialStrategy):
             value = self._extract_value_for_key(current_powder, keys)
             all_values.append(value)
 
-            if value is None:
+            if empty(value):
                 all_filled = False
 
         if not all_filled:
