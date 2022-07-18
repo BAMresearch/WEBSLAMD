@@ -495,12 +495,9 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = BaseMaterialService().delete_material('powder', 'uuid to delete')
+    BaseMaterialService().delete_material('powder', 'uuid to delete')
 
-    _assert_test_powders(result.all_materials)
-    assert result.ctx == 'base'
-    assert mock_delete_by_type_and_uuid_called_with == (
-        'powder', 'uuid to delete')
+    assert mock_delete_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
 
 
 def _assert_test_powders(result):

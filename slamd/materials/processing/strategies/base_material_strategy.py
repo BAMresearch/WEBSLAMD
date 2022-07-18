@@ -46,8 +46,8 @@ class BaseMaterialStrategy(ABC):
         self._convert_additional_properties_to_multidict(multidict, material.additional_properties)
         return multidict
 
-    def edit_model(self, uuid, submitted_material, additional_properties):
-        model = self.create_model(submitted_material, additional_properties)
+    def edit_model(self, uuid, submitted_material):
+        model = self.create_model(submitted_material)
         model.uuid = uuid
         return model
 
@@ -74,9 +74,8 @@ class BaseMaterialStrategy(ABC):
             return ''
         return f'{displayed_name}: {property}, '
 
-    def save_model(self, material):
-        material_type = material.type.lower()
-        MaterialsPersistence.save(material_type, material)
+    def save_model(self, model):
+        MaterialsPersistence.save(model.type.lower(), model)
 
     def _append_cost_properties(self, dto, costs):
         if costs is None:

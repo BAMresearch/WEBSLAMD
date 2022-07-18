@@ -18,7 +18,7 @@ class BaseMaterialService(MaterialsService):
 
     def create_additional_property_form(self, additional_property_entries):
         new_form = AdditionalPropertiesForm()
-        if (not_empty(additional_property_entries)):
+        if not_empty(additional_property_entries):
             for entry in additional_property_entries:
                 additional_property_entry = new_form.additional_properties.append_entry()
                 additional_property_entry.property_name.data = entry['property_name']
@@ -64,4 +64,3 @@ class BaseMaterialService(MaterialsService):
 
     def delete_material(self, type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
-        return self.list_materials(blended=False)
