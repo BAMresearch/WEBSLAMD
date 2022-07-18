@@ -2,10 +2,10 @@ from slamd.common.error_handling import ValueNotSupportedException
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
 
 
-class PowderStrategy(BaseMaterialStrategy):
+class PowderStrategy(MaterialStrategy):
 
     def create_model(self, submitted_material):
         composition = Composition(
@@ -71,10 +71,6 @@ class PowderStrategy(BaseMaterialStrategy):
         multidict.add('gravity', powder.structure.gravity)
         return multidict
 
-    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials_as_dict):
-        for i, ratio_list in enumerate(list_of_normalizes_ratios_lists):
-            self.create_blended_material(i, blended_material_name, ratio_list, base_materials_as_dict)
-
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
         if len(normalized_ratios) != len(base_powders_as_dict):
             raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
@@ -83,16 +79,14 @@ class PowderStrategy(BaseMaterialStrategy):
         composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = self._compute_blended_structure(normalized_ratios, base_powders_as_dict)
 
-        blended_powder = Powder(type=base_powders_as_dict[0]['type'],
-                                name=f'{blended_material_name}-{idx}',
-                                costs=costs,
-                                composition=composition,
-                                structure=structure,
-                                additional_properties=[],
-                                is_blended=True,
-                                blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
-
-        self.save_material(blended_powder)
+        return Powder(type=base_powders_as_dict[0]['type'],
+                      name=f'{blended_material_name}-{idx}',
+                      costs=costs,
+                      composition=composition,
+                      structure=structure,
+                      additional_properties=[],
+                      is_blended=True,
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
         blended_fe2_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')

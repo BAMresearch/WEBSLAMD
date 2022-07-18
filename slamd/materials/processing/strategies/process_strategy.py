@@ -1,8 +1,8 @@
 from slamd.materials.processing.models.process import Process
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
 
 
-class ProcessStrategy(BaseMaterialStrategy):
+class ProcessStrategy(MaterialStrategy):
 
     def create_model(self, submitted_material):
         return Process(

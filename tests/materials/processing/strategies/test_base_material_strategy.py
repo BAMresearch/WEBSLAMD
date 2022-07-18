@@ -1,10 +1,10 @@
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.models.material import Material
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
 
 
-class MockStrategy(BaseMaterialStrategy):
-    def create_model(self, submitted_material, additional_properties):
+class MockStrategy(MaterialStrategy):
+    def create_model(self, submitted_material):
         return None
 
     def gather_composition_information(self, material):

@@ -88,8 +88,10 @@ class BlendedMaterialsService(MaterialsService):
 
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
-        strategy.create_blended_materials(submitted_blending_configuration['blended_material_name'],
-                                          list_of_normalizes_ratios_lists, base_materials_as_dict)
+        for i, ratio_list in enumerate(list_of_normalizes_ratios_lists):
+            blended_material = strategy.create_blended_material(i, submitted_blending_configuration['blended_material_name'],
+                                             ratio_list, base_materials_as_dict)
+            strategy.save_model(blended_material)
 
     def _validate_configuration(self, submitted_blending_configuration):
         blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)

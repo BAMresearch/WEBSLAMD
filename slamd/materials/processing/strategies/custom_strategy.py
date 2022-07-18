@@ -1,8 +1,8 @@
 from slamd.materials.processing.models.custom import Custom
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
 
 
-class CustomStrategy(BaseMaterialStrategy):
+class CustomStrategy(MaterialStrategy):
 
     def create_model(self, submitted_material):
         return Custom(

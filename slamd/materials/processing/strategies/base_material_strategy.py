@@ -10,15 +10,11 @@ from slamd.materials.processing.models.additional_property import AdditionalProp
 from slamd.materials.processing.models.material import Costs
 
 
-class BaseMaterialStrategy(ABC):
+class MaterialStrategy(ABC):
 
     @abstractmethod
     def create_model(self, submitted_material):
         pass
-
-    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials):
-        for ratio_list in list_of_normalizes_ratios_lists:
-            self.create_blended_material(ratio_list, base_materials)
 
     def create_dto(self, material):
         dto = MaterialDto()

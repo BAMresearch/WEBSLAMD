@@ -1,14 +1,12 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import StringField, validators, SubmitField, SelectField
 
-from slamd.materials.processing.forms.validation import blending_name_is_unique
-
 
 class BlendingNameAndTypeForm(Form):
 
     blended_material_name = StringField(
         label='Name',
-        validators=[validators.DataRequired(), blending_name_is_unique]
+        validators=[validators.DataRequired()]
     )
 
     base_type = SelectField(

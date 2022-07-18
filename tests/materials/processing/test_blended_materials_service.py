@@ -166,7 +166,7 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
 
     with app.test_request_context('/materials/blended'):
-        form = _prepare_request_for_succesful_blending()
+        form = _prepare_request_for_successful_blending()
 
         BlendedMaterialsService().save_blended_materials(form)
 
@@ -174,7 +174,7 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
                                              mock_save_called_with_second_blended_material)
 
 
-def _prepare_request_for_succesful_blending():
+def _prepare_request_for_successful_blending():
     form = MultiDict()
     form.add('blended_material_name', 'test blend')
     form.add('base_type', 'Powder')
