@@ -81,11 +81,11 @@ def test_save_material_creates_powder(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(PowderStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
@@ -121,11 +121,11 @@ def test_save_material_creates_liquid(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(LiquidStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test liquid'),
@@ -156,11 +156,11 @@ def test_save_material_creates_aggregates(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(AggregatesStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
@@ -183,11 +183,11 @@ def test_save_material_creates_process(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(ProcessStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test process'),
@@ -209,11 +209,11 @@ def test_save_material_creates_admixture(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(AdmixtureStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test admixture'),
@@ -234,11 +234,11 @@ def test_save_material_creates_custom(monkeypatch):
         mock_create_model_called_with = submitted_material, additional_properties
         return None
 
-    def mock_save_material(self, material):
+    def mock_save_model(self, material):
         return None
 
     monkeypatch.setattr(CustomStrategy, 'create_model', mock_create_model)
-    monkeypatch.setattr(BaseMaterialStrategy, 'save_material', mock_save_material)
+    monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
     with app.test_request_context('/materials'):
         form = ImmutableMultiDict([('material_name', 'test custom'),

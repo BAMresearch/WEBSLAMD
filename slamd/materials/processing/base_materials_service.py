@@ -84,9 +84,9 @@ class BaseMaterialService(MaterialsService):
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         model = strategy.create_model(submitted_material, additional_properties)
-        strategy.save_material(model)
+        strategy.save_model(model)
 
     def _edit_base_material_by_type(self, uuid, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
         model = strategy.edit_model(uuid, submitted_material, additional_properties)
-        strategy.save_material(model)
+        strategy.save_model(model)
