@@ -166,7 +166,9 @@ function validateIncrementValue(increment) {
 }
 
 /**
- * After adding a new field we need to reassign the ratio events as new input fields must be registered
+ * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
+ * requires a certain structure of DOM elements within the blending_ratio_placeholder. Thus, when changing this function always
+ * check the correspoding html dom structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
@@ -207,17 +209,8 @@ function assignDeleteCustomBlendEvent() {
 
         let ratioInputFields = collectRatioFields();
         let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-        for (let ratioInput of ratioInputFields) {
 
-            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
-            let nonMatchingInputs = ratioInputFields
-                .map(input => input.value)
-                .filter(value => !regex.test(value))
-                .length;
-            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
-            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
-        }
-
+        toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields);
         assignKeyboardEventsToRatiosForm()
     })
 }
@@ -227,14 +220,17 @@ function toggleSubmitButtonBasedOnRatiosAndName() {
     let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
     for (let ratioInput of ratioInputFields) {
         ratioInput.addEventListener("keyup", () => {
-
-            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
-            let nonMatchingInputs = ratioInputFields
-                .map(input => input.value)
-                .filter(value => !regex.test(value))
-                .length;
-            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
-            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
+            toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields)
         })
     }
+}
+
+function toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields) {
+    let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+    let nonMatchingInputs = ratioInputFields
+        .map(input => input.value)
+        .filter(value => !regex.test(value))
+        .length;
+    allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+    document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
 }

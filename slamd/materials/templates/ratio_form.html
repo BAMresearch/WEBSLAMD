@@ -7,6 +7,8 @@
     Note that also decimals with up to two decimal places are allowed.
 </div>
 </span>
+<!--Custom ratio fields can be dynammically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
+<!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
 {% for entry in ratio_form.all_ratio_entries %}
 <div class="col-md-3">
     {{ entry.ratio(class_="form-control") }}
