@@ -38,17 +38,24 @@ class BaseMaterialService(MaterialsService):
         form = MaterialFactory.create_material_form(submitted_material=form_data)
         return form
 
+    def edit_material(self, material_type, uuid, submitted_material):
+        """
+        Edit a base material with type material_type and given UUID.
+        The old version of the material will be deleted before creating the new one
+        to keep the database consistent. The UUID is reused, even if the material_type changes.
+        """
+        form = MaterialFactory.create_material_form(submitted_material=submitted_material)
+        additional_properties = self._process_additional_properties(submitted_material)
+
+        if form.validate():
+            self.delete_material(material_type, uuid)
+            self._edit_base_material_by_type(uuid, submitted_material, additional_properties)
+            return True, None
+        return False, form
+
     def save_material(self, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
-
-        additional_properties = []
-        submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
-        submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
-
-        for name, value in zip(submitted_names, submitted_values):
-            if not_empty(name):
-                additional_property = AdditionalProperty(name, value)
-                additional_properties.append(additional_property)
+        additional_properties = self._process_additional_properties(submitted_material)
 
         if form.validate():
             self._create_base_material_by_type(submitted_material, additional_properties)
@@ -59,10 +66,27 @@ class BaseMaterialService(MaterialsService):
         MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
         return self.list_materials(blended=False)
 
+    def _process_additional_properties(self, submitted_material):
+        additional_properties = []
+        submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
+        submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
+
+        for name, value in zip(submitted_names, submitted_values):
+            if not_empty(name):
+                additional_property = AdditionalProperty(name, value)
+                additional_properties.append(additional_property)
+        return additional_properties
+
     def _extract_additional_property_by_label(self, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
 
     def _create_base_material_by_type(self, submitted_material, additional_properties):
         strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
-        strategy.create_model(submitted_material, additional_properties)
+        model = strategy.create_model(submitted_material, additional_properties)
+        strategy.save_material(model)
+
+    def _edit_base_material_by_type(self, uuid, submitted_material, additional_properties):
+        strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
+        model = strategy.edit_model(uuid, submitted_material, additional_properties)
+        strategy.save_material(model)

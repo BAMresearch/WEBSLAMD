@@ -14,6 +14,11 @@ class BaseMaterialStrategy(ABC):
     def create_model(self, submitted_material, additional_properties):
         pass
 
+    def edit_model(self, uuid, submitted_material, additional_properties):
+        model = self.create_model(submitted_material, additional_properties)
+        model.uuid = uuid
+        return model
+
     @abstractmethod
     def gather_composition_information(self, material):
         pass

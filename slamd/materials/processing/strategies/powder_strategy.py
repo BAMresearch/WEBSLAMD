@@ -25,7 +25,7 @@ class PowderStrategy(BaseMaterialStrategy):
             fine=submitted_material['fine']
         )
 
-        powder = Powder(
+        return Powder(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
@@ -33,8 +33,6 @@ class PowderStrategy(BaseMaterialStrategy):
             structure=structure,
             additional_properties=additional_properties
         )
-
-        self.save_material(powder)
 
     def gather_composition_information(self, powder):
         return [self.include('Fe₂O₃', powder.composition.fe3_o2),

@@ -53,6 +53,17 @@ def populate_base_material_form(material_type, uuid):
     return render_template('base_materials.html', form=form, materials_response=all_base_materials)
 
 
+@base_materials.route('/<material_type>/<uuid>', methods=['POST'])
+def edit_material(material_type, uuid):
+    valid, form = base_materials_service.edit_material(material_type, uuid, request.form)
+
+    if valid:
+        return redirect('/')
+
+    materials_response = base_materials_service.list_materials(blended=False)
+    return render_template('base_materials.html', form=form, materials_response=materials_response)
+
+
 @base_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_base_material(material_type, uuid):
     all_base_materials = base_materials_service.delete_material(material_type, uuid)

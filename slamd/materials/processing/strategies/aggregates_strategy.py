@@ -12,15 +12,13 @@ class AggregatesStrategy(BaseMaterialStrategy):
             ca_density=submitted_material['ca_density']
         )
 
-        aggregates = Aggregates(
+        return Aggregates(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=additional_properties
         )
-
-        self.save_material(aggregates)
 
     def gather_composition_information(self, aggregates):
         return [self.include('Fine Aggregates', aggregates.composition.fine_aggregates),

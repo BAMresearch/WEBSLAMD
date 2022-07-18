@@ -20,15 +20,13 @@ class LiquidStrategy(BaseMaterialStrategy):
             na_o_h_total=submitted_material['na_o_h_total']
         )
 
-        liquid = Liquid(
+        return Liquid(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=additional_properties
         )
-
-        self.save_material(liquid)
 
     def gather_composition_information(self, liquid):
         return [self.include('Na₂SiO₃', liquid.composition.na2_si_o3),
