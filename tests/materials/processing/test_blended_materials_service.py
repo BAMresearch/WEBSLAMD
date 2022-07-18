@@ -172,10 +172,12 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
 
         assert mock_save_called_with_first_blended_material.composition.fe3_o2 == 15.0
         assert mock_save_called_with_first_blended_material.composition.si_o2 == 7.2
+        assert mock_save_called_with_first_blended_material.composition.al2_o3 == 7
         assert mock_save_called_with_first_blended_material.composition.na2_o == None
 
         assert mock_save_called_with_second_blended_material.composition.fe3_o2 == 17.5
         assert mock_save_called_with_second_blended_material.composition.si_o2 == 8.6
+        assert mock_save_called_with_second_blended_material.composition.al2_o3 == 7
         assert mock_save_called_with_second_blended_material.composition.na2_o == None
 
 
@@ -201,7 +203,7 @@ def _prepare_test_base_materials_for_blending(material_type, uuid):
     if material_type == 'Powder':
         if uuid == 'uuid1':
             powder1 = Powder(name='powder 1', type='Powder', costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                             composition=Composition(fe3_o2=10.0, si_o2=4.4, na2_o=11),
+                             composition=Composition(fe3_o2=10.0, si_o2=4.4, al2_o3=7, na2_o=11),
                              additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
                                                     AdditionalProperty(name='Prop3', value='Not in powder 2')])
@@ -209,7 +211,7 @@ def _prepare_test_base_materials_for_blending(material_type, uuid):
             return powder1
         if uuid == 'uuid2':
             powder2 = Powder(name='powder 2', type='Powder', costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                             composition=Composition(fe3_o2=20.0, si_o2=10),
+                             composition=Composition(fe3_o2=20.0, al2_o3=7, si_o2=10),
                              additional_properties=[AdditionalProperty(name='Prop1', value='4'),
                                                     AdditionalProperty(name='Prop2', value='Other Category')])
             powder2.uuid = 'uuid2'

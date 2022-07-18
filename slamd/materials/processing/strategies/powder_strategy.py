@@ -76,8 +76,11 @@ class PowderStrategy(BaseMaterialStrategy):
     def _compute_composition(self, blended_powder, normalized_ratios, base_powders_as_dict):
         blended_fe2_o3 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
         blended_si_o2 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_al2_o3 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
         blended_na2_o = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
-        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, na2_o=blended_na2_o)
+
+        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3, na2_o=blended_na2_o)
+
         blended_powder.composition = composition
 
     def _compute_mean_with_default(self, normalized_ratios, base_powders_as_dict, *keys):
