@@ -64,14 +64,15 @@ class PowderStrategy(BaseMaterialStrategy):
         if len(normalized_ratios) != len(base_powders_as_dict):
             raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
 
-        composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         costs = self._compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+        structure = self._compute_blended_structure(normalized_ratios, base_powders_as_dict)
 
         blended_powder = Powder(type=base_powders_as_dict[0]['type'],
                                 name=f'{blended_material_name}-{idx}',
                                 costs=costs,
                                 composition=composition,
-                                structure=Structure(),
+                                structure=structure,
                                 additional_properties=[],
                                 is_blended=True,
                                 blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
@@ -101,14 +102,18 @@ class PowderStrategy(BaseMaterialStrategy):
 
         return composition
 
+    def _compute_blended_structure(self, normalized_ratios, base_powders_as_dict):
+        blended_fine = self._compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
+        blended_gravity = self._compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
+
+        return Structure(fine=blended_fine, gravity=blended_gravity)
+
     def _compute_blended_costs(self, normalized_ratios, base_powders_as_dict):
         blended_co2_footprint = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'co2_footprint')
         blended_costs = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'costs')
         blended_delivery_time = self._compute_max(base_powders_as_dict, 'costs', 'delivery_time')
 
-        composition = Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
-
-        return composition
+        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
 
     def _compute_mean(self, normalized_ratios, base_powders_as_dict, *keys):
         all_values = self._collect_all_base_material_values_for_property(base_powders_as_dict, keys)

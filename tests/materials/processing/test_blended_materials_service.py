@@ -8,7 +8,7 @@ from slamd.materials.processing.blended_materials_service import BlendedMaterial
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
-from slamd.materials.processing.models.powder import Powder, Composition
+from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from tests.materials.materials_test_data import create_test_powders
 
 app = create_app('testing', with_session=False)
@@ -195,16 +195,20 @@ def _create_basic_submission_data():
 def _prepare_test_base_materials_for_blending(material_type, uuid):
     if material_type == 'Powder':
         if uuid == 'uuid1':
-            powder1 = Powder(name='powder 1', type='Powder', costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+            powder1 = Powder(name='powder 1', type='Powder',
+                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
                              composition=Composition(fe3_o2=10.0, si_o2=4.4, al2_o3=7, na2_o=11),
+                             structure=Structure(fine=50, gravity=10),
                              additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
                                                     AdditionalProperty(name='Prop3', value='Not in powder 2')])
             powder1.uuid = 'uuid1'
             return powder1
         if uuid == 'uuid2':
-            powder2 = Powder(name='powder 2', type='Powder', costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
+            powder2 = Powder(name='powder 2', type='Powder',
+                             costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
                              composition=Composition(fe3_o2=20.0, al2_o3=7, si_o2=10),
+                             structure=Structure(fine=100),
                              additional_properties=[AdditionalProperty(name='Prop1', value='4'),
                                                     AdditionalProperty(name='Prop2', value='Other Category')])
             powder2.uuid = 'uuid2'
@@ -225,6 +229,9 @@ def _assert_saved_blended_materials_from(mock_save_called_with_first_blended_mat
     assert mock_save_called_with_first_blended_material.costs.costs == '40.0'
     assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
 
+    assert mock_save_called_with_first_blended_material.structure.fine == '75.0'
+    assert mock_save_called_with_first_blended_material.structure.gravity is None
+
     assert mock_save_called_with_second_blended_material.composition.fe3_o2 == '17.5'
     assert mock_save_called_with_second_blended_material.composition.si_o2 == '8.6'
     assert mock_save_called_with_second_blended_material.composition.al2_o3 == '7.0'
@@ -234,3 +241,6 @@ def _assert_saved_blended_materials_from(mock_save_called_with_first_blended_mat
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == '12.5'
     assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
     assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+
+    assert mock_save_called_with_second_blended_material.structure.fine == '87.5'
+    assert mock_save_called_with_second_blended_material.structure.gravity is None
