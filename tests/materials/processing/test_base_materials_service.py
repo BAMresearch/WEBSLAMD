@@ -81,13 +81,13 @@ def test_save_material_creates_powder(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(PowderStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
                                    ('material_type', 'Powder'),
                                    ('co2_footprint', ''),
@@ -121,13 +121,13 @@ def test_save_material_creates_liquid(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(LiquidStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test liquid'),
                                    ('material_type', 'Liquid'),
                                    ('na2_si_o3', ''),
@@ -156,13 +156,13 @@ def test_save_material_creates_aggregates(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(AggregatesStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
                                    ('material_type', 'Aggregates'),
                                    ('fine_aggregates', ''),
@@ -183,13 +183,13 @@ def test_save_material_creates_process(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(ProcessStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test process'),
                                    ('material_type', 'Process'),
                                    ('duration', ''),
@@ -209,13 +209,13 @@ def test_save_material_creates_admixture(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(AdmixtureStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test admixture'),
                                    ('material_type', 'Admixture'),
                                    ('composition', ''),
@@ -234,13 +234,13 @@ def test_save_material_creates_custom(monkeypatch):
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     monkeypatch.setattr(CustomStrategy, 'create_model', mock_create_model)
     monkeypatch.setattr(BaseMaterialStrategy, 'save_model', mock_save_model)
 
-    with app.test_request_context('/materials'):
+    with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test custom'),
                                    ('material_type', 'Custom'),
                                    ('custom_name', ''),
@@ -259,7 +259,7 @@ def test_edit_material_edits_powder(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -303,7 +303,7 @@ def test_edit_material_edits_liquid(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -342,7 +342,7 @@ def test_edit_material_edits_aggregates(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -373,7 +373,7 @@ def test_edit_material_edits_process(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -403,7 +403,7 @@ def test_edit_material_edits_admixture(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -432,7 +432,7 @@ def test_edit_material_edits_custom(monkeypatch):
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, material):
+    def mock_save_model(self, model):
         return None
 
     def mock_delete_material(self, type, uuid):
