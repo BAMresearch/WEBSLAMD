@@ -70,7 +70,11 @@
                         interpreted as continuous variables. Thus in case you want to add a catergorical variable, use a string which is not a number.
                     </div>
                     <div class="additional-properties">
-                        <div id="additional-properties-placeholder"></div>
+                        <div id="additional-properties-placeholder">
+                            {% if form.additional_properties is defined %}
+                            {% include 'additional_property_form.html' %}
+                            {% endif %}
+                        </div>
 
                         <button class="btn btn-secondary" type="button" id="add-property-button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
