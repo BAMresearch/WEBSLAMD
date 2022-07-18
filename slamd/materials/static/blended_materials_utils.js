@@ -168,7 +168,7 @@ function validateIncrementValue(increment) {
 /**
  * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
  * requires a certain structure of DOM elements within the blending_ratio_placeholder. Thus, when changing this function always
- * check the correspoding html dom structure and vice versa.
+ * check the corresponding html dom structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");

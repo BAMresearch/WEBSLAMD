@@ -2,12 +2,13 @@ from itertools import product
 
 from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException, \
     SlamdRequestTooLargeException
-from slamd.common.slamd_utils import not_numeric, string_to_number
-from slamd.materials.processing.blending_configuration_parser import RatioParser
+from slamd.common.slamd_utils import not_numeric
+from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.blending_name_and_type_form import BlendingNameAndTypeForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
+from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
@@ -82,23 +83,29 @@ class BlendedMaterialsService(MaterialsService):
                 raise MaterialNotFoundException('The requested base materials do no longer exist!')
             base_materials.append(base_material)
 
-        list_of_normalizes_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string, RATIO_DELIMITER)
+        list_of_normalizes_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
+                                                                                            RATIO_DELIMITER)
 
-        for ratio_list in list_of_normalizes_ratios_lists:
-            self._create_blended_material(ratio_list, base_materials)
+        strategy = MaterialFactory.create_strategy(base_type.lower())
+
+        strategy.create_blended_materials(submitted_blending_configuration['blended_material_name'],
+                                          list_of_normalizes_ratios_lists, base_materials)
 
     def _validate_configuration(self, submitted_blending_configuration):
         blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)
         if not blending_name_any_type_form.validate():
             raise ValueNotSupportedException("The blending name is empty or already used!")
+
         all_ratios_as_string = [value for key, value in submitted_blending_configuration.items() if
                                 'all_ratio_entries-' in key]
         if len(all_ratios_as_string) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException(
                 f'Too many ratios were passed! At most {MAX_NUMBER_OF_RATIOS} can be processed!')
+
         base_material_uuids = submitted_blending_configuration.getlist('base_material_selection')
         if not self._ratios_are_valid(all_ratios_as_string, len(base_material_uuids)):
             raise ValueNotSupportedException("There are invalid ratios. Make sure they satisfy the correct pattern!")
+
         return all_ratios_as_string, base_material_uuids
 
     def _prepare_values_for_cartesian_product(self, min_max_values_with_increments):
@@ -137,12 +144,3 @@ class BlendedMaterialsService(MaterialsService):
                 if not_numeric(pieces_of_a_ratio):
                     return False
         return True
-
-    def _create_blended_material(self, normalized_ratios, base_materials):
-        ratios_with_materials = list(zip(normalized_ratios, base_materials))
-
-        sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_materials)))
-
-    def _compute_mean(self):
-        return lambda x, y: x[0] * string_to_number(x[1].composition.fe3_o2) + y[0] * string_to_number(
-            y[1].composition.fe3_o2)

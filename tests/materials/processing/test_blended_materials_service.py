@@ -150,17 +150,17 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
         return _prepare_test_base_materials_for_blending(material_type, uuid)
 
-    mock_save_called_with_first_material = Powder()
-    mock_save_called_with_second_material = Powder()
+    mock_save_called_with_first_blended_material = Powder()
+    mock_save_called_with_second_blended_material = Powder()
 
     def mock_save(material_type, material):
         if material_type == 'powder':
-            nonlocal mock_save_called_with_first_material
-            nonlocal mock_save_called_with_second_material
+            nonlocal mock_save_called_with_first_blended_material
+            nonlocal mock_save_called_with_second_blended_material
+            if material.name == 'test blend-0':
+                mock_save_called_with_first_blended_material = material
             if material.name == 'test blend-1':
-                mock_save_called_with_first_material = material
-            if material.name == 'test blend-2':
-                mock_save_called_with_second_material = material
+                mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
     monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
@@ -170,8 +170,13 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
 
         BlendedMaterialsService().save_blended_materials(form)
 
-        assert mock_save_called_with_first_material.composition.fe3_o2 == 15.0
-        assert mock_save_called_with_second_material.composition.fe3_o2 == 17.5
+        assert mock_save_called_with_first_blended_material.composition.fe3_o2 == 15.0
+        assert mock_save_called_with_first_blended_material.composition.si_o2 == 7.2
+        assert mock_save_called_with_first_blended_material.composition.na2_o == None
+
+        assert mock_save_called_with_second_blended_material.composition.fe3_o2 == 17.5
+        assert mock_save_called_with_second_blended_material.composition.si_o2 == 8.5
+        assert mock_save_called_with_second_blended_material.composition.na2_o == None
 
 
 def _prepare_request_for_succesful_blending():
@@ -193,21 +198,21 @@ def _create_basic_submission_data():
 
 
 def _prepare_test_base_materials_for_blending(material_type, uuid):
-    if material_type == 'powder':
+    if material_type == 'Powder':
         if uuid == 'uuid1':
-            return Powder(name='powder 1',
-                          type='Powder',
-                          costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                          composition=Composition(fe3_o2=10.0, si_o2=4.4),
-                          additional_properties=[AdditionalProperty(name='Prop1', value='2'),
-                                                 AdditionalProperty(name='Prop2', value='Category'),
-                                                 AdditionalProperty(name='Prop3', value='Not in powder 2')])
+            powder1 = Powder(name='powder 1', type='Powder', costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+                             composition=Composition(fe3_o2=10.0, si_o2=4.4, na2_o=11),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='2'),
+                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop3', value='Not in powder 2')])
+            powder1.uuid = 'uuid1'
+            return powder1
         if uuid == 'uuid2':
-            return Powder(name='powder 2',
-                          type='Powder',
-                          costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                          composition=Composition(fe3_o2=20.0, si_o2=10),
-                          additional_properties=[AdditionalProperty(name='Prop1', value='4'),
-                                                 AdditionalProperty(name='Prop2', value='Other Category')])
+            powder2 = Powder(name='powder 2', type='Powder', costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
+                             composition=Composition(fe3_o2=20.0, si_o2=10),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='4'),
+                                                    AdditionalProperty(name='Prop2', value='Other Category')])
+            powder2.uuid = 'uuid2'
+            return powder2
         return None
     return None

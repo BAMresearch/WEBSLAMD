@@ -13,9 +13,9 @@ class BaseMaterialStrategy(ABC):
     def create_model(self, submitted_material, additional_properties):
         pass
 
-    @abstractmethod
-    def gather_composition_information(self, material):
-        pass
+    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials):
+        for ratio_list in list_of_normalizes_ratios_lists:
+            self.create_blended_material(ratio_list, base_materials)
 
     def create_dto(self, material):
         dto = MaterialDto()
@@ -65,3 +65,10 @@ class BaseMaterialStrategy(ABC):
         for property in additional_properties:
             additional_property_to_be_displayed += f'{property.name}: {property.value}, '
         dto.all_properties += additional_property_to_be_displayed
+
+    @abstractmethod
+    def gather_composition_information(self, material):
+        pass
+
+    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
+        pass

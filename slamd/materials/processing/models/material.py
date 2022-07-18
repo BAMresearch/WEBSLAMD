@@ -3,13 +3,14 @@ import uuid
 
 class Material:
 
-    def __init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False):
+    def __init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False, blending_ratios=''):
         self.uuid = uuid.uuid1()
         self.name = name
         self.type = type
         self.costs = costs
         self.additional_properties = additional_properties
         self.is_blended = is_blended
+        self.blending_ratios = blending_ratios
 
 
 class Costs:

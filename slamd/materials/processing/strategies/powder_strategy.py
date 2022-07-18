@@ -1,4 +1,7 @@
+from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.slamd_utils import string_to_number
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
+from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
 
@@ -51,3 +54,31 @@ class PowderStrategy(BaseMaterialStrategy):
                 self.include('Mn₂O₃', powder.composition.mn2_o3),
                 self.include('Fine modules', powder.structure.fine),
                 self.include('Specific gravity', powder.structure.gravity)]
+
+    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials):
+        for i, ratio_list in enumerate(list_of_normalizes_ratios_lists):
+            self.create_blended_material(i, blended_material_name, ratio_list, base_materials)
+
+    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
+        if len(normalized_ratios) != len(base_powders):
+            raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
+        ratios_with_base_materials = list(zip(normalized_ratios, base_powders))
+
+        blended_powder = Powder()
+        blended_powder.type = base_powders[0].type
+        blended_powder.name = f'{blended_material_name}-{idx}'
+        blended_powder.is_blended = True
+        blended_powder.blending_ratios = RatioParser.ratio_list_to_ratio_string(normalized_ratios)
+
+        self._compute_composition(blended_powder, ratios_with_base_materials)
+
+        self.save_material(blended_powder)
+
+    def _compute_composition(self, blended_powder, ratios_with_base_materials):
+        blended_fe2_o3 = sum(
+            list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_base_materials)))
+        composition = Composition(fe3_o2=blended_fe2_o3)
+        blended_powder.composition = composition
+
+    # def _compute_mean(self, ratios_with_materials):
+    #     return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_materials)))
