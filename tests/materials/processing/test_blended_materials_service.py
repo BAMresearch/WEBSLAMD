@@ -6,6 +6,9 @@ from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestT
     ValueNotSupportedException
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.additional_property import AdditionalProperty
+from slamd.materials.processing.models.material import Costs
+from slamd.materials.processing.models.powder import Powder, Composition
 from tests.materials.materials_test_data import create_test_powders
 
 app = create_app('testing', with_session=False)
@@ -143,9 +146,68 @@ def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric
             BlendedMaterialsService().save_blended_materials(form)
 
 
+def test_save_blended_materials_creates_two_ratios(monkeypatch):
+    def mock_query_by_type_and_uuid(material_type, uuid):
+        return _prepare_test_base_materials_for_blending(material_type, uuid)
+
+    mock_save_called_with_first_material = Powder()
+    mock_save_called_with_second_material = Powder()
+
+    def mock_save(material_type, material):
+        if material_type == 'powder':
+            nonlocal mock_save_called_with_first_material
+            nonlocal mock_save_called_with_second_material
+            if material.name == 'test blend-1':
+                mock_save_called_with_first_material = material
+            if material.name == 'test blend-2':
+                mock_save_called_with_second_material = material
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
+
+    with app.test_request_context('/materials/blended'):
+        form = _prepare_request_for_succesful_blending()
+
+        BlendedMaterialsService().save_blended_materials(form)
+
+        assert mock_save_called_with_first_material.composition.fe3_o2 == 15.0
+        assert mock_save_called_with_second_material.composition.fe3_o2 == 17.5
+
+
+def _prepare_request_for_succesful_blending():
+    form = MultiDict()
+    form.add('blended_material_name', 'test blend')
+    form.add('base_type', 'Powder')
+    form.setlist('base_material_selection', ['uuid1', 'uuid2'])
+    form['all_ratio_entries-0-ratio'] = '50/50'
+    form['all_ratio_entries-1-ratio'] = '25/75'
+    return form
+
+
 def _create_basic_submission_data():
     form = MultiDict()
     form.add('blended_material_name', 'test blend')
     form.add('base_type', 'Powder')
     form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
     return form
+
+
+def _prepare_test_base_materials_for_blending(material_type, uuid):
+    if material_type == 'powder':
+        if uuid == 'uuid1':
+            return Powder(name='powder 1',
+                          type='Powder',
+                          costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+                          composition=Composition(fe3_o2=10.0, si_o2=4.4),
+                          additional_properties=[AdditionalProperty(name='Prop1', value='2'),
+                                                 AdditionalProperty(name='Prop2', value='Category'),
+                                                 AdditionalProperty(name='Prop3', value='Not in powder 2')])
+        if uuid == 'uuid2':
+            return Powder(name='powder 2',
+                          type='Powder',
+                          costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
+                          composition=Composition(fe3_o2=20.0, si_o2=10),
+                          additional_properties=[AdditionalProperty(name='Prop1', value='4'),
+                                                 AdditionalProperty(name='Prop2', value='Other Category')])
+        return None
+    return None
