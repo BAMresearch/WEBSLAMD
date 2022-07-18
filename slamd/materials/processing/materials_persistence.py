@@ -17,6 +17,19 @@ class MaterialsPersistence:
         return MaterialsPersistence.get_session_property(material_type)
 
     @classmethod
+    def query_by_type_and_uuid(cls, material_type, uuid):
+        """
+        Return the first element matching the given uuid and material_type.
+        Return None if no matching element was found.
+        """
+        materials = MaterialsPersistence.get_session_property(material_type)
+        for material in materials:
+            if str(material.uuid) == uuid:
+                return material
+        # Nothing found
+        return None
+
+    @classmethod
     def delete_by_type_and_uuid(cls, material_type, uuid):
         materials = cls.query_by_type(material_type)
         remaining_materials = list(filter(lambda material: str(material.uuid) != uuid, materials))

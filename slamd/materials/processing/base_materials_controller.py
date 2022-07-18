@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, render_template, request, make_response, jsonify, redirect
 
 from slamd.materials.processing.base_materials_service import BaseMaterialService
@@ -25,15 +27,11 @@ def select_base_material_type(type):
     return make_response(jsonify(body), 200)
 
 
-@base_materials.route('/add_property/<new_property_index>', methods=['GET'])
-def add_property(new_property_index):
-    """
-    Return HTML for an additional property form.
-    The <input> tags generated here must have different 'name' and 'id' attributes.
-    We use indexes starting from zero to name them differently.
-    The format matches what WTForms does when rendering a FieldList.
-    """
-    body = {'template': render_template('add_property_form.html', index=new_property_index)}
+@base_materials.route('/add_property', methods=['POST'])
+def add_additional_property():
+    current_additional_properties = json.loads(request.data)
+    form = base_materials_service.create_additional_property_form(current_additional_properties)
+    body = {'template': render_template('additional_property_form.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -48,9 +46,29 @@ def submit_base_material():
     return render_template('base_materials.html', form=form, materials_response=materials_response)
 
 
+@base_materials.route('/<material_type>/<uuid>', methods=['GET'])
+def populate_base_material_form(material_type, uuid):
+    form = base_materials_service.populate_form(material_type, uuid)
+
+    materials_response = base_materials_service.list_materials(blended=False)
+    return render_template('base_materials.html', form=form, materials_response=materials_response)
+
+
+@base_materials.route('/<material_type>/<uuid>', methods=['POST'])
+def edit_material(material_type, uuid):
+    valid, form = base_materials_service.edit_material(material_type, uuid, request.form)
+
+    if valid:
+        return redirect('/')
+
+    materials_response = base_materials_service.list_materials(blended=False)
+    return render_template('base_materials.html', form=form, materials_response=materials_response)
+
+
 @base_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_base_material(material_type, uuid):
-    all_base_materials = base_materials_service.delete_material(material_type, uuid)
+    base_materials_service.delete_material(material_type, uuid)
 
-    body = {'template': render_template('materials_table.html', materials_response=all_base_materials)}
+    materials_response = base_materials_service.list_materials(blended=False)
+    body = {'template': render_template('materials_table.html', materials_response=materials_response)}
     return make_response(jsonify(body), 200)

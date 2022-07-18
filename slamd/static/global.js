@@ -13,7 +13,7 @@ async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = fals
     }
 }
 
-async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body){
+async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
     const token = document.getElementById("csrf_token").value
     const response = await fetch(url, {
         method: "POST",
@@ -22,7 +22,7 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body){
         },
         body: JSON.stringify(body)
     });
-    if (response.ok){
+    if (response.ok) {
         const form = await response.json();
         document.getElementById(placeholderID).innerHTML = form["template"];
     } else {

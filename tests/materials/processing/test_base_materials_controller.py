@@ -9,7 +9,7 @@ from slamd.materials.processing.materials_service import MaterialsResponse
 
 
 def test_slamd_shows_form_and_table(client, mocker):
-    mock_response = MaterialsResponse([{'uuid': 'test', 'name': 'test powder'}], 'base')
+    mock_response = MaterialsResponse([{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}], 'base')
     mocker.patch.object(BaseMaterialService, 'list_materials',
                         autospec=True, return_value=mock_response)
     response = client.get('/materials/base')
@@ -25,6 +25,7 @@ def test_slamd_shows_form_and_table(client, mocker):
 
     assert 'All base materials' in html
     assert 'test powder' in html
+    assert 'Powder' in html
 
 
 def test_slamd_selects_powder(client):
