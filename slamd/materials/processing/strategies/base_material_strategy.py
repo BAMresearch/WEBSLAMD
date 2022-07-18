@@ -32,18 +32,19 @@ class BaseMaterialStrategy(ABC):
         # Remove trailing comma and whitespace
         dto.all_properties = dto.all_properties.strip()[:-1]
         return dto
-    
+
     def convert_to_multidict(self, material):
-        return MultiDict([
+        multidict = MultiDict([
             ('uuid', material.uuid),
             ('material_name', material.name),
             ('material_type', material.type),
             ('delivery_time', material.costs.delivery_time),
             ('costs', material.costs.costs),
             ('co2_footprint', material.costs.co2_footprint),
-            ('additional_properties', material.additional_properties),
             ('is_blended', material.is_blended)
         ])
+        self._convert_additional_properties_to_multidict(multidict, material.additional_properties)
+        return multidict
 
     def edit_model(self, uuid, submitted_material, additional_properties):
         model = self.create_model(submitted_material, additional_properties)
@@ -83,3 +84,8 @@ class BaseMaterialStrategy(ABC):
         for property in additional_properties:
             additional_property_to_be_displayed += f'{property.name}: {property.value}, '
         dto.all_properties += additional_property_to_be_displayed
+
+    def _convert_additional_properties_to_multidict(self, multidict, additional_properties):
+        for (index, property) in enumerate(additional_properties):
+            multidict.add(f'additional_properties-{index}-property_name', property.name)
+            multidict.add(f'additional_properties-{index}-property_value', property.value)
