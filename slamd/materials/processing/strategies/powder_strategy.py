@@ -1,5 +1,5 @@
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import string_to_number, empty
+from slamd.common.slamd_utils import string_to_number, empty, not_empty
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
@@ -64,11 +64,12 @@ class PowderStrategy(BaseMaterialStrategy):
         if len(normalized_ratios) != len(base_powders_as_dict):
             raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
 
-        composition = self._compute_composition(normalized_ratios, base_powders_as_dict)
+        composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+        costs = self._compute_blended_costs(normalized_ratios, base_powders_as_dict)
 
         blended_powder = Powder(type=base_powders_as_dict[0]['type'],
                                 name=f'{blended_material_name}-{idx}',
-                                costs=Costs(),
+                                costs=costs,
                                 composition=composition,
                                 structure=Structure(),
                                 additional_properties=[],
@@ -77,7 +78,7 @@ class PowderStrategy(BaseMaterialStrategy):
 
         self.save_material(blended_powder)
 
-    def _compute_composition(self, normalized_ratios, base_powders_as_dict):
+    def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
         blended_fe2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
         blended_si_o2 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
         blended_al2_o3 = self._compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
@@ -100,22 +101,41 @@ class PowderStrategy(BaseMaterialStrategy):
 
         return composition
 
+    def _compute_blended_costs(self, normalized_ratios, base_powders_as_dict):
+        blended_co2_footprint = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'co2_footprint')
+        blended_costs = self._compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'costs')
+        blended_delivery_time = self._compute_max(base_powders_as_dict, 'costs', 'delivery_time')
+
+        composition = Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
+
+        return composition
+
     def _compute_mean(self, normalized_ratios, base_powders_as_dict, *keys):
-        all_filled = True
+        all_values = self._collect_all_base_material_values_for_property(base_powders_as_dict, keys)
+
+        empty_values = [value for value in all_values if empty(value)]
+
+        if len(empty_values) > 0:
+            return None
+
+        ratios_with_property_values = zip(normalized_ratios, all_values)
+        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
+        return str(round(mean, 2))
+
+    def _compute_max(self, base_powders_as_dict, *keys):
+        all_values = self._collect_all_base_material_values_for_property(base_powders_as_dict, keys)
+        non_empty_values = [float(value) for value in all_values if not_empty(value)]
+        maximum = max(non_empty_values)
+        return str(round(maximum, 2))
+
+    def _collect_all_base_material_values_for_property(self, base_powders_as_dict, keys):
         all_values = []
 
         for current_powder in base_powders_as_dict:
             value = self._extract_value_for_key(current_powder, keys)
             all_values.append(value)
 
-            if empty(value):
-                all_filled = False
-
-        if not all_filled:
-            return None
-
-        ratios_with_property_values = zip(normalized_ratios, all_values)
-        return sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
+        return all_values
 
     def _extract_value_for_key(self, current_powder_as_dict, keys):
         base = current_powder_as_dict
