@@ -55,54 +55,55 @@ class PowderStrategy(BaseMaterialStrategy):
                 self.include('Fine modules', powder.structure.fine),
                 self.include('Specific gravity', powder.structure.gravity)]
 
-    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials):
+    def create_blended_materials(self, blended_material_name, list_of_normalizes_ratios_lists, base_materials_as_dict):
         for i, ratio_list in enumerate(list_of_normalizes_ratios_lists):
-            self.create_blended_material(i, blended_material_name, ratio_list, base_materials)
+            self.create_blended_material(i, blended_material_name, ratio_list, base_materials_as_dict)
 
-    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
-        if len(normalized_ratios) != len(base_powders):
+    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+        if len(normalized_ratios) != len(base_powders_as_dict):
             raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
-        ratios_with_base_materials = list(zip(normalized_ratios, base_powders))
 
         blended_powder = Powder()
-        blended_powder.type = base_powders[0].type
+        blended_powder.type = base_powders_as_dict[0]['type']
         blended_powder.name = f'{blended_material_name}-{idx}'
         blended_powder.is_blended = True
         blended_powder.blending_ratios = RatioParser.ratio_list_to_ratio_string(normalized_ratios)
 
-        self._compute_composition(blended_powder, ratios_with_base_materials)
+        self._compute_composition(blended_powder, normalized_ratios, base_powders_as_dict)
 
         self.save_material(blended_powder)
 
-    def _compute_composition(self, blended_powder, ratios_with_base_materials):
-        blended_fe2_o3 = self._compute_mean_with_default(ratios_with_base_materials, 'composition', 'fe3_o2')
-        composition = Composition(fe3_o2=blended_fe2_o3)
+    def _compute_composition(self, blended_powder, normalized_ratios, base_powders_as_dict):
+        blended_fe2_o3 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
+        blended_si_o2 = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_na2_o = self._compute_mean_with_default(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, na2_o=blended_na2_o)
         blended_powder.composition = composition
 
-    def _compute_mean_with_default(self, ratios_with_base_materials, *keys):
+    def _compute_mean_with_default(self, normalized_ratios, base_powders_as_dict, *keys):
         all_filled = True
-        for i, item in enumerate(ratios_with_base_materials):
-            base = ratios_with_base_materials[i][1].__dict__
+        all_values = []
 
-            property = None
-            for key in keys:
-                property = base.get(key, None)
-                try:
-                    base = property.__dict__
-                except AttributeError:
-                    pass
+        for current_powder in base_powders_as_dict:
+            value = self._extract_value_for_key(current_powder, keys)
+            all_values.append(value)
 
-            if property is None:
-                raise ValueNotSupportedException('Use proper Exception')
-
-            if empty(property):
+            if value is None:
                 all_filled = False
 
         if not all_filled:
             return None
 
-        return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_base_materials)))
+        ratios_with_property_values = zip(normalized_ratios, all_values)
+        return sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
 
+    def _extract_value_for_key(self, current_powder_as_dict, keys):
+        base = current_powder_as_dict
+        for key in keys:
+            value = base.get(key, None)
+            try:
+                base = value.__dict__
+            except AttributeError:
+                return value
 
-    def _compute_mean(self, ratio, property):
-        return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_materials)))
+        raise ValueNotSupportedException('No such property!')

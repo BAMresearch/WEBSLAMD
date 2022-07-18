@@ -74,14 +74,14 @@ class BlendedMaterialsService(MaterialsService):
     def save_blended_materials(self, submitted_blending_configuration):
         all_ratios_as_string, base_material_uuids = self._validate_configuration(submitted_blending_configuration)
 
-        base_materials = []
+        base_materials_as_dict = []
         base_type = submitted_blending_configuration['base_type']
 
         for base_material_uuid in base_material_uuids:
             base_material = MaterialsPersistence.query_by_type_and_uuid(base_type, base_material_uuid)
             if base_material is None:
                 raise MaterialNotFoundException('The requested base materials do no longer exist!')
-            base_materials.append(base_material)
+            base_materials_as_dict.append(base_material.__dict__)
 
         list_of_normalizes_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
                                                                                             RATIO_DELIMITER)
@@ -89,7 +89,7 @@ class BlendedMaterialsService(MaterialsService):
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
         strategy.create_blended_materials(submitted_blending_configuration['blended_material_name'],
-                                          list_of_normalizes_ratios_lists, base_materials)
+                                          list_of_normalizes_ratios_lists, base_materials_as_dict)
 
     def _validate_configuration(self, submitted_blending_configuration):
         blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)

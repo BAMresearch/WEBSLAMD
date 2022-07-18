@@ -2,6 +2,8 @@ from slamd.common.error_handling import ValueNotSupportedException
 
 
 def empty(input):
+    if isinstance(input, (int, float)):
+        return False
     return input is None or input == ''
 
 

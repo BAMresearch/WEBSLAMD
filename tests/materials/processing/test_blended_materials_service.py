@@ -175,7 +175,7 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
         assert mock_save_called_with_first_blended_material.composition.na2_o == None
 
         assert mock_save_called_with_second_blended_material.composition.fe3_o2 == 17.5
-        assert mock_save_called_with_second_blended_material.composition.si_o2 == 8.5
+        assert mock_save_called_with_second_blended_material.composition.si_o2 == 8.6
         assert mock_save_called_with_second_blended_material.composition.na2_o == None
 
 
