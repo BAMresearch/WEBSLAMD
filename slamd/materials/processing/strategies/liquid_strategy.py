@@ -4,7 +4,7 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class LiquidStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         composition = Composition(
             na2_si_o3=submitted_material['na2_si_o3'],
             na_o_h=submitted_material['na_o_h'],
@@ -25,7 +25,7 @@ class LiquidStrategy(BaseMaterialStrategy):
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
 
     def gather_composition_information(self, liquid):

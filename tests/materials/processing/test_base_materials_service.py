@@ -76,9 +76,9 @@ def test_create_material_form_raises_bad_request_when_invalid_form_is_requested(
 def test_save_material_creates_powder(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -110,15 +110,15 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_save_material_creates_liquid(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -145,15 +145,15 @@ def test_save_material_creates_liquid(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_save_material_creates_aggregates(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -172,15 +172,15 @@ def test_save_material_creates_aggregates(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_save_material_creates_process(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -198,15 +198,15 @@ def test_save_material_creates_process(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_save_material_creates_admixture(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -223,15 +223,15 @@ def test_save_material_creates_admixture(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_save_material_creates_custom(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material, additional_properties):
+    def mock_create_model(self, submitted_material):
         nonlocal mock_create_model_called_with
-        mock_create_model_called_with = submitted_material, additional_properties
+        mock_create_model_called_with = submitted_material
         return None
 
     def mock_save_model(self, material):
@@ -248,7 +248,7 @@ def test_save_material_creates_custom(monkeypatch):
                                    ('submit', 'Save material')])
         BaseMaterialService().save_material(form)
 
-    assert mock_create_model_called_with == (form, [])
+    assert mock_create_model_called_with == form
 
 
 def test_list_all_creates_all_materials_for_view(monkeypatch):

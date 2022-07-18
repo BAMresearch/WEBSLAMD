@@ -4,7 +4,7 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class AggregatesStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         composition = Composition(
             fine_aggregates=submitted_material['fine_aggregates'],
             coarse_aggregates=submitted_material['coarse_aggregates'],
@@ -17,7 +17,7 @@ class AggregatesStrategy(BaseMaterialStrategy):
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
 
     def gather_composition_information(self, aggregates):

@@ -4,14 +4,14 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class CustomStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         return Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             custom_name=submitted_material['name'],
             custom_value=submitted_material['value'],
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
 
     def gather_composition_information(self, custom):

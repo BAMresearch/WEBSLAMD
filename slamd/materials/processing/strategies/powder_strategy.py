@@ -4,7 +4,7 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class PowderStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         composition = Composition(
             fe3_o2=submitted_material['fe3_o2'],
             si_o2=submitted_material['si_o2'],
@@ -31,7 +31,7 @@ class PowderStrategy(BaseMaterialStrategy):
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
 
     def gather_composition_information(self, powder):

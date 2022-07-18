@@ -4,7 +4,7 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class ProcessStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         return Process(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
@@ -12,7 +12,7 @@ class ProcessStrategy(BaseMaterialStrategy):
             duration=submitted_material['duration'],
             temperature=submitted_material['temperature'],
             relative_humidity=submitted_material['relative_humidity'],
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
 
     def gather_composition_information(self, process):

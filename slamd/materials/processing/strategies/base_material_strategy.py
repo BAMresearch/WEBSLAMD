@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import empty
-from slamd.common.slamd_utils import join_all
+from slamd.common.slamd_utils import not_empty, empty, join_all
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
 
 
 class BaseMaterialStrategy(ABC):
 
     @abstractmethod
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         pass
 
     @abstractmethod
@@ -51,6 +51,17 @@ class BaseMaterialStrategy(ABC):
         model.uuid = uuid
         return model
 
+    def extract_additional_properties(self, submitted_material):
+        additional_properties = []
+        submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
+        submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
+
+        for name, value in zip(submitted_names, submitted_values):
+            if not_empty(name):
+                additional_property = AdditionalProperty(name, value)
+                additional_properties.append(additional_property)
+        return additional_properties
+
     def extract_cost_properties(self, submitted_material):
         return Costs(
             co2_footprint=submitted_material['co2_footprint'],
@@ -89,3 +100,7 @@ class BaseMaterialStrategy(ABC):
         for (index, property) in enumerate(additional_properties):
             multidict.add(f'additional_properties-{index}-property_name', property.name)
             multidict.add(f'additional_properties-{index}-property_value', property.value)
+
+    def _extract_additional_property_by_label(self, submitted_material, label):
+        return [submitted_material[k] for k in sorted(submitted_material) if
+                'additional_properties' in k and label in k]
