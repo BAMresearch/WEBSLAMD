@@ -192,20 +192,32 @@ function assignAddCustomBlendEvent() {
     })
 }
 
-function assignDeleteCustomBlendEvent(){
+function assignDeleteCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
 
     document.getElementById("delete_custom_blend_button").addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
 
-        for(let div of placeholder.children){
+        for (let div of placeholder.children) {
             let input = div.children[0]
-            if(input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`){
+            if (input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`) {
                 placeholder.removeChild(div);
             }
         }
 
-        toggleSubmitButtonBasedOnRatiosAndName();
+        let ratioInputFields = collectRatioFields();
+        let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+        for (let ratioInput of ratioInputFields) {
+
+            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+            let nonMatchingInputs = ratioInputFields
+                .map(input => input.value)
+                .filter(value => !regex.test(value))
+                .length;
+            allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+            document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
+        }
+
         assignKeyboardEventsToRatiosForm()
     })
 }
