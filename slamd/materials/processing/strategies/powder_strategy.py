@@ -1,5 +1,5 @@
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import string_to_number
+from slamd.common.slamd_utils import string_to_number, empty
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
@@ -75,10 +75,34 @@ class PowderStrategy(BaseMaterialStrategy):
         self.save_material(blended_powder)
 
     def _compute_composition(self, blended_powder, ratios_with_base_materials):
-        blended_fe2_o3 = sum(
-            list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_base_materials)))
+        blended_fe2_o3 = self._compute_mean_with_default(ratios_with_base_materials, 'composition', 'fe3_o2')
         composition = Composition(fe3_o2=blended_fe2_o3)
         blended_powder.composition = composition
 
-    # def _compute_mean(self, ratios_with_materials):
-    #     return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_materials)))
+    def _compute_mean_with_default(self, ratios_with_base_materials, *keys):
+        all_filled = True
+        for i, item in enumerate(ratios_with_base_materials):
+            base = ratios_with_base_materials[i][1].__dict__
+
+            property = None
+            for key in keys:
+                property = base.get(key, None)
+                try:
+                    base = property.__dict__
+                except AttributeError:
+                    pass
+
+            if property is None:
+                raise ValueNotSupportedException('Use proper Exception')
+
+            if empty(property):
+                all_filled = False
+
+        if not all_filled:
+            return None
+
+        return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_base_materials)))
+
+
+    def _compute_mean(self, ratio, property):
+        return sum(list(map(lambda x: x[0] * string_to_number(x[1].composition.fe3_o2), ratios_with_materials)))
