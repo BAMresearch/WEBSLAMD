@@ -1,6 +1,7 @@
 import pytest
 from werkzeug.datastructures import MultiDict
 
+import slamd
 from slamd import create_app
 from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestTooLargeException, \
     ValueNotSupportedException
@@ -9,7 +10,7 @@ from slamd.materials.processing.materials_persistence import MaterialsPersistenc
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.material import Costs
-from slamd.materials.processing.models.powder import Powder, Composition, Structure
+from slamd.materials.processing.models.powder import Powder, Structure
 from tests.materials.materials_test_data import create_test_powders
 
 app = create_app('testing', with_session=False)
@@ -158,9 +159,9 @@ def test_save_blended_materials_creates_two_powders_from_two_base_materials(monk
         if material_type == 'powder':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend-0':
+            if material.name == 'test blend 1-0':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend-1':
+            if material.name == 'test blend 1-1':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -186,9 +187,9 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
         if material_type == 'aggregates':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend-0':
+            if material.name == 'test blend 1-0':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend-1':
+            if material.name == 'test blend 1-1':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -196,7 +197,6 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
 
     with app.test_request_context('/materials/blended'):
         form = _prepare_request_for_successful_blending('Aggregates')
-        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
 
         BlendedMaterialsService().save_blended_materials(form)
 
@@ -206,8 +206,13 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
 
 def _prepare_request_for_successful_blending(material_type):
     form = MultiDict()
-    form.add('blended_material_name', 'test blend')
+    form.add('blended_material_name', 'test blend 1')
     form.add('base_type', material_type)
+    if material_type == 'Aggregates':
+        form['all_ratio_entries-0-ratio'] = '40/40/20'
+        form['all_ratio_entries-1-ratio'] = '40/30/30'
+        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
+        return form
     form.setlist('base_material_selection', ['uuid1', 'uuid2'])
     form['all_ratio_entries-0-ratio'] = '50/50'
     form['all_ratio_entries-1-ratio'] = '25/75'
@@ -227,7 +232,8 @@ def _prepare_test_base_powders_for_blending(material_type, uuid):
         if uuid == 'uuid1':
             powder1 = Powder(name='powder 1', type='Powder',
                              costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                             composition=Composition(fe3_o2=10.0, si_o2=4.4, al2_o3=7, na2_o=11),
+                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=10.0, si_o2=4.4,
+                                                                                              al2_o3=7, na2_o=11),
                              structure=Structure(fine=50, gravity=10),
                              additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
@@ -237,7 +243,8 @@ def _prepare_test_base_powders_for_blending(material_type, uuid):
         if uuid == 'uuid2':
             powder2 = Powder(name='powder 2', type='Powder',
                              costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                             composition=Composition(fe3_o2=20.0, al2_o3=7, si_o2=10),
+                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=20.0, al2_o3=7,
+                                                                                              si_o2=10),
                              structure=Structure(fine=100),
                              additional_properties=[AdditionalProperty(name='Prop1', value='4'),
                                                     AdditionalProperty(name='Prop2', value='Other Category')])
@@ -250,14 +257,41 @@ def _prepare_test_base_powders_for_blending(material_type, uuid):
 def _prepare_test_base_aggregates_for_blending(material_type, uuid):
     if material_type == 'Aggregates':
         if uuid == 'uuid1':
-            aggregates1 = Aggregates(name='aggregate 1', type='Aggregate',
+            aggregates1 = Aggregates(name='aggregate 1', type='Aggregates',
                                      costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                                     composition=Composition(fe3_o2=10.0, si_o2=4.4, al2_o3=7, na2_o=11),
+                                     composition=slamd.materials.processing.models.aggregates.Composition(
+                                         fine_aggregates=10.0, coarse_aggregates=4.4, fa_density=7,
+                                         ca_density=11),
                                      additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                             AdditionalProperty(name='Prop2', value='Category'),
-                                                            AdditionalProperty(name='Prop3', value='Not in aggregates 2')])
+                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
+                                                                                                   '3')])
             aggregates1.uuid = 'uuid1'
             return aggregates1
+        if uuid == 'uuid2':
+            aggregates2 = Aggregates(name='aggregate 2', type='Aggregates',
+                                     costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
+                                     composition=slamd.materials.processing.models.aggregates.Composition(
+                                         fine_aggregates=20.0, coarse_aggregates=4.1, fa_density=4,
+                                         ca_density=11),
+                                     additional_properties=[AdditionalProperty(name='Prop1', value='5'),
+                                                            AdditionalProperty(name='Prop2', value='Category'),
+                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
+                                                                                                   '1')])
+            aggregates2.uuid = 'uuid2'
+            return aggregates2
+        if uuid == 'uuid3':
+            aggregates3 = Aggregates(name='aggregate 3', type='Aggregates',
+                                     costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
+                                     composition=slamd.materials.processing.models.aggregates.Composition(
+                                         fine_aggregates=27.0, coarse_aggregates=9.0, fa_density=6,
+                                         ca_density=16),
+                                     additional_properties=[AdditionalProperty(name='Prop1', value='5'),
+                                                            AdditionalProperty(name='Prop2', value='Category'),
+                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
+                                                                                                   '2')])
+            aggregates3.uuid = 'uuid3'
+            return aggregates3
         return None
     return None
 
@@ -293,4 +327,12 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
 
 def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
                                      mock_save_called_with_second_blended_material):
-    pass
+    assert mock_save_called_with_first_blended_material.composition.fine_aggregates == '17.4'
+    assert mock_save_called_with_first_blended_material.composition.coarse_aggregates == '5.2'
+    assert mock_save_called_with_first_blended_material.composition.fa_density == '5.6'
+    assert mock_save_called_with_first_blended_material.composition.ca_density == '12.0'
+
+    assert mock_save_called_with_second_blended_material.composition.fine_aggregates == '18.1'
+    assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == '5.69'
+    assert mock_save_called_with_second_blended_material.composition.fa_density == '5.8'
+    assert mock_save_called_with_second_blended_material.composition.ca_density == '12.5'
