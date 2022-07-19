@@ -3,6 +3,21 @@
 
 <h3>Material Discovery</h3>
 <form class="row g-3" action="" method="post" novalidate>
+    <div class="col-md-4">
+    {{ discovery_form.input_features.label(class_="control-label") }}
+    {{ discovery_form.input_features(class_="form-control form-select") }}
+    </div>
+
+    <div class="col-md-4">
+    {{ discovery_form.target_features.label(class_="control-label") }}
+    {{ discovery_form.target_features(class_="form-control form-select") }}
+    </div>
+
+
+      <div class="col-md-4">
+    {{ discovery_form.a_priori_information.label(class_="control-label") }}
+    {{ discovery_form.a_priori_information(class_="form-control form-select") }}
+    </div>
 
 
 </form>
