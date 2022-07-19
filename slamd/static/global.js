@@ -1,3 +1,5 @@
+const ACTION_BUTTON_DELIMITER = "___"
+
 async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
     if (response.ok) {
