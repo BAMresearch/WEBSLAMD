@@ -16,6 +16,10 @@ class MaterialStrategy(ABC):
     def create_model(self, submitted_material):
         pass
 
+    @abstractmethod
+    def gather_composition_information(self, material):
+        pass
+
     def create_dto(self, material):
         dto = MaterialDto()
         dto.uuid = str(material.uuid)
@@ -102,15 +106,18 @@ class MaterialStrategy(ABC):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
 
-    @abstractmethod
-    def gather_composition_information(self, material):
-        pass
-
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
         pass
 
-    def compute_mean(self, normalized_ratios, material_as_dict, *keys):
-        all_values = self._collect_all_base_material_values_for_property(material_as_dict, keys)
+    def compute_blended_costs(self, normalized_ratios, base_materials_as_dict):
+        blended_co2_footprint = self.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'co2_footprint')
+        blended_costs = self.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'costs')
+        blended_delivery_time = self.compute_max(base_materials_as_dict, 'costs', 'delivery_time')
+
+        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
+
+    def compute_mean(self, normalized_ratios, materials_as_dict, *keys):
+        all_values = self._collect_all_base_material_values_for_property(materials_as_dict, keys)
 
         empty_values = [value for value in all_values if empty(value)]
 
@@ -124,6 +131,8 @@ class MaterialStrategy(ABC):
     def compute_max(self, material_as_dict, *keys):
         all_values = self._collect_all_base_material_values_for_property(material_as_dict, keys)
         non_empty_values = [float(value) for value in all_values if not_empty(value)]
+        if len(non_empty_values) == 0:
+            return None
         maximum = max(non_empty_values)
         return str(round(maximum, 2))
 

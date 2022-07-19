@@ -7,6 +7,7 @@ from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestT
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
+from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from tests.materials.materials_test_data import create_test_powders
@@ -146,9 +147,9 @@ def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric
             BlendedMaterialsService().save_blended_materials(form)
 
 
-def test_save_blended_materials_creates_two_ratios(monkeypatch):
+def test_save_blended_materials_creates_two_powders_from_two_base_materials(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
-        return _prepare_test_base_materials_for_blending(material_type, uuid)
+        return _prepare_test_base_powders_for_blending(material_type, uuid)
 
     mock_save_called_with_first_blended_material = Powder()
     mock_save_called_with_second_blended_material = Powder()
@@ -166,18 +167,47 @@ def test_save_blended_materials_creates_two_ratios(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
 
     with app.test_request_context('/materials/blended'):
-        form = _prepare_request_for_successful_blending()
+        form = _prepare_request_for_successful_blending('Powder')
 
         BlendedMaterialsService().save_blended_materials(form)
 
-        _assert_saved_blended_materials_from(mock_save_called_with_first_blended_material,
-                                             mock_save_called_with_second_blended_material)
+        _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
+                                      mock_save_called_with_second_blended_material)
 
 
-def _prepare_request_for_successful_blending():
+def test_save_blended_materials_creates_two_aggregates_from_three_base_materials(monkeypatch):
+    def mock_query_by_type_and_uuid(material_type, uuid):
+        return _prepare_test_base_aggregates_for_blending(material_type, uuid)
+
+    mock_save_called_with_first_blended_material = Aggregates()
+    mock_save_called_with_second_blended_material = Aggregates()
+
+    def mock_save(material_type, material):
+        if material_type == 'aggregates':
+            nonlocal mock_save_called_with_first_blended_material
+            nonlocal mock_save_called_with_second_blended_material
+            if material.name == 'test blend-0':
+                mock_save_called_with_first_blended_material = material
+            if material.name == 'test blend-1':
+                mock_save_called_with_second_blended_material = material
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
+
+    with app.test_request_context('/materials/blended'):
+        form = _prepare_request_for_successful_blending('Aggregates')
+        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
+
+        BlendedMaterialsService().save_blended_materials(form)
+
+        _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
+                                         mock_save_called_with_second_blended_material)
+
+
+def _prepare_request_for_successful_blending(material_type):
     form = MultiDict()
     form.add('blended_material_name', 'test blend')
-    form.add('base_type', 'Powder')
+    form.add('base_type', material_type)
     form.setlist('base_material_selection', ['uuid1', 'uuid2'])
     form['all_ratio_entries-0-ratio'] = '50/50'
     form['all_ratio_entries-1-ratio'] = '25/75'
@@ -192,7 +222,7 @@ def _create_basic_submission_data():
     return form
 
 
-def _prepare_test_base_materials_for_blending(material_type, uuid):
+def _prepare_test_base_powders_for_blending(material_type, uuid):
     if material_type == 'Powder':
         if uuid == 'uuid1':
             powder1 = Powder(name='powder 1', type='Powder',
@@ -217,8 +247,23 @@ def _prepare_test_base_materials_for_blending(material_type, uuid):
     return None
 
 
-def _assert_saved_blended_materials_from(mock_save_called_with_first_blended_material,
-                                         mock_save_called_with_second_blended_material):
+def _prepare_test_base_aggregates_for_blending(material_type, uuid):
+    if material_type == 'Aggregates':
+        if uuid == 'uuid1':
+            aggregates1 = Aggregates(name='aggregate 1', type='Aggregate',
+                                     costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+                                     composition=Composition(fe3_o2=10.0, si_o2=4.4, al2_o3=7, na2_o=11),
+                                     additional_properties=[AdditionalProperty(name='Prop1', value='2'),
+                                                            AdditionalProperty(name='Prop2', value='Category'),
+                                                            AdditionalProperty(name='Prop3', value='Not in aggregates 2')])
+            aggregates1.uuid = 'uuid1'
+            return aggregates1
+        return None
+    return None
+
+
+def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
+                                  mock_save_called_with_second_blended_material):
     assert mock_save_called_with_first_blended_material.composition.fe3_o2 == '15.0'
     assert mock_save_called_with_first_blended_material.composition.si_o2 == '7.2'
     assert mock_save_called_with_first_blended_material.composition.al2_o3 == '7.0'
@@ -244,3 +289,8 @@ def _assert_saved_blended_materials_from(mock_save_called_with_first_blended_mat
 
     assert mock_save_called_with_second_blended_material.structure.fine == '87.5'
     assert mock_save_called_with_second_blended_material.structure.gravity is None
+
+
+def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
+                                     mock_save_called_with_second_blended_material):
+    pass

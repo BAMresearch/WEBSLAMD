@@ -83,14 +83,17 @@ class BlendedMaterialsService(MaterialsService):
                 raise MaterialNotFoundException('The requested base materials do no longer exist!')
             base_materials_as_dict.append(base_material.__dict__)
 
-        list_of_normalizes_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
+        list_of_normalized_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
                                                                                             RATIO_DELIMITER)
 
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
-        for i, ratio_list in enumerate(list_of_normalizes_ratios_lists):
-            blended_material = strategy.create_blended_material(i, submitted_blending_configuration['blended_material_name'],
-                                             ratio_list, base_materials_as_dict)
+        for i, ratio_list in enumerate(list_of_normalized_ratios_lists):
+            if len(ratio_list) != len(base_materials_as_dict):
+                raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
+
+            material_name = submitted_blending_configuration['blended_material_name']
+            blended_material = strategy.create_blended_material(i, material_name, ratio_list, base_materials_as_dict)
             strategy.save_model(blended_material)
 
     def _validate_configuration(self, submitted_blending_configuration):

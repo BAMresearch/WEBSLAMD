@@ -72,10 +72,7 @@ class PowderStrategy(MaterialStrategy):
         return multidict
 
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
-        if len(normalized_ratios) != len(base_powders_as_dict):
-            raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
-
-        costs = self._compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        costs = self.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = self._compute_blended_structure(normalized_ratios, base_powders_as_dict)
 
@@ -116,10 +113,3 @@ class PowderStrategy(MaterialStrategy):
         blended_gravity = self.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
-
-    def _compute_blended_costs(self, normalized_ratios, base_powders_as_dict):
-        blended_co2_footprint = self.compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'co2_footprint')
-        blended_costs = self.compute_mean(normalized_ratios, base_powders_as_dict, 'costs', 'costs')
-        blended_delivery_time = self.compute_max(base_powders_as_dict, 'costs', 'delivery_time')
-
-        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
