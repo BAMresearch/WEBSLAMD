@@ -1,5 +1,4 @@
 const BASE_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/base`
-const ACTION_BUTTON_DELIMITER = "___"
 const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
 const MAX_ADDITIONAL_PROPERTIES = 10;
 
@@ -66,6 +65,8 @@ function deleteAdditionalProperty() {
  * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
  * @param id
+ * @param material_type
+ * @param token
  */
 async function deleteMaterial(id, material_type, token) {
     token = document.getElementById("csrf_token").value

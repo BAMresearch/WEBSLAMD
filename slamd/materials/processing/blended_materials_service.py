@@ -51,6 +51,11 @@ class BlendedMaterialsService(MaterialsService):
             min_max_form.all_min_max_entries.append_entry()
         return min_max_form
 
+    def delete_material(self, material_type, uuid):
+        MaterialsPersistence.delete_by_type_and_uuid(material_type, uuid)
+        return self.list_materials(blended=True)
+
+
     def create_ratio_form(self, min_max_values_with_increments):
         if not self._ratio_input_is_valid(min_max_values_with_increments):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')

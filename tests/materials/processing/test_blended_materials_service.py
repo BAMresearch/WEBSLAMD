@@ -6,6 +6,7 @@ from slamd import create_app
 from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestTooLargeException, \
     ValueNotSupportedException
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
+from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -336,3 +337,39 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == '5.69'
     assert mock_save_called_with_second_blended_material.composition.fa_density == '5.8'
     assert mock_save_called_with_second_blended_material.composition.ca_density == '12.5'
+def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
+    mock_delete_by_type_and_uuid_called_with = None
+
+    def mock_delete_by_type_and_uuid(type, uuid):
+        nonlocal mock_delete_by_type_and_uuid_called_with
+        mock_delete_by_type_and_uuid_called_with = type, uuid
+        return None
+
+    def mock_get_all_types():
+        return ['powder']
+
+    def mock_query_by_type(input):
+        powders = create_test_powders()
+        powders[0].is_blended = True
+        return powders
+
+    monkeypatch.setattr(MaterialsPersistence,
+                        'delete_by_type_and_uuid', mock_delete_by_type_and_uuid)
+    monkeypatch.setattr(MaterialType, 'get_all_types', mock_get_all_types)
+    monkeypatch.setattr(MaterialsPersistence,
+                        'query_by_type', mock_query_by_type)
+
+    result = BlendedMaterialsService().delete_material('powder', 'uuid to delete')
+
+    all_blended_materials = result.all_materials
+
+    assert len(all_blended_materials) == 1
+
+    dto = all_blended_materials[0]
+    assert dto.name == 'test powder'
+    assert dto.type == 'Powder'
+    assert dto.all_properties == 'Fe₂O₃: 23.3, Specific gravity: 12, test prop: test value'
+
+    assert result.ctx == 'blended'
+    assert mock_delete_by_type_and_uuid_called_with == (
+        'powder', 'uuid to delete')

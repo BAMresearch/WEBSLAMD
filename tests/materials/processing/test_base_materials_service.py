@@ -499,15 +499,14 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     assert mock_delete_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
 
 
-def _assert_test_powders(result):
-    assert len(result) == 2
+def _assert_test_powders(all_materials):
+    assert len(all_materials) == 2
 
-    dto = result[0]
+    dto = all_materials[0]
     assert dto.name == 'my powder'
     assert dto.type == 'Powder'
     assert dto.all_properties == ''
-    dto = result[1]
+    dto = all_materials[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == u'Fe\u2082O\u2083' + \
-        ': 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃: 23.3, Specific gravity: 12, test prop: test value'
