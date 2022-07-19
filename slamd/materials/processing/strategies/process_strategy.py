@@ -10,9 +10,9 @@ class ProcessStrategy(BaseMaterialStrategy):
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
-            duration=submitted_material['duration'],
-            temperature=submitted_material['temperature'],
-            relative_humidity=submitted_material['relative_humidity'],
+            duration=float(submitted_material['duration']),
+            temperature=float(submitted_material['temperature']),
+            relative_humidity=float(submitted_material['relative_humidity']),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
 

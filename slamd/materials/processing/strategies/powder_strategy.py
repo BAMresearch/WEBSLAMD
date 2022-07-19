@@ -7,23 +7,23 @@ class PowderStrategy(BaseMaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            fe3_o2=submitted_material['fe3_o2'],
-            si_o2=submitted_material['si_o2'],
-            al2_o3=submitted_material['al2_o3'],
-            ca_o=submitted_material['ca_o'],
-            mg_o=submitted_material['mg_o'],
-            na2_o=submitted_material['na2_o'],
-            k2_o=submitted_material['k2_o'],
-            s_o3=submitted_material['s_o3'],
-            ti_o2=submitted_material['ti_o2'],
-            p2_o5=submitted_material['p2_o5'],
-            sr_o=submitted_material['sr_o'],
-            mn2_o3=submitted_material['mn2_o3']
+            fe3_o2=float(submitted_material['fe3_o2']),
+            si_o2=float(submitted_material['si_o2']),
+            al2_o3=float(submitted_material['al2_o3']),
+            ca_o=float(submitted_material['ca_o']),
+            mg_o=float(submitted_material['mg_o']),
+            na2_o=float(submitted_material['na2_o']),
+            k2_o=float(submitted_material['k2_o']),
+            s_o3=float(submitted_material['s_o3']),
+            ti_o2=float(submitted_material['ti_o2']),
+            p2_o5=float(submitted_material['p2_o5']),
+            sr_o=float(submitted_material['sr_o']),
+            mn2_o3=float(submitted_material['mn2_o3'])
         )
 
         structure = Structure(
-            gravity=submitted_material['gravity'],
-            fine=submitted_material['fine']
+            gravity=float(submitted_material['gravity']),
+            fine=float(submitted_material['fine'])
         )
 
         return Powder(

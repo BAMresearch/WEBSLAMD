@@ -70,9 +70,9 @@ class BaseMaterialStrategy(ABC):
     @classmethod
     def extract_cost_properties(cls, submitted_material):
         return Costs(
-            co2_footprint=submitted_material['co2_footprint'],
-            delivery_time=submitted_material['delivery_time'],
-            costs=submitted_material['costs']
+            co2_footprint=float(submitted_material['co2_footprint']),
+            costs=float(submitted_material['costs']),
+            delivery_time=int(submitted_material['delivery_time'])
         )
 
     @classmethod
