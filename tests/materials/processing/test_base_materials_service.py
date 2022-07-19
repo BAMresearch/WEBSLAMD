@@ -27,42 +27,42 @@ app = create_app('testing', with_session=False)
 
 def test_create_material_form_creates_powder():
     with app.test_request_context('/materials/base/powder'):
-        file, form = BaseMaterialService().create_material_form('powder')
+        file, form = BaseMaterialService.create_material_form('powder')
         assert file == 'powder_form.html'
         assert isinstance(form, PowderForm)
 
 
 def test_create_material_form_creates_liquid():
     with app.test_request_context('/materials/base/liquid'):
-        file, form = BaseMaterialService().create_material_form('liquid')
+        file, form = BaseMaterialService.create_material_form('liquid')
         assert file == 'liquid_form.html'
         assert isinstance(form, LiquidForm)
 
 
 def test_create_material_form_creates_aggregates():
     with app.test_request_context('/materials/base/aggregates'):
-        file, form = BaseMaterialService().create_material_form('aggregates')
+        file, form = BaseMaterialService.create_material_form('aggregates')
         assert file == 'aggregates_form.html'
         assert isinstance(form, AggregatesForm)
 
 
 def test_create_material_form_creates_process():
     with app.test_request_context('/materials/base/process'):
-        file, form = BaseMaterialService().create_material_form('process')
+        file, form = BaseMaterialService.create_material_form('process')
         assert file == 'process_form.html'
         assert isinstance(form, ProcessForm)
 
 
 def test_create_material_form_creates_admixture():
     with app.test_request_context('/materials/base/admixture'):
-        file, form = BaseMaterialService().create_material_form('admixture')
+        file, form = BaseMaterialService.create_material_form('admixture')
         assert file == 'admixture_form.html'
         assert isinstance(form, AdmixtureForm)
 
 
 def test_create_material_form_creates_custom():
     with app.test_request_context('/materials/base/custom'):
-        file, form = BaseMaterialService().create_material_form('custom')
+        file, form = BaseMaterialService.create_material_form('custom')
         assert file == 'custom_form.html'
         assert isinstance(form, CustomForm)
 
@@ -70,7 +70,7 @@ def test_create_material_form_creates_custom():
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
     with app.test_request_context('/materials/base/invalid'):
         with pytest.raises(MaterialNotFoundException):
-            BaseMaterialService().create_material_form('invalid')
+            BaseMaterialService.create_material_form('invalid')
 
 
 def test_save_material_creates_powder(monkeypatch):
@@ -108,7 +108,7 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('fine', ''),
                                    ('gravity', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -143,7 +143,7 @@ def test_save_material_creates_liquid(monkeypatch):
                                    ('water', ''),
                                    ('na_o_h_total', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -170,7 +170,7 @@ def test_save_material_creates_aggregates(monkeypatch):
                                    ('fa_density', ''),
                                    ('ca_density', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -196,7 +196,7 @@ def test_save_material_creates_process(monkeypatch):
                                    ('temperature', ''),
                                    ('relative_humidity', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -221,7 +221,7 @@ def test_save_material_creates_admixture(monkeypatch):
                                    ('composition', ''),
                                    ('type', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -246,7 +246,7 @@ def test_save_material_creates_custom(monkeypatch):
                                    ('custom_name', ''),
                                    ('custom_value', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().save_material(form)
+        BaseMaterialService.save_material(form)
 
     assert mock_create_model_called_with == form
 
@@ -262,7 +262,7 @@ def test_edit_material_edits_powder(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(PowderStrategy, 'edit_model', mock_edit_model)
@@ -290,7 +290,7 @@ def test_edit_material_edits_powder(monkeypatch):
                                    ('fine', ''),
                                    ('gravity', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('powder', 'to_be_edited', form)
+        BaseMaterialService.edit_material('powder', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -306,7 +306,7 @@ def test_edit_material_edits_liquid(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(LiquidStrategy, 'edit_model', mock_edit_model)
@@ -329,7 +329,7 @@ def test_edit_material_edits_liquid(monkeypatch):
                                    ('water', ''),
                                    ('na_o_h_total', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('Liquid', 'to_be_edited', form)
+        BaseMaterialService.edit_material('Liquid', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -345,7 +345,7 @@ def test_edit_material_edits_aggregates(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(AggregatesStrategy, 'edit_model', mock_edit_model)
@@ -360,7 +360,7 @@ def test_edit_material_edits_aggregates(monkeypatch):
                                    ('fa_density', ''),
                                    ('ca_density', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('Aggregates', 'to_be_edited', form)
+        BaseMaterialService.edit_material('Aggregates', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -376,7 +376,7 @@ def test_edit_material_edits_process(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(ProcessStrategy, 'edit_model', mock_edit_model)
@@ -390,7 +390,7 @@ def test_edit_material_edits_process(monkeypatch):
                                    ('temperature', ''),
                                    ('relative_humidity', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('Process', 'to_be_edited', form)
+        BaseMaterialService.edit_material('Process', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -406,7 +406,7 @@ def test_edit_material_edits_admixture(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(AdmixtureStrategy, 'edit_model', mock_edit_model)
@@ -419,7 +419,7 @@ def test_edit_material_edits_admixture(monkeypatch):
                                    ('composition', ''),
                                    ('type', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('Admixture', 'to_be_edited', form)
+        BaseMaterialService.edit_material('Admixture', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -435,7 +435,7 @@ def test_edit_material_edits_custom(monkeypatch):
     def mock_save_model(model):
         return None
 
-    def mock_delete_material(self, type, uuid):
+    def mock_delete_material(type, uuid):
         return None
 
     monkeypatch.setattr(CustomStrategy, 'edit_model', mock_edit_model)
@@ -448,7 +448,7 @@ def test_edit_material_edits_custom(monkeypatch):
                                    ('custom_name', ''),
                                    ('custom_value', ''),
                                    ('submit', 'Save material')])
-        BaseMaterialService().edit_material('Custom', 'to_be_edited', form)
+        BaseMaterialService.edit_material('Custom', 'to_be_edited', form)
 
     assert mock_edit_model_called_with == ('to_be_edited', form)
 
@@ -468,7 +468,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = BaseMaterialService().list_materials(blended=False)
+    result = BaseMaterialService.list_materials(blended=False)
 
     _assert_test_powders(result.all_materials)
     assert result.ctx == 'base'
@@ -495,7 +495,7 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    BaseMaterialService().delete_material('powder', 'uuid to delete')
+    BaseMaterialService.delete_material('powder', 'uuid to delete')
 
     assert mock_delete_by_type_and_uuid_called_with == ('powder', 'uuid to delete')
 

@@ -7,7 +7,8 @@ from slamd.materials.processing.materials_persistence import MaterialsPersistenc
 
 class MaterialsService(ABC):
 
-    def list_materials(self, blended):
+    @classmethod
+    def list_materials(cls, blended):
         all_material_types = MaterialType.get_all_types()
 
         all_material_dtos = []
@@ -23,10 +24,11 @@ class MaterialsService(ABC):
 
         sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
-        return self.create_materials_response(sorted_by_type)
+        return cls.create_materials_response(sorted_by_type)
 
+    @classmethod
     @abstractmethod
-    def create_materials_response(self, materials):
+    def create_materials_response(cls, materials):
         pass
 
 

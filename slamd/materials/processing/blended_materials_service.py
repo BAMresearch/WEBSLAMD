@@ -15,10 +15,12 @@ MAX_NUMBER_OF_RATIOS = 1000
 
 class BlendedMaterialsService(MaterialsService):
 
-    def create_materials_response(self, materials):
+    @classmethod
+    def create_materials_response(cls, materials):
         return MaterialsResponse(materials, 'blended')
 
-    def list_base_material_selection_by_type(self, material_type):
+    @classmethod
+    def list_base_material_selection_by_type(cls, material_type):
         if material_type not in MaterialType.get_all_types():
             raise MaterialNotFoundException('The requested type is not supported!')
 
@@ -33,7 +35,8 @@ class BlendedMaterialsService(MaterialsService):
         form.base_material_selection.choices = material_selection
         return form
 
-    def create_min_max_form(self, count):
+    @classmethod
+    def create_min_max_form(cls, count):
         if not_numeric(count):
             raise ValueNotSupportedException('Cannot process selection!')
 
@@ -47,13 +50,14 @@ class BlendedMaterialsService(MaterialsService):
             min_max_form.all_min_max_entries.append_entry()
         return min_max_form
 
-    def delete_material(self, material_type, uuid):
+    @classmethod
+    def delete_material(cls, material_type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(material_type, uuid)
-        return self.list_materials(blended=True)
+        return cls.list_materials(blended=True)
 
-
-    def create_ratio_form(self, min_max_values_with_increments):
-        if not self._ratio_input_is_valid(min_max_values_with_increments):
+    @classmethod
+    def create_ratio_form(cls, min_max_values_with_increments):
+        if not cls._ratio_input_is_valid(min_max_values_with_increments):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
 
         all_values = []
@@ -75,12 +79,13 @@ class BlendedMaterialsService(MaterialsService):
 
         ratio_form = RatioForm()
         for entry in cartesian_product_list:
-            all_ratios_for_entry = self._create_entry_value(entry)
+            all_ratios_for_entry = cls._create_entry_value(entry)
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
             ratio_form_entry.ratio.data = all_ratios_for_entry
         return ratio_form
 
-    def _create_entry_value(self, entry):
+    @classmethod
+    def _create_entry_value(cls, entry):
         entry_list = list(entry)
         sum_of_independent_ratios = sum(entry_list)
         dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
@@ -88,16 +93,18 @@ class BlendedMaterialsService(MaterialsService):
         all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
         return all_ratios_for_entry
 
-    def _ratio_input_is_valid(self, min_max_increments_values):
-        for i in range(len(min_max_increments_values)- 1):
+    @classmethod
+    def _ratio_input_is_valid(cls, min_max_increments_values):
+        for i in range(len(min_max_increments_values) - 1):
             min_value = min_max_increments_values[i]['min']
             max_value = min_max_increments_values[i]['max']
             increment = min_max_increments_values[i]['increment']
-            if self._validate_ranges(increment, max_value, min_value):
+            if cls._validate_ranges(increment, max_value, min_value):
                 return False
         return True
 
-    def _validate_ranges(self, increment, max_value, min_value):
+    @classmethod
+    def _validate_ranges(cls, increment, max_value, min_value):
         return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
-               or max_value < 0 or increment <= 0 or not_numeric(max_value) \
-               or not_numeric(min_value) or not_numeric(increment)
+            or max_value < 0 or increment <= 0 or not_numeric(max_value) \
+            or not_numeric(min_value) or not_numeric(increment)
