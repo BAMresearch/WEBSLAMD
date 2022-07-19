@@ -1,5 +1,6 @@
 from werkzeug.datastructures import ImmutableMultiDict
 from slamd.materials.processing.material_dto import MaterialDto
+from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Material, Costs
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
@@ -7,8 +8,8 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class MockStrategy(BaseMaterialStrategy):
     @classmethod
-    def create_model(cls, submitted_material, additional_properties):
-        return None
+    def create_model(cls, submitted_material):
+        return Material()
 
     @classmethod
     def gather_composition_information(cls, material):
@@ -102,3 +103,33 @@ def test_base_material_strategy_extract_additional_properties_parses_additional_
     assert additional_properties[0] == AdditionalProperty('Prop 0', 'Value 0')
     assert additional_properties[1] == AdditionalProperty('Prop 1', 'Value 1')
     assert additional_properties[2] == AdditionalProperty('Prop 2', 'Value 2')
+
+
+def test_base_material_strategy_extract_cost_properties_parses_cost_properties():
+    submitted_material = ImmutableMultiDict([
+        ('co2_footprint', '12.3'),
+        ('costs', '45.6'),
+        ('delivery_time', '789'),
+    ])
+    costs = MockStrategy.extract_cost_properties(submitted_material)
+    assert costs == Costs(co2_footprint=12.3, costs=45.6, delivery_time=789)
+
+
+def test_base_material_strategy_edit_model_inyects_given_uuid():
+    material = MockStrategy.edit_model('to_be_edited', ImmutableMultiDict())
+    assert material.uuid == 'to_be_edited'
+
+
+def test_base_material_strategy_save_model_saves_model(monkeypatch):
+    mock_save_called_with = None
+
+    def mock_save(type, model):
+        nonlocal mock_save_called_with
+        mock_save_called_with = (type, model)
+        return None
+
+    monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
+
+    material = Material(name='test name', type='test type')
+    MockStrategy.save_model(material)
+    assert mock_save_called_with == ('test type', material)
