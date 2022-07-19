@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.liquid_strategy import LiquidStrategy
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = LiquidStrategy()
     composition = Composition(
         na2_si_o3=12.3,
         na_o_h=23.4,
@@ -27,7 +26,7 @@ def test_gather_composition_properties_adds_all_properties():
         composition=composition
     )
 
-    result = strategy.gather_composition_information(liquid)
+    result = LiquidStrategy.gather_composition_information(liquid)
     assert result == ['Na₂SiO₃: 12.3, ',
                       'NaOH: 23.4, ',
                       'Na₂SiO₃ specific: 34.5, ',

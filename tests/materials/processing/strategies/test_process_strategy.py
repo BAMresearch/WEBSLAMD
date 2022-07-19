@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.process_strategy import ProcessStrate
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = ProcessStrategy()
     process = Process(
         name='test process',
         type='Process',
@@ -14,7 +13,7 @@ def test_gather_composition_properties_adds_all_properties():
         temperature=6.54,
         relative_humidity=9.87,
     )
-    
-    result = strategy.gather_composition_information(process)
+
+    result = ProcessStrategy.gather_composition_information(process)
     assert result == ['Duration: 3.21, ',
                       'Temperature: 6.54, ', 'Relative Humidity: 9.87, ']

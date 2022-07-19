@@ -76,12 +76,12 @@ def test_create_material_form_raises_bad_request_when_invalid_form_is_requested(
 def test_save_material_creates_powder(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(PowderStrategy, 'create_model', mock_create_model)
@@ -116,12 +116,12 @@ def test_save_material_creates_powder(monkeypatch):
 def test_save_material_creates_liquid(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(LiquidStrategy, 'create_model', mock_create_model)
@@ -151,12 +151,12 @@ def test_save_material_creates_liquid(monkeypatch):
 def test_save_material_creates_aggregates(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(AggregatesStrategy, 'create_model', mock_create_model)
@@ -178,12 +178,12 @@ def test_save_material_creates_aggregates(monkeypatch):
 def test_save_material_creates_process(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(ProcessStrategy, 'create_model', mock_create_model)
@@ -204,12 +204,12 @@ def test_save_material_creates_process(monkeypatch):
 def test_save_material_creates_admixture(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(AdmixtureStrategy, 'create_model', mock_create_model)
@@ -229,12 +229,12 @@ def test_save_material_creates_admixture(monkeypatch):
 def test_save_material_creates_custom(monkeypatch):
     mock_create_model_called_with = None
 
-    def mock_create_model(self, submitted_material):
+    def mock_create_model(submitted_material):
         nonlocal mock_create_model_called_with
         mock_create_model_called_with = submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     monkeypatch.setattr(CustomStrategy, 'create_model', mock_create_model)
@@ -254,12 +254,12 @@ def test_save_material_creates_custom(monkeypatch):
 def test_edit_material_edits_powder(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -298,12 +298,12 @@ def test_edit_material_edits_powder(monkeypatch):
 def test_edit_material_edits_liquid(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -337,12 +337,12 @@ def test_edit_material_edits_liquid(monkeypatch):
 def test_edit_material_edits_aggregates(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -368,12 +368,12 @@ def test_edit_material_edits_aggregates(monkeypatch):
 def test_edit_material_edits_process(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -398,12 +398,12 @@ def test_edit_material_edits_process(monkeypatch):
 def test_edit_material_edits_admixture(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):
@@ -427,12 +427,12 @@ def test_edit_material_edits_admixture(monkeypatch):
 def test_edit_material_edits_custom(monkeypatch):
     mock_edit_model_called_with = None
 
-    def mock_edit_model(self, uuid, submitted_material):
+    def mock_edit_model(uuid, submitted_material):
         nonlocal mock_edit_model_called_with
         mock_edit_model_called_with = uuid, submitted_material
         return None
 
-    def mock_save_model(self, model):
+    def mock_save_model(model):
         return None
 
     def mock_delete_material(self, type, uuid):

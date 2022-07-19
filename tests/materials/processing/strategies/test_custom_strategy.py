@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = CustomStrategy()
     custom = Custom(
         name='test custom',
         type='Custom',
@@ -14,5 +13,5 @@ def test_gather_composition_properties_adds_all_properties():
         custom_value='test custom value'
     )
 
-    result = strategy.gather_composition_information(custom)
+    result = CustomStrategy.gather_composition_information(custom)
     assert result == ['Name: test custom name, ', 'Value: test custom value, ']

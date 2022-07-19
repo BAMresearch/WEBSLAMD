@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = PowderStrategy()
     composition = Composition(
         fe3_o2=12.3,
         si_o2=23.4,
@@ -32,7 +31,7 @@ def test_gather_composition_properties_adds_all_properties():
         structure=structure
     )
 
-    result = strategy.gather_composition_information(powder)
+    result = PowderStrategy.gather_composition_information(powder)
     assert result == ['Fe₂O₃: 12.3, ',
                       'SiO₂: 23.4, ',
                       'Al₂O₃: 34.5, ',

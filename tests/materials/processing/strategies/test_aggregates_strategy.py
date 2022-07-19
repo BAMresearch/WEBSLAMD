@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.aggregates_strategy import Aggregates
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = AggregatesStrategy()
     composition = Composition(
         fine_aggregates=123.45,
         coarse_aggregates=67.890,
@@ -19,7 +18,7 @@ def test_gather_composition_properties_adds_all_properties():
         composition=composition,
     )
 
-    result = strategy.gather_composition_information(aggregates)
+    result = AggregatesStrategy.gather_composition_information(aggregates)
     assert result == ['Fine Aggregates: 123.45, ',
                       'Coarse Aggregates: 67.89, ',
                       'FA Density: test FA density, ',

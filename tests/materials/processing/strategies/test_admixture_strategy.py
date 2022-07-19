@@ -4,7 +4,6 @@ from slamd.materials.processing.strategies.admixture_strategy import AdmixtureSt
 
 
 def test_gather_composition_properties_adds_all_properties():
-    strategy = AdmixtureStrategy()
     admixture = Admixture(
         name='test admixture',
         type='Admixture',
@@ -13,6 +12,6 @@ def test_gather_composition_properties_adds_all_properties():
         composition=10.4,
         admixture_type='test type'
     )
-    
-    result = strategy.gather_composition_information(admixture)
+
+    result = AdmixtureStrategy.gather_composition_information(admixture)
     assert result == ['Composition: 10.4, ', 'Type: test type, ']
