@@ -1,6 +1,7 @@
 from functools import reduce
 
-from slamd.common.slamd_utils import string_to_number
+from slamd.common.slamd_utils import string_to_number, numeric, not_numeric
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
@@ -83,7 +84,7 @@ class PowderStrategy(MaterialStrategy):
                       costs=costs,
                       composition=composition,
                       structure=structure,
-                      additional_properties= additional_properties,
+                      additional_properties=additional_properties,
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
@@ -121,25 +122,58 @@ class PowderStrategy(MaterialStrategy):
         for base_powder in base_materials_as_dict:
             additional_properties_for_all_base_materials.append(base_powder['additional_properties'])
 
-        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: self._keep_matching(x, y), additional_properties_for_all_base_materials)
-        key_defined_in_all_base_materials = list(map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
+        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: self._keep_matching(x, y),
+                                                                   additional_properties_for_all_base_materials)
+        key_defined_in_all_base_materials = list(
+            map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
 
         matching_properties_for_all_base_materials = []
         for base_material_dict in base_materials_as_dict:
-            matching_properties_for_base_material = list(filter(lambda prop: prop.name in key_defined_in_all_base_materials,
-                            base_material_dict['additional_properties']))
+            matching_properties_for_base_material = list(
+                filter(lambda prop: prop.name in key_defined_in_all_base_materials,
+                       base_material_dict['additional_properties']))
+
             matching_properties_for_all_base_materials.append(matching_properties_for_base_material)
 
-        # create structure containing ratios together with corresponding properties e.g.
-        # ((0.3, [Prop1(Material1), Prop2(Material1)], (0.7, [Prop1(Material2), Prop2(Material2)])))
-        ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+        blended_additional_properties = []
+        for i in range(len(matching_properties_for_all_base_materials[0])):
+            ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+            mapped_properties = list(map(lambda x: self.method_name(x[0], x[1][i]), ratios_with_property_values))
+            if numeric(mapped_properties[0][1]):
+                mean = sum(list(map(lambda x: x[1], mapped_properties)))
+                blended_additional_properties.append(AdditionalProperty(name=mapped_properties[0][0], value=mean))
+            else:
+                for item in mapped_properties:
+                    # TODO pass ratio to value instead of 5
+                    blended_additional_properties.append(AdditionalProperty(name=item[1], value=5))
+        return blended_additional_properties
 
+    def method_name(self,a,b):
+        return (b.name, self._map_according_to_value(a, b.value))
 
-        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1][0].value), ratios_with_property_values)))
-        return str(round(mean, 2))
+    def _map_according_to_value(self, ratio, value):
+        if numeric(value):
+            return ratio * string_to_number(value)
+        return value
 
-
-
+    # we throw away all properties with keys (names) either not contained in additional_properties of all base materials
+    # or if the key is contained in additional_properties of all base materials but the types of the values are not
+    # matching as otherwise we cannot clearly separate continuous from categorical variables
     def _keep_matching(self, first_property_list, second_property_list):
-        names_of_second_property_list = list(map(lambda prop: prop.name, second_property_list))
-        return [x for x in first_property_list if x.name in names_of_second_property_list]
+        return [x for x in first_property_list if
+                self._is_contained_and_has_same_type_in_all_materials(x, second_property_list)]
+
+    def _is_contained_and_has_same_type_in_all_materials(self, prop, property_list):
+        matching_name = False
+        matching_type = False
+        names_of_properties = list(map(lambda p: p.name, property_list))
+        if prop.name in names_of_properties:
+            matching_name = True
+        if matching_name:
+            for additional_property in property_list:
+                if additional_property.name == prop.name:
+                    if (numeric(additional_property.value) and not_numeric(prop.value)) or (not_numeric(additional_property.value) and numeric(prop.value)):
+                        matching_type = False
+                    else:
+                        matching_type = True
+        return matching_name and matching_type
