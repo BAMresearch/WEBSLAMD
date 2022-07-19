@@ -3,9 +3,12 @@ from slamd.materials.processing.models.material import Material
 
 class Liquid(Material):
 
-    def __init__(self, name='', type='', costs=None, composition=None, additional_properties=None):
+    def __init__(self, name='', type='', costs=None, composition=None, additional_properties=None, is_blended=False,
+                 blending_ratios=''):
         super().__init__(name=name, type=type, costs=costs,
-                         additional_properties=additional_properties)
+                         additional_properties=additional_properties,is_blended=is_blended,
+                         blending_ratios=blending_ratios
+                         )
         self.composition = composition
 
 
