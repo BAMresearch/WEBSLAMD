@@ -1,4 +1,3 @@
-import multidict
 from werkzeug.datastructures import ImmutableMultiDict
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.models.material import Costs
