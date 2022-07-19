@@ -39,3 +39,22 @@ def test_gather_composition_properties_adds_all_properties():
     result = ProcessStrategy.gather_composition_information(process)
     assert result == ['Duration: 3.21, ',
                       'Temperature: 6.54, ', 'Relative Humidity: 9.87, ']
+
+
+def test_convert_to_multidict_adds_all_properties():
+    process = Process(
+        name='test process',
+        type='Process',
+        costs=Costs(),
+        additional_properties=[],
+        duration=3.21,
+        temperature=6.54,
+        relative_humidity=9.87,
+    )
+
+    multidict = ProcessStrategy.convert_to_multidict(process)
+    assert multidict['material_name'] == 'test process'
+    assert multidict['material_type'] == 'Process'
+    assert multidict['duration'] == 3.21
+    assert multidict['temperature'] == 6.54
+    assert multidict['relative_humidity'] == 9.87

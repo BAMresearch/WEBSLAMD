@@ -35,3 +35,20 @@ def test_gather_composition_properties_adds_all_properties():
 
     result = CustomStrategy.gather_composition_information(custom)
     assert result == ['Name: test custom name, ', 'Value: test custom value, ']
+
+
+def test_convert_to_multidict_adds_all_properties():
+    custom = Custom(
+        name='test custom',
+        type='Custom',
+        costs=Costs(),
+        additional_properties=[],
+        custom_name='test custom name',
+        custom_value='test custom value'
+    )
+
+    multidict = CustomStrategy.convert_to_multidict(custom)
+    assert multidict['material_name'] == 'test custom'
+    assert multidict['material_type'] == 'Custom'
+    assert multidict['custom_name'] == 'test custom name'
+    assert multidict['custom_value'] == 'test custom value'

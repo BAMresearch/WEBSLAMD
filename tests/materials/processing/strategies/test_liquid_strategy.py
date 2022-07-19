@@ -79,3 +79,43 @@ def test_gather_composition_properties_adds_all_properties():
                       'SiO₂: 9.87, ',
                       'Water: 8.76, ',
                       'Total NaOH: 7.65, ']
+
+
+def test_convert_to_multidict_adds_all_properties():
+    composition = Composition(
+        na2_si_o3=12.3,
+        na_o_h=23.4,
+        na2_si_o3_specific=34.5,
+        na_o_h_specific=45.6,
+        total=56.7,
+        na2_o=67.8,
+        si_o2=78.9,
+        h2_o=89.0,
+        na2_o_dry=0.98,
+        si_o2_dry=9.87,
+        water=8.76,
+        na_o_h_total=7.65
+    )
+    liquid = Liquid(
+        name='test liquid',
+        type='Liquid',
+        costs=Costs(),
+        additional_properties=[],
+        composition=composition
+    )
+
+    multidict = LiquidStrategy.convert_to_multidict(liquid)
+    assert multidict['material_name'] == 'test liquid'
+    assert multidict['material_type'] == 'Liquid'
+    assert multidict['na2_si_o3'] == 12.3
+    assert multidict['na_o_h'] == 23.4
+    assert multidict['na2_si_o3_specific'] == 34.5
+    assert multidict['na_o_h_specific'] == 45.6
+    assert multidict['total'] == 56.7
+    assert multidict['na2_o'] == 67.8
+    assert multidict['si_o2'] == 78.9
+    assert multidict['h2_o'] == 89.0
+    assert multidict['na2_o_dry'] == 0.98
+    assert multidict['si_o2_dry'] == 9.87
+    assert multidict['water'] == 8.76
+    assert multidict['na_o_h_total'] == 7.65

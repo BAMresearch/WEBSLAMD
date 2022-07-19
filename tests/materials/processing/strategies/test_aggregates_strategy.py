@@ -1,3 +1,4 @@
+import multidict
 from werkzeug.datastructures import ImmutableMultiDict
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.models.material import Costs
@@ -47,3 +48,27 @@ def test_gather_composition_properties_adds_all_properties():
                       'Coarse Aggregates: 67.89, ',
                       'FA Density: test FA density, ',
                       'CA Density: test CA density, ']
+
+
+def test_convert_to_multidict_adds_all_properties():
+    composition = Composition(
+        fine_aggregates=123.45,
+        coarse_aggregates=67.890,
+        fa_density='test FA density',
+        ca_density='test CA density'
+    )
+    aggregates = Aggregates(
+        name='test aggregates',
+        type='Aggregates',
+        costs=Costs(),
+        additional_properties=[],
+        composition=composition,
+    )
+
+    multidict = AggregatesStrategy.convert_to_multidict(aggregates)
+    assert multidict['material_name'] == 'test aggregates'
+    assert multidict['material_type'] == 'Aggregates'
+    assert multidict['fine_aggregates'] == 123.45
+    assert multidict['coarse_aggregates'] == 67.890
+    assert multidict['fa_density'] == 'test FA density'
+    assert multidict['ca_density'] == 'test CA density'

@@ -35,3 +35,20 @@ def test_gather_composition_properties_adds_all_properties():
 
     result = AdmixtureStrategy.gather_composition_information(admixture)
     assert result == ['Composition: 10.4, ', 'Type: test type, ']
+
+
+def test_convert_to_multidict_adds_all_properties():
+    admixture = Admixture(
+        name='test admixture',
+        type='Admixture',
+        costs=Costs(),
+        additional_properties=[],
+        composition=10.4,
+        admixture_type='test type'
+    )
+
+    multidict = AdmixtureStrategy.convert_to_multidict(admixture)
+    assert multidict['material_name'] == 'test admixture'
+    assert multidict['material_type'] == 'Admixture'
+    assert multidict['composition'] == 10.4
+    assert multidict['type'] == 'test type'
