@@ -1,16 +1,17 @@
 from abc import ABC, abstractmethod
+from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import empty
-from slamd.common.slamd_utils import join_all
+from slamd.common.slamd_utils import not_empty, empty, join_all
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
 
 
 class BaseMaterialStrategy(ABC):
 
     @abstractmethod
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         pass
 
     @abstractmethod
@@ -32,6 +33,35 @@ class BaseMaterialStrategy(ABC):
         dto.all_properties = dto.all_properties.strip()[:-1]
         return dto
 
+    def convert_to_multidict(self, material):
+        multidict = MultiDict([
+            ('uuid', material.uuid),
+            ('material_name', material.name),
+            ('material_type', material.type),
+            ('delivery_time', material.costs.delivery_time),
+            ('costs', material.costs.costs),
+            ('co2_footprint', material.costs.co2_footprint),
+            ('is_blended', material.is_blended)
+        ])
+        self._convert_additional_properties_to_multidict(multidict, material.additional_properties)
+        return multidict
+
+    def edit_model(self, uuid, submitted_material):
+        model = self.create_model(submitted_material)
+        model.uuid = uuid
+        return model
+
+    def extract_additional_properties(self, submitted_material):
+        additional_properties = []
+        submitted_names = self._extract_additional_property_by_label(submitted_material, 'name')
+        submitted_values = self._extract_additional_property_by_label(submitted_material, 'value')
+
+        for name, value in zip(submitted_names, submitted_values):
+            if not_empty(name):
+                additional_property = AdditionalProperty(name, value)
+                additional_properties.append(additional_property)
+        return additional_properties
+
     def extract_cost_properties(self, submitted_material):
         return Costs(
             co2_footprint=submitted_material['co2_footprint'],
@@ -44,9 +74,8 @@ class BaseMaterialStrategy(ABC):
             return ''
         return f'{displayed_name}: {property}, '
 
-    def save_material(self, material):
-        material_type = material.type.lower()
-        MaterialsPersistence.save(material_type, material)
+    def save_model(self, model):
+        MaterialsPersistence.save(model.type.lower(), model)
 
     def _append_cost_properties(self, dto, costs):
         if costs is None:
@@ -65,3 +94,12 @@ class BaseMaterialStrategy(ABC):
         for property in additional_properties:
             additional_property_to_be_displayed += f'{property.name}: {property.value}, '
         dto.all_properties += additional_property_to_be_displayed
+
+    def _convert_additional_properties_to_multidict(self, multidict, additional_properties):
+        for (index, property) in enumerate(additional_properties):
+            multidict.add(f'additional_properties-{index}-property_name', property.name)
+            multidict.add(f'additional_properties-{index}-property_value', property.value)
+
+    def _extract_additional_property_by_label(self, submitted_material, label):
+        return [submitted_material[k] for k in sorted(submitted_material) if
+                'additional_properties' in k and label in k]

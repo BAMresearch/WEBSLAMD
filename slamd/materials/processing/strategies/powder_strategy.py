@@ -4,7 +4,7 @@ from slamd.materials.processing.strategies.base_material_strategy import BaseMat
 
 class PowderStrategy(BaseMaterialStrategy):
 
-    def create_model(self, submitted_material, additional_properties):
+    def create_model(self, submitted_material):
         composition = Composition(
             fe3_o2=submitted_material['fe3_o2'],
             si_o2=submitted_material['si_o2'],
@@ -25,16 +25,14 @@ class PowderStrategy(BaseMaterialStrategy):
             fine=submitted_material['fine']
         )
 
-        powder = Powder(
+        return Powder(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=self.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,
-            additional_properties=additional_properties
+            additional_properties=self.extract_additional_properties(submitted_material)
         )
-
-        self.save_material(powder)
 
     def gather_composition_information(self, powder):
         return [self.include('Fe₂O₃', powder.composition.fe3_o2),
@@ -51,3 +49,21 @@ class PowderStrategy(BaseMaterialStrategy):
                 self.include('Mn₂O₃', powder.composition.mn2_o3),
                 self.include('Fine modules', powder.structure.fine),
                 self.include('Specific gravity', powder.structure.gravity)]
+
+    def convert_to_multidict(self, powder):
+        multidict = super().convert_to_multidict(powder)
+        multidict.add('fe3_o2', powder.composition.fe3_o2)
+        multidict.add('si_o2', powder.composition.si_o2)
+        multidict.add('al2_o3', powder.composition.al2_o3)
+        multidict.add('ca_o', powder.composition.ca_o)
+        multidict.add('mg_o', powder.composition.mg_o)
+        multidict.add('na2_o', powder.composition.na2_o)
+        multidict.add('k2_o', powder.composition.k2_o)
+        multidict.add('s_o3', powder.composition.s_o3)
+        multidict.add('ti_o2', powder.composition.ti_o2)
+        multidict.add('p2_o5', powder.composition.p2_o5)
+        multidict.add('sr_o', powder.composition.sr_o)
+        multidict.add('mn2_o3', powder.composition.mn2_o3)
+        multidict.add('fine', powder.structure.fine)
+        multidict.add('gravity', powder.structure.gravity)
+        return multidict

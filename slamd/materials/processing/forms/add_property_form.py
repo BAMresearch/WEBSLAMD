@@ -4,5 +4,5 @@ from wtforms import StringField
 
 class AddPropertyForm(Form):
 
-    name = StringField(label='Name')
-    value = StringField(label='Value')
+    property_name = StringField(label='Name')
+    property_value = StringField(label='Value')
