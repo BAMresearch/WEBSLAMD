@@ -15,13 +15,12 @@ blended_materials = Blueprint('blended_materials', __name__,
                               static_url_path='static',
                               url_prefix='/materials/blended')
 
-blended_materials_service = BlendedMaterialsService()
-
 
 @blended_materials.route('', methods=['GET'])
 def blended_material_page():
-    material_response = blended_materials_service.list_materials(blended=True)
-    base_material_selection_form = blended_materials_service.list_base_material_selection_by_type(MaterialType.POWDER.value)
+    material_response = BlendedMaterialsService.list_materials(blended=True)
+    base_material_selection_form = BlendedMaterialsService.list_base_material_selection_by_type(
+        MaterialType.POWDER.value)
     return render_template('blended_materials.html',
                            blending_name_and_type_form=BlendingNameAndTypeForm(),
                            base_material_selection_form=base_material_selection_form,
@@ -32,7 +31,7 @@ def blended_material_page():
 
 @blended_materials.route('/<type>', methods=['GET'])
 def select_base_material_type(type):
-    base_material_selection_form = blended_materials_service.list_base_material_selection_by_type(type)
+    base_material_selection_form = BlendedMaterialsService.list_base_material_selection_by_type(type)
     body = {'template': render_template('base_material_selection.html',
                                         base_material_selection_form=base_material_selection_form)}
     return make_response(jsonify(body), 200)
@@ -46,7 +45,7 @@ def submit_blending():
     if blending_data.validate():
         return redirect('/materials/blended')
 
-    materials_response = blended_materials_service.list_materials(blended=True)
+    materials_response = BlendedMaterialsService.list_materials(blended=True)
     return render_template('blended_materials.html',
                            blending_name_and_type_form=blending_data,
                            base_material_selection_form=BaseMaterialSelectionForm(),
@@ -57,7 +56,7 @@ def submit_blending():
 
 @blended_materials.route('/add_min_max_entries/<count>', methods=['GET'])
 def add_min_max_entry(count):
-    min_max_form = blended_materials_service.create_min_max_form(count)
+    min_max_form = BlendedMaterialsService.create_min_max_form(count)
     body = {'template': render_template('min_max_form.html', min_max_form=min_max_form)}
     return make_response(jsonify(body), 200)
 
@@ -65,14 +64,14 @@ def add_min_max_entry(count):
 @blended_materials.route('/add_ratios', methods=['POST'])
 def add_ratios():
     all_min_max_values = json.loads(request.data)
-    ratio_form = blended_materials_service.create_ratio_form(all_min_max_values)
+    ratio_form = BlendedMaterialsService.create_ratio_form(all_min_max_values)
     body = {'template': render_template('ratio_form.html', ratio_form=ratio_form)}
     return make_response(jsonify(body), 200)
 
 
 @blended_materials.route('/<material_type>/<uuid>', methods=['DELETE'])
 def delete_blended_material(material_type, uuid):
-    all_blended_materials = blended_materials_service.delete_material(material_type, uuid)
+    all_blended_materials = BlendedMaterialsService.delete_material(material_type, uuid)
 
     body = {'template': render_template('materials_table.html', materials_response=all_blended_materials)}
     return make_response(jsonify(body), 200)

@@ -20,7 +20,7 @@ def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
 
         monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
-        form = BlendedMaterialsService().list_base_material_selection_by_type('powder')
+        form = BlendedMaterialsService.list_base_material_selection_by_type('powder')
 
         assert len(form.base_material_selection.choices) == 2
         assert form.base_material_selection.choices[0] == ('test uuid1', 'test powder')
@@ -30,7 +30,7 @@ def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
 def test_list_material_selection_by_type_raises_not_found_exception():
     with app.test_request_context('/materials/blended/invalid'):
         with pytest.raises(MaterialNotFoundException):
-            BlendedMaterialsService().list_base_material_selection_by_type('invalid')
+            BlendedMaterialsService.list_base_material_selection_by_type('invalid')
 
 
 def test_create_ratio_form_creates_all_ratios_for_integer_values():
@@ -39,7 +39,7 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
                          {'idx': 1, 'min': 2, 'max': 6, 'increment': 2},
                          {'idx': 2, 'min': 53, 'max': 39, 'increment': None}]
 
-        form = BlendedMaterialsService().create_ratio_form(ratio_request)
+        form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
         data = form.all_ratio_entries.data
 
@@ -54,7 +54,7 @@ def test_create_ratio_form_creates_all_ratios_for_decimal_values():
         ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 5},
                          {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
 
-        form = BlendedMaterialsService().create_ratio_form(ratio_request)
+        form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
         data = form.all_ratio_entries.data
 
@@ -67,7 +67,7 @@ def test_create_ratio_form_creates_all_ratios_for_large_increment_value():
         ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 30},
                          {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
 
-        form = BlendedMaterialsService().create_ratio_form(ratio_request)
+        form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
         data = form.all_ratio_entries.data
 
@@ -81,7 +81,7 @@ def test_create_ratio_form_raises_exception_when_too_many_ratios_are_requested()
             ratio_request = [{'idx': 0, 'min': 10, 'max': 90, 'increment': 0.01},
                              {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
 
-            BlendedMaterialsService().create_ratio_form(ratio_request)
+            BlendedMaterialsService.create_ratio_form(ratio_request)
 
 
 def test_create_ratio_form_raises_exception_when_min_value_is_invalid():
@@ -90,7 +90,7 @@ def test_create_ratio_form_raises_exception_when_min_value_is_invalid():
             ratio_request = [{'idx': 0, 'min': -2, 'max': 90, 'increment': 0.01},
                              {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
 
-            BlendedMaterialsService().create_ratio_form(ratio_request)
+            BlendedMaterialsService.create_ratio_form(ratio_request)
 
 
 def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
@@ -115,7 +115,7 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     monkeypatch.setattr(MaterialsPersistence,
                         'query_by_type', mock_query_by_type)
 
-    result = BlendedMaterialsService().delete_material('powder', 'uuid to delete')
+    result = BlendedMaterialsService.delete_material('powder', 'uuid to delete')
 
     all_blended_materials = result.all_materials
 

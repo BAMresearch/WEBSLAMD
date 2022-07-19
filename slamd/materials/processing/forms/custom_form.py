@@ -5,6 +5,6 @@ from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 class CustomForm(MaterialsForm):
 
-    name = StringField(label='Name:')
+    custom_name = StringField(label='Name:')
 
-    value = StringField(label='Value:')
+    custom_value = StringField(label='Value:')

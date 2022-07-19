@@ -8,15 +8,18 @@ from slamd.materials.processing.materials_service import MaterialsService, Mater
 
 class BaseMaterialService(MaterialsService):
 
-    def create_materials_response(self, materials):
+    @classmethod
+    def create_materials_response(cls, materials):
         return MaterialsResponse(materials, 'base')
 
-    def create_material_form(self, type):
+    @classmethod
+    def create_material_form(cls, type):
         template_file = f'{type}_form.html'
         form = MaterialFactory.create_material_form(type=type)
         return template_file, form
 
-    def create_additional_property_form(self, additional_property_entries):
+    @classmethod
+    def create_additional_property_form(cls, additional_property_entries):
         new_form = AdditionalPropertiesForm()
         if not_empty(additional_property_entries):
             for entry in additional_property_entries:
@@ -27,7 +30,8 @@ class BaseMaterialService(MaterialsService):
         new_form.additional_properties.append_entry()
         return new_form
 
-    def populate_form(self, material_type, uuid):
+    @classmethod
+    def populate_form(cls, material_type, uuid):
         material = MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
         if empty(material):
             raise MaterialNotFoundException('Material with given UUID not found')
@@ -36,7 +40,8 @@ class BaseMaterialService(MaterialsService):
         form = MaterialFactory.create_material_form(submitted_material=form_data)
         return form
 
-    def edit_material(self, material_type, uuid, submitted_material):
+    @classmethod
+    def edit_material(cls, material_type, uuid, submitted_material):
         """
         Edit a base material with type material_type and given UUID.
         The old version of the material will be deleted before creating the new one
@@ -45,14 +50,15 @@ class BaseMaterialService(MaterialsService):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
 
         if form.validate():
-            self.delete_material(material_type, uuid)
+            cls.delete_material(material_type, uuid)
             strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
             model = strategy.edit_model(uuid, submitted_material)
             strategy.save_model(model)
             return True, None
         return False, form
 
-    def save_material(self, submitted_material):
+    @classmethod
+    def save_material(cls, submitted_material):
         form = MaterialFactory.create_material_form(submitted_material=submitted_material)
 
         if form.validate():
@@ -62,5 +68,6 @@ class BaseMaterialService(MaterialsService):
             return True, None
         return False, form
 
-    def delete_material(self, type, uuid):
+    @classmethod
+    def delete_material(cls, type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
