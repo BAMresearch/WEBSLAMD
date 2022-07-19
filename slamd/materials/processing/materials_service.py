@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-
+from dataclasses import dataclass
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.material import Material
 
 
 class MaterialsService(ABC):
@@ -32,8 +33,7 @@ class MaterialsService(ABC):
         pass
 
 
+@dataclass
 class MaterialsResponse:
-
-    def __init__(self, all_materials, ctx):
-        self.all_materials = all_materials
-        self.ctx = ctx
+    all_materials: list[Material]
+    ctx: str
