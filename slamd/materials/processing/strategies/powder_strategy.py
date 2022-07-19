@@ -1,3 +1,6 @@
+from functools import reduce
+
+from slamd.common.slamd_utils import string_to_number
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
@@ -73,13 +76,14 @@ class PowderStrategy(MaterialStrategy):
         costs = self.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = self._compute_blended_structure(normalized_ratios, base_powders_as_dict)
+        additional_properties = self._compute_additional_properties(normalized_ratios, base_powders_as_dict)
 
         return Powder(type=base_powders_as_dict[0]['type'],
                       name=f'{blended_material_name}-{idx}',
                       costs=costs,
                       composition=composition,
                       structure=structure,
-                      additional_properties=[],
+                      additional_properties= additional_properties,
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
@@ -111,3 +115,31 @@ class PowderStrategy(MaterialStrategy):
         blended_gravity = self.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
+
+    def _compute_additional_properties(self, normalized_ratios, base_materials_as_dict):
+        additional_properties_for_all_base_materials = []
+        for base_powder in base_materials_as_dict:
+            additional_properties_for_all_base_materials.append(base_powder['additional_properties'])
+
+        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: self._keep_matching(x, y), additional_properties_for_all_base_materials)
+        key_defined_in_all_base_materials = list(map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
+
+        matching_properties_for_all_base_materials = []
+        for base_material_dict in base_materials_as_dict:
+            matching_properties_for_base_material = list(filter(lambda prop: prop.name in key_defined_in_all_base_materials,
+                            base_material_dict['additional_properties']))
+            matching_properties_for_all_base_materials.append(matching_properties_for_base_material)
+
+        # create structure containing ratios together with corresponding properties e.g.
+        # ((0.3, [Prop1(Material1), Prop2(Material1)], (0.7, [Prop1(Material2), Prop2(Material2)])))
+        ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+
+
+        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1][0].value), ratios_with_property_values)))
+        return str(round(mean, 2))
+
+
+
+    def _keep_matching(self, first_property_list, second_property_list):
+        names_of_second_property_list = list(map(lambda prop: prop.name, second_property_list))
+        return [x for x in first_property_list if x.name in names_of_second_property_list]

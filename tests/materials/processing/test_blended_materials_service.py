@@ -312,6 +312,14 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.structure.fine == '75.0'
     assert mock_save_called_with_first_blended_material.structure.gravity is None
 
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
+    assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_first_blended_material.additional_properties[0].value == 3
+    assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].value == 0.5
+    assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].value == 0.5
+
     assert mock_save_called_with_second_blended_material.composition.fe3_o2 == '17.5'
     assert mock_save_called_with_second_blended_material.composition.si_o2 == '8.6'
     assert mock_save_called_with_second_blended_material.composition.al2_o3 == '7.0'
@@ -324,6 +332,14 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
 
     assert mock_save_called_with_second_blended_material.structure.fine == '87.5'
     assert mock_save_called_with_second_blended_material.structure.gravity is None
+
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
+    assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_first_blended_material.additional_properties[0].value == 3.5
+    assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].value == 0.25
+    assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].value == 0.75
 
 
 def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
