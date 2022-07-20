@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import float_if_not_empty
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -7,18 +8,18 @@ class LiquidStrategy(BaseMaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            na2_si_o3=float(submitted_material['na2_si_o3']),
-            na_o_h=float(submitted_material['na_o_h']),
-            na2_si_o3_specific=float(submitted_material['na2_si_o3_specific']),
-            na_o_h_specific=float(submitted_material['na_o_h_specific']),
-            total=float(submitted_material['total']),
-            na2_o=float(submitted_material['na2_o']),
-            si_o2=float(submitted_material['si_o2']),
-            h2_o=float(submitted_material['h2_o']),
-            na2_o_dry=float(submitted_material['na2_o_dry']),
-            si_o2_dry=float(submitted_material['si_o2_dry']),
-            water=float(submitted_material['water']),
-            na_o_h_total=float(submitted_material['na_o_h_total'])
+            na2_si_o3=float_if_not_empty(submitted_material['na2_si_o3']),
+            na_o_h=float_if_not_empty(submitted_material['na_o_h']),
+            na2_si_o3_specific=float_if_not_empty(submitted_material['na2_si_o3_specific']),
+            na_o_h_specific=float_if_not_empty(submitted_material['na_o_h_specific']),
+            total=float_if_not_empty(submitted_material['total']),
+            na2_o=float_if_not_empty(submitted_material['na2_o']),
+            si_o2=float_if_not_empty(submitted_material['si_o2']),
+            h2_o=float_if_not_empty(submitted_material['h2_o']),
+            na2_o_dry=float_if_not_empty(submitted_material['na2_o_dry']),
+            si_o2_dry=float_if_not_empty(submitted_material['si_o2_dry']),
+            water=float_if_not_empty(submitted_material['water']),
+            na_o_h_total=float_if_not_empty(submitted_material['na_o_h_total'])
         )
 
         return Liquid(

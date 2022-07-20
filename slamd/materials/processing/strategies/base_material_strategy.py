@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import not_empty, empty, join_all
+from slamd.common.slamd_utils import int_if_not_empty, not_empty, empty, join_all, float_if_not_empty
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
@@ -70,9 +70,9 @@ class BaseMaterialStrategy(ABC):
     @classmethod
     def extract_cost_properties(cls, submitted_material):
         return Costs(
-            co2_footprint=float(submitted_material['co2_footprint']),
-            costs=float(submitted_material['costs']),
-            delivery_time=int(submitted_material['delivery_time'])
+            co2_footprint=float_if_not_empty(submitted_material['co2_footprint']),
+            costs=float_if_not_empty(submitted_material['costs']),
+            delivery_time=int_if_not_empty(submitted_material['delivery_time'])
         )
 
     @classmethod

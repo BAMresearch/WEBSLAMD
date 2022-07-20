@@ -1,4 +1,5 @@
-from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of
+from re import A
+from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, join_all, molecular_formula_of
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -51,3 +52,27 @@ def test_molecular_formula_of_returns_subscripted_numbers():
 
 def test_molecular_formula_of_returns_subsripted_numbers_for_complex_molecules():
     assert molecular_formula_of('C6H12') == u'C\u2086H\u2081\u2082'
+
+
+def test_float_if_not_empty_returns_none_for_empty_string():
+    assert float_if_not_empty('') == None
+
+
+def test_float_if_not_empty_returns_none_for_none():
+    assert float_if_not_empty(None) == None
+
+
+def test_float_if_not_empty_returns_float_for_string_with_number():
+    assert float_if_not_empty('1234.5678') == 1234.5678
+
+
+def test_int_if_not_empty_returns_none_for_empty_string():
+    assert float_if_not_empty('') == None
+
+
+def test_int_if_not_empty_returns_none_for_none():
+    assert float_if_not_empty(None) == None
+
+
+def test_int_if_not_empty_returns_float_for_string_with_number():
+    assert float_if_not_empty('12345678') == 12345678

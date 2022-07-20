@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import float_if_not_empty
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -10,7 +11,7 @@ class AdmixtureStrategy(BaseMaterialStrategy):
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
-            composition=float(submitted_material['composition']),
+            composition=float_if_not_empty(submitted_material['composition']),
             admixture_type=submitted_material['type'],
             additional_properties=cls.extract_additional_properties(submitted_material)
         )

@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import float_if_not_empty
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -7,8 +8,8 @@ class AggregatesStrategy(BaseMaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            fine_aggregates=float(submitted_material['fine_aggregates']),
-            coarse_aggregates=float(submitted_material['coarse_aggregates']),
+            fine_aggregates=float_if_not_empty(submitted_material['fine_aggregates']),
+            coarse_aggregates=float_if_not_empty(submitted_material['coarse_aggregates']),
             fa_density=submitted_material['fa_density'],
             ca_density=submitted_material['ca_density']
         )

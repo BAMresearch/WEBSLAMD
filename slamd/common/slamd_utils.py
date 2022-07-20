@@ -21,6 +21,14 @@ def molecular_formula_of(input_molecule):
 
 
 def not_numeric(input_value):
-    if isinstance(input_value, (int,float)):
+    if isinstance(input_value, (int, float)):
         return False
     return not input_value.isnumeric()
+
+
+def float_if_not_empty(input_value):
+    return float(input_value) if not_empty(input_value) else None
+
+
+def int_if_not_empty(input_value):
+    return int(input_value) if not_empty(input_value) else None

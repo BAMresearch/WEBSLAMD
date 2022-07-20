@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import float_if_not_empty
 from slamd.materials.processing.models.process import Process
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -10,9 +11,9 @@ class ProcessStrategy(BaseMaterialStrategy):
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
-            duration=float(submitted_material['duration']),
-            temperature=float(submitted_material['temperature']),
-            relative_humidity=float(submitted_material['relative_humidity']),
+            duration=float_if_not_empty(submitted_material['duration']),
+            temperature=float_if_not_empty(submitted_material['temperature']),
+            relative_humidity=float_if_not_empty(submitted_material['relative_humidity']),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
 
