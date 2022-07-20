@@ -64,15 +64,3 @@ def test_float_if_not_empty_returns_none_for_none():
 
 def test_float_if_not_empty_returns_float_for_string_with_number():
     assert float_if_not_empty('1234.5678') == 1234.5678
-
-
-def test_int_if_not_empty_returns_none_for_empty_string():
-    assert float_if_not_empty('') == None
-
-
-def test_int_if_not_empty_returns_none_for_none():
-    assert float_if_not_empty(None) == None
-
-
-def test_int_if_not_empty_returns_float_for_string_with_number():
-    assert float_if_not_empty('12345678') == 12345678

@@ -28,7 +28,3 @@ def not_numeric(input_value):
 
 def float_if_not_empty(input_value):
     return float(input_value) if not_empty(input_value) else None
-
-
-def int_if_not_empty(input_value):
-    return int(input_value) if not_empty(input_value) else None

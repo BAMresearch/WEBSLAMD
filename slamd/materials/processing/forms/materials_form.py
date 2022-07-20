@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, DecimalField, IntegerField, SelectField, SubmitField
+from wtforms import StringField, DecimalField, SelectField, SubmitField
 from wtforms import FieldList, FormField
 from wtforms import validators
 
@@ -34,7 +34,7 @@ class MaterialsForm(Form):
         ]
     )
 
-    delivery_time = IntegerField(
+    delivery_time = DecimalField(
         label='Delivery time (days)',
         validators=[
             validators.Optional()

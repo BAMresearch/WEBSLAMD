@@ -72,7 +72,7 @@ class BaseMaterialStrategy(ABC):
         return Costs(
             co2_footprint=float_if_not_empty(submitted_material['co2_footprint']),
             costs=float_if_not_empty(submitted_material['costs']),
-            delivery_time=int_if_not_empty(submitted_material['delivery_time'])
+            delivery_time=float_if_not_empty(submitted_material['delivery_time'])
         )
 
     @classmethod
