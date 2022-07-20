@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import int_if_not_empty, not_empty, empty, join_all, float_if_not_empty
+from slamd.common.slamd_utils import not_empty, empty, join_all, float_if_not_empty
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
