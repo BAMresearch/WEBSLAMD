@@ -2,6 +2,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 from slamd.materials.processing.models.powder import Powder, Structure, Composition
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 def test_create_model_reads_all_properties_from_submitted_material():
@@ -137,3 +138,55 @@ def test_convert_to_multidict_adds_all_properties():
     assert multidict['mn2_o3'] == '7.65'
     assert multidict['fine'] == '123.45'
     assert multidict['gravity'] == '678.9'
+
+
+def test_check_completeness_of_base_material_properties_returns_true_when_all_properties_are_incomplete(monkeypatch):
+    def mock_is_complete(materials_as_dict, key1, key2):
+        return True
+
+    def mock_additional_properties_are_complete(model):
+        return True
+
+    monkeypatch.setattr(PropertyCompletenessChecker, 'is_complete', mock_is_complete)
+    monkeypatch.setattr(PropertyCompletenessChecker, 'additional_properties_are_complete',
+                        mock_additional_properties_are_complete)
+
+    # We mock away all details in the test. Thus, we do not care about the actual input and simply use []
+    complete = PowderStrategy.check_completeness_of_base_material_properties([])
+    assert complete is True
+
+
+def test_check_completeness_of_base_material_properties_returns_false_when_one_property_is_incomplete(monkeypatch):
+    def mock_is_complete(materials_as_dict, key1, key2):
+        if key1 == 'composition' and key2 == 'fe3_o2':
+            return False
+        return True
+
+    def mock_additional_properties_are_complete(model):
+        return True
+
+    monkeypatch.setattr(PropertyCompletenessChecker, 'is_complete', mock_is_complete)
+    monkeypatch.setattr(PropertyCompletenessChecker, 'additional_properties_are_complete',
+                        mock_additional_properties_are_complete)
+
+    # We mock away all details in the test. Thus, we do not care about the actual input and simply use []
+    complete = PowderStrategy.check_completeness_of_base_material_properties([])
+
+    assert complete is False
+
+
+def test_check_completeness_of_base_material_properties_returns_false_when_additional_properties_are_incomplete(monkeypatch):
+    def mock_is_complete(materials_as_dict, key1, key2):
+        return True
+
+    def mock_additional_properties_are_complete(model):
+        return False
+
+    monkeypatch.setattr(PropertyCompletenessChecker, 'is_complete', mock_is_complete)
+    monkeypatch.setattr(PropertyCompletenessChecker, 'additional_properties_are_complete',
+                        mock_additional_properties_are_complete)
+
+    # We mock away all details in the test. Thus, we do not care about the actual input and simply use []
+    complete = PowderStrategy.check_completeness_of_base_material_properties([])
+
+    assert complete is False
