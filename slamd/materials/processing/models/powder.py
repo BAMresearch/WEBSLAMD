@@ -20,8 +20,8 @@ class Composition:
 
 @dataclass
 class Structure:
-    fine: str = None
-    gravity: str = None
+    fine: float = None
+    gravity: float = None
 
 
 @dataclass

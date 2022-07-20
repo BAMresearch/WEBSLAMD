@@ -5,9 +5,9 @@ from slamd.materials.processing.models.additional_property import AdditionalProp
 
 @dataclass
 class Costs:
-    co2_footprint: float = 0
-    costs: float = 0
-    delivery_time: float = 0
+    co2_footprint: float = None
+    costs: float = None
+    delivery_time: float = None
 
 
 @dataclass
