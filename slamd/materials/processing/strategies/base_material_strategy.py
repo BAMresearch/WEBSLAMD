@@ -121,9 +121,11 @@ class MaterialStrategy(ABC):
         return BlendingPropertiesCalculator.compute_additional_properties(normalized_ratios, base_materials_as_dict)
 
     def check_completeness_of_costs(self, base_materials_as_dict):
-        co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'co2_footprint')
+        co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs',
+                                                                         'co2_footprint')
         costs_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'costs')
-        delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'delivery_time')
+        delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs',
+                                                                         'delivery_time')
 
         return co2_footprint_complete and costs_complete and delivery_time_complete
 
