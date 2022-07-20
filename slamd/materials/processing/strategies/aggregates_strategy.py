@@ -45,12 +45,13 @@ class AggregatesStrategy(MaterialStrategy):
     def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_aggregates_as_dict):
         costs = cls.compute_blended_costs(normalized_ratios, base_aggregates_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_aggregates_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_aggregates_as_dict)
 
         return Aggregates(type=base_aggregates_as_dict[0]['type'],
                           name=f'{blended_material_name}-{idx}',
                           costs=costs,
                           composition=composition,
-                          additional_properties=[],
+                          additional_properties=additional_properties,
                           is_blended=True,
                           blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 

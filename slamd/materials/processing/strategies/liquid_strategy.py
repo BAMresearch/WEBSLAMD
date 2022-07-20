@@ -1,9 +1,10 @@
 from dataclasses import fields
+
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
-from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
 class LiquidStrategy(MaterialStrategy):
@@ -34,15 +35,16 @@ class LiquidStrategy(MaterialStrategy):
         )
 
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
-        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
-        composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_liquid_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_liquid_as_dict)
+        composition = cls._compute_blended_composition(normalized_ratios, base_liquid_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_liquid_as_dict)
 
-        return Liquid(type=base_powders_as_dict[0]['type'],
+        return Liquid(type=base_liquid_as_dict[0]['type'],
                       name=f'{blended_material_name}-{idx}',
                       costs=costs,
                       composition=composition,
-                      additional_properties=[],
+                      additional_properties=additional_properties,
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 

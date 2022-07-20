@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import string_to_number, not_empty, numeric, not_numeric
+from slamd.common.slamd_utils import string_to_number, not_empty, numeric
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
@@ -56,7 +56,8 @@ class BlendingPropertiesCalculator:
 
             # Create list of property names together with their weigthed values and an information about the
             # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
-            mapped_properties = list(map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
+            mapped_properties = list(
+                map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
             if numeric(mapped_properties[0][1]):
                 mean = sum(list(map(lambda x: x[1], mapped_properties)))
                 blended_additional_properties.append(
