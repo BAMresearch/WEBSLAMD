@@ -33,8 +33,9 @@ class BlendedMaterialsService(MaterialsService):
         for material in base_materials:
             material_selection.append((material.uuid, material.name))
 
+        sorted_by_name = sorted(material_selection, key=lambda material: material[1])
         form = BaseMaterialSelectionForm()
-        form.base_material_selection.choices = material_selection
+        form.base_material_selection.choices = sorted_by_name
         return form
 
     def create_min_max_form(self, count):
