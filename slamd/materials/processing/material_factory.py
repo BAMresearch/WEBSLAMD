@@ -46,16 +46,16 @@ class MaterialFactory:
     @classmethod
     def create_strategy(cls, type):
         if type == MaterialType.POWDER.value:
-            return PowderStrategy()
+            return PowderStrategy
         if type == MaterialType.LIQUID.value:
-            return LiquidStrategy()
+            return LiquidStrategy
         if type == MaterialType.AGGREGATES.value:
-            return AggregatesStrategy()
+            return AggregatesStrategy
         if type == MaterialType.PROCESS.value:
-            return ProcessStrategy()
+            return ProcessStrategy
         if type == MaterialType.ADMIXTURE.value:
-            return AdmixtureStrategy()
+            return AdmixtureStrategy
         if type == MaterialType.CUSTOM.value:
-            return CustomStrategy()
+            return CustomStrategy
         else:
             raise MaterialNotFoundException('The requested type is not supported!')

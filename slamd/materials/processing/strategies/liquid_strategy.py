@@ -1,3 +1,5 @@
+from dataclasses import fields
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
@@ -6,33 +8,35 @@ from slamd.materials.processing.strategies.blending_properties_calculator import
 
 class LiquidStrategy(MaterialStrategy):
 
-    def create_model(self, submitted_material):
+    @classmethod
+    def create_model(cls, submitted_material):
         composition = Composition(
-            na2_si_o3=submitted_material['na2_si_o3'],
-            na_o_h=submitted_material['na_o_h'],
-            na2_si_o3_specific=submitted_material['na2_si_o3_specific'],
-            na_o_h_specific=submitted_material['na_o_h_specific'],
-            total=submitted_material['total'],
-            na2_o=submitted_material['na2_o'],
-            si_o2=submitted_material['si_o2'],
-            h2_o=submitted_material['h2_o'],
-            na2_o_dry=submitted_material['na2_o_dry'],
-            si_o2_dry=submitted_material['si_o2_dry'],
-            water=submitted_material['water'],
-            na_o_h_total=submitted_material['na_o_h_total']
+            na2_si_o3=float_if_not_empty(submitted_material['na2_si_o3']),
+            na_o_h=float_if_not_empty(submitted_material['na_o_h']),
+            na2_si_o3_specific=float_if_not_empty(submitted_material['na2_si_o3_specific']),
+            na_o_h_specific=float_if_not_empty(submitted_material['na_o_h_specific']),
+            total=float_if_not_empty(submitted_material['total']),
+            na2_o=float_if_not_empty(submitted_material['na2_o']),
+            si_o2=float_if_not_empty(submitted_material['si_o2']),
+            h2_o=float_if_not_empty(submitted_material['h2_o']),
+            na2_o_dry=float_if_not_empty(submitted_material['na2_o_dry']),
+            si_o2_dry=float_if_not_empty(submitted_material['si_o2_dry']),
+            water=float_if_not_empty(submitted_material['water']),
+            na_o_h_total=float_if_not_empty(submitted_material['na_o_h_total'])
         )
 
         return Liquid(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_cost_properties(submitted_material),
+            costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
-            additional_properties=self.extract_additional_properties(submitted_material)
+            additional_properties=cls.extract_additional_properties(submitted_material)
         )
-
-    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
-        costs = self.compute_blended_costs(normalized_ratios, base_powders_as_dict)
-        composition = self._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+    
+    @classmethod
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
 
         return Liquid(type=base_powders_as_dict[0]['type'],
                       name=f'{blended_material_name}-{idx}',
@@ -42,37 +46,31 @@ class LiquidStrategy(MaterialStrategy):
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
-    def gather_composition_information(self, liquid):
-        return [self.include('Na₂SiO₃', liquid.composition.na2_si_o3),
-                self.include('NaOH', liquid.composition.na_o_h),
-                self.include('Na₂SiO₃ specific', liquid.composition.na2_si_o3_specific),
-                self.include('NaOH specific', liquid.composition.na_o_h_specific),
-                self.include('Total solution', liquid.composition.total),
-                self.include('Na₂O', liquid.composition.na2_o),
-                self.include('SiO₂', liquid.composition.si_o2),
-                self.include('H₂O', liquid.composition.h2_o),
-                self.include('Na₂O', liquid.composition.na2_o_dry),
-                self.include('SiO₂', liquid.composition.si_o2_dry),
-                self.include('Water', liquid.composition.water),
-                self.include('Total NaOH', liquid.composition.na_o_h_total)]
+    @classmethod
+    def gather_composition_information(cls, liquid):
+        return [cls.include('Na₂SiO₃', liquid.composition.na2_si_o3),
+                cls.include('NaOH', liquid.composition.na_o_h),
+                cls.include('Na₂SiO₃ specific', liquid.composition.na2_si_o3_specific),
+                cls.include('NaOH specific', liquid.composition.na_o_h_specific),
+                cls.include('Total solution', liquid.composition.total),
+                cls.include('Na₂O', liquid.composition.na2_o),
+                cls.include('SiO₂', liquid.composition.si_o2),
+                cls.include('H₂O', liquid.composition.h2_o),
+                cls.include('Na₂O', liquid.composition.na2_o_dry),
+                cls.include('SiO₂', liquid.composition.si_o2_dry),
+                cls.include('Water', liquid.composition.water),
+                cls.include('Total NaOH', liquid.composition.na_o_h_total)]
 
-    def convert_to_multidict(self, liquid):
+    @classmethod
+    def convert_to_multidict(cls, liquid):
         multidict = super().convert_to_multidict(liquid)
-        multidict.add('na2_si_o3', liquid.composition.na2_si_o3)
-        multidict.add('na_o_h', liquid.composition.na_o_h)
-        multidict.add('na2_si_o3_specific', liquid.composition.na2_si_o3_specific)
-        multidict.add('na_o_h_specific', liquid.composition.na_o_h_specific)
-        multidict.add('total', liquid.composition.total)
-        multidict.add('na2_o', liquid.composition.na2_o)
-        multidict.add('si_o2', liquid.composition.si_o2)
-        multidict.add('h2_o', liquid.composition.h2_o)
-        multidict.add('na2_o_dry', liquid.composition.na2_o_dry)
-        multidict.add('si_o2_dry', liquid.composition.si_o2_dry)
-        multidict.add('water', liquid.composition.water)
-        multidict.add('na_o_h_total', liquid.composition.na_o_h_total)
+        # Iterate over the fields of Composition and convert them to string
+        for field in fields(liquid.composition):
+            field_value = str_if_not_none(getattr(liquid.composition, field.name))
+            multidict.add(field.name, field_value)
         return multidict
 
-    def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
+    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
         blended_na2_si_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
                                                                       'composition', 'na2_si_o3')
         blended_na_o_h = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,

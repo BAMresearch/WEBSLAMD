@@ -1,10 +1,8 @@
+from dataclasses import dataclass
 from slamd.materials.processing.models.material import Material
 
 
+@dataclass
 class Admixture(Material):
-
-    def __init__(self, name='', type='', costs=None, composition=None, admixture_type=None, additional_properties=None):
-        super().__init__(name=name, type=type, costs=costs,
-                         additional_properties=additional_properties)
-        self.composition = composition
-        self.admixture_type = admixture_type
+    composition: float = None
+    admixture_type: str = None

@@ -1,21 +1,22 @@
-import uuid
+from uuid import UUID, uuid1
+from dataclasses import dataclass, field
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 
 
-class Material:
-
-    def __init__(self, name='', type='', costs=None, additional_properties=None, is_blended=False, blending_ratios=''):
-        self.uuid = uuid.uuid1()
-        self.name = name
-        self.type = type
-        self.costs = costs
-        self.additional_properties = additional_properties
-        self.is_blended = is_blended
-        self.blending_ratios = blending_ratios
-
-
+@dataclass
 class Costs:
+    co2_footprint: float = None
+    costs: float = None
+    delivery_time: float = None
 
-    def __init__(self, co2_footprint=0, costs=0, delivery_time=0):
-        self.delivery_time = delivery_time
-        self.costs = costs
-        self.co2_footprint = co2_footprint
+
+@dataclass
+class Material:
+    # Generate a new UUID for every material, not one for every material
+    uuid: UUID = field(default_factory=lambda: uuid1())
+    name: str = ''
+    type: str = ''
+    costs: Costs = None
+    additional_properties: list[AdditionalProperty] = None
+    is_blended: bool = False
+    blending_ratios: str = ''

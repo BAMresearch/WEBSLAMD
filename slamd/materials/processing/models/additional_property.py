@@ -1,5 +1,7 @@
-class AdditionalProperty:
+from dataclasses import dataclass
 
-    def __init__(self, name='', value=''):
-        self.name = name
-        self.value = value
+
+@dataclass
+class AdditionalProperty:
+    name: str = ''
+    value: str = ''

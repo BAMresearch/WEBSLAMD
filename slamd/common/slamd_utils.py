@@ -56,3 +56,10 @@ def _pieces_are_numeric(input_value, separator):
         return pieces[0].isnumeric() and pieces[1].isnumeric()
     return False
 
+
+def float_if_not_empty(input_value):
+    return float(input_value) if not_empty(input_value) else None
+
+
+def str_if_not_none(input_value):
+    return str(input_value) if input_value is not None else ''
