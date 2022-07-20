@@ -379,17 +379,17 @@ def _prepare_test_base_liquids_for_blending(material_type, uuid):
 
 def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
                                   mock_save_called_with_second_blended_material):
-    assert mock_save_called_with_first_blended_material.composition.fe3_o2 == '14.0'
-    assert mock_save_called_with_first_blended_material.composition.si_o2 == '6.64'
-    assert mock_save_called_with_first_blended_material.composition.al2_o3 == '7.0'
+    assert mock_save_called_with_first_blended_material.composition.fe3_o2 == 14.0
+    assert mock_save_called_with_first_blended_material.composition.si_o2 == 6.64
+    assert mock_save_called_with_first_blended_material.composition.al2_o3 == 7.0
     assert mock_save_called_with_first_blended_material.composition.na2_o is None
     assert mock_save_called_with_first_blended_material.composition.p2_o5 is None
 
-    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '16.0'
-    assert mock_save_called_with_first_blended_material.costs.costs == '42.0'
-    assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == 16.0
+    assert mock_save_called_with_first_blended_material.costs.costs == 42.0
+    assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
 
-    assert mock_save_called_with_first_blended_material.structure.fine == '70.0'
+    assert mock_save_called_with_first_blended_material.structure.fine == 70.0
     assert mock_save_called_with_first_blended_material.structure.gravity is None
 
     assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
@@ -400,17 +400,17 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
     assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.4'
 
-    assert mock_save_called_with_second_blended_material.composition.fe3_o2 == '13.0'
-    assert mock_save_called_with_second_blended_material.composition.si_o2 == '6.08'
-    assert mock_save_called_with_second_blended_material.composition.al2_o3 == '7.0'
+    assert mock_save_called_with_second_blended_material.composition.fe3_o2 == 13.0
+    assert mock_save_called_with_second_blended_material.composition.si_o2 == 6.08
+    assert mock_save_called_with_second_blended_material.composition.al2_o3 == 7.0
     assert mock_save_called_with_second_blended_material.composition.na2_o is None
     assert mock_save_called_with_second_blended_material.composition.p2_o5 is None
 
-    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '17.0'
-    assert mock_save_called_with_second_blended_material.costs.costs == '44.0'
-    assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == 17.0
+    assert mock_save_called_with_second_blended_material.costs.costs == 44.0
+    assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
 
-    assert mock_save_called_with_second_blended_material.structure.fine == '65.0'
+    assert mock_save_called_with_second_blended_material.structure.fine == 65.0
     assert mock_save_called_with_second_blended_material.structure.gravity is None
 
     assert len(mock_save_called_with_second_blended_material.additional_properties) == 3
@@ -424,31 +424,31 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
 
 def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
                                      mock_save_called_with_second_blended_material):
-    assert mock_save_called_with_first_blended_material.composition.fine_aggregates == '17.4'
-    assert mock_save_called_with_first_blended_material.composition.coarse_aggregates == '5.2'
-    assert mock_save_called_with_first_blended_material.composition.fa_density == '5.6'
-    assert mock_save_called_with_first_blended_material.composition.ca_density == '12.0'
+    assert mock_save_called_with_first_blended_material.composition.fine_aggregates == 17.4
+    assert mock_save_called_with_first_blended_material.composition.coarse_aggregates == 5.2
+    assert mock_save_called_with_first_blended_material.composition.fa_density == 5.6
+    assert mock_save_called_with_first_blended_material.composition.ca_density == 12.0
 
-    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '26.0'
-    assert mock_save_called_with_first_blended_material.costs.costs == '36.0'
-    assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
+    assert mock_save_called_with_first_blended_material.costs.costs == 36.0
+    assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
 
-    assert mock_save_called_with_second_blended_material.composition.fine_aggregates == '18.1'
-    assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == '5.69'
-    assert mock_save_called_with_second_blended_material.composition.fa_density == '5.8'
-    assert mock_save_called_with_second_blended_material.composition.ca_density == '12.5'
+    assert mock_save_called_with_second_blended_material.composition.fine_aggregates == 18.1
+    assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == 5.69
+    assert mock_save_called_with_second_blended_material.composition.fa_density == 5.8
+    assert mock_save_called_with_second_blended_material.composition.ca_density == 12.5
 
-    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '32.0'
-    assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
-    assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
+    assert mock_save_called_with_second_blended_material.costs.costs == 35.0
+    assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
 
 
 def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
                                   mock_save_called_with_second_blended_material):
-    assert mock_save_called_with_first_blended_material.composition.na2_si_o3 == '17.4'
-    assert mock_save_called_with_first_blended_material.composition.na_o_h == '5.2'
-    assert mock_save_called_with_first_blended_material.composition.na2_si_o3_specific == '5.6'
-    assert mock_save_called_with_first_blended_material.composition.water == '12.0'
+    assert mock_save_called_with_first_blended_material.composition.na2_si_o3 == 17.4
+    assert mock_save_called_with_first_blended_material.composition.na_o_h == 5.2
+    assert mock_save_called_with_first_blended_material.composition.na2_si_o3_specific == 5.6
+    assert mock_save_called_with_first_blended_material.composition.water == 12.0
     assert mock_save_called_with_first_blended_material.composition.na_o_h_specific is None
     assert mock_save_called_with_first_blended_material.composition.total is None
     assert mock_save_called_with_first_blended_material.composition.na2_o is None
@@ -458,14 +458,14 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.composition.si_o2_dry is None
     assert mock_save_called_with_first_blended_material.composition.na_o_h_total is None
 
-    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '26.0'
-    assert mock_save_called_with_first_blended_material.costs.costs == '36.0'
-    assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
+    assert mock_save_called_with_first_blended_material.costs.costs == 36.0
+    assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
 
-    assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == '18.1'
-    assert mock_save_called_with_second_blended_material.composition.na_o_h == '5.69'
-    assert mock_save_called_with_second_blended_material.composition.na2_si_o3_specific == '5.8'
-    assert mock_save_called_with_second_blended_material.composition.water == '12.5'
+    assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == 18.1
+    assert mock_save_called_with_second_blended_material.composition.na_o_h == 5.69
+    assert mock_save_called_with_second_blended_material.composition.na2_si_o3_specific == 5.8
+    assert mock_save_called_with_second_blended_material.composition.water == 12.5
     assert mock_save_called_with_second_blended_material.composition.na_o_h_specific is None
     assert mock_save_called_with_second_blended_material.composition.total is None
     assert mock_save_called_with_second_blended_material.composition.na2_o is None
@@ -475,9 +475,9 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_second_blended_material.composition.si_o2_dry is None
     assert mock_save_called_with_second_blended_material.composition.na_o_h_total is None
 
-    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '32.0'
-    assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
-    assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
+    assert mock_save_called_with_second_blended_material.costs.costs == 35.0
+    assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
 
 
 def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
