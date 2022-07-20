@@ -1,8 +1,10 @@
 {% from 'errors.html' import with_errors -%}
 
 {% if not complete %}
-<div>
-    "The chosen configuration is not complete!"
+<div class="incomplete_blending_warning">
+    The chosen configuration is not complete! Check that all properties are specified among all chosen base materials.
+    Further, make sure that all additional properties have the same keys and matching data types for a given key. If you nevertheless
+    want to continue with the chosen setup, not all blended properties will be inferred.
 </div>
 {% endif %}
 {% for entry in min_max_form.all_min_max_entries %}
