@@ -67,7 +67,7 @@ def test_convert_to_multidict_adds_all_properties():
     multidict = AggregatesStrategy.convert_to_multidict(aggregates)
     assert multidict['material_name'] == 'test aggregates'
     assert multidict['material_type'] == 'Aggregates'
-    assert multidict['fine_aggregates'] == 123.45
-    assert multidict['coarse_aggregates'] == 67.890
+    assert multidict['fine_aggregates'] == '123.45'
+    assert multidict['coarse_aggregates'] == '67.89'
     assert multidict['fa_density'] == 'test FA density'
     assert multidict['ca_density'] == 'test CA density'

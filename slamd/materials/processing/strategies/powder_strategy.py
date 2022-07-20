@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import float_if_not_empty
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -56,18 +56,18 @@ class PowderStrategy(BaseMaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, powder):
         multidict = super().convert_to_multidict(powder)
-        multidict.add('fe3_o2', powder.composition.fe3_o2)
-        multidict.add('si_o2', powder.composition.si_o2)
-        multidict.add('al2_o3', powder.composition.al2_o3)
-        multidict.add('ca_o', powder.composition.ca_o)
-        multidict.add('mg_o', powder.composition.mg_o)
-        multidict.add('na2_o', powder.composition.na2_o)
-        multidict.add('k2_o', powder.composition.k2_o)
-        multidict.add('s_o3', powder.composition.s_o3)
-        multidict.add('ti_o2', powder.composition.ti_o2)
-        multidict.add('p2_o5', powder.composition.p2_o5)
-        multidict.add('sr_o', powder.composition.sr_o)
-        multidict.add('mn2_o3', powder.composition.mn2_o3)
-        multidict.add('fine', powder.structure.fine)
-        multidict.add('gravity', powder.structure.gravity)
+        multidict.add('fe3_o2', str_if_not_none(powder.composition.fe3_o2))
+        multidict.add('si_o2', str_if_not_none(powder.composition.si_o2))
+        multidict.add('al2_o3', str_if_not_none(powder.composition.al2_o3))
+        multidict.add('ca_o', str_if_not_none(powder.composition.ca_o))
+        multidict.add('mg_o', str_if_not_none(powder.composition.mg_o))
+        multidict.add('na2_o', str_if_not_none(powder.composition.na2_o))
+        multidict.add('k2_o', str_if_not_none(powder.composition.k2_o))
+        multidict.add('s_o3', str_if_not_none(powder.composition.s_o3))
+        multidict.add('ti_o2', str_if_not_none(powder.composition.ti_o2))
+        multidict.add('p2_o5', str_if_not_none(powder.composition.p2_o5))
+        multidict.add('sr_o', str_if_not_none(powder.composition.sr_o))
+        multidict.add('mn2_o3', str_if_not_none(powder.composition.mn2_o3))
+        multidict.add('fine', str_if_not_none(powder.structure.fine))
+        multidict.add('gravity', str_if_not_none(powder.structure.gravity))
         return multidict

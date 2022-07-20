@@ -1,5 +1,5 @@
 from re import A
-from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, join_all, molecular_formula_of
+from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, join_all, molecular_formula_of, str_if_not_none
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -64,3 +64,15 @@ def test_float_if_not_empty_returns_none_for_none():
 
 def test_float_if_not_empty_returns_float_for_string_with_number():
     assert float_if_not_empty('1234.5678') == 1234.5678
+
+
+def test_str_if_not_none_returns_empty_string_for_none():
+    assert str_if_not_none(None) == ''
+
+
+def test_str_if_not_none_returns_string_for_float():
+    assert str_if_not_none(1234.5678) == '1234.5678'
+
+
+def test_str_if_not_none_returns_int_for_int():
+    assert str_if_not_none(987654321) == '987654321'

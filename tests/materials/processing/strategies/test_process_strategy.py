@@ -55,6 +55,6 @@ def test_convert_to_multidict_adds_all_properties():
     multidict = ProcessStrategy.convert_to_multidict(process)
     assert multidict['material_name'] == 'test process'
     assert multidict['material_type'] == 'Process'
-    assert multidict['duration'] == 3.21
-    assert multidict['temperature'] == 6.54
-    assert multidict['relative_humidity'] == 9.87
+    assert multidict['duration'] == '3.21'
+    assert multidict['temperature'] == '6.54'
+    assert multidict['relative_humidity'] == '9.87'

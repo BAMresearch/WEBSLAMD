@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import float_if_not_empty
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.process import Process
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -26,7 +26,7 @@ class ProcessStrategy(BaseMaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, process):
         multidict = super().convert_to_multidict(process)
-        multidict.add('duration', process.duration)
-        multidict.add('temperature', process.temperature)
-        multidict.add('relative_humidity', process.relative_humidity)
+        multidict.add('duration', str_if_not_none(process.duration))
+        multidict.add('temperature', str_if_not_none(process.temperature))
+        multidict.add('relative_humidity', str_if_not_none(process.relative_humidity))
         return multidict

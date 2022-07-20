@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import not_empty, empty, join_all, float_if_not_empty
+from slamd.common.slamd_utils import not_empty, empty, join_all, float_if_not_empty, str_if_not_none
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
@@ -41,9 +41,9 @@ class BaseMaterialStrategy(ABC):
             ('uuid', material.uuid),
             ('material_name', material.name),
             ('material_type', material.type),
-            ('delivery_time', material.costs.delivery_time),
-            ('costs', material.costs.costs),
-            ('co2_footprint', material.costs.co2_footprint),
+            ('delivery_time', str_if_not_none(material.costs.delivery_time)),
+            ('costs', str_if_not_none(material.costs.costs)),
+            ('co2_footprint', str_if_not_none(material.costs.co2_footprint)),
             ('is_blended', material.is_blended)
         ])
         cls._convert_additional_properties_to_multidict(multidict, material.additional_properties)

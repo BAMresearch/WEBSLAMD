@@ -50,5 +50,5 @@ def test_convert_to_multidict_adds_all_properties():
     multidict = AdmixtureStrategy.convert_to_multidict(admixture)
     assert multidict['material_name'] == 'test admixture'
     assert multidict['material_type'] == 'Admixture'
-    assert multidict['composition'] == 10.4
+    assert multidict['composition'] == '10.4'
     assert multidict['type'] == 'test type'

@@ -123,17 +123,17 @@ def test_convert_to_multidict_adds_all_properties():
     multidict = PowderStrategy.convert_to_multidict(powder)
     assert multidict['material_name'] == 'test powder'
     assert multidict['material_type'] == 'Powder'
-    assert multidict['fe3_o2'] == 12.3
-    assert multidict['si_o2'] == 23.4
-    assert multidict['al2_o3'] == 34.5
-    assert multidict['ca_o'] == 45.6
-    assert multidict['mg_o'] == 56.7
-    assert multidict['na2_o'] == 67.8
-    assert multidict['k2_o'] == 78.9
-    assert multidict['s_o3'] == 89.0
-    assert multidict['ti_o2'] == 0.98
-    assert multidict['p2_o5'] == 9.87
-    assert multidict['sr_o'] == 8.76
-    assert multidict['mn2_o3'] == 7.65
-    assert multidict['fine'] == 123.45
-    assert multidict['gravity'] == 678.90
+    assert multidict['fe3_o2'] == '12.3'
+    assert multidict['si_o2'] == '23.4'
+    assert multidict['al2_o3'] == '34.5'
+    assert multidict['ca_o'] == '45.6'
+    assert multidict['mg_o'] == '56.7'
+    assert multidict['na2_o'] == '67.8'
+    assert multidict['k2_o'] == '78.9'
+    assert multidict['s_o3'] == '89.0'
+    assert multidict['ti_o2'] == '0.98'
+    assert multidict['p2_o5'] == '9.87'
+    assert multidict['sr_o'] == '8.76'
+    assert multidict['mn2_o3'] == '7.65'
+    assert multidict['fine'] == '123.45'
+    assert multidict['gravity'] == '678.9'

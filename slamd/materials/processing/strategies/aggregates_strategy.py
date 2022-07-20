@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import float_if_not_empty
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -32,8 +32,8 @@ class AggregatesStrategy(BaseMaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, aggregates):
         multidict = super().convert_to_multidict(aggregates)
-        multidict.add('fine_aggregates', aggregates.composition.fine_aggregates)
-        multidict.add('coarse_aggregates', aggregates.composition.coarse_aggregates)
+        multidict.add('fine_aggregates', str_if_not_none(aggregates.composition.fine_aggregates))
+        multidict.add('coarse_aggregates', str_if_not_none(aggregates.composition.coarse_aggregates))
         multidict.add('fa_density', aggregates.composition.fa_density)
         multidict.add('ca_density', aggregates.composition.ca_density)
         return multidict

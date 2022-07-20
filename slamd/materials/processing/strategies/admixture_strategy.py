@@ -1,4 +1,4 @@
-from slamd.common.slamd_utils import float_if_not_empty
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
 
@@ -24,6 +24,6 @@ class AdmixtureStrategy(BaseMaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, admixture):
         multidict = super().convert_to_multidict(admixture)
-        multidict.add('composition', admixture.composition)
+        multidict.add('composition', str_if_not_none(admixture.composition))
         multidict.add('type', admixture.admixture_type)
         return multidict
