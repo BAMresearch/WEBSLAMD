@@ -17,7 +17,7 @@ from tests.materials.materials_test_data import create_test_powders
 app = create_app('testing', with_session=False)
 
 
-def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
+def test_list_material_selection_by_type_returns_correct_sorted_form(monkeypatch):
     with app.test_request_context('/materials/blended'):
         def mock_query_by_type(input):
             if input == 'powder':
@@ -29,8 +29,8 @@ def test_list_material_selection_by_type_returns_correct_form(monkeypatch):
         form = BlendedMaterialsService().list_base_material_selection_by_type('powder')
 
         assert len(form.base_material_selection.choices) == 2
-        assert form.base_material_selection.choices[0] == ('test uuid1', 'test powder')
-        assert form.base_material_selection.choices[1] == ('test uuid2', 'my powder')
+        assert form.base_material_selection.choices[0] == ('test uuid2', 'my powder')
+        assert form.base_material_selection.choices[1] == ('test uuid1', 'test powder')
 
 
 def test_list_material_selection_by_type_raises_not_found_exception():
