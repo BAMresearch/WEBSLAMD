@@ -10,6 +10,7 @@ from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates
+from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Structure
 from tests.materials.materials_test_data import create_test_powders
@@ -205,6 +206,34 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
                                          mock_save_called_with_second_blended_material)
 
 
+def test_save_blended_materials_creates_two_liquids_from_three_base_materials(monkeypatch):
+    def mock_query_by_type_and_uuid(material_type, uuid):
+        return _prepare_test_base_liquids_for_blending(material_type, uuid)
+
+    mock_save_called_with_first_blended_material = Liquid()
+    mock_save_called_with_second_blended_material = Liquid()
+
+    def mock_save(material_type, material):
+        if material_type == 'liquid':
+            nonlocal mock_save_called_with_first_blended_material
+            nonlocal mock_save_called_with_second_blended_material
+            if material.name == 'test blend 1-0':
+                mock_save_called_with_first_blended_material = material
+            if material.name == 'test blend 1-1':
+                mock_save_called_with_second_blended_material = material
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsPersistence, 'save', mock_save)
+
+    with app.test_request_context('/materials/blended'):
+        form = _prepare_request_for_successful_blending('Liquid')
+
+        BlendedMaterialsService().save_blended_materials(form)
+
+        _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
+                                      mock_save_called_with_second_blended_material)
+
+
 def _prepare_request_for_successful_blending(material_type):
     form = MultiDict()
     form.add('blended_material_name', 'test blend 1')
@@ -306,6 +335,48 @@ def _prepare_test_base_aggregates_for_blending(material_type, uuid):
     return None
 
 
+def _prepare_test_base_liquids_for_blending(material_type, uuid):
+    if material_type == 'Liquid':
+        if uuid == 'uuid1':
+            liquid1 = Liquid(name='liquid 1', type='Liquid',
+                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+                             composition=slamd.materials.processing.models.liquid.Composition(
+                                 na2_si_o3=10.0, na_o_h=4.4, na2_si_o3_specific=7,
+                                 water=11),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='2'),
+                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
+                                                                                           '3')])
+            liquid1.uuid = 'uuid1'
+            return liquid1
+        if uuid == 'uuid2':
+            liquid2 = Liquid(name='liquid 2', type='Liquid',
+                             costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
+                             composition=slamd.materials.processing.models.liquid.Composition(
+                                 na2_si_o3=20.0, na_o_h=4.1, na2_si_o3_specific=4,
+                                 water=11),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='5'),
+                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
+                                                                                           '1')])
+            liquid2.uuid = 'uuid2'
+            return liquid2
+        if uuid == 'uuid3':
+            liquid3 = Liquid(name='liquid 3', type='Liquid',
+                             costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
+                             composition=slamd.materials.processing.models.liquid.Composition(
+                                 na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_specific=6,
+                                 water=16),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='5'),
+                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
+                                                                                           '2')])
+            liquid3.uuid = 'uuid3'
+            return liquid3
+        return None
+    return None
+
+
 def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
                                   mock_save_called_with_second_blended_material):
     assert mock_save_called_with_first_blended_material.composition.fe3_o2 == '14.0'
@@ -370,6 +441,44 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == '32.0'
     assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
     assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+
+
+def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
+                                  mock_save_called_with_second_blended_material):
+    assert mock_save_called_with_first_blended_material.composition.na2_si_o3 == '17.4'
+    assert mock_save_called_with_first_blended_material.composition.na_o_h == '5.2'
+    assert mock_save_called_with_first_blended_material.composition.na2_si_o3_specific == '5.6'
+    assert mock_save_called_with_first_blended_material.composition.water == '12.0'
+    assert mock_save_called_with_first_blended_material.composition.na_o_h_specific is None
+    assert mock_save_called_with_first_blended_material.composition.total is None
+    assert mock_save_called_with_first_blended_material.composition.na2_o is None
+    assert mock_save_called_with_first_blended_material.composition.si_o2 is None
+    assert mock_save_called_with_first_blended_material.composition.h2_o is None
+    assert mock_save_called_with_first_blended_material.composition.na2_o_dry is None
+    assert mock_save_called_with_first_blended_material.composition.si_o2_dry is None
+    assert mock_save_called_with_first_blended_material.composition.na_o_h_total is None
+
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '26.0'
+    assert mock_save_called_with_first_blended_material.costs.costs == '36.0'
+    assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
+
+    assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == '18.1'
+    assert mock_save_called_with_second_blended_material.composition.na_o_h == '5.69'
+    assert mock_save_called_with_second_blended_material.composition.na2_si_o3_specific == '5.8'
+    assert mock_save_called_with_second_blended_material.composition.water == '12.5'
+    assert mock_save_called_with_second_blended_material.composition.na_o_h_specific is None
+    assert mock_save_called_with_second_blended_material.composition.total is None
+    assert mock_save_called_with_second_blended_material.composition.na2_o is None
+    assert mock_save_called_with_second_blended_material.composition.si_o2 is None
+    assert mock_save_called_with_second_blended_material.composition.h2_o is None
+    assert mock_save_called_with_second_blended_material.composition.na2_o_dry is None
+    assert mock_save_called_with_second_blended_material.composition.si_o2_dry is None
+    assert mock_save_called_with_second_blended_material.composition.na_o_h_total is None
+
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '32.0'
+    assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
+    assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+
 
 def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
     mock_delete_by_type_and_uuid_called_with = None
