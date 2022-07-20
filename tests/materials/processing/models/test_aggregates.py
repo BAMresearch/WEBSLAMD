@@ -45,11 +45,11 @@ def test_aggregates_composition_constructor_sets_properties():
     composition = Composition(
         fine_aggregates=123.45,
         coarse_aggregates=67.890,
-        fa_density='test FA density',
-        ca_density='test CA density'
+        fa_density=987.6,
+        ca_density=543.2
     )
 
     assert composition.fine_aggregates == 123.45
     assert composition.coarse_aggregates == 67.890
-    assert composition.fa_density == 'test FA density'
-    assert composition.ca_density == 'test CA density'
+    assert composition.fa_density == 987.6
+    assert composition.ca_density == 543.2

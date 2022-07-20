@@ -6,8 +6,8 @@ from slamd.materials.processing.models.material import Material
 class Composition:
     fine_aggregates: float = None
     coarse_aggregates: float = None
-    fa_density: str = None
-    ca_density: str = None
+    fa_density: float = None
+    ca_density: float = None
 
 
 @dataclass
