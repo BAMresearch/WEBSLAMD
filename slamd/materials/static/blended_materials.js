@@ -57,6 +57,8 @@ function checkNameIsNotEmpty() {
     let nameField = document.getElementById("blended_material_name");
     nameIsEmpty = nameField.value === undefined || nameField.value === ""
     document.getElementById("submit").disabled = nameIsEmpty || !allRatioFieldsHaveValidInput;
+}
+
 /**
  * The input parameter corresponds to the id of the html button element. It is specified in blended_materials_table.html
  * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
