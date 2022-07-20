@@ -1,19 +1,17 @@
 import pytest
 from werkzeug.datastructures import MultiDict
 
-import slamd
 from slamd import create_app
 from slamd.common.error_handling import MaterialNotFoundException, SlamdRequestTooLargeException, \
     ValueNotSupportedException
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.liquid import Liquid
-from slamd.materials.processing.models.material import Costs
-from slamd.materials.processing.models.powder import Powder, Structure
-from tests.materials.materials_test_data import create_test_powders
+from slamd.materials.processing.models.powder import Powder
+from tests.materials.materials_test_data import create_test_powders, prepare_test_base_powders_for_blending, \
+    prepare_test_base_aggregates_for_blending, prepare_test_base_liquids_for_blending
 
 app = create_app('testing', with_session=False)
 
@@ -106,7 +104,7 @@ def test_save_blended_materials_throws_exception_when_name_is_not_set():
         form.add('base_type', 'Powder')
 
         with pytest.raises(ValueNotSupportedException):
-            BlendedMaterialsService().save_blended_materials(form)
+            BlendedMaterialsService.save_blended_materials(form)
 
 
 def test_save_blended_materials_throws_exception_when_too_many_ratios_are_passed():
@@ -119,7 +117,7 @@ def test_save_blended_materials_throws_exception_when_too_many_ratios_are_passed
             form.add(f'all_ratio_entries-{i}-ratio', '10/10')
 
         with pytest.raises(SlamdRequestTooLargeException):
-            BlendedMaterialsService().save_blended_materials(form)
+            BlendedMaterialsService.save_blended_materials(form)
 
 
 def test_save_blended_materials_throws_exception_when_ratios_have_not_enough_pieces():
@@ -132,7 +130,7 @@ def test_save_blended_materials_throws_exception_when_ratios_have_not_enough_pie
         form['all_ratio_entries-5-ratio'] = '10/15'
 
         with pytest.raises(ValueNotSupportedException):
-            BlendedMaterialsService().save_blended_materials(form)
+            BlendedMaterialsService.save_blended_materials(form)
 
 
 def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric_parts():
@@ -147,12 +145,29 @@ def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric
         form['all_ratio_entries-7-ratio'] = '10/ab/8'
 
         with pytest.raises(ValueNotSupportedException):
-            BlendedMaterialsService().save_blended_materials(form)
+            BlendedMaterialsService.save_blended_materials(form)
+
+
+def test_creates_min_max_form_creates_forms_and_returns_completeness_information(monkeypatch):
+    def mock_query_by_type_and_uuid(material_type, uuid):
+        return prepare_test_base_powders_for_blending(material_type, uuid)
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+
+    with app.test_request_context('/materials/blended/add_min_max_entries/powder/2'):
+        form, complete = BlendedMaterialsService.create_min_max_form('powder', 2, ['uuid1', 'uuid2', 'uuid1'])
+
+    assert len(form.all_min_max_entries.data) == 2
+    assert form.all_min_max_entries.data[0] == {'uuid_field': None, 'blended_material_name': None, 'increment': None,
+                                                'min': None, 'max': None}
+    assert form.all_min_max_entries.data[1] == {'uuid_field': None, 'blended_material_name': None, 'increment': None,
+                                                'min': None, 'max': None}
+    assert complete is False
 
 
 def test_save_blended_materials_creates_two_powders_from_three_base_materials(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
-        return _prepare_test_base_powders_for_blending(material_type, uuid)
+        return prepare_test_base_powders_for_blending(material_type, uuid)
 
     mock_save_called_with_first_blended_material = Powder()
     mock_save_called_with_second_blended_material = Powder()
@@ -172,15 +187,15 @@ def test_save_blended_materials_creates_two_powders_from_three_base_materials(mo
     with app.test_request_context('/materials/blended'):
         form = _prepare_request_for_successful_blending('Powder')
 
-        BlendedMaterialsService().save_blended_materials(form)
+        BlendedMaterialsService.save_blended_materials(form)
 
-        _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
-                                      mock_save_called_with_second_blended_material)
+    _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
+                                  mock_save_called_with_second_blended_material)
 
 
 def test_save_blended_materials_creates_two_aggregates_from_three_base_materials(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
-        return _prepare_test_base_aggregates_for_blending(material_type, uuid)
+        return prepare_test_base_aggregates_for_blending(material_type, uuid)
 
     mock_save_called_with_first_blended_material = Aggregates()
     mock_save_called_with_second_blended_material = Aggregates()
@@ -200,15 +215,15 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
     with app.test_request_context('/materials/blended'):
         form = _prepare_request_for_successful_blending('Aggregates')
 
-        BlendedMaterialsService().save_blended_materials(form)
+        BlendedMaterialsService.save_blended_materials(form)
 
-        _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
-                                         mock_save_called_with_second_blended_material)
+    _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
+                                     mock_save_called_with_second_blended_material)
 
 
 def test_save_blended_materials_creates_two_liquids_from_three_base_materials(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
-        return _prepare_test_base_liquids_for_blending(material_type, uuid)
+        return prepare_test_base_liquids_for_blending(material_type, uuid)
 
     mock_save_called_with_first_blended_material = Liquid()
     mock_save_called_with_second_blended_material = Liquid()
@@ -228,10 +243,10 @@ def test_save_blended_materials_creates_two_liquids_from_three_base_materials(mo
     with app.test_request_context('/materials/blended'):
         form = _prepare_request_for_successful_blending('Liquid')
 
-        BlendedMaterialsService().save_blended_materials(form)
+        BlendedMaterialsService.save_blended_materials(form)
 
-        _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
-                                      mock_save_called_with_second_blended_material)
+    _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
+                                  mock_save_called_with_second_blended_material)
 
 
 def _prepare_request_for_successful_blending(material_type):
@@ -250,129 +265,6 @@ def _create_basic_submission_data():
     form.add('base_type', 'Powder')
     form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
     return form
-
-
-def _prepare_test_base_powders_for_blending(material_type, uuid):
-    if material_type == 'Powder':
-        if uuid == 'uuid1':
-            powder1 = Powder(name='powder 1', type='Powder',
-                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=10.0, si_o2=4.4,
-                                                                                              al2_o3=7, na2_o=11),
-                             structure=Structure(fine=50, gravity=10),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='2'),
-                                                    AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in powder 2'),
-                                                    AdditionalProperty(name='Prop4', value='12')])
-            powder1.uuid = 'uuid1'
-            return powder1
-        if uuid == 'uuid2':
-            powder2 = Powder(name='powder 2', type='Powder',
-                             costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=20.0, al2_o3=7,
-                                                                                              si_o2=10),
-                             structure=Structure(fine=100),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='4'),
-                                                    AdditionalProperty(name='Prop2', value='Other Category'),
-                                                    AdditionalProperty(name='Prop4', value='No Number')])
-            powder2.uuid = 'uuid2'
-            return powder2
-        if uuid == 'uuid3':
-            powder1 = Powder(name='powder 3', type='Powder',
-                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=10.0, si_o2=4.4,
-                                                                                              al2_o3=7, na2_o=11),
-                             structure=Structure(fine=50, gravity=10),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='10'),
-                                                    AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in powder 2'),
-                                                    AdditionalProperty(name='Prop4', value='10.2')])
-            powder1.uuid = 'uuid1'
-            return powder1
-        return None
-    return None
-
-
-def _prepare_test_base_aggregates_for_blending(material_type, uuid):
-    if material_type == 'Aggregates':
-        if uuid == 'uuid1':
-            aggregates1 = Aggregates(name='aggregate 1', type='Aggregates',
-                                     costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                                     composition=slamd.materials.processing.models.aggregates.Composition(
-                                         fine_aggregates=10.0, coarse_aggregates=4.4, fa_density=7,
-                                         ca_density=11),
-                                     additional_properties=[AdditionalProperty(name='Prop1', value='2'),
-                                                            AdditionalProperty(name='Prop2', value='Category'),
-                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                                   '3')])
-            aggregates1.uuid = 'uuid1'
-            return aggregates1
-        if uuid == 'uuid2':
-            aggregates2 = Aggregates(name='aggregate 2', type='Aggregates',
-                                     costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                                     composition=slamd.materials.processing.models.aggregates.Composition(
-                                         fine_aggregates=20.0, coarse_aggregates=4.1, fa_density=4,
-                                         ca_density=11),
-                                     additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                            AdditionalProperty(name='Prop2', value='Category'),
-                                                            AdditionalProperty(name='Prop3', value='12')])
-            aggregates2.uuid = 'uuid2'
-            return aggregates2
-        if uuid == 'uuid3':
-            aggregates3 = Aggregates(name='aggregate 3', type='Aggregates',
-                                     costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
-                                     composition=slamd.materials.processing.models.aggregates.Composition(
-                                         fine_aggregates=27.0, coarse_aggregates=9.0, fa_density=6,
-                                         ca_density=16),
-                                     additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                            AdditionalProperty(name='Prop2', value='Other Category'),
-                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                                   '3')])
-            aggregates3.uuid = 'uuid3'
-            return aggregates3
-        return None
-    return None
-
-
-def _prepare_test_base_liquids_for_blending(material_type, uuid):
-    if material_type == 'Liquid':
-        if uuid == 'uuid1':
-            liquid1 = Liquid(name='liquid 1', type='Liquid',
-                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
-                             composition=slamd.materials.processing.models.liquid.Composition(
-                                 na2_si_o3=10.0, na_o_h=4.4, na2_si_o3_specific=7,
-                                 water=11),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='2'),
-                                                    AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                           '1')])
-            liquid1.uuid = 'uuid1'
-            return liquid1
-        if uuid == 'uuid2':
-            liquid2 = Liquid(name='liquid 2', type='Liquid',
-                             costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
-                             composition=slamd.materials.processing.models.liquid.Composition(
-                                 na2_si_o3=20.0, na_o_h=4.1, na2_si_o3_specific=4,
-                                 water=11),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                    AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='12')])
-            liquid2.uuid = 'uuid2'
-            return liquid2
-        if uuid == 'uuid3':
-            liquid3 = Liquid(name='liquid 3', type='Liquid',
-                             costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
-                             composition=slamd.materials.processing.models.liquid.Composition(
-                                 na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_specific=6,
-                                 water=16),
-                             additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                    AdditionalProperty(name='Prop2', value='Other Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                           '2')])
-            liquid3.uuid = 'uuid3'
-            return liquid3
-        return None
-    return None
 
 
 def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
