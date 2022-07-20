@@ -123,20 +123,32 @@ class PowderStrategy(MaterialStrategy):
         return fine_complete and gravity_complete
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
-        blended_fe2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
-        blended_si_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_al2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
-        blended_na2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+        blended_fe2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                   'composition', 'fe3_o2')
+        blended_si_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                  'composition', 'si_o2')
+        blended_al2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                   'composition', 'al2_o3')
+        blended_na2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                  'composition', 'na2_o')
 
-        blended_ca_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
-        blended_mg_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
-        blended_k2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
-        blended_s_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
+        blended_ca_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+                                                                 'ca_o')
+        blended_mg_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+                                                                 'mg_o')
+        blended_k2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+                                                                 'k2_o')
+        blended_s_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+                                                                 's_o3')
 
-        blended_ti_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
-        blended_p2_o5 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
-        blended_sr_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
-        blended_mn2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
+        blended_ti_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                  'composition', 'ti_o2')
+        blended_p2_o5 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                  'composition', 'p2_o5')
+        blended_sr_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+                                                                 'sr_o')
+        blended_mn2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                   'composition', 'mn2_o3')
 
         composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
                                   na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
@@ -146,7 +158,9 @@ class PowderStrategy(MaterialStrategy):
         return composition
 
     def _compute_blended_structure(self, normalized_ratios, base_powders_as_dict):
-        blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
-        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
+        blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure',
+                                                                 'fine')
+        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                    'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
