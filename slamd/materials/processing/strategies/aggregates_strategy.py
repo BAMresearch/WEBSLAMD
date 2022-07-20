@@ -39,7 +39,7 @@ class AggregatesStrategy(MaterialStrategy):
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_aggregates_as_dict):
         costs = self.compute_blended_costs(normalized_ratios, base_aggregates_as_dict)
         composition = self._compute_blended_composition(normalized_ratios, base_aggregates_as_dict)
-        additional_properties = self.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+        additional_properties = self.compute_additional_properties(normalized_ratios, base_aggregates_as_dict)
 
         return Aggregates(type=base_aggregates_as_dict[0]['type'],
                           name=f'{blended_material_name}-{idx}',
