@@ -1,6 +1,7 @@
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 
 
 class LiquidStrategy(MaterialStrategy):
@@ -72,20 +73,20 @@ class LiquidStrategy(MaterialStrategy):
         return multidict
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
-        blended_na2_si_o3 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_si_o3')
-        blended_na_o_h = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na_o_h')
-        blended_na2_si_o3_specific = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+        blended_na2_si_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_si_o3')
+        blended_na_o_h = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na_o_h')
+        blended_na2_si_o3_specific = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
                                                        'na2_si_o3_specific')
-        blended_na_o_h_specific = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+        blended_na_o_h_specific = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
                                                     'na_o_h_specific')
-        blended_total = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'total')
-        blended_na2_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
-        blended_si_o2 = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_h2_o = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'h2_o')
-        blended_na2_o_dry = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o_dry')
-        blended_si_o2_dry = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2_dry')
-        blended_water = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'water')
-        blended_na_o_h_total = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na_o_h_total')
+        blended_total = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'total')
+        blended_na2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+        blended_si_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_h2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'h2_o')
+        blended_na2_o_dry = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o_dry')
+        blended_si_o2_dry = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2_dry')
+        blended_water = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'water')
+        blended_na_o_h_total = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na_o_h_total')
 
         composition = Composition(na2_si_o3=blended_na2_si_o3, na_o_h=blended_na_o_h,
                                   na2_si_o3_specific=blended_na2_si_o3_specific,
