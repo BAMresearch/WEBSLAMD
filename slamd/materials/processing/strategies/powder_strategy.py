@@ -86,9 +86,6 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
-        if len(base_materials_as_dict) < 2:
-            return False
-
         costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
         additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
         composition_complete = cls._check_completeness_of_composition(base_materials_as_dict)
