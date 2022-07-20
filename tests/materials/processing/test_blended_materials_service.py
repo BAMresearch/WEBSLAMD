@@ -326,7 +326,7 @@ def _prepare_test_base_aggregates_for_blending(material_type, uuid):
                                          fine_aggregates=27.0, coarse_aggregates=9.0, fa_density=6,
                                          ca_density=16),
                                      additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                            AdditionalProperty(name='Prop2', value='Category'),
+                                                            AdditionalProperty(name='Prop2', value='Other Category'),
                                                             AdditionalProperty(name='Prop3', value='Not in aggregate '
                                                                                                    '2')])
             aggregates3.uuid = 'uuid3'
@@ -346,7 +346,7 @@ def _prepare_test_base_liquids_for_blending(material_type, uuid):
                              additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
                                                     AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                           '3')])
+                                                                                           '1')])
             liquid1.uuid = 'uuid1'
             return liquid1
         if uuid == 'uuid2':
@@ -368,7 +368,7 @@ def _prepare_test_base_liquids_for_blending(material_type, uuid):
                                  na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_specific=6,
                                  water=16),
                              additional_properties=[AdditionalProperty(name='Prop1', value='5'),
-                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop2', value='Other Category'),
                                                     AdditionalProperty(name='Prop3', value='Not in liquid '
                                                                                            '2')])
             liquid3.uuid = 'uuid3'
@@ -432,6 +432,14 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
     assert mock_save_called_with_first_blended_material.costs.costs == 36.0
     assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
+
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 6
+    assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_first_blended_material.additional_properties[0].value == '3.8'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].value == '0.8'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.2'
 
     assert mock_save_called_with_second_blended_material.composition.fine_aggregates == 18.1
     assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == 5.69
