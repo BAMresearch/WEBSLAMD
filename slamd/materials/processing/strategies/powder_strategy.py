@@ -147,8 +147,12 @@ class PowderStrategy(MaterialStrategy):
                 blended_additional_properties.append(AdditionalProperty(name=mapped_properties[0][0], value=mean))
             else:
                 for item in mapped_properties:
-                    # TODO pass ratio to value instead of 5
-                    blended_additional_properties.append(AdditionalProperty(name=item[1], value=item[2]))
+                    blended_property_names = [x.name for x in blended_additional_properties]
+                    if item[1] in blended_property_names:
+                        index_of_matching_name = blended_property_names.index(item[1])
+                        blended_additional_properties[index_of_matching_name].value += item[2]
+                    else:
+                        blended_additional_properties.append(AdditionalProperty(name=item[1], value=round(item[2],2)))
         return blended_additional_properties
 
     def method_name(self, ratio, property):
