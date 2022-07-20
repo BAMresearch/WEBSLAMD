@@ -60,14 +60,32 @@ class BlendingPropertiesCalculator:
         
     4) We merge categoricals created in 3c) with the same name and sum up their values.
     """
+
     @classmethod
     def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):
+        matching_properties_for_all_base_materials = cls._find_properties_contained_in_all_base_materials(
+            base_materials_as_dict)
+
+        blended_additional_properties = []
+        for i in range(len(matching_properties_for_all_base_materials[0])):
+            ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+
+            # Create list of property names together with their weighted values and an information about the
+            # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
+            mapped_properties = list(
+                map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
+            if numeric(mapped_properties[0][1]):
+                cls._add_continuous_additional_properties(blended_additional_properties, mapped_properties)
+            else:
+                cls.add_categorical_additional_properties(blended_additional_properties, mapped_properties)
+        return blended_additional_properties
+
+    @classmethod
+    def _find_properties_contained_in_all_base_materials(cls, base_materials_as_dict):
         properties_with_key_defined_in_all_base_materials = \
             PropertyCompletenessChecker.find_additional_properties_defined_in_all_base_materials(base_materials_as_dict)
-
         key_defined_in_all_base_materials = list(
             map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
-
         matching_properties_for_all_base_materials = []
         for base_material_dict in base_materials_as_dict:
             matching_properties_for_base_material = list(
@@ -75,30 +93,25 @@ class BlendingPropertiesCalculator:
                        base_material_dict['additional_properties']))
 
             matching_properties_for_all_base_materials.append(matching_properties_for_base_material)
+        return matching_properties_for_all_base_materials
 
-        blended_additional_properties = []
-        for i in range(len(matching_properties_for_all_base_materials[0])):
-            ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
-
-            # Create list of property names together with their weigthed values and an information about the
-            # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
-            mapped_properties = list(
-                map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
-            if numeric(mapped_properties[0][1]):
-                mean = sum(list(map(lambda x: x[1], mapped_properties)))
-                blended_additional_properties.append(
-                    AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
+    @classmethod
+    def add_categorical_additional_properties(cls, blended_additional_properties, mapped_properties):
+        for item in mapped_properties:
+            blended_property_names = [x.name for x in blended_additional_properties]
+            if item[1] in blended_property_names:
+                index_of_matching_name = blended_property_names.index(item[1])
+                updated_value = float(blended_additional_properties[index_of_matching_name].value) + item[2]
+                blended_additional_properties[index_of_matching_name].value = str(round(updated_value, 2))
             else:
-                for item in mapped_properties:
-                    blended_property_names = [x.name for x in blended_additional_properties]
-                    if item[1] in blended_property_names:
-                        index_of_matching_name = blended_property_names.index(item[1])
-                        updated_value = float(blended_additional_properties[index_of_matching_name].value) + item[2]
-                        blended_additional_properties[index_of_matching_name].value = str(round(updated_value, 2))
-                    else:
-                        blended_additional_properties.append(
-                            AdditionalProperty(name=item[1], value=str(round(item[2], 2))))
-        return blended_additional_properties
+                blended_additional_properties.append(
+                    AdditionalProperty(name=item[1], value=str(round(item[2], 2))))
+
+    @classmethod
+    def _add_continuous_additional_properties(cls, blended_additional_properties, mapped_properties):
+        mean = sum(list(map(lambda x: x[1], mapped_properties)))
+        blended_additional_properties.append(
+            AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
 
     @classmethod
     def _compute_weighted_properties_with_ratios(cls, ratio, property):
