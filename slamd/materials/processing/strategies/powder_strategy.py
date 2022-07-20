@@ -144,15 +144,18 @@ class PowderStrategy(MaterialStrategy):
             mapped_properties = list(map(lambda x: self.method_name(x[0], x[1][i]), ratios_with_property_values))
             if numeric(mapped_properties[0][1]):
                 mean = sum(list(map(lambda x: x[1], mapped_properties)))
-                blended_additional_properties.append(AdditionalProperty(name=mapped_properties[0][0], value=mean))
+                blended_additional_properties.append(
+                    AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
             else:
                 for item in mapped_properties:
                     blended_property_names = [x.name for x in blended_additional_properties]
                     if item[1] in blended_property_names:
                         index_of_matching_name = blended_property_names.index(item[1])
-                        blended_additional_properties[index_of_matching_name].value += item[2]
+                        updated_value = float(blended_additional_properties[index_of_matching_name].value) + item[2]
+                        blended_additional_properties[index_of_matching_name].value = str(round(updated_value, 2))
                     else:
-                        blended_additional_properties.append(AdditionalProperty(name=item[1], value=round(item[2],2)))
+                        blended_additional_properties.append(
+                            AdditionalProperty(name=item[1], value=str(round(item[2], 2))))
         return blended_additional_properties
 
     def method_name(self, ratio, property):
