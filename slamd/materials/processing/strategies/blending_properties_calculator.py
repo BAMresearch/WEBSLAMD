@@ -58,8 +58,6 @@ class BlendingPropertiesCalculator:
             except AttributeError:
                 return value
 
-        raise ValueNotSupportedException('No such property!')
-
     @classmethod
     def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):
         additional_properties_for_all_base_materials = []

@@ -65,3 +65,17 @@ def test_compute_mean_returns_none_when_not_all_values_are_filled():
                                                      'composition', 'fe3_o2')
 
     assert mean is None
+
+
+def test_compute_mean_returns_none_when_specified_property_does_not_exist():
+    first_material_as_dict = {
+        'composition': Composition(fe3_o2='1.2')
+    }
+    second_material_as_dict = {
+        'composition': Composition(fe3_o2='1')
+    }
+    base_materials_as_dict = [first_material_as_dict, second_material_as_dict]
+
+    mean = BlendingPropertiesCalculator.compute_mean([0.4, 0.4, 0.2], base_materials_as_dict, 'composition',
+                                                     'not defined')
+    assert mean is None
