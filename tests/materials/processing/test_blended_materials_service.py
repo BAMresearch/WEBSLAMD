@@ -333,10 +333,19 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_first_blended_material.composition.fa_density == '5.6'
     assert mock_save_called_with_first_blended_material.composition.ca_density == '12.0'
 
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '26.0'
+    assert mock_save_called_with_first_blended_material.costs.costs == '36.0'
+    assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
+
     assert mock_save_called_with_second_blended_material.composition.fine_aggregates == '18.1'
     assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == '5.69'
     assert mock_save_called_with_second_blended_material.composition.fa_density == '5.8'
     assert mock_save_called_with_second_blended_material.composition.ca_density == '12.5'
+
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '32.0'
+    assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
+    assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
+
 def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
     mock_delete_by_type_and_uuid_called_with = None
 
