@@ -149,7 +149,7 @@ def test_save_blended_materials_throws_exception_when_ratios_contain_non_numeric
             BlendedMaterialsService().save_blended_materials(form)
 
 
-def test_save_blended_materials_creates_two_powders_from_two_base_materials(monkeypatch):
+def test_save_blended_materials_creates_two_powders_from_three_base_materials(monkeypatch):
     def mock_query_by_type_and_uuid(material_type, uuid):
         return _prepare_test_base_powders_for_blending(material_type, uuid)
 
@@ -209,14 +209,9 @@ def _prepare_request_for_successful_blending(material_type):
     form = MultiDict()
     form.add('blended_material_name', 'test blend 1')
     form.add('base_type', material_type)
-    if material_type == 'Aggregates':
-        form['all_ratio_entries-0-ratio'] = '40/40/20'
-        form['all_ratio_entries-1-ratio'] = '40/30/30'
-        form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
-        return form
-    form.setlist('base_material_selection', ['uuid1', 'uuid2'])
-    form['all_ratio_entries-0-ratio'] = '50/50'
-    form['all_ratio_entries-1-ratio'] = '25/75'
+    form['all_ratio_entries-0-ratio'] = '40/40/20'
+    form['all_ratio_entries-1-ratio'] = '40/30/30'
+    form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
     return form
 
 
@@ -238,7 +233,8 @@ def _prepare_test_base_powders_for_blending(material_type, uuid):
                              structure=Structure(fine=50, gravity=10),
                              additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in powder 2')])
+                                                    AdditionalProperty(name='Prop3', value='Not in powder 2'),
+                                                    AdditionalProperty(name='Prop4', value='12')])
             powder1.uuid = 'uuid1'
             return powder1
         if uuid == 'uuid2':
@@ -248,9 +244,22 @@ def _prepare_test_base_powders_for_blending(material_type, uuid):
                                                                                               si_o2=10),
                              structure=Structure(fine=100),
                              additional_properties=[AdditionalProperty(name='Prop1', value='4'),
-                                                    AdditionalProperty(name='Prop2', value='Other Category')])
+                                                    AdditionalProperty(name='Prop2', value='Other Category'),
+                                                    AdditionalProperty(name='Prop4', value='No Number')])
             powder2.uuid = 'uuid2'
             return powder2
+        if uuid == 'uuid3':
+            powder1 = Powder(name='powder 3', type='Powder',
+                             costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
+                             composition=slamd.materials.processing.models.powder.Composition(fe3_o2=10.0, si_o2=4.4,
+                                                                                              al2_o3=7, na2_o=11),
+                             structure=Structure(fine=50, gravity=10),
+                             additional_properties=[AdditionalProperty(name='Prop1', value='10'),
+                                                    AdditionalProperty(name='Prop2', value='Category'),
+                                                    AdditionalProperty(name='Prop3', value='Not in powder 2'),
+                                                    AdditionalProperty(name='Prop4', value='10.2')])
+            powder1.uuid = 'uuid1'
+            return powder1
         return None
     return None
 
@@ -299,31 +308,47 @@ def _prepare_test_base_aggregates_for_blending(material_type, uuid):
 
 def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
                                   mock_save_called_with_second_blended_material):
-    assert mock_save_called_with_first_blended_material.composition.fe3_o2 == '15.0'
-    assert mock_save_called_with_first_blended_material.composition.si_o2 == '7.2'
+    assert mock_save_called_with_first_blended_material.composition.fe3_o2 == '14.0'
+    assert mock_save_called_with_first_blended_material.composition.si_o2 == '6.64'
     assert mock_save_called_with_first_blended_material.composition.al2_o3 == '7.0'
     assert mock_save_called_with_first_blended_material.composition.na2_o is None
     assert mock_save_called_with_first_blended_material.composition.p2_o5 is None
 
-    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '15.0'
-    assert mock_save_called_with_first_blended_material.costs.costs == '40.0'
+    assert mock_save_called_with_first_blended_material.costs.co2_footprint == '16.0'
+    assert mock_save_called_with_first_blended_material.costs.costs == '42.0'
     assert mock_save_called_with_first_blended_material.costs.delivery_time == '40.0'
 
-    assert mock_save_called_with_first_blended_material.structure.fine == '75.0'
+    assert mock_save_called_with_first_blended_material.structure.fine == '70.0'
     assert mock_save_called_with_first_blended_material.structure.gravity is None
 
-    assert mock_save_called_with_second_blended_material.composition.fe3_o2 == '17.5'
-    assert mock_save_called_with_second_blended_material.composition.si_o2 == '8.6'
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
+    assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_first_blended_material.additional_properties[0].value == '4.4'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].value == '0.6'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.4'
+
+    assert mock_save_called_with_second_blended_material.composition.fe3_o2 == '13.0'
+    assert mock_save_called_with_second_blended_material.composition.si_o2 == '6.08'
     assert mock_save_called_with_second_blended_material.composition.al2_o3 == '7.0'
     assert mock_save_called_with_second_blended_material.composition.na2_o is None
     assert mock_save_called_with_second_blended_material.composition.p2_o5 is None
 
-    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '12.5'
-    assert mock_save_called_with_second_blended_material.costs.costs == '35.0'
+    assert mock_save_called_with_second_blended_material.costs.co2_footprint == '17.0'
+    assert mock_save_called_with_second_blended_material.costs.costs == '44.0'
     assert mock_save_called_with_second_blended_material.costs.delivery_time == '40.0'
 
-    assert mock_save_called_with_second_blended_material.structure.fine == '87.5'
+    assert mock_save_called_with_second_blended_material.structure.fine == '65.0'
     assert mock_save_called_with_second_blended_material.structure.gravity is None
+
+    assert len(mock_save_called_with_second_blended_material.additional_properties) == 3
+    assert mock_save_called_with_second_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_second_blended_material.additional_properties[0].value == '5.0'
+    assert mock_save_called_with_second_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_second_blended_material.additional_properties[1].value == '0.7'
+    assert mock_save_called_with_second_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_second_blended_material.additional_properties[2].value == '0.3'
 
 
 def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,

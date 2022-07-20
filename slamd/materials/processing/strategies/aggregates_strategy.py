@@ -1,6 +1,7 @@
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 
 
 class AggregatesStrategy(MaterialStrategy):
@@ -48,12 +49,12 @@ class AggregatesStrategy(MaterialStrategy):
                           blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
-        blended_fine_aggregates = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+        blended_fine_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
                                                     'fine_aggregates')
-        blended_coarse_aggregates = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
+        blended_coarse_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
                                                       'coarse_aggregates')
-        blended_fa_density = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fa_density')
-        blended_ca_density = self.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_density')
+        blended_fa_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fa_density')
+        blended_ca_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_density')
 
         composition = Composition(fine_aggregates=blended_fine_aggregates, coarse_aggregates=blended_coarse_aggregates,
                                   fa_density=blended_fa_density, ca_density=blended_ca_density)

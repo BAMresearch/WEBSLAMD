@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
+from functools import reduce
+
 from werkzeug.datastructures import MultiDict
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import empty, string_to_number, not_empty
+from slamd.common.slamd_utils import empty, string_to_number, not_empty, numeric, not_numeric
 from slamd.common.slamd_utils import join_all
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 
 
 class MaterialStrategy(ABC):
@@ -110,48 +113,7 @@ class MaterialStrategy(ABC):
         pass
 
     def compute_blended_costs(self, normalized_ratios, base_materials_as_dict):
-        blended_co2_footprint = self.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'co2_footprint')
-        blended_costs = self.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'costs')
-        blended_delivery_time = self.compute_max(base_materials_as_dict, 'costs', 'delivery_time')
+        return BlendingPropertiesCalculator.compute_blended_costs(normalized_ratios, base_materials_as_dict)
 
-        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
-
-    def compute_mean(self, normalized_ratios, materials_as_dict, *keys):
-        all_values = self._collect_all_base_material_values_for_property(materials_as_dict, keys)
-
-        empty_values = [value for value in all_values if empty(value)]
-
-        if len(empty_values) > 0:
-            return None
-
-        ratios_with_property_values = zip(normalized_ratios, all_values)
-        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
-        return str(round(mean, 2))
-
-    def compute_max(self, material_as_dict, *keys):
-        all_values = self._collect_all_base_material_values_for_property(material_as_dict, keys)
-        non_empty_values = [float(value) for value in all_values if not_empty(value)]
-        if len(non_empty_values) == 0:
-            return None
-        maximum = max(non_empty_values)
-        return str(round(maximum, 2))
-
-    def _collect_all_base_material_values_for_property(self, material_as_dict, keys):
-        all_values = []
-
-        for current_powder in material_as_dict:
-            value = self._extract_value_for_key(current_powder, keys)
-            all_values.append(value)
-
-        return all_values
-
-    def _extract_value_for_key(self, material_as_dict, keys):
-        base = material_as_dict
-        for key in keys:
-            value = base.get(key, None)
-            try:
-                base = value.__dict__
-            except AttributeError:
-                return value
-
-        raise ValueNotSupportedException('No such property!')
+    def compute_additional_properties(self, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_additional_properties(normalized_ratios, base_materials_as_dict)
