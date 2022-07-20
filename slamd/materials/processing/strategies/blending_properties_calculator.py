@@ -23,7 +23,7 @@ class BlendingPropertiesCalculator:
 
         ratios_with_property_values = zip(normalized_ratios, all_values)
         mean = sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
-        return str(round(mean, 2))
+        return round(mean, 2)
 
     @classmethod
     def _compute_max(cls, material_as_dict, *keys):
@@ -32,7 +32,7 @@ class BlendingPropertiesCalculator:
         if len(non_empty_values) == 0:
             return None
         maximum = max(non_empty_values)
-        return str(round(maximum, 2))
+        return round(maximum, 2)
 
     @classmethod
     def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):

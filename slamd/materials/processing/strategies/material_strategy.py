@@ -118,23 +118,23 @@ class MaterialStrategy(ABC):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
     @classmethod
-    def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders):
         pass
 
     @classmethod
-    def check_completeness_of_base_material_properties(self, base_materials_as_dict):
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
         pass
 
     @classmethod
-    def compute_blended_costs(self, normalized_ratios, base_materials_as_dict):
+    def compute_blended_costs(cls, normalized_ratios, base_materials_as_dict):
         return BlendingPropertiesCalculator.compute_blended_costs(normalized_ratios, base_materials_as_dict)
 
     @classmethod
-    def compute_additional_properties(self, normalized_ratios, base_materials_as_dict):
+    def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):
         return BlendingPropertiesCalculator.compute_additional_properties(normalized_ratios, base_materials_as_dict)
 
     @classmethod
-    def check_completeness_of_costs(self, base_materials_as_dict):
+    def check_completeness_of_costs(cls, base_materials_as_dict):
         co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'co2_footprint')
         costs_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'costs')
         delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'delivery_time')
@@ -142,5 +142,5 @@ class MaterialStrategy(ABC):
         return co2_footprint_complete and costs_complete and delivery_time_complete
 
     @classmethod
-    def check_completeness_of_additional_properties(self, base_materials_as_dict):
+    def check_completeness_of_additional_properties(cls, base_materials_as_dict):
         return PropertyCompletenessChecker.additional_properties_are_complete(base_materials_as_dict)

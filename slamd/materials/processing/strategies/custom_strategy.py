@@ -1,5 +1,5 @@
 from slamd.materials.processing.models.custom import Custom
-from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
 class CustomStrategy(MaterialStrategy):

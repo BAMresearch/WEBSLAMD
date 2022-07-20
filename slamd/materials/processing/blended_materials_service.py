@@ -128,7 +128,7 @@ class BlendedMaterialsService(MaterialsService):
                 f'Too many ratios were passed! At most {MAX_NUMBER_OF_RATIOS} can be processed!')
 
         base_material_uuids = submitted_blending_configuration.getlist('base_material_selection')
-        if not self._ratios_are_valid(all_ratios_as_string, len(base_material_uuids)):
+        if not cls._ratios_are_valid(all_ratios_as_string, len(base_material_uuids)):
             raise ValueNotSupportedException("There are invalid ratios. Make sure they satisfy the correct pattern!")
 
         return all_ratios_as_string, base_material_uuids
