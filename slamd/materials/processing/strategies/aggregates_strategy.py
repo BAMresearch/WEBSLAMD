@@ -39,22 +39,25 @@ class AggregatesStrategy(MaterialStrategy):
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_aggregates_as_dict):
         costs = self.compute_blended_costs(normalized_ratios, base_aggregates_as_dict)
         composition = self._compute_blended_composition(normalized_ratios, base_aggregates_as_dict)
+        additional_properties = self.compute_additional_properties(normalized_ratios, base_powders_as_dict)
 
         return Aggregates(type=base_aggregates_as_dict[0]['type'],
                           name=f'{blended_material_name}-{idx}',
                           costs=costs,
                           composition=composition,
-                          additional_properties=[],
+                          additional_properties=additional_properties,
                           is_blended=True,
                           blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
-        blended_fine_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
-                                                    'fine_aggregates')
-        blended_coarse_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition',
-                                                      'coarse_aggregates')
-        blended_fa_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fa_density')
-        blended_ca_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_density')
+        blended_fine_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                            'composition', 'fine_aggregates')
+        blended_coarse_aggregates = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                              'composition', 'coarse_aggregates')
+        blended_fa_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                       'composition', 'fa_density')
+        blended_ca_density = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                       'composition', 'ca_density')
 
         composition = Composition(fine_aggregates=blended_fine_aggregates, coarse_aggregates=blended_coarse_aggregates,
                                   fa_density=blended_fa_density, ca_density=blended_ca_density)
