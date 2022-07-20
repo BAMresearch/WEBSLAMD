@@ -315,8 +315,7 @@ def _prepare_test_base_aggregates_for_blending(material_type, uuid):
                                          ca_density=11),
                                      additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                             AdditionalProperty(name='Prop2', value='Category'),
-                                                            AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                                   '1')])
+                                                            AdditionalProperty(name='Prop3', value='12')])
             aggregates2.uuid = 'uuid2'
             return aggregates2
         if uuid == 'uuid3':
@@ -328,7 +327,7 @@ def _prepare_test_base_aggregates_for_blending(material_type, uuid):
                                      additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                             AdditionalProperty(name='Prop2', value='Other Category'),
                                                             AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                                   '2')])
+                                                                                                   '3')])
             aggregates3.uuid = 'uuid3'
             return aggregates3
         return None
@@ -357,8 +356,7 @@ def _prepare_test_base_liquids_for_blending(material_type, uuid):
                                  water=11),
                              additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                     AdditionalProperty(name='Prop2', value='Category'),
-                                                    AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                           '1')])
+                                                    AdditionalProperty(name='Prop3', value='12')])
             liquid2.uuid = 'uuid2'
             return liquid2
         if uuid == 'uuid3':
@@ -433,7 +431,7 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_first_blended_material.costs.costs == 36.0
     assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
 
-    assert len(mock_save_called_with_first_blended_material.additional_properties) == 6
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
     assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
     assert mock_save_called_with_first_blended_material.additional_properties[0].value == '3.8'
     assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
@@ -469,6 +467,14 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
     assert mock_save_called_with_first_blended_material.costs.costs == 36.0
     assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
+
+    assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
+    assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
+    assert mock_save_called_with_first_blended_material.additional_properties[0].value == '3.8'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].name == 'Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[1].value == '0.8'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
+    assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.2'
 
     assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == 18.1
     assert mock_save_called_with_second_blended_material.composition.na_o_h == 5.69
