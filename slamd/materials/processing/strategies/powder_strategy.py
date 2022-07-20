@@ -138,6 +138,9 @@ class PowderStrategy(MaterialStrategy):
         blended_additional_properties = []
         for i in range(len(matching_properties_for_all_base_materials[0])):
             ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+
+            # Create list of property names together with their weigthed values and an information about the
+            # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
             mapped_properties = list(map(lambda x: self.method_name(x[0], x[1][i]), ratios_with_property_values))
             if numeric(mapped_properties[0][1]):
                 mean = sum(list(map(lambda x: x[1], mapped_properties)))
@@ -145,11 +148,11 @@ class PowderStrategy(MaterialStrategy):
             else:
                 for item in mapped_properties:
                     # TODO pass ratio to value instead of 5
-                    blended_additional_properties.append(AdditionalProperty(name=item[1], value=5))
+                    blended_additional_properties.append(AdditionalProperty(name=item[1], value=item[2]))
         return blended_additional_properties
 
-    def method_name(self,a,b):
-        return (b.name, self._map_according_to_value(a, b.value))
+    def method_name(self, ratio, property):
+        return property.name, self._map_according_to_value(ratio, property.value), ratio
 
     def _map_according_to_value(self, ratio, value):
         if numeric(value):
@@ -172,7 +175,8 @@ class PowderStrategy(MaterialStrategy):
         if matching_name:
             for additional_property in property_list:
                 if additional_property.name == prop.name:
-                    if (numeric(additional_property.value) and not_numeric(prop.value)) or (not_numeric(additional_property.value) and numeric(prop.value)):
+                    if (numeric(additional_property.value) and not_numeric(prop.value)) or (
+                            not_numeric(additional_property.value) and numeric(prop.value)):
                         matching_type = False
                     else:
                         matching_type = True
