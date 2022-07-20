@@ -1,3 +1,4 @@
+from dataclasses import fields
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
@@ -48,16 +49,8 @@ class LiquidStrategy(BaseMaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, liquid):
         multidict = super().convert_to_multidict(liquid)
-        multidict.add('na2_si_o3', str_if_not_none(liquid.composition.na2_si_o3))
-        multidict.add('na_o_h', str_if_not_none(liquid.composition.na_o_h))
-        multidict.add('na2_si_o3_specific', str_if_not_none(liquid.composition.na2_si_o3_specific))
-        multidict.add('na_o_h_specific', str_if_not_none(liquid.composition.na_o_h_specific))
-        multidict.add('total', str_if_not_none(liquid.composition.total))
-        multidict.add('na2_o', str_if_not_none(liquid.composition.na2_o))
-        multidict.add('si_o2', str_if_not_none(liquid.composition.si_o2))
-        multidict.add('h2_o', str_if_not_none(liquid.composition.h2_o))
-        multidict.add('na2_o_dry', str_if_not_none(liquid.composition.na2_o_dry))
-        multidict.add('si_o2_dry', str_if_not_none(liquid.composition.si_o2_dry))
-        multidict.add('water', str_if_not_none(liquid.composition.water))
-        multidict.add('na_o_h_total', str_if_not_none(liquid.composition.na_o_h_total))
+        # Iterate over the fields of Composition and convert them to string
+        for field in fields(liquid.composition):
+            field_value = str_if_not_none(getattr(liquid.composition, field.name))
+            multidict.add(field.name, field_value)
         return multidict
