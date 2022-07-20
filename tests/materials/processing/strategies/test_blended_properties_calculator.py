@@ -1,3 +1,4 @@
+from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Composition
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
@@ -79,3 +80,28 @@ def test_compute_mean_returns_none_when_specified_property_does_not_exist():
     mean = BlendingPropertiesCalculator.compute_mean([0.4, 0.4, 0.2], base_materials_as_dict, 'composition',
                                                      'not defined')
     assert mean is None
+
+
+def test_compute_additional_properties_creates_blended_properties_for_properties_specified_consistently():
+    first_material_as_dict = {
+        'additional_properties': [AdditionalProperty('Prop 1', '5'), AdditionalProperty('Prop 2', 'X')]
+    }
+    second_material_as_dict = {
+        'additional_properties': [AdditionalProperty('Prop 1', '10'), AdditionalProperty('Prop 2', 'Y')]
+    }
+    third_material_as_dict = {
+        'additional_properties': [AdditionalProperty('Prop 1', '22.2'), AdditionalProperty('Prop 2', 'Z')]
+    }
+    base_materials_as_dict = [first_material_as_dict, second_material_as_dict, third_material_as_dict]
+
+    result = BlendingPropertiesCalculator.compute_additional_properties([0.4, 0.4, 0.2], base_materials_as_dict)
+
+    assert len(result) is 4
+    assert result[0].name == 'Prop 1'
+    assert result[0].value == '10.44'
+    assert result[1].name == 'X'
+    assert result[1].value == '0.4'
+    assert result[2].name == 'Y'
+    assert result[2].value == '0.4'
+    assert result[3].name == 'Z'
+    assert result[3].value == '0.2'
