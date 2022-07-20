@@ -9,6 +9,7 @@ from slamd.materials.processing.materials_persistence import MaterialsPersistenc
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class MaterialStrategy(ABC):
@@ -118,3 +119,13 @@ class MaterialStrategy(ABC):
 
     def compute_additional_properties(self, normalized_ratios, base_materials_as_dict):
         return BlendingPropertiesCalculator.compute_additional_properties(normalized_ratios, base_materials_as_dict)
+
+    def check_completeness_of_costs(self, base_materials_as_dict):
+        co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'co2_footprint')
+        costs_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'costs')
+        delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'delivery_time')
+
+        return co2_footprint_complete and costs_complete and delivery_time_complete
+
+    def check_completeness_of_additional_properties(self, base_materials_as_dict):
+        return PropertyCompletenessChecker.additional_properties_are_complete(base_materials_as_dict)

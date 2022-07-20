@@ -86,10 +86,18 @@ class PowderStrategy(MaterialStrategy):
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
-    @classmethod
     def check_completeness_of_base_material_properties(self, base_materials_as_dict):
         if len(base_materials_as_dict) < 2:
             return False
+
+        costs_complete = self.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = self.check_completeness_of_additional_properties(base_materials_as_dict)
+        composition_complete = self._check_completeness_of_composition(base_materials_as_dict)
+        structure_complete = self._check_completeness_of_structure(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete and composition_complete and structure_complete
+
+    def _check_completeness_of_composition(cls, base_materials_as_dict):
         fe2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'fe3_o2')
         si_o2_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'si_o2')
         al2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'al2_o3')
@@ -106,6 +114,13 @@ class PowderStrategy(MaterialStrategy):
         return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
                mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
                sr_o_complete and mn2_o3_complete
+
+    @classmethod
+    def _check_completeness_of_structure(cls, base_materials_as_dict):
+        fine_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'fine')
+        gravity_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'gravity')
+
+        return fine_complete and gravity_complete
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
         blended_fe2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')

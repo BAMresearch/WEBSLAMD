@@ -1,5 +1,3 @@
-from functools import reduce
-
 from slamd.common.slamd_utils import string_to_number, not_empty, numeric, not_numeric
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
@@ -38,12 +36,9 @@ class BlendingPropertiesCalculator:
 
     @classmethod
     def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):
-        additional_properties_for_all_base_materials = []
-        for base_powder in base_materials_as_dict:
-            additional_properties_for_all_base_materials.append(base_powder['additional_properties'])
+        properties_with_key_defined_in_all_base_materials = \
+            PropertyCompletenessChecker.find_additional_properties_defined_in_all_base_materials(base_materials_as_dict)
 
-        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: cls._keep_matching(x, y),
-                                                                   additional_properties_for_all_base_materials)
         key_defined_in_all_base_materials = list(
             map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
 
@@ -87,28 +82,3 @@ class BlendingPropertiesCalculator:
         if numeric(value):
             return ratio * string_to_number(value)
         return value
-
-    # we throw away all properties with keys (names) either not contained in additional_properties of all base materials
-    # or if the key is contained in additional_properties of all base materials but the types of the values are not
-    # matching as otherwise we cannot clearly separate continuous from categorical variables
-    @classmethod
-    def _keep_matching(cls, first_property_list, second_property_list):
-        return [x for x in first_property_list if
-                cls._is_contained_and_has_same_type_in_all_materials(x, second_property_list)]
-
-    @classmethod
-    def _is_contained_and_has_same_type_in_all_materials(cls, prop, property_list):
-        matching_name = False
-        matching_type = False
-        names_of_properties = list(map(lambda p: p.name, property_list))
-        if prop.name in names_of_properties:
-            matching_name = True
-        if matching_name:
-            for additional_property in property_list:
-                if additional_property.name == prop.name:
-                    if (numeric(additional_property.value) and not_numeric(prop.value)) or (
-                            not_numeric(additional_property.value) and numeric(prop.value)):
-                        matching_type = False
-                    else:
-                        matching_type = True
-        return matching_name and matching_type
