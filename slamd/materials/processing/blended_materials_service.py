@@ -38,7 +38,7 @@ class BlendedMaterialsService(MaterialsService):
         form.base_material_selection.choices = sorted_by_name
         return form
 
-    def create_min_max_form(self, count):
+    def create_min_max_form(self, material_type, count, base_material_uuids):
         if not_numeric(count):
             raise ValueNotSupportedException('Cannot process selection!')
 
@@ -47,15 +47,22 @@ class BlendedMaterialsService(MaterialsService):
         if count < 2:
             raise ValueNotSupportedException('At least two items must be selected!')
 
+        selected_base_materials_as_dict = []
+        for uuid in base_material_uuids:
+            material = MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
+            selected_base_materials_as_dict.append(material.__dict__)
+
+        strategy = MaterialFactory.create_strategy(material_type)
+        complete = strategy.check_completeness_of_base_material_properties(selected_base_materials_as_dict)
+
         min_max_form = MinMaxForm()
         for i in range(count):
             min_max_form.all_min_max_entries.append_entry()
-        return min_max_form
+        return min_max_form, complete
 
     def delete_material(self, material_type, uuid):
         MaterialsPersistence.delete_by_type_and_uuid(material_type, uuid)
         return self.list_materials(blended=True)
-
 
     def create_ratio_form(self, min_max_values_with_increments):
         if not self._ratio_input_is_valid(min_max_values_with_increments):

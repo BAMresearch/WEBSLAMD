@@ -1,5 +1,10 @@
 {% from 'errors.html' import with_errors -%}
 
+{% if not complete %}
+<div>
+    "The chosen configuration is not complete!"
+</div>
+{% endif %}
 {% for entry in min_max_form.all_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}

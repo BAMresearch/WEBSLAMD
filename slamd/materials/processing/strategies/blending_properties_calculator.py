@@ -1,9 +1,9 @@
 from functools import reduce
 
-from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import empty, string_to_number, not_empty, numeric, not_numeric
+from slamd.common.slamd_utils import string_to_number, not_empty, numeric, not_numeric
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class BlendingPropertiesCalculator:
@@ -18,11 +18,9 @@ class BlendingPropertiesCalculator:
 
     @classmethod
     def compute_mean(cls, normalized_ratios, materials_as_dict, *keys):
-        all_values = cls._collect_all_base_material_values_for_property(materials_as_dict, keys)
+        is_complete, all_values = PropertyCompletenessChecker.is_complete_with_values_returned(materials_as_dict, keys)
 
-        empty_values = [value for value in all_values if empty(value)]
-
-        if len(empty_values) > 0:
+        if not is_complete:
             return None
 
         ratios_with_property_values = zip(normalized_ratios, all_values)
@@ -31,32 +29,12 @@ class BlendingPropertiesCalculator:
 
     @classmethod
     def _compute_max(cls, material_as_dict, *keys):
-        all_values = cls._collect_all_base_material_values_for_property(material_as_dict, keys)
+        all_values = PropertyCompletenessChecker.collect_all_base_material_values_for_property(material_as_dict, keys)
         non_empty_values = [float(value) for value in all_values if not_empty(value)]
         if len(non_empty_values) == 0:
             return None
         maximum = max(non_empty_values)
         return str(round(maximum, 2))
-
-    @classmethod
-    def _collect_all_base_material_values_for_property(cls, material_as_dict, keys):
-        all_values = []
-
-        for current_powder in material_as_dict:
-            value = cls._extract_value_for_key(current_powder, keys)
-            all_values.append(value)
-
-        return all_values
-
-    @classmethod
-    def _extract_value_for_key(cls, material_as_dict, keys):
-        base = material_as_dict
-        for key in keys:
-            value = base.get(key, None)
-            try:
-                base = value.__dict__
-            except AttributeError:
-                return value
 
     @classmethod
     def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):

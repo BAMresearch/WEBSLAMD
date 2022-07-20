@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
-from functools import reduce
 
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import empty, string_to_number, not_empty, numeric, not_numeric
+from slamd.common.slamd_utils import empty, not_empty
 from slamd.common.slamd_utils import join_all
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -110,6 +108,9 @@ class MaterialStrategy(ABC):
                 'additional_properties' in k and label in k]
 
     def create_blended_material(self, idx, blended_material_name, normalized_ratios, base_powders):
+        pass
+
+    def check_completeness_of_base_material_properties(self, base_materials_as_dict):
         pass
 
     def compute_blended_costs(self, normalized_ratios, base_materials_as_dict):

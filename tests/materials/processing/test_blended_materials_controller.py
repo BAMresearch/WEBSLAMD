@@ -49,8 +49,8 @@ def test_blended_materials_controller_loads_correct_selection_after_choosing_typ
     assert 'Material type' not in template
 
 
-def test_blended_materials_controller_adds_min_max_form(client, monkeypatch):
-    response = client.get('/materials/blended/add_min_max_entries/2')
+def test_blended_materials_controller_adds_min_max_form(client):
+    response = client.post('/materials/blended/add_min_max_entries/powder/2', data=b'[]')
 
     assert response.status_code == 200
 

@@ -2,6 +2,7 @@ from slamd.materials.processing.models.powder import Powder, Composition, Struct
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.base_material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class PowderStrategy(MaterialStrategy):
@@ -84,6 +85,27 @@ class PowderStrategy(MaterialStrategy):
                       additional_properties=additional_properties,
                       is_blended=True,
                       blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+
+    @classmethod
+    def check_completeness_of_base_material_properties(self, base_materials_as_dict):
+        if len(base_materials_as_dict) < 2:
+            return False
+        fe2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'fe3_o2')
+        si_o2_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'si_o2')
+        al2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'al2_o3')
+        na2_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'na2_o')
+        ca_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'ca_o')
+        mg_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'mg_o')
+        k2_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'k2_o')
+        s_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 's_o3')
+        ti_o2_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'ti_o2')
+        p2_o5_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'p2_o5')
+        sr_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'sr_o')
+        mn2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
+
+        return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
+               mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
+               sr_o_complete and mn2_o3_complete
 
     def _compute_blended_composition(self, normalized_ratios, base_powders_as_dict):
         blended_fe2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
