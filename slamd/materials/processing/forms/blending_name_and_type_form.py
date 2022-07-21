@@ -3,7 +3,6 @@ from wtforms import StringField, validators, SubmitField, SelectField
 
 
 class BlendingNameAndTypeForm(Form):
-
     blended_material_name = StringField(
         label='Name',
         validators=[validators.DataRequired()]
@@ -13,7 +12,7 @@ class BlendingNameAndTypeForm(Form):
         label='Material type',
         validators=[validators.DataRequired()],
         choices=['Powder', 'Liquid', 'Aggregates',
-                 'Admixture', 'Process', 'Custom']
+                 'Admixture', 'Custom']
     )
 
     submit = SubmitField('Create blended materials')
