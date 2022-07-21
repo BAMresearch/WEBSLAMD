@@ -7,7 +7,7 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
-    <div>Materials Formulations</div>
+    {% include 'formulations_form.html' %}
 </main>
 <script src="{{url_for('formulations.static', filename='formulations.js')}}"></script>
 {%endblock%}
