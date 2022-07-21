@@ -1,4 +1,5 @@
-from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of
+from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of, not_numeric, float_if_not_empty, \
+    str_if_not_none
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -51,3 +52,51 @@ def test_molecular_formula_of_returns_subscripted_numbers():
 
 def test_molecular_formula_of_returns_subsripted_numbers_for_complex_molecules():
     assert molecular_formula_of('C6H12') == u'C\u2086H\u2081\u2082'
+
+
+def test_float_if_not_empty_returns_none_for_empty_string():
+    assert float_if_not_empty('') == None
+
+
+def test_float_if_not_empty_returns_none_for_none():
+    assert float_if_not_empty(None) == None
+
+
+def test_float_if_not_empty_returns_float_for_string_with_number():
+    assert float_if_not_empty('1234.5678') == 1234.5678
+
+
+def test_str_if_not_none_returns_empty_string_for_none():
+    assert str_if_not_none(None) == ''
+
+
+def test_str_if_not_none_returns_string_for_float():
+    assert str_if_not_none(1234.5678) == '1234.5678'
+
+
+def test_str_if_not_none_returns_int_for_int():
+    assert str_if_not_none(987654321) == '987654321'
+
+
+def test_not_numeric_is_false_for_integer_input():
+    assert not_numeric(13) is False
+
+
+def test_not_numeric_is_false_for_float_input():
+    assert not_numeric(13.12) is False
+
+
+def test_not_numeric_is_false_for_integer_as_string_input():
+    assert not_numeric('13') is False
+
+
+def test_not_numeric_is_false_for_float_as_string_input():
+    assert not_numeric('13.5') is False
+
+
+def test_not_numeric_is_false_for_comma_float_as_string_input():
+    assert not_numeric('13,5') is False
+
+
+def test_not_numeric_is_true_for_non_number_input():
+    assert not_numeric('abc') is True

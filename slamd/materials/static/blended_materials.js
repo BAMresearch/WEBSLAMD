@@ -1,5 +1,7 @@
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
 
+let nameIsEmpty = true;
+
 /**
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
@@ -23,9 +25,12 @@ async function confirmSelection() {
     const placeholder = document.getElementById("base_material_selection");
 
     const selectedMaterials = collectBaseMaterialSelection(placeholder);
+    let uuids = selectedMaterials.map(material=>material.uuid);
 
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}`;
-    await fetchEmbedTemplateInPlaceholder(url, "min-max-placeholder", true);
+    const type = document.getElementById('base_type').value
+
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries//${type.toLowerCase()}/${selectedMaterials.length}`;
+    await postDataAndEmbedTemplateInPlaceholder(url, "min-max-placeholder", uuids);
 
     prepareMinMaxInputFieldsFromSelection(selectedMaterials);
     assignKeyboardEventsToMinMaxForm();
@@ -39,8 +44,9 @@ async function assignConfirmBlendingConfigurationEvent() {
         const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
         const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
         await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements)
-        assignKeyboardEventsToRatiosForm();
+        assignKeyboardEventsToRatiosForm(true);
         assignAddCustomBlendEvent();
+        assignDeleteCustomBlendEvent();
     })
 }
 
@@ -48,6 +54,12 @@ function toggleConfirmationButton() {
     const placeholder = document.getElementById("base_material_selection");
     const count = countSelectedBaseMaterials(placeholder);
     document.getElementById("change_base_material_selection_button").disabled = count < 2;
+}
+
+function checkNameIsNotEmpty() {
+    let nameField = document.getElementById("blended_material_name");
+    nameIsEmpty = nameField.value === undefined || nameField.value === ""
+    document.getElementById("submit").disabled = nameIsEmpty || !allRatioFieldsHaveValidInput;
 }
 
 /**
@@ -80,4 +92,5 @@ async function deleteMaterial(id, material_type, token) {
 window.addEventListener("load", function () {
     document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
     document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
+    document.getElementById("blended_material_name").addEventListener("change", checkNameIsNotEmpty);
 });

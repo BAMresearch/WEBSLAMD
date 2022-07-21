@@ -1,69 +1,155 @@
+from dataclasses import fields
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.ratio_parser import RatioParser
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
-class PowderStrategy(BaseMaterialStrategy):
+class PowderStrategy(MaterialStrategy):
 
-    def create_model(self, submitted_material):
+    @classmethod
+    def create_model(cls, submitted_material):
         composition = Composition(
-            fe3_o2=submitted_material['fe3_o2'],
-            si_o2=submitted_material['si_o2'],
-            al2_o3=submitted_material['al2_o3'],
-            ca_o=submitted_material['ca_o'],
-            mg_o=submitted_material['mg_o'],
-            na2_o=submitted_material['na2_o'],
-            k2_o=submitted_material['k2_o'],
-            s_o3=submitted_material['s_o3'],
-            ti_o2=submitted_material['ti_o2'],
-            p2_o5=submitted_material['p2_o5'],
-            sr_o=submitted_material['sr_o'],
-            mn2_o3=submitted_material['mn2_o3']
+            fe3_o2=float_if_not_empty(submitted_material['fe3_o2']),
+            si_o2=float_if_not_empty(submitted_material['si_o2']),
+            al2_o3=float_if_not_empty(submitted_material['al2_o3']),
+            ca_o=float_if_not_empty(submitted_material['ca_o']),
+            mg_o=float_if_not_empty(submitted_material['mg_o']),
+            na2_o=float_if_not_empty(submitted_material['na2_o']),
+            k2_o=float_if_not_empty(submitted_material['k2_o']),
+            s_o3=float_if_not_empty(submitted_material['s_o3']),
+            ti_o2=float_if_not_empty(submitted_material['ti_o2']),
+            p2_o5=float_if_not_empty(submitted_material['p2_o5']),
+            sr_o=float_if_not_empty(submitted_material['sr_o']),
+            mn2_o3=float_if_not_empty(submitted_material['mn2_o3'])
         )
 
         structure = Structure(
-            gravity=submitted_material['gravity'],
-            fine=submitted_material['fine']
+            gravity=float_if_not_empty(submitted_material['gravity']),
+            fine=float_if_not_empty(submitted_material['fine'])
         )
 
         return Powder(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_cost_properties(submitted_material),
+            costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,
-            additional_properties=self.extract_additional_properties(submitted_material)
+            additional_properties=cls.extract_additional_properties(submitted_material)
         )
 
-    def gather_composition_information(self, powder):
-        return [self.include('Fe₂O₃', powder.composition.fe3_o2),
-                self.include('SiO₂', powder.composition.si_o2),
-                self.include('Al₂O₃', powder.composition.al2_o3),
-                self.include('CaO', powder.composition.ca_o),
-                self.include('MgO', powder.composition.mg_o),
-                self.include('Na₂O', powder.composition.na2_o),
-                self.include('K₂O', powder.composition.k2_o),
-                self.include('SO₃', powder.composition.s_o3),
-                self.include('TiO₂', powder.composition.ti_o2),
-                self.include('P₂O₅', powder.composition.p2_o5),
-                self.include('SrO', powder.composition.sr_o),
-                self.include('Mn₂O₃', powder.composition.mn2_o3),
-                self.include('Fine modules', powder.structure.fine),
-                self.include('Specific gravity', powder.structure.gravity)]
+    @classmethod
+    def gather_composition_information(cls, powder):
+        return [cls.include('Fe₂O₃', powder.composition.fe3_o2),
+                cls.include('SiO₂', powder.composition.si_o2),
+                cls.include('Al₂O₃', powder.composition.al2_o3),
+                cls.include('CaO', powder.composition.ca_o),
+                cls.include('MgO', powder.composition.mg_o),
+                cls.include('Na₂O', powder.composition.na2_o),
+                cls.include('K₂O', powder.composition.k2_o),
+                cls.include('SO₃', powder.composition.s_o3),
+                cls.include('TiO₂', powder.composition.ti_o2),
+                cls.include('P₂O₅', powder.composition.p2_o5),
+                cls.include('SrO', powder.composition.sr_o),
+                cls.include('Mn₂O₃', powder.composition.mn2_o3),
+                cls.include('Fine modules', powder.structure.fine),
+                cls.include('Specific gravity', powder.structure.gravity)]
 
-    def convert_to_multidict(self, powder):
+    @classmethod
+    def convert_to_multidict(cls, powder):
         multidict = super().convert_to_multidict(powder)
-        multidict.add('fe3_o2', powder.composition.fe3_o2)
-        multidict.add('si_o2', powder.composition.si_o2)
-        multidict.add('al2_o3', powder.composition.al2_o3)
-        multidict.add('ca_o', powder.composition.ca_o)
-        multidict.add('mg_o', powder.composition.mg_o)
-        multidict.add('na2_o', powder.composition.na2_o)
-        multidict.add('k2_o', powder.composition.k2_o)
-        multidict.add('s_o3', powder.composition.s_o3)
-        multidict.add('ti_o2', powder.composition.ti_o2)
-        multidict.add('p2_o5', powder.composition.p2_o5)
-        multidict.add('sr_o', powder.composition.sr_o)
-        multidict.add('mn2_o3', powder.composition.mn2_o3)
-        multidict.add('fine', powder.structure.fine)
-        multidict.add('gravity', powder.structure.gravity)
+        # Iterate over the fields of Composition and convert them to string
+        for field in fields(powder.composition):
+            field_value = str_if_not_none(getattr(powder.composition, field.name))
+            multidict.add(field.name, field_value)
+        multidict.add('fine', str_if_not_none(powder.structure.fine))
+        multidict.add('gravity', str_if_not_none(powder.structure.gravity))
         return multidict
+
+    @classmethod
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+        structure = cls._compute_blended_structure(normalized_ratios, base_powders_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+
+        return Powder(type=base_powders_as_dict[0]['type'],
+                      name=f'{blended_material_name}-{idx}',
+                      costs=costs,
+                      composition=composition,
+                      structure=structure,
+                      additional_properties=additional_properties,
+                      is_blended=True,
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+
+    @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
+        composition_complete = cls._check_completeness_of_composition(base_materials_as_dict)
+        structure_complete = cls._check_completeness_of_structure(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete and composition_complete and structure_complete
+
+    @classmethod
+    def _check_completeness_of_composition(cls, base_materials_as_dict):
+        pcc = PropertyCompletenessChecker
+
+        fe2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fe3_o2')
+        si_o2_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'si_o2')
+        al2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'al2_o3')
+        na2_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na2_o')
+        ca_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ca_o')
+        mg_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mg_o')
+        k2_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'k2_o')
+        s_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 's_o3')
+        ti_o2_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ti_o2')
+        p2_o5_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'p2_o5')
+        sr_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'sr_o')
+        mn2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
+
+        return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
+               mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
+               sr_o_complete and mn2_o3_complete
+
+    @classmethod
+    def _check_completeness_of_structure(cls, base_materials_as_dict):
+        fine_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'fine')
+        gravity_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'gravity')
+
+        return fine_complete and gravity_complete
+
+    @classmethod
+    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
+        bpc = BlendingPropertiesCalculator
+
+        blended_fe2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
+        blended_si_o2 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_al2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
+        blended_na2_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+
+        blended_ca_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
+        blended_mg_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
+        blended_k2_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
+        blended_s_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
+
+        blended_ti_o2 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
+        blended_p2_o5 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
+        blended_sr_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
+        blended_mn2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
+
+        composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
+                                  na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
+                                  k2_o=blended_k2_o, s_o3=blended_s_o3, ti_o2=blended_ti_o2,
+                                  p2_o5=blended_p2_o5, sr_o=blended_sr_o, mn2_o3=blended_mn2_o3)
+
+        return composition
+
+    @classmethod
+    def _compute_blended_structure(cls, normalized_ratios, base_powders_as_dict):
+        blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
+        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
+
+        return Structure(fine=blended_fine, gravity=blended_gravity)

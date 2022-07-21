@@ -1,25 +1,28 @@
 from slamd.materials.processing.models.custom import Custom
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
-class CustomStrategy(BaseMaterialStrategy):
+class CustomStrategy(MaterialStrategy):
 
-    def create_model(self, submitted_material):
+    @classmethod
+    def create_model(cls, submitted_material):
         return Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            costs=self.extract_cost_properties(submitted_material),
-            custom_name=submitted_material['name'],
-            custom_value=submitted_material['value'],
-            additional_properties=self.extract_additional_properties(submitted_material)
+            costs=cls.extract_cost_properties(submitted_material),
+            custom_name=submitted_material['custom_name'],
+            custom_value=submitted_material['custom_value'],
+            additional_properties=cls.extract_additional_properties(submitted_material)
         )
 
-    def gather_composition_information(self, custom):
-        return [self.include('Name', custom.custom_name),
-                self.include('Value', custom.custom_value)]
+    @classmethod
+    def gather_composition_information(cls, custom):
+        return [cls.include('Name', custom.custom_name),
+                cls.include('Value', custom.custom_value)]
 
-    def convert_to_multidict(self, custom):
+    @classmethod
+    def convert_to_multidict(cls, custom):
         multidict = super().convert_to_multidict(custom)
-        multidict.add('name', custom.custom_name)
-        multidict.add('value', custom.custom_value)
+        multidict.add('custom_name', custom.custom_name)
+        multidict.add('custom_value', custom.custom_value)
         return multidict

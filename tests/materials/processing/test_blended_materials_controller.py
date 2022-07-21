@@ -1,6 +1,7 @@
 import json
 
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 from tests.materials.materials_test_data import create_test_powders, create_test_aggregates
 
 
@@ -49,21 +50,53 @@ def test_blended_materials_controller_loads_correct_selection_after_choosing_typ
     assert 'Material type' not in template
 
 
-def test_blended_materials_controller_adds_min_max_form(client, monkeypatch):
-    response = client.get('/materials/blended/add_min_max_entries/2')
+def test_blended_materials_controller_adds_min_max_form_without_warning(client, monkeypatch):
+    def mock_check_completeness_of_base_material_properties(input):
+        return True
+
+    monkeypatch.setattr(PowderStrategy, 'check_completeness_of_base_material_properties',
+                        mock_check_completeness_of_base_material_properties)
+
+    response = client.post('/materials/blended/add_min_max_entries/powder/2', data=b'[]')
 
     assert response.status_code == 200
 
     template = json.loads(response.data.decode('utf-8'))['template']
+
+    _assert_min_max_entries(template)
+
+    assert 'The chosen configuration is not complete!' not in template
+
+    assert 'Blended base materials' not in template
+    assert 'Material type' not in template
+
+
+def test_blended_materials_controller_adds_min_max_form_with_warning(client, monkeypatch):
+    def mock_check_completeness_of_base_material_properties(input):
+        return False
+
+    monkeypatch.setattr(PowderStrategy, 'check_completeness_of_base_material_properties',
+                        mock_check_completeness_of_base_material_properties)
+
+    response = client.post('/materials/blended/add_min_max_entries/powder/2', data=b'[]')
+
+    assert response.status_code == 200
+
+    template = json.loads(response.data.decode('utf-8'))['template']
+    _assert_min_max_entries(template)
+
+    assert 'The chosen configuration is not complete!' in template
+
+    assert 'Blended base materials' not in template
+    assert 'Material type' not in template
+
+
+def _assert_min_max_entries(template):
     assert 'all_min_max_entries-0-blended_material_name' in template
     assert 'all_min_max_entries-0-increment' in template
     assert 'all_min_max_entries-0-min' in template
     assert 'all_min_max_entries-0-max' in template
-
     assert 'all_min_max_entries-1-blended_material_name' in template
     assert 'all_min_max_entries-1-increment' in template
     assert 'all_min_max_entries-1-min' in template
     assert 'all_min_max_entries-1-max' in template
-
-    assert 'Blended base materials' not in template
-    assert 'Material type' not in template
