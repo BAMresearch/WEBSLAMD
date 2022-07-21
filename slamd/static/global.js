@@ -32,3 +32,19 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
         document.write(error);
     }
 }
+
+function removeInnerHtmlFromPlaceholder(placeholderID) {
+    let placeholder = document.getElementById(placeholderID);
+    placeholder.innerHTML = "";
+}
+
+function collectSelection(placeholder) {
+    return Array.from(placeholder.children)
+        .filter(option => option.selected)
+        .map(option => {
+            return {
+                uuid: option.value,
+                name: option.innerHTML
+            }
+        });
+}

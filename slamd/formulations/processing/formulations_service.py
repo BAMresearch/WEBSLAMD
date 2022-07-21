@@ -1,3 +1,6 @@
+from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.slamd_utils import not_numeric
+from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -30,3 +33,18 @@ class FormulationsService:
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
         return list(map(lambda material: (material.uuid, f'{material.type.capitalize()}: {material.name}'), by_type))
+
+    @classmethod
+    def create_formulations_min_max_form(cls, count):
+        if not_numeric(count):
+            raise ValueNotSupportedException('Cannot process selection!')
+
+        count = int(count)
+
+        if count == 0:
+            raise ValueNotSupportedException('No item selected!')
+
+        min_max_form = FormulationsMinMaxForm()
+        for i in range(count):
+            min_max_form.all_formulations_min_max_entries.append_entry()
+        return min_max_form

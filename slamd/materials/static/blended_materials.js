@@ -24,12 +24,12 @@ async function confirmSelection() {
 
     const placeholder = document.getElementById("base_material_selection");
 
-    const selectedMaterials = collectBaseMaterialSelection(placeholder);
+    const selectedMaterials = collectSelection(placeholder);
     let uuids = selectedMaterials.map(material=>material.uuid);
 
     const type = document.getElementById('base_type').value
 
-    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries//${type.toLowerCase()}/${selectedMaterials.length}`;
+    const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${type.toLowerCase()}/${selectedMaterials.length}`;
     await postDataAndEmbedTemplateInPlaceholder(url, "min-max-placeholder", uuids);
 
     prepareMinMaxInputFieldsFromSelection(selectedMaterials);

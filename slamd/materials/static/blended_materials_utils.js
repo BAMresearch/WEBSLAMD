@@ -21,11 +21,6 @@ function countSelectedBaseMaterials(placeholder) {
     return count;
 }
 
-function removeInnerHtmlFromPlaceholder(placeholderID) {
-    let placeholder = document.getElementById(placeholderID);
-    placeholder.innerHTML = "";
-}
-
 function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
