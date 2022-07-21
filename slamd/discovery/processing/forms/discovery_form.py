@@ -7,6 +7,7 @@ class DiscoveryForm(Form):
 
     upload_file = FileField('upload_file')
 
+
     input_features = SelectMultipleField(
         label='Input Features',
         validators=[validators.DataRequired()],
