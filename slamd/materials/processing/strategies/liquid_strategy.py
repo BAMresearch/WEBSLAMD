@@ -73,21 +73,21 @@ class LiquidStrategy(MaterialStrategy):
         return multidict
 
     @classmethod
-    def _compute_blended_composition(cls, ratios, base_powders_as_dict):
+    def _compute_blended_composition(cls, ratios, base_liquids_as_dict):
         bpc = BlendingPropertiesCalculator
 
-        blended_na2_si_o3 = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na2_si_o3')
-        blended_na_o_h = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na_o_h')
-        blended_na2_si_o3_specific = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na2_si_o3_specific')
-        blended_na_o_h_specific = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na_o_h_specific')
-        blended_total = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'total')
-        blended_na2_o = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na2_o')
-        blended_si_o2 = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_h2_o = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'h2_o')
-        blended_na2_o_dry = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na2_o_dry')
-        blended_si_o2_dry = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'si_o2_dry')
-        blended_water = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'water')
-        blended_na_o_h_total = bpc.compute_mean(ratios, base_powders_as_dict, 'composition', 'na_o_h_total')
+        blended_na2_si_o3 = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na2_si_o3')
+        blended_na_o_h = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na_o_h')
+        blended_na2_si_o3_specific = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na2_si_o3_specific')
+        blended_na_o_h_specific = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na_o_h_specific')
+        blended_total = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'total')
+        blended_na2_o = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na2_o')
+        blended_si_o2 = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'si_o2')
+        blended_h2_o = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'h2_o')
+        blended_na2_o_dry = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na2_o_dry')
+        blended_si_o2_dry = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'si_o2_dry')
+        blended_water = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'water')
+        blended_na_o_h_total = bpc.compute_mean(ratios, base_liquids_as_dict, 'composition', 'na_o_h_total')
 
         composition = Composition(na2_si_o3=blended_na2_si_o3, na_o_h=blended_na_o_h,
                                   na2_si_o3_specific=blended_na2_si_o3_specific,

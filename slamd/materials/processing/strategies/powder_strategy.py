@@ -95,18 +95,20 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def _check_completeness_of_composition(cls, base_materials_as_dict):
-        fe2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'fe3_o2')
-        si_o2_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'si_o2')
-        al2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'al2_o3')
-        na2_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'na2_o')
-        ca_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'ca_o')
-        mg_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'mg_o')
-        k2_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'k2_o')
-        s_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 's_o3')
-        ti_o2_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'ti_o2')
-        p2_o5_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'p2_o5')
-        sr_o_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'sr_o')
-        mn2_o3_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
+        pcc = PropertyCompletenessChecker
+
+        fe2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fe3_o2')
+        si_o2_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'si_o2')
+        al2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'al2_o3')
+        na2_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na2_o')
+        ca_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ca_o')
+        mg_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mg_o')
+        k2_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'k2_o')
+        s_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 's_o3')
+        ti_o2_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ti_o2')
+        p2_o5_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'p2_o5')
+        sr_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'sr_o')
+        mn2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
 
         return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
                mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
@@ -121,20 +123,22 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
-        blended_fe2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
-        blended_si_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
-        blended_al2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
-        blended_na2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
+        bpc = BlendingPropertiesCalculator
 
-        blended_ca_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
-        blended_mg_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
-        blended_k2_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
-        blended_s_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
+        blended_fe2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'fe3_o2')
+        blended_si_o2 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'si_o2')
+        blended_al2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'al2_o3')
+        blended_na2_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'na2_o')
 
-        blended_ti_o2 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
-        blended_p2_o5 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
-        blended_sr_o = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
-        blended_mn2_o3 = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
+        blended_ca_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ca_o')
+        blended_mg_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mg_o')
+        blended_k2_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'k2_o')
+        blended_s_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 's_o3')
+
+        blended_ti_o2 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'ti_o2')
+        blended_p2_o5 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
+        blended_sr_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
+        blended_mn2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
 
         composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
                                   na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
