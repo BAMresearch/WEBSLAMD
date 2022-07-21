@@ -11,7 +11,7 @@ class MaterialsAndProcessesSelectionForm(Form):
     )
 
     process_selection = SelectMultipleField(
-        label='Materials',
+        label='Processes',
         validators=[validators.DataRequired()],
         choices=[]
     )
