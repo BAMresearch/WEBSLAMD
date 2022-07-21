@@ -46,9 +46,9 @@ def test_material_constructor_generates_different_uuids():
 def test_material_costs_constructor_sets_default_values():
     costs = Costs()
 
-    assert costs.delivery_time == 0
-    assert costs.costs == 0
-    assert costs.co2_footprint == 0
+    assert costs.delivery_time is None
+    assert costs.costs is None
+    assert costs.co2_footprint is None
 
 
 def test_material_costs_constructor_sets_properties():

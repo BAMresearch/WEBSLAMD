@@ -1,4 +1,4 @@
-from wtforms import DecimalField, StringField, validators
+from wtforms import DecimalField, validators
 
 from slamd.materials.processing.forms.materials_form import MaterialsForm
 
@@ -19,6 +19,16 @@ class AggregatesForm(MaterialsForm):
         ]
     )
 
-    fa_density = StringField(label='FA Density')
+    fa_density = DecimalField(
+        label='FA Density',
+        validators=[
+            validators.Optional()
+        ]
+    )
 
-    ca_density = StringField(label='CA Density')
+    ca_density = DecimalField(
+        label='CA Density',
+        validators=[
+            validators.Optional()
+        ]
+    )
