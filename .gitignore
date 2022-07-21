@@ -21,3 +21,8 @@ venv.bak/
 # Libraries
 flask_session
 .coverage
+
+# Dependency directories (Cypress)
+node_modules/
+cypress/videos
+cypress/screenshots/
