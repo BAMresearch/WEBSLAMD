@@ -1,5 +1,6 @@
 from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class CustomStrategy(MaterialStrategy):
@@ -19,6 +20,23 @@ class CustomStrategy(MaterialStrategy):
     def gather_composition_information(cls, custom):
         return [cls.include('Name', custom.custom_name),
                 cls.include('Value', custom.custom_value)]
+
+    @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
+        composition_complete = cls._check_completeness_of_composition(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete and composition_complete
+
+    @classmethod
+    def _check_completeness_of_composition(cls, base_materials_as_dict):
+        pcc = PropertyCompletenessChecker
+
+        custom_name_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'custom_name')
+        custom_value_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'custom_value')
+
+        return custom_name_complete and custom_value_complete
 
     @classmethod
     def convert_to_multidict(cls, custom):
