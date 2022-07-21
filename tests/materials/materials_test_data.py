@@ -94,8 +94,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
                                      ca_density=11),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                         AdditionalProperty(name='Prop2', value='Category'),
-                                                        AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                               '3')])
+                                                        AdditionalProperty(name='Prop3', value='Not a number 1')])
         aggregates1.uuid = 'uuid1'
         return aggregates1
     if uuid == 'uuid2':
@@ -117,8 +116,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
                                      ca_density=16),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                         AdditionalProperty(name='Prop2', value='Other Category'),
-                                                        AdditionalProperty(name='Prop3', value='Not in aggregate '
-                                                                                               '3')])
+                                                        AdditionalProperty(name='Prop3', value='Not a number 2')])
         aggregates3.uuid = 'uuid3'
         return aggregates3
     return None
@@ -133,8 +131,7 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
                              water=11),
                          additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                 AdditionalProperty(name='Prop2', value='Category'),
-                                                AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                       '1')])
+                                                AdditionalProperty(name='Prop3', value='Not a liquid 1')])
         liquid1.uuid = 'uuid1'
         return liquid1
     if uuid == 'uuid2':
@@ -156,8 +153,7 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
                              water=16),
                          additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                 AdditionalProperty(name='Prop2', value='Other Category'),
-                                                AdditionalProperty(name='Prop3', value='Not in liquid '
-                                                                                       '2')])
+                                                AdditionalProperty(name='Prop3', value='Not a liquid 2')])
         liquid3.uuid = 'uuid3'
         return liquid3
     return None
