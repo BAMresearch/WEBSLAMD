@@ -32,7 +32,7 @@ describe('Test base materials page', () => {
 
         // Fill out composition properties
         cy.findByText("Composition").click()
-        cy.findByText("Molecular composition").should("exist")
+        cy.findByText("Molecular composition").scrollIntoView()
         cy.findByLabelText("Fe₂O₃ (m%)").type("12.3")
         cy.findByLabelText("SiO₂ (m%)").type("23.4")
         cy.findByLabelText("Al₂O₃ (m%)").type("34.5")
@@ -52,7 +52,7 @@ describe('Test base materials page', () => {
         cy.findByLabelText("Specific gravity (m%)").type("67.890")
 
         // Fill out additional properties
-        cy.findByText("Additional Properties - Leave empty if not needed.").click()
+        cy.findByText("Additional Properties - Leave empty if not needed.").click().scrollIntoView()
         cy.findByText("Add property").click()
         cy.findAllByLabelText("Name").last().type("Prop 0")
         cy.findAllByLabelText("Value").last().type("Value 0")
