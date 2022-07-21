@@ -48,10 +48,9 @@
 </div>
 {% endmacro %}
 
-{% macro create_change_selection_button() -%}
-
-<div data-bs-toggle="tooltip" data-bs-placement="top" title="Select at least two base materials">
-    <button id="change_base_material_selection_button" class="btn btn-success col-12" type="button"
+{% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
+<div data-bs-toggle="tooltip" data-bs-placement="top" title="{{ tooltip }}">
+    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button"
         data-bs-toggle="modal" disabled data-bs-target="#change_modal">Confirm Selection
     </button>
 </div>
@@ -68,7 +67,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
-                <button type="button" id="confirm_base_material_selection_button" class="btn btn-primary"
+                <button type="button" id="{{ confirmButtonId }}" class="btn btn-primary"
                     onclick="confirmSelection()" data-bs-dismiss="modal">Confirm
                 </button>
             </div>
