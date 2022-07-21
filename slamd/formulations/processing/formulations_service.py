@@ -1,5 +1,5 @@
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import not_numeric
+from slamd.common.slamd_utils import not_numeric, not_empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
@@ -35,16 +35,26 @@ class FormulationsService:
         return list(map(lambda material: (material.uuid, f'{material.type.capitalize()}: {material.name}'), by_type))
 
     @classmethod
-    def create_formulations_min_max_form(cls, count):
-        if not_numeric(count):
+    def create_formulations_min_max_form(cls, count_materials, count_processes):
+        if not_numeric(count_materials):
             raise ValueNotSupportedException('Cannot process selection!')
 
-        count = int(count)
+        if not_empty(count_processes) and not_numeric(count_processes):
+            raise ValueNotSupportedException('Cannot process selection!')
 
-        if count == 0:
-            raise ValueNotSupportedException('No item selected!')
+        count_materials = int(count_materials)
+
+        if not_empty(count_processes):
+            count_processes = int(count_processes)
+
+        if count_materials == 0:
+            raise ValueNotSupportedException('No material selected!')
 
         min_max_form = FormulationsMinMaxForm()
-        for i in range(count):
-            min_max_form.all_formulations_min_max_entries.append_entry()
+        for i in range(count_materials):
+            min_max_form.materials_min_max_entries.append_entry()
+
+        for i in range(count_processes):
+            min_max_form.processes_entries.append_entry()
+
         return min_max_form

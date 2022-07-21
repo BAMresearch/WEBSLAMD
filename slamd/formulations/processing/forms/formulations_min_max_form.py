@@ -3,11 +3,11 @@ from wtforms import FieldList, FormField, DecimalField, validators
 from wtforms import StringField
 
 
-class FormulationsMinMaxEntriesForm(Form):
+class MaterialsMinMaxEntriesForm(Form):
 
     uuid_field = StringField(label='UUID')
 
-    formulations_entry_name = StringField(
+    materials_entry_name = StringField(
         label='Name',
         validators=[validators.DataRequired(message='Name cannot be empty')]
     )
@@ -19,5 +19,16 @@ class FormulationsMinMaxEntriesForm(Form):
     max = DecimalField('Max (kg)')
 
 
+class ProcessesEntriesForm(Form):
+
+    uuid_field = StringField(label='UUID')
+
+    process_name = StringField(
+        label='Name',
+        validators=[validators.DataRequired(message='Name cannot be empty')]
+    )
+
+
 class FormulationsMinMaxForm(Form):
-    all_formulations_min_max_entries = FieldList(FormField(FormulationsMinMaxEntriesForm), min_entries=0)
+    materials_min_max_entries = FieldList(FormField(MaterialsMinMaxEntriesForm), min_entries=0)
+    processes_entries = FieldList(FormField(ProcessesEntriesForm), min_entries=0)

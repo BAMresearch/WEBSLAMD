@@ -1,10 +1,10 @@
-{% for entry in formulations_min_max_form.all_formulations_min_max_entries %}
+{% for entry in formulations_min_max_form.materials_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
 <div class="col-md-3">
-    {{ entry.formulations_entry_name.label(class_="control-label") }}
-    {{ entry.formulations_entry_name(class_="form-control", disabled=True) }}
+    {{ entry.materials_entry_name.label(class_="control-label") }}
+    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
 </div>
 <div class="col-md-3">
     {{ entry.increment.label(class_="control-label") }}
@@ -19,6 +19,17 @@
     {{ entry.max(class_="form-control") }}
 </div>
 {% endfor %}
+
+{% for entry in formulations_min_max_form.processes_entries %}
+<div class="d-none">
+    {{ entry.uuid_field(class_="form-control", hidden=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.process_name.label(class_="control-label") }}
+    {{ entry.process_name(class_="form-control", disabled=True) }}
+</div>
+{% endfor %}
+
 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Fill in all editable fields">
     <button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button" disabled>
         Confirm configuration

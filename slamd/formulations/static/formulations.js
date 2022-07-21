@@ -17,28 +17,26 @@ async function confirmSelection() {
     const selectedMaterials = collectSelection(materialsPlaceholder);
     const selectedProcesses = collectSelection(processesPlaceholder);
 
-    const numberOfRequestsFields = selectedMaterials.length + selectedProcesses.length
-
-    const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${numberOfRequestsFields}`;
+    const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;
     await fetchEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
-    prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses, selectedMaterials.length);
+    prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses);
     // assignKeyboardEventsToMinMaxForm();
     // assignConfirmBlendingConfigurationEvent();
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
     for (let i = 0; i < selectedMaterials.length; i++) {
-        document.getElementById(`all_formulations_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
-        document.getElementById(`all_formulations_min_max_entries-${i}-formulations_entry_name`).value = selectedMaterials[i].name;
+        document.getElementById(`materials_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
+        document.getElementById(`materials_min_max_entries-${i}-materials_entry_name`).value = selectedMaterials[i].name;
     }
 }
 
-function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses, materialsLength) {
-    for (let i = materialsLength; i < materialsLength + selectedProcesses.length; i++) {
-        document.getElementById(`all_formulations_min_max_entries-${i}-uuid_field`).value = selectedProcesses[i - materialsLength].uuid;
-        document.getElementById(`all_formulations_min_max_entries-${i}-formulations_entry_name`).value = selectedProcesses[i - materialsLength].name;
+function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
+    for (let i = 0; i < selectedProcesses.length; i++) {
+        document.getElementById(`processes_entries-${i}-uuid_field`).value = selectedProcesses[i].uuid;
+        document.getElementById(`processes_entries-${i}-process_name`).value = selectedProcesses[i].name;
     }
 }
 
