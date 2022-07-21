@@ -1,8 +1,11 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import validators, SelectMultipleField
+from wtforms import FileField
 
 
 class DiscoveryForm(Form):
+
+    upload_file = FileField('upload_file')
 
     input_features = SelectMultipleField(
         label='Input Features',
@@ -22,3 +25,6 @@ class DiscoveryForm(Form):
         choices=[]
     )
 
+    # left - exploit
+    # right - explore
+    # AI Model LOLO as a built-in
