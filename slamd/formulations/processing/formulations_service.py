@@ -27,6 +27,6 @@ class FormulationsService:
 
     @classmethod
     def _to_selection(cls, list_of_models):
-        sorted_by_name = sorted(list_of_models, key=lambda model: model.name)
-        sorted_by_type = sorted(sorted_by_name, key=lambda model: model.type)
-        return list(map(lambda material: (material.uuid, material.name), sorted_by_type))
+        by_name = sorted(list_of_models, key=lambda model: model.name)
+        by_type = sorted(by_name, key=lambda model: model.type)
+        return list(map(lambda material: (material.uuid, f'{material.type.capitalize()}: {material.name}'), by_type))
