@@ -6,7 +6,7 @@
 <form class="row g-3" action="" method="post" novalidate>
     {{ form.csrf_token }}
     <div class="col-md-6">
-        {{ form.material_name.label(class_="control-label") }}
+        {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
         {{ form.material_name(class_="form-control") }}
         {{ with_errors(form.material_name) }}
     </div>
@@ -65,6 +65,10 @@
             </h2>
             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree">
                 <div class="accordion-body">
+                    <div>
+                        Here you can add custom properties. Note that for sequential learning, values which correspond to any number will be
+                        interpreted as continuous variables. Thus in case you want to add a catergorical variable, use a string which is not a number.
+                    </div>
                     <div class="additional-properties">
                         <div id="additional-properties-placeholder">
                             {% if form.additional_properties is defined %}

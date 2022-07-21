@@ -1,5 +1,7 @@
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
+let allRatioFieldsHaveValidInput = false;
+
 function collectBaseMaterialSelection(placeholder) {
     return Array.from(placeholder.children)
         .filter(option => option.selected)
@@ -41,25 +43,15 @@ function toggleConfirmBlendingButton(independentInputFields) {
     let allMinFilled = independentInputFields.filter(item => item['min'].value === "").length === 0;
     let allMaxFilled = independentInputFields.filter(item => item['max'].value === "").length === 0;
     document.getElementById("confirm_blending_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
-    document.getElementById("submit").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
-function assignKeyboardEventsToRatiosForm() {
-    let ratioInputFields = collectRatioFields();
-
-    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-    for (let ratioInput of ratioInputFields) {
-        ratioInput.addEventListener("keyup", () => {
-
-            let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
-            let nonMatchingInputs = ratioInputFields
-                .map(input => input.value)
-                .filter(value => !regex.test(value))
-                .length
-
-            document.getElementById("submit").disabled = nonMatchingInputs > 0;
-        })
+function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
+    if (initialCreationOfForm) {
+        allRatioFieldsHaveValidInput = true;
+        document.getElementById("submit").disabled = nameIsEmpty;
     }
+
+    toggleSubmitButtonBasedOnRatiosAndName();
 }
 
 function collectRatioFields() {
@@ -174,19 +166,21 @@ function validateIncrementValue(increment) {
 }
 
 /**
- * After adding a new field we need to reassign the ratio events as new input fields must be registered
+ * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
+ * requires a certain structure of DOM elements within the blending_ratio_placeholder. Thus, when changing this function always
+ * check the corresponding html dom structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
 
     document.getElementById("add_custom_blend_button").addEventListener("click", () => {
-        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
+        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
         let div = document.createElement("div");
         div.className = "col-md-3"
 
         let input = document.createElement("input");
-        input.id = `all_ratio_entries-${numberOfRatioFields}-ratio`;
-        input.name = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+        input.id = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
+        input.name = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
         input.type = "text";
         input.className = "form-control";
         div.appendChild(input);
@@ -194,7 +188,49 @@ function assignAddCustomBlendEvent() {
         const button_wrapper = document.getElementById("add_custom_blend_button_wrapper");
         placeholder.insertBefore(div, button_wrapper);
 
+        allRatioFieldsHaveValidInput = false;
         document.getElementById("submit").disabled = true;
         assignKeyboardEventsToRatiosForm()
     })
+}
+
+function assignDeleteCustomBlendEvent() {
+    const placeholder = document.getElementById("blending_ratio_placeholder");
+
+    document.getElementById("delete_custom_blend_button").addEventListener("click", () => {
+        const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
+
+        for (let div of placeholder.children) {
+            let input = div.children[0]
+            if (input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`) {
+                placeholder.removeChild(div);
+            }
+        }
+
+        let ratioInputFields = collectRatioFields();
+        let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+
+        toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields);
+        assignKeyboardEventsToRatiosForm()
+    })
+}
+
+function toggleSubmitButtonBasedOnRatiosAndName() {
+    let ratioInputFields = collectRatioFields();
+    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    for (let ratioInput of ratioInputFields) {
+        ratioInput.addEventListener("keyup", () => {
+            toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields)
+        })
+    }
+}
+
+function toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields) {
+    let regex = new RegExp("\^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+    let nonMatchingInputs = ratioInputFields
+        .map(input => input.value)
+        .filter(value => !regex.test(value))
+        .length;
+    allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
+    document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
 }

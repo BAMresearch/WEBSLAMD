@@ -1,3 +1,7 @@
 .blending_explanation_text {
     height: 75%;
 }
+
+.incomplete_blending_warning {
+    color: darkorange;
+}

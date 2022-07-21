@@ -1,9 +1,9 @@
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.admixture import Admixture
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
-class AdmixtureStrategy(BaseMaterialStrategy):
+class AdmixtureStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):

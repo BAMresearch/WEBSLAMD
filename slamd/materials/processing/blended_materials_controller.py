@@ -3,7 +3,6 @@ import json
 from flask import Blueprint, render_template, request, redirect, make_response, jsonify
 
 from slamd.materials.processing.blended_materials_service import BlendedMaterialsService
-from slamd.materials.processing.forms.base_material_selection_form import BaseMaterialSelectionForm
 from slamd.materials.processing.forms.blending_name_and_type_form import BlendingNameAndTypeForm
 from slamd.materials.processing.forms.min_max_form import MinMaxForm
 from slamd.materials.processing.forms.ratio_form import RatioForm
@@ -39,25 +38,15 @@ def select_base_material_type(type):
 
 @blended_materials.route('', methods=['POST'])
 def submit_blending():
-    blending_data = BlendingNameAndTypeForm(request.form)
-    base_material_selection = request.form.getlist('base_material_selection')
-
-    if blending_data.validate():
-        return redirect('/materials/blended')
-
-    materials_response = BlendedMaterialsService.list_materials(blended=True)
-    return render_template('blended_materials.html',
-                           blending_name_and_type_form=blending_data,
-                           base_material_selection_form=BaseMaterialSelectionForm(),
-                           min_max_form=MinMaxForm(),
-                           ratio_form=RatioForm(),
-                           materials_response=materials_response)
+    BlendedMaterialsService.save_blended_materials(request.form)
+    return redirect('/materials/blended')
 
 
-@blended_materials.route('/add_min_max_entries/<count>', methods=['GET'])
-def add_min_max_entry(count):
-    min_max_form = BlendedMaterialsService.create_min_max_form(count)
-    body = {'template': render_template('min_max_form.html', min_max_form=min_max_form)}
+@blended_materials.route('/add_min_max_entries/<material_type>/<count>', methods=['POST'])
+def add_min_max_entry(material_type, count):
+    data = json.loads(request.data)
+    min_max_form, complete = BlendedMaterialsService.create_min_max_form(material_type, count, data)
+    body = {'template': render_template('min_max_form.html', min_max_form=min_max_form, complete=complete)}
     return make_response(jsonify(body), 200)
 
 

@@ -1,14 +1,18 @@
 from abc import ABC, abstractmethod
+
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import not_empty, empty, join_all, float_if_not_empty, str_if_not_none
+from slamd.common.slamd_utils import empty, not_empty
+from slamd.common.slamd_utils import join_all, float_if_not_empty, str_if_not_none
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Costs
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
-class BaseMaterialStrategy(ABC):
+class MaterialStrategy(ABC):
 
     @classmethod
     @abstractmethod
@@ -113,3 +117,30 @@ class BaseMaterialStrategy(ABC):
     def _extract_additional_property_by_label(cls, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
+    @classmethod
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders):
+        pass
+
+    @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        pass
+
+    @classmethod
+    def compute_blended_costs(cls, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_blended_costs(normalized_ratios, base_materials_as_dict)
+
+    @classmethod
+    def compute_additional_properties(cls, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_additional_properties(normalized_ratios, base_materials_as_dict)
+
+    @classmethod
+    def check_completeness_of_costs(cls, base_materials_as_dict):
+        co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'co2_footprint')
+        costs_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'costs')
+        delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'delivery_time')
+
+        return co2_footprint_complete and costs_complete and delivery_time_complete
+
+    @classmethod
+    def check_completeness_of_additional_properties(cls, base_materials_as_dict):
+        return PropertyCompletenessChecker.additional_properties_are_complete(base_materials_as_dict)
