@@ -1,0 +1,25 @@
+{
+  "name": "webslamd",
+  "version": "1.0.0",
+  "description": "Sequential Learning for Materials Discovery",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BAMresearch/WEBSLAMD.git"
+  },
+  "author": "BAM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BAMresearch/WEBSLAMD/issues"
+  },
+  "homepage": "https://github.com/BAMresearch/WEBSLAMD#readme",
+  "devDependencies": {
+    "@testing-library/cypress": "^8.0.3",
+    "cypress": "^10.3.1"
+  }
+}
