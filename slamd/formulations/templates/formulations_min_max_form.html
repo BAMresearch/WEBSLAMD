@@ -28,6 +28,18 @@
     {{ entry.process_name.label(class_="control-label") }}
     {{ entry.process_name(class_="form-control", disabled=True) }}
 </div>
+<div class="col-md-3">
+    {{ entry.increment.label(class_="control-label") }}
+    {{ entry.increment(class_="form-control") }}
+</div>
+<div class="col-md-3">
+    {{ entry.min.label(class_="control-label") }}
+    {{ entry.min(class_="form-control") }}
+</div>
+<div class="col-md-3">
+    {{ entry.max.label(class_="control-label") }}
+    {{ entry.max(class_="form-control") }}
+</div>
 {% endfor %}
 
 <div data-bs-toggle="tooltip" data-bs-placement="top" title="Fill in all editable fields">

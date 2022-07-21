@@ -13,6 +13,6 @@ describe("Test landing page", () => {
     cy.url().should('include', '/materials/base')
     cy.url().should('eq', 'http://localhost:5001/materials/base')
     cy.findByText("New material").should("exist")
-    cy.findByText("Material type").should("exist")
+    cy.findByText("Material type / Process").should("exist")
   })
 })

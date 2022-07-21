@@ -9,20 +9,20 @@ describe('Test base materials page', () => {
 
     it('Material types are listed correctly', () => {
         cy.findByText("Powder").should("exist")
-        cy.findByLabelText("Material type").select("Powder")
-        cy.findByLabelText("Material type").select("Liquid")
-        cy.findByLabelText("Material type").select("Aggregates")
-        cy.findByLabelText("Material type").select("Aggregates")
-        cy.findByLabelText("Material type").select("Admixture")
-        cy.findByLabelText("Material type").select("Process")
-        cy.findByLabelText("Material type").select("Custom")
-        cy.findByLabelText("Material type").select("Powder")
+        cy.findByLabelText("Material type / Process").select("Powder")
+        cy.findByLabelText("Material type / Process").select("Liquid")
+        cy.findByLabelText("Material type / Process").select("Aggregates")
+        cy.findByLabelText("Material type / Process").select("Aggregates")
+        cy.findByLabelText("Material type / Process").select("Admixture")
+        cy.findByLabelText("Material type / Process").select("Process")
+        cy.findByLabelText("Material type / Process").select("Custom")
+        cy.findByLabelText("Material type / Process").select("Powder")
     })
 
     it('Create powder', () => {
         // Fill out name and material type
         cy.findByLabelText("Name").type("My Powder")
-        cy.findByLabelText("Material type").select("Powder")
+        cy.findByLabelText("Material type / Process").select("Powder")
 
         // Fill out cost properties
         cy.findByText("Cost").click()

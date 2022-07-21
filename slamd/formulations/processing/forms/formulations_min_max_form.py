@@ -28,6 +28,12 @@ class ProcessesEntriesForm(Form):
         validators=[validators.DataRequired(message='Name cannot be empty')]
     )
 
+    increment = DecimalField('Increment (hours)')
+
+    min = DecimalField('Min')
+
+    max = DecimalField('Max')
+
 
 class FormulationsMinMaxForm(Form):
     materials_min_max_entries = FieldList(FormField(MaterialsMinMaxEntriesForm), min_entries=0)

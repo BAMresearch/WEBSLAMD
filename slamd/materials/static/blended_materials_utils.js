@@ -2,16 +2,6 @@ const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
 let allRatioFieldsHaveValidInput = false;
 
-function collectBaseMaterialSelection(placeholder) {
-    return Array.from(placeholder.children)
-        .filter(option => option.selected)
-        .map(option => {
-            return {
-                uuid: option.value,
-                name: option.innerHTML
-            }
-        });
-}
 
 function countSelectedBaseMaterials(placeholder) {
     let count = 0;

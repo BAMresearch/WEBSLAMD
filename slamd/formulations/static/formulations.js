@@ -22,8 +22,7 @@ async function confirmSelection() {
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
     prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses);
-    // assignKeyboardEventsToMinMaxForm();
-    // assignConfirmBlendingConfigurationEvent();
+    assignKeyboardEventsToMinMaxForm();
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
@@ -37,6 +36,25 @@ function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
     for (let i = 0; i < selectedProcesses.length; i++) {
         document.getElementById(`processes_entries-${i}-uuid_field`).value = selectedProcesses[i].uuid;
         document.getElementById(`processes_entries-${i}-process_name`).value = selectedProcesses[i].name;
+    }
+}
+
+function assignKeyboardEventsToMinMaxForm() {
+    let independentInputFields = collectIndependentInputFields();
+
+    for (let item of independentInputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentValue("min", item.min, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentValue("max", item.max, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
+            toggleConfirmBlendingButton(independentInputFields);
+        });
     }
 }
 
