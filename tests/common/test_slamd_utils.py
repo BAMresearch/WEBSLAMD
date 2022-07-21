@@ -1,5 +1,5 @@
-from re import A
-from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, join_all, molecular_formula_of, str_if_not_none
+from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of, not_numeric, float_if_not_empty, \
+    str_if_not_none
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -76,3 +76,27 @@ def test_str_if_not_none_returns_string_for_float():
 
 def test_str_if_not_none_returns_int_for_int():
     assert str_if_not_none(987654321) == '987654321'
+
+
+def test_not_numeric_is_false_for_integer_input():
+    assert not_numeric(13) is False
+
+
+def test_not_numeric_is_false_for_float_input():
+    assert not_numeric(13.12) is False
+
+
+def test_not_numeric_is_false_for_integer_as_string_input():
+    assert not_numeric('13') is False
+
+
+def test_not_numeric_is_false_for_float_as_string_input():
+    assert not_numeric('13.5') is False
+
+
+def test_not_numeric_is_false_for_comma_float_as_string_input():
+    assert not_numeric('13,5') is False
+
+
+def test_not_numeric_is_true_for_non_number_input():
+    assert not_numeric('abc') is True

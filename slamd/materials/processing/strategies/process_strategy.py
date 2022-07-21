@@ -1,9 +1,9 @@
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.process import Process
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
-class ProcessStrategy(BaseMaterialStrategy):
+class ProcessStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):

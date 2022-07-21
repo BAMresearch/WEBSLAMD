@@ -19,3 +19,4 @@ class Material:
     costs: Costs = None
     additional_properties: list[AdditionalProperty] = None
     is_blended: bool = False
+    blending_ratios: str = ''

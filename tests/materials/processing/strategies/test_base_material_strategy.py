@@ -1,12 +1,13 @@
 from werkzeug.datastructures import ImmutableMultiDict
+
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 from slamd.materials.processing.models.material import Material, Costs
-from slamd.materials.processing.strategies.base_material_strategy import BaseMaterialStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
-class MockStrategy(BaseMaterialStrategy):
+class MockStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         return Material()
