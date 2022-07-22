@@ -48,3 +48,22 @@ function collectSelection(placeholder) {
             }
         });
 }
+
+function assignKeyboardEventsToMinMaxForm() {
+    let independentInputFields = collectIndependentInputFields();
+
+    for (let item of independentInputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentValue("min", item.min, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentValue("max", item.max, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+    }
+}

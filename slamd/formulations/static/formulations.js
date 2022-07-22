@@ -37,13 +37,10 @@ async function confirmSelection() {
     await fetchEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
-    prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses);
     assignKeyboardEventsToMinMaxForm();
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
-    document.getElementById("with_constraint").disabled = true
-    document.getElementById("weigth_constraint").disabled = true
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`materials_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
         document.getElementById(`materials_min_max_entries-${i}-materials_entry_name`).value = selectedMaterials[i].name;
@@ -60,32 +57,6 @@ function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
         document.getElementById("materials_min_max_entries-0-max").value = weigthConstraint
     }
 
-}
-
-function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
-    for (let i = 0; i < selectedProcesses.length; i++) {
-        document.getElementById(`processes_entries-${i}-uuid_field`).value = selectedProcesses[i].uuid;
-        document.getElementById(`processes_entries-${i}-process_name`).value = selectedProcesses[i].name;
-    }
-}
-
-function assignKeyboardEventsToMinMaxForm() {
-    let independentInputFields = collectIndependentInputFields();
-
-    for (let item of independentInputFields) {
-        item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-    }
 }
 
 window.addEventListener("load", function () {

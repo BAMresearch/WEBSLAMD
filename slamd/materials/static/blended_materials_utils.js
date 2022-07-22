@@ -50,25 +50,6 @@ function collectRatioFields() {
     return ratioInputFields;
 }
 
-function assignKeyboardEventsToMinMaxForm() {
-    let independentInputFields = collectIndependentInputFields();
-
-    for (let item of independentInputFields) {
-        item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-    }
-}
-
 /**
  * The method extracts all min, max and increment input fields except the last one as the latter will be computed dynamically in terms
  * of all the other min/max values. The number of min items always equals the number of min items. Therefore we can get the
