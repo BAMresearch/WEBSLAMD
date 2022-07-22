@@ -1,4 +1,4 @@
-from slamd.materials.processing.models.material import Material
+from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
@@ -7,7 +7,7 @@ class CustomStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):
-        return Material(
+        return Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
@@ -19,12 +19,12 @@ class CustomStrategy(MaterialStrategy):
         costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
 
-        return Material(type=base_powders_as_dict[0]['type'],
-                        name=f'{blended_material_name}-{idx}',
-                        costs=costs,
-                        additional_properties=additional_properties,
-                        is_blended=True,
-                        blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+        return Custom(type=base_powders_as_dict[0]['type'],
+                      name=f'{blended_material_name}-{idx}',
+                      costs=costs,
+                      additional_properties=additional_properties,
+                      is_blended=True,
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
@@ -39,3 +39,7 @@ class CustomStrategy(MaterialStrategy):
         multidict.add('custom_name', custom.custom_name)
         multidict.add('custom_value', custom.custom_value)
         return multidict
+
+    @classmethod
+    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
+        pass
