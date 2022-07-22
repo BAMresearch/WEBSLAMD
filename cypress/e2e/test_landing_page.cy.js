@@ -12,7 +12,7 @@ describe("Test landing page", () => {
     cy.findAllByText("SLAMD Dashboard").should("have.length", 2)
     cy.url().should('include', '/materials/base')
     cy.url().should('eq', 'http://localhost:5001/materials/base')
-    cy.findByText("New material").should("exist")
+    cy.findByText("New material / process").should("exist")
     cy.findByText("Material type / Process").should("exist")
   })
 })

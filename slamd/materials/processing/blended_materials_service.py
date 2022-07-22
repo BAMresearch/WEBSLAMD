@@ -21,7 +21,7 @@ class BlendedMaterialsService(MaterialsService):
 
     @classmethod
     def create_materials_response(cls, materials):
-        return MaterialsResponse(materials, 'blended')
+        return MaterialsResponse(materials, 'blended materials')
 
     @classmethod
     def list_base_material_selection_by_type(cls, material_type):

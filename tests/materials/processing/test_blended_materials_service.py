@@ -419,6 +419,6 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     assert dto.type == 'Powder'
     assert dto.all_properties == 'Fe₂O₃: 23.3, Specific gravity: 12, test prop: test value'
 
-    assert result.ctx == 'blended'
+    assert result.ctx == 'blended materials'
     assert mock_delete_by_type_and_uuid_called_with == (
         'powder', 'uuid to delete')

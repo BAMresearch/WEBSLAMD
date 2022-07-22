@@ -62,7 +62,7 @@ describe('Test base materials page', () => {
 
         // Save material and check that it is listed
         cy.findByText("Save material").click()
-        cy.findByText("All base materials").should("exist")
+        cy.findByText("All base materials / processes").should("exist")
         cy.findByText("My Powder").should("exist")
     })
 })

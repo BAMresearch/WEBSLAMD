@@ -10,7 +10,7 @@ from slamd.materials.processing.materials_service import MaterialsResponse
 
 def test_slamd_shows_form_and_table(client, monkeypatch):
     def mock_list_materials(blended):
-        return MaterialsResponse([{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}], 'base')
+        return MaterialsResponse([{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}], 'base materials / processes')
 
     monkeypatch.setattr(BaseMaterialService, 'list_materials', mock_list_materials)
 
@@ -25,7 +25,7 @@ def test_slamd_shows_form_and_table(client, monkeypatch):
     assert 'Costs' in html
     assert 'Delivery time' in html
 
-    assert 'All base materials' in html
+    assert 'All base materials / processes' in html
     assert 'test powder' in html
     assert 'Powder' in html
 
