@@ -1,6 +1,7 @@
 const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations`
+let withConstraint = false
+let weigthConstraint = undefined
 
-let currentlySelectedProcesses = []
 
 function toggleSelectionConfirmationButton() {
     const material_selection = document.getElementById("material_selection")
@@ -12,8 +13,8 @@ function toggleSelectionConfirmationButton() {
 
 function toggleWeigthConstraintInput() {
     const with_constraint = document.getElementById("with_constraint")
-    const checked = with_constraint.checked;
-    if (checked) {
+    withConstraint = with_constraint.checked;
+    if (withConstraint) {
         document.getElementById("weigth_constraint").disabled = false
     } else {
         document.getElementById("weigth_constraint").disabled = true
@@ -22,23 +23,9 @@ function toggleWeigthConstraintInput() {
 
 }
 
-function toggleProcessSelection() {
-    const process_selection = document.getElementById("process_selection")
-
-    const currentlySelectedIndex = process_selection.options.selectedIndex
-    const currentlySelectedProcess = Array.from(process_selection.options)[currentlySelectedIndex];
-    if (currentlySelectedProcesses.includes(currentlySelectedProcess)) {
-        currentlySelectedProcesses = Array.from(process_selection.options).filter(option => option.selected && option !== currentlySelectedProcess)
-        process_selection.options[currentlySelectedIndex].selected = false
-    } else {
-        currentlySelectedProcesses = Array.from(process_selection.options).filter(option => option.selected)
-    }
-
-
-}
-
 async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder")
+    weigthConstraint = document.getElementById("weigth_constraint").value
 
     const materialsPlaceholder = document.getElementById("material_selection");
     const processesPlaceholder = document.getElementById("process_selection");
@@ -55,10 +42,24 @@ async function confirmSelection() {
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
+    document.getElementById("with_constraint").disabled = true
+    document.getElementById("weigth_constraint").disabled = true
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`materials_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
         document.getElementById(`materials_min_max_entries-${i}-materials_entry_name`).value = selectedMaterials[i].name;
+        if (withConstraint) {
+            if (i === selectedMaterials.length - 1) {
+                document.getElementById(`materials_min_max_entries-${i}-increment`).disabled = true;
+                document.getElementById(`materials_min_max_entries-${i}-max`).disabled = true;
+                document.getElementById(`materials_min_max_entries-${i}-min`).disabled = true;
+            }
+        }
     }
+    if(selectedMaterials.length === 1){
+        document.getElementById("materials_min_max_entries-0-min").value = weigthConstraint
+        document.getElementById("materials_min_max_entries-0-max").value = weigthConstraint
+    }
+
 }
 
 function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
@@ -91,5 +92,4 @@ window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
     document.getElementById("material_selection").addEventListener("change", toggleSelectionConfirmationButton);
     document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
-    // document.getElementById("process_selection").addEventListener("click", toggleProcessSelection);
 });
