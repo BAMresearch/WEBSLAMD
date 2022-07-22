@@ -1,3 +1,12 @@
+<div class="col-md-3">
+    {{ formulations_min_max_form.with_constraint.label(class_="control-label") }}
+    {{ formulations_min_max_form.with_constraint() }}
+</div>
+<div class="col-md-3">
+    {{ formulations_min_max_form.weigth_constraint.label(class_="control-label") }}
+    {{ formulations_min_max_form.weigth_constraint(class_="form-control", disabled=True) }}
+</div>
+
 {% for entry in formulations_min_max_form.materials_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
@@ -25,7 +34,6 @@
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
 <div class="col-md-3">
-    {{ entry.process_name.label(class_="control-label") }}
     {{ entry.process_name(class_="form-control", disabled=True) }}
 </div>
 {% endfor %}
