@@ -1,36 +1,44 @@
 function assignKeyboardEventsToFormulationsMinMaxForm() {
     if (withConstraint) {
-        const inputFields = collectInputFields();
-        for (let item of inputFields) {
-            item.min.addEventListener("keyup", () => {
-                computeDependentValue("min", item.min, inputFields);
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-            item.max.addEventListener("keyup", () => {
-                computeDependentValue("max", item.max, inputFields);
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-            item.increment.addEventListener("keyup", () => {
-                validateIncrementValue(item.increment)
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-        }
+        addListenersToIndependentFields();
     } else {
-        const inputFields = collectInputFields(false);
-        for (let item of inputFields) {
-            item.min.addEventListener("keyup", () => {
-                fixInputValue(item.min);
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-            item.max.addEventListener("keyup", () => {
-                fixInputValue(item.max);
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-            item.increment.addEventListener("keyup", () => {
-                fixInputValue(item.increment);
-                toggleConfirmFormulationsBlendingButton(inputFields);
-            });
-        }
+        addListenersToAllFields();
+    }
+}
+
+function addListenersToIndependentFields() {
+    const inputFields = collectInputFields();
+    for (let item of inputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentValue("min", item.min, inputFields);
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentValue("max", item.max, inputFields);
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
+    }
+}
+
+function addListenersToAllFields() {
+    const inputFields = collectInputFields(false);
+    for (let item of inputFields) {
+        item.min.addEventListener("keyup", () => {
+            fixInputValue(item.min);
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            fixInputValue(item.max);
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            fixInputValue(item.increment);
+            toggleConfirmFormulationsBlendingButton(inputFields);
+        });
     }
 }
 
