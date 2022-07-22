@@ -1,11 +1,40 @@
 const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations`
 
+let currentlySelectedProcesses = []
+
 function toggleSelectionConfirmationButton() {
     const material_selection = document.getElementById("material_selection")
     const materials_selected = Array.from(material_selection.options).filter(option => option.selected);
 
     const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
     changeSelectionButton.disabled = materials_selected.length === 0
+}
+
+function toggleWeigthConstraintInput() {
+    const with_constraint = document.getElementById("with_constraint")
+    const checked = with_constraint.checked;
+    if (checked) {
+        document.getElementById("weigth_constraint").disabled = false
+    } else {
+        document.getElementById("weigth_constraint").disabled = true
+        document.getElementById("weigth_constraint").value = ""
+    }
+
+}
+
+function toggleProcessSelection() {
+    const process_selection = document.getElementById("process_selection")
+
+    const currentlySelectedIndex = process_selection.options.selectedIndex
+    const currentlySelectedProcess = Array.from(process_selection.options)[currentlySelectedIndex];
+    if (currentlySelectedProcesses.includes(currentlySelectedProcess)) {
+        currentlySelectedProcesses = Array.from(process_selection.options).filter(option => option.selected && option !== currentlySelectedProcess)
+        process_selection.options[currentlySelectedIndex].selected = false
+    } else {
+        currentlySelectedProcesses = Array.from(process_selection.options).filter(option => option.selected)
+    }
+
+
 }
 
 async function confirmSelection() {
@@ -61,4 +90,6 @@ function assignKeyboardEventsToMinMaxForm() {
 window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
     document.getElementById("material_selection").addEventListener("change", toggleSelectionConfirmationButton);
+    document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
+    // document.getElementById("process_selection").addEventListener("click", toggleProcessSelection);
 });
