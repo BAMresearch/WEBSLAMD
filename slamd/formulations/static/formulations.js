@@ -37,7 +37,7 @@ async function confirmSelection() {
     await fetchEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
-    assignKeyboardEventsToMinMaxForm();
+    assignKeyboardEventsToFormulationsMinMaxForm();
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
@@ -52,9 +52,12 @@ function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
             }
         }
     }
-    if(selectedMaterials.length === 1){
+    if (selectedMaterials.length === 1) {
         document.getElementById("materials_min_max_entries-0-min").value = weigthConstraint
         document.getElementById("materials_min_max_entries-0-max").value = weigthConstraint
+        if (withConstraint) {
+            document.getElementById("confirm_formulations_configuration_button").disabled = false
+        }
     }
 
 }

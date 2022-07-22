@@ -1,5 +1,3 @@
-const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
-
 let allRatioFieldsHaveValidInput = false;
 
 
@@ -20,6 +18,25 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
             document.getElementById(`all_min_max_entries-${i}-max`).disabled = true;
             document.getElementById(`all_min_max_entries-${i}-min`).disabled = true;
         }
+    }
+}
+
+function assignKeyboardEventsToMinMaxForm() {
+    let independentInputFields = collectIndependentInputFields();
+
+    for (let item of independentInputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentValue("min", item.min, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentValue("max", item.max, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
+            toggleConfirmBlendingButton(independentInputFields);
+        });
     }
 }
 

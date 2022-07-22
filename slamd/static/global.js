@@ -1,4 +1,5 @@
 const ACTION_BUTTON_DELIMITER = "___"
+const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
 async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
@@ -47,23 +48,4 @@ function collectSelection(placeholder) {
                 name: option.innerHTML
             }
         });
-}
-
-function assignKeyboardEventsToMinMaxForm() {
-    let independentInputFields = collectIndependentInputFields();
-
-    for (let item of independentInputFields) {
-        item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-    }
 }
