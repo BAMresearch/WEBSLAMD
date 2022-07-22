@@ -1,25 +1,30 @@
-from slamd.materials.processing.models.custom import Custom
+from slamd.materials.processing.models.material import Material
+from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
-from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class CustomStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):
-        return Custom(
+        return Material(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
-            custom_name=submitted_material['custom_name'],
-            custom_value=submitted_material['custom_value'],
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
 
     @classmethod
-    def gather_composition_information(cls, custom):
-        return [cls.include('Name', custom.custom_name),
-                cls.include('Value', custom.custom_value)]
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+
+        return Material(type=base_powders_as_dict[0]['type'],
+                        name=f'{blended_material_name}-{idx}',
+                        costs=costs,
+                        additional_properties=additional_properties,
+                        is_blended=True,
+                        blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):

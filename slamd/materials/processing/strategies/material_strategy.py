@@ -30,8 +30,8 @@ class MaterialStrategy(ABC):
         dto.uuid = str(material.uuid)
         dto.name = material.name
         dto.type = material.type
-
-        dto.all_properties = join_all(cls.gather_composition_information(material))
+        if not material == "custom":
+            dto.all_properties = join_all(cls.gather_composition_information(material))
 
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
