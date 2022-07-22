@@ -37,6 +37,7 @@ async function confirmSelection() {
     await fetchEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
+    prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses)
     assignKeyboardEventsToFormulationsMinMaxForm();
 }
 
@@ -59,7 +60,13 @@ function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
             document.getElementById("confirm_formulations_configuration_button").disabled = false
         }
     }
+}
 
+function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
+    for (let i = 0; i < selectedProcesses.length; i++) {
+        document.getElementById(`processes_entries-${i}-uuid_field`).value = selectedProcesses[i].uuid;
+        document.getElementById(`processes_entries-${i}-process_name`).value = selectedProcesses[i].name;
+    }
 }
 
 window.addEventListener("load", function () {
