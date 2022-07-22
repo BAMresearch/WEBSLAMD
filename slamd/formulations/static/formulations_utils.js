@@ -1,7 +1,6 @@
 function assignKeyboardEventsToFormulationsMinMaxForm() {
-    let inputFields = collectInputFields();
     if (withConstraint) {
-
+        const inputFields = collectInputFields();
         for (let item of inputFields) {
             item.min.addEventListener("keyup", () => {
                 computeDependentValue("min", item.min, inputFields);
@@ -17,24 +16,28 @@ function assignKeyboardEventsToFormulationsMinMaxForm() {
             });
         }
     } else {
+        const inputFields = collectInputFields(false);
         for (let item of inputFields) {
             item.min.addEventListener("keyup", () => {
                 fixInputValue(item.min);
+                toggleConfirmFormulationsBlendingButton(inputFields);
             });
             item.max.addEventListener("keyup", () => {
                 fixInputValue(item.max);
+                toggleConfirmFormulationsBlendingButton(inputFields);
             });
             item.increment.addEventListener("keyup", () => {
                 fixInputValue(item.increment);
+                toggleConfirmFormulationsBlendingButton(inputFields);
             });
         }
     }
 }
 
-function toggleConfirmFormulationsBlendingButton(independentInputFields) {
-    let allIncrementsFilled = independentInputFields.filter(item => item['increment'].value === "").length === 0;
-    let allMinFilled = independentInputFields.filter(item => item['min'].value === "").length === 0;
-    let allMaxFilled = independentInputFields.filter(item => item['max'].value === "").length === 0;
+function toggleConfirmFormulationsBlendingButton(inputFields) {
+    let allIncrementsFilled = inputFields.filter(item => item['increment'].value === "").length === 0;
+    let allMinFilled = inputFields.filter(item => item['min'].value === "").length === 0;
+    let allMaxFilled = inputFields.filter(item => item['max'].value === "").length === 0;
     document.getElementById("confirm_formulations_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
@@ -58,18 +61,18 @@ function collectInputFields(only_independent = true) {
         numberOfIndependentRows += 1;
     }
 
-    let independentInputFields = []
+    let inputFields = []
     for (let i = 0; i < numberOfIndependentRows; i++) {
         let min = document.getElementById(`materials_min_max_entries-${i}-min`)
         let max = document.getElementById(`materials_min_max_entries-${i}-max`)
         let increment = document.getElementById(`materials_min_max_entries-${i}-increment`)
-        independentInputFields.push({
+        inputFields.push({
             min: min,
             max: max,
             increment: increment
         })
     }
-    return independentInputFields;
+    return inputFields;
 }
 
 function createMinMaxValuesWithIncrements() {
