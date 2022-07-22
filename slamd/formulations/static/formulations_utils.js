@@ -1,19 +1,31 @@
 function assignKeyboardEventsToFormulationsMinMaxForm() {
+    let inputFields = collectInputFields();
     if (withConstraint) {
-        let independentInputFields = collectIndependentInputFields();
 
-        for (let item of independentInputFields) {
+        for (let item of inputFields) {
             item.min.addEventListener("keyup", () => {
-                computeDependentValue("min", item.min, independentInputFields);
-                toggleConfirmFormulationsBlendingButton(independentInputFields);
+                computeDependentValue("min", item.min, inputFields);
+                toggleConfirmFormulationsBlendingButton(inputFields);
             });
             item.max.addEventListener("keyup", () => {
-                computeDependentValue("max", item.max, independentInputFields);
-                toggleConfirmFormulationsBlendingButton(independentInputFields);
+                computeDependentValue("max", item.max, inputFields);
+                toggleConfirmFormulationsBlendingButton(inputFields);
             });
             item.increment.addEventListener("keyup", () => {
                 validateIncrementValue(item.increment)
-                toggleConfirmFormulationsBlendingButton(independentInputFields);
+                toggleConfirmFormulationsBlendingButton(inputFields);
+            });
+        }
+    } else {
+        for (let item of inputFields) {
+            item.min.addEventListener("keyup", () => {
+                fixInputValue(item.min);
+            });
+            item.max.addEventListener("keyup", () => {
+                fixInputValue(item.max);
+            });
+            item.increment.addEventListener("keyup", () => {
+                fixInputValue(item.increment);
             });
         }
     }
@@ -39,8 +51,12 @@ function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
  * Similar to the logic defined in the corresponding method of blended_materials_utils.js. However, since it is possible
  * to define formulations without weigth constraints we internally take this possibility into account.
  */
-function collectIndependentInputFields() {
-    const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+function collectInputFields(only_independent = true) {
+    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+
+    if (!only_independent) {
+        numberOfIndependentRows += 1;
+    }
 
     let independentInputFields = []
     for (let i = 0; i < numberOfIndependentRows; i++) {
@@ -84,7 +100,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     }
 }
 
-function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
+function fixInputValue(currentInputField) {
     if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
         currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
     }
@@ -92,6 +108,10 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
     if (currentInputField.value < 0) {
         currentInputField.value = 0;
     }
+}
+
+function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
+    fixInputValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
