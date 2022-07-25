@@ -1,17 +1,8 @@
 from flask_wtf import FlaskForm as Form
-from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField
 
 
 class DiscoveryForm(Form):
-
-    upload_file = FileField(
-        label="CSV File Upload",
-        validators=[
-            FileRequired(),
-            FileAllowed(['csv'], message='Only CSV files are allowed')
-        ]
-    )
 
     materials_data_input = SelectMultipleField(
         label='Materials Data (Input)',

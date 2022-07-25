@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, make_response, jsonify
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
+from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 
 discovery = Blueprint('discovery', __name__,
                       template_folder='../templates',
@@ -14,4 +15,10 @@ discovery_service = DiscoveryService()
 
 @discovery.route('', methods=['GET'])
 def discovery_page():
-    return render_template('discovery.html', discovery_form=DiscoveryForm())
+    return render_template('discovery.html', upload_dataset_form=UploadDatasetForm(), discovery_form=DiscoveryForm())
+
+
+@discovery.route('/<dataset>/columns', methods=['GET'])
+def get_dataset_columns(dataset):
+    columns = DiscoveryService.list_columns(dataset)
+    return make_response(jsonify(columns), 200)
