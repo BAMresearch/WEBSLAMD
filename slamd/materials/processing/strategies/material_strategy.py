@@ -1,3 +1,4 @@
+import uuid
 from abc import ABC, abstractmethod
 
 from werkzeug.datastructures import MultiDict
@@ -119,6 +120,10 @@ class MaterialStrategy(ABC):
     @classmethod
     def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders):
         pass
+
+    @classmethod
+    def created_from(cls, base_materials_as_dict):
+        return list(map(lambda material: material['uuid'], base_materials_as_dict))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):

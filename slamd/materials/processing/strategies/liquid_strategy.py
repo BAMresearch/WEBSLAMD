@@ -47,7 +47,8 @@ class LiquidStrategy(MaterialStrategy):
                       composition=composition,
                       additional_properties=additional_properties,
                       is_blended=True,
-                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                      created_from=cls.created_from(base_liquid_as_dict))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):

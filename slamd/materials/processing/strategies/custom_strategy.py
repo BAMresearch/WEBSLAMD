@@ -15,16 +15,17 @@ class CustomStrategy(MaterialStrategy):
         )
 
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
-        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
-        additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_customs_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_customs_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_customs_as_dict)
 
-        return Custom(type=base_powders_as_dict[0]['type'],
+        return Custom(type=base_customs_as_dict[0]['type'],
                       name=f'{blended_material_name}-{idx}',
                       costs=costs,
                       additional_properties=additional_properties,
                       is_blended=True,
-                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                      created_from=cls.created_from(base_customs_as_dict))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):

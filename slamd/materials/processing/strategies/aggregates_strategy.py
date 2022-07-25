@@ -75,7 +75,8 @@ class AggregatesStrategy(MaterialStrategy):
                           composition=composition,
                           additional_properties=additional_properties,
                           is_blended=True,
-                          blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                          blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                          created_from=cls.created_from(base_aggregates_as_dict))
 
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_aggregates_as_dict):

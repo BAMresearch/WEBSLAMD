@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import fields
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
@@ -82,7 +83,8 @@ class PowderStrategy(MaterialStrategy):
                       structure=structure,
                       additional_properties=additional_properties,
                       is_blended=True,
-                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                      created_from=cls.created_from(base_powders_as_dict))
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
@@ -149,7 +151,9 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def _compute_blended_structure(cls, normalized_ratios, base_powders_as_dict):
-        blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'fine')
-        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure', 'gravity')
+        blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure',
+                                                                 'fine')
+        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
+                                                                    'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
