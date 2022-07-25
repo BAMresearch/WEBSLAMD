@@ -62,8 +62,12 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
     elem.addEventListener("click", async () => {
         const minMaxValuesWithIncrements = collectFormulationsMinMaxValuesWithIncrements();
+        const requestBody = {
+            min_max_values_with_increments: minMaxValuesWithIncrements,
+            weight_constraint: weigthConstraint
+        }
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", minMaxValuesWithIncrements)
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestBody)
         // assignKeyboardEventsToRatiosForm(true);
         // assignAddCustomBlendEvent();
         // assignDeleteCustomBlendEvent();

@@ -1,9 +1,16 @@
-from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import not_numeric, not_empty
+from itertools import product
+
+from slamd.common.common_validators import min_max_increment_config_valid
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.slamd_utils import not_numeric, not_empty, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
+from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.ratio_parser import RatioParser
+
+MAX_NUMBER_OF_WEIGHTS = 100
 
 
 class FormulationsService:
@@ -58,3 +65,38 @@ class FormulationsService:
             min_max_form.processes_entries.append_entry()
 
         return min_max_form
+
+    @classmethod
+    def create_weights_form(cls, weights_request_data):
+        min_max_values_with_increments = weights_request_data['min_max_values_with_increments']
+        weight_constraint = weights_request_data['weight_constraint']
+
+        if empty(weight_constraint):
+            cls._create_unconstrained_weights(min_max_values_with_increments)
+
+        else:
+            if not_numeric(weight_constraint):
+                raise ValueNotSupportedException('Weight Constraint must be a number!')
+
+            if not min_max_increment_config_valid(min_max_values_with_increments, weight_constraint):
+                raise ValueNotSupportedException('Configuration of weights is not valid!')
+
+            all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
+
+            cartesian_product = product(*all_values)
+            cartesian_product_list = list(cartesian_product)
+
+            if len(cartesian_product_list) > MAX_NUMBER_OF_WEIGHTS:
+                raise SlamdRequestTooLargeException(
+                    f'Too many formulation configurations were requested. At most {MAX_NUMBER_OF_WEIGHTS} configurations can be created!')
+
+            weigths_form = WeightsForm()
+            for ratio_as_list in cartesian_product_list:
+                all_ratios_for_entry = RatioParser.create_ratio_string(ratio_as_list)
+                ratio_form_entry = weigths_form.all_ratio_entries.append_entry()
+                ratio_form_entry.ratio.data = all_ratios_for_entry
+            return weigths_form
+
+    @classmethod
+    def _create_unconstrained_weights(cls, min_max_values_with_increments):
+        pass

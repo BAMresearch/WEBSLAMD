@@ -1,5 +1,6 @@
 from itertools import product
 
+from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import MaterialNotFoundException, ValueNotSupportedException, \
     SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric
@@ -70,7 +71,7 @@ class BlendedMaterialsService(MaterialsService):
 
     @classmethod
     def create_ratio_form(cls, min_max_values_with_increments):
-        if not cls._ratio_input_is_valid(min_max_values_with_increments):
+        if not min_max_increment_config_valid(min_max_values_with_increments, 100):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
 
         all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
@@ -146,22 +147,6 @@ class BlendedMaterialsService(MaterialsService):
                 current_value += increment
             all_values.append(values_for_given_base_material)
         return all_values
-
-    @classmethod
-    def _validate_ranges(cls, increment, max_value, min_value):
-        return min_value < 0 or min_value > 100 or max_value > 100 or min_value > max_value \
-               or max_value < 0 or increment <= 0 or not_numeric(max_value) \
-               or not_numeric(min_value) or not_numeric(increment)
-
-    @classmethod
-    def _ratio_input_is_valid(cls, min_max_increments_values):
-        for i in range(len(min_max_increments_values) - 1):
-            min_value = min_max_increments_values[i]['min']
-            max_value = min_max_increments_values[i]['max']
-            increment = min_max_increments_values[i]['increment']
-            if cls._validate_ranges(increment, max_value, min_value):
-                return False
-        return True
 
     @classmethod
     def _ratios_are_valid(cls, all_ratios, number_of_base_materials):
