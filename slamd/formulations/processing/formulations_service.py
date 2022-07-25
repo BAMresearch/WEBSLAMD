@@ -102,7 +102,8 @@ class FormulationsService:
             cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
 
             full_cartesian_product = cls._compute_full_cartesian_product(cartesian_product_list_of_independent_weights,
-                                                materials_formulation_configuration, weight_constraint)
+                                                                         materials_formulation_configuration,
+                                                                         weight_constraint)
 
             weights_form = WeightsForm()
             for entry in full_cartesian_product:
