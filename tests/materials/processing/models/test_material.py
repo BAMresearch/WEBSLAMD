@@ -10,6 +10,8 @@ def test_material_constructor_sets_default_values():
     assert material.costs is None
     assert material.additional_properties is None
     assert material.is_blended is False
+    assert material.blending_ratios == ''
+    assert material.created_from is None
 
 
 def test_material_constructor_sets_properties():
