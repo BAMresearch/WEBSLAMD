@@ -158,11 +158,11 @@ function validateIncrementValue(increment) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
-    if (increment.value < 0) {
+    if (parseFloat(increment.value) < 0) {
         increment.value = 0;
     }
 
-    if (increment.value > weigthConstraint) {
+    if (parseFloat(increment.value) > parseFloat(weigthConstraint)) {
         increment.value = weigthConstraint;
     }
 }

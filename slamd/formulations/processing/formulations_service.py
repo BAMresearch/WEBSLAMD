@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+from functools import reduce
+from itertools import product
 
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException
@@ -6,6 +8,7 @@ from slamd.common.slamd_utils import not_numeric, not_empty, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
+from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 
 MAX_NUMBER_OF_WEIGHTS = 100
@@ -70,21 +73,67 @@ class FormulationsService:
         materials_formulation_configuration = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']
 
-        if not_numeric(weight_constraint):
-            raise ValueNotSupportedException('Weight Constraint must be a number!')
+        if not_empty(weight_constraint):
 
-        if not min_max_increment_config_valid(materials_formulation_configuration, weight_constraint):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
+            if not_numeric(weight_constraint):
+                raise ValueNotSupportedException('Weight Constraint must be a number!')
 
-        all_materials_weights = []
-        for material_configuration in materials_formulation_configuration:
-            material_uuid = material_configuration['uuid']
-            material_type = material_configuration['type']
-            material = MaterialsPersistence.query_by_type_and_uuid(material_type, material_uuid)
-            blending_ratios = material.blending_ratios
-            weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                    materials_formulation_configuration)
-            all_materials_weights.append(weights_for_material)
+            if not min_max_increment_config_valid(materials_formulation_configuration, weight_constraint):
+                raise ValueNotSupportedException('Configuration of weights is not valid!')
+
+            all_materials_weights = []
+            for i in range(len(materials_formulation_configuration) - 1):
+                material_uuid = materials_formulation_configuration[i]['uuid']
+                material_type = materials_formulation_configuration[i]['type']
+                material = MaterialsPersistence.query_by_type_and_uuid(material_type, material_uuid)
+                blending_ratios = material.blending_ratios
+                weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
+                                                                        materials_formulation_configuration[i])
+                all_materials_weights.append(weights_for_material)
+
+            all_independent_weights = list(map(lambda w: w.weights, all_materials_weights))
+            cartesian_product_of_independent_weights = product(*all_independent_weights)
+            cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
+
+            full_cartesian_product = []
+            for item in cartesian_product_list_of_independent_weights:
+
+                entry_list = list(item)
+                sum_of_all = 0
+                dependent_weight = weight_constraint
+                for ratios in entry_list:
+                    pieces = ratios.split('/')
+                    if len(pieces) == 0:
+                        sum_of_all += float(ratios[0])
+                    else:
+                        sum_of_all += float(reduce(lambda x, y: float(x) + float(y), pieces))
+                    dependent_weight = (round(float(weight_constraint) - sum_of_all, 2))
+                index_of_dependent_material = len(materials_formulation_configuration) - 1
+                dependent_material_uuid = materials_formulation_configuration[index_of_dependent_material]['uuid']
+                dependent_material_type = materials_formulation_configuration[index_of_dependent_material]['type']
+                dependent_material = MaterialsPersistence.query_by_type_and_uuid(dependent_material_type,
+                                                                                 dependent_material_uuid)
+                blending_ratios = dependent_material.blending_ratios
+
+                dependent_weight_ratios = ''
+                if empty(blending_ratios):
+                    entry_list.append(str(dependent_weight))
+                else:
+                    ratios = blending_ratios.split('/')
+                    for ratio in ratios:
+                        dependent_weight_ratios += f'{round(float(ratio) * float(dependent_weight), 2)}/'
+                    dependent_weight_ratios = dependent_weight_ratios.strip()[:-1]
+                    entry_list.append(dependent_weight_ratios)
+
+                full_cartesian_product.append(entry_list)
+
+            print('')
+
+            weights_form = WeightsForm()
+            for entry in all_materials_weights:
+                ratio_form_entry = weights_form.all_ratio_entries.append_entry()
+            # ratio_form_entry.ratio.data = all_ratios_for_entry
+            return []
 
         return []
 
@@ -107,15 +156,23 @@ class FormulationsService:
 
     @classmethod
     def _create_weigths(cls, material_configuration):
-        for i in range(len(material_configuration) - 1):
-            values_for_given_base_material = []
-            current_value = float(material_configuration[i]['min'])
-            max = float(material_configuration[i]['max'])
-            increment = float(material_configuration[i]['increment'])
-            while current_value <= max:
-                values_for_given_base_material.append(str(current_value))
-                current_value += increment
-            return values_for_given_base_material
+        values_for_given_base_material = []
+        current_value = float(material_configuration['min'])
+        max = float(material_configuration['max'])
+        increment = float(material_configuration['increment'])
+        while current_value <= max:
+            values_for_given_base_material.append(str(current_value))
+            current_value += increment
+        return values_for_given_base_material
+
+    @classmethod
+    def create_ratio_string(cls, entry):
+        entry_list = list(entry)
+        sum_of_independent_ratios = sum(entry_list)
+        dependent_ratio_value = round(100 - sum_of_independent_ratios, 2)
+        independent_ratio_values = cls.ratio_list_to_ratio_string(entry_list)
+        all_ratios_for_entry = f'{independent_ratio_values}/{dependent_ratio_value}'
+        return all_ratios_for_entry
 
 
 """
@@ -123,6 +180,8 @@ Weights are defined at the level of base materials which were used for blending.
 of the material used for creating a formulation. This can either be a blended material or a base material. In the latter
 case, the weights simply correspond to the weigth passed in the input fields. 
 """
+
+
 @dataclass
 class MaterialsWeights:
     material_name: str
