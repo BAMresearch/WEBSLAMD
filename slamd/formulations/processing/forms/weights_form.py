@@ -5,7 +5,7 @@ from wtforms import StringField
 
 class WeightsEntriesForm(Form):
 
-    ratio = StringField(
+    weights = StringField(
         'Weigths',
         validators=[])
 

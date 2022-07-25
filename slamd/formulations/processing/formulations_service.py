@@ -95,47 +95,53 @@ class FormulationsService:
             cartesian_product_of_independent_weights = product(*all_independent_weights)
             cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
 
-            full_cartesian_product = []
-            for item in cartesian_product_list_of_independent_weights:
-
-                entry_list = list(item)
-                sum_of_all = 0
-                dependent_weight = weight_constraint
-                for ratios in entry_list:
-                    pieces = ratios.split('/')
-                    if len(pieces) == 0:
-                        sum_of_all += float(ratios[0])
-                    else:
-                        sum_of_all += float(reduce(lambda x, y: float(x) + float(y), pieces))
-                    dependent_weight = (round(float(weight_constraint) - sum_of_all, 2))
-                index_of_dependent_material = len(materials_formulation_configuration) - 1
-                dependent_material_uuid = materials_formulation_configuration[index_of_dependent_material]['uuid']
-                dependent_material_type = materials_formulation_configuration[index_of_dependent_material]['type']
-                dependent_material = MaterialsPersistence.query_by_type_and_uuid(dependent_material_type,
-                                                                                 dependent_material_uuid)
-                blending_ratios = dependent_material.blending_ratios
-
-                dependent_weight_ratios = ''
-                if empty(blending_ratios):
-                    entry_list.append(str(dependent_weight))
-                else:
-                    ratios = blending_ratios.split('/')
-                    for ratio in ratios:
-                        dependent_weight_ratios += f'{round(float(ratio) * float(dependent_weight), 2)}/'
-                    dependent_weight_ratios = dependent_weight_ratios.strip()[:-1]
-                    entry_list.append(dependent_weight_ratios)
-
-                full_cartesian_product.append(entry_list)
-
-            print('')
+            full_cartesian_product = cls._compute_full_cartesian_product(cartesian_product_list_of_independent_weights,
+                                                materials_formulation_configuration, weight_constraint)
 
             weights_form = WeightsForm()
-            for entry in all_materials_weights:
-                ratio_form_entry = weights_form.all_ratio_entries.append_entry()
-            # ratio_form_entry.ratio.data = all_ratios_for_entry
-            return []
+            for entry in full_cartesian_product:
+                ratio_form_entry = weights_form.all_weights_entries.append_entry()
+                ratio_form_entry.weights.data = entry
+            return weights_form
 
         return []
+
+    @classmethod
+    def _compute_full_cartesian_product(cls, cartesian_product_list_of_independent_weights,
+                                        materials_formulation_configuration, weight_constraint):
+        full_cartesian_product = []
+        for item in cartesian_product_list_of_independent_weights:
+
+            entry_list = list(item)
+            sum_of_all = 0
+            dependent_weight = weight_constraint
+            for ratios in entry_list:
+                pieces = ratios.split('/')
+                if len(pieces) == 0:
+                    sum_of_all += float(ratios[0])
+                else:
+                    sum_of_all += float(reduce(lambda x, y: float(x) + float(y), pieces))
+                dependent_weight = (round(float(weight_constraint) - sum_of_all, 2))
+            index_of_dependent_material = len(materials_formulation_configuration) - 1
+            dependent_material_uuid = materials_formulation_configuration[index_of_dependent_material]['uuid']
+            dependent_material_type = materials_formulation_configuration[index_of_dependent_material]['type']
+            dependent_material = MaterialsPersistence.query_by_type_and_uuid(dependent_material_type,
+                                                                             dependent_material_uuid)
+            blending_ratios = dependent_material.blending_ratios
+
+            dependent_weight_ratios = ''
+            if empty(blending_ratios):
+                entry_list.append(str(dependent_weight))
+            else:
+                ratios = blending_ratios.split('/')
+                for ratio in ratios:
+                    dependent_weight_ratios += f'{round(float(ratio) * float(dependent_weight), 2)}/'
+                dependent_weight_ratios = dependent_weight_ratios.strip()[:-1]
+                entry_list.append(dependent_weight_ratios)
+
+            full_cartesian_product.append(entry_list)
+
+        return full_cartesian_product
 
     @classmethod
     def _create_weights_for_material(cls, material_name, blending_ratios, material_configuration):
