@@ -82,14 +82,20 @@ class FormulationsService:
                 raise ValueNotSupportedException('Configuration of weights is not valid!')
 
             all_materials_weights = []
-            for i in range(len(materials_formulation_configuration) - 1):
+            all_names = []
+            for i in range(len(materials_formulation_configuration)):
                 material_uuid = materials_formulation_configuration[i]['uuid']
                 material_type = materials_formulation_configuration[i]['type']
                 material = MaterialsPersistence.query_by_type_and_uuid(material_type, material_uuid)
-                blending_ratios = material.blending_ratios
-                weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                        materials_formulation_configuration[i])
-                all_materials_weights.append(weights_for_material)
+
+                base_names_for_blended_material = cls._add_created_from_base_names(material, material_type)
+                all_names.append(base_names_for_blended_material)
+
+                if i != len(materials_formulation_configuration) - 1:
+                    blending_ratios = material.blending_ratios
+                    weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
+                                                                            materials_formulation_configuration[i])
+                    all_materials_weights.append(weights_for_material)
 
             all_independent_weights = list(map(lambda w: w.weights, all_materials_weights))
             cartesian_product_of_independent_weights = product(*all_independent_weights)
@@ -102,9 +108,20 @@ class FormulationsService:
             for entry in full_cartesian_product:
                 ratio_form_entry = weights_form.all_weights_entries.append_entry()
                 ratio_form_entry.weights.data = entry
-            return weights_form
+            return weights_form, '   '.join(all_names)
 
         return []
+
+    @classmethod
+    def _add_created_from_base_names(cls, material, material_type):
+        base_names_for_blended_material = []
+        if material.created_from is None:
+            base_names_for_blended_material.append(material.name)
+        else:
+            for base_uuid in material.created_from:
+                base_material = MaterialsPersistence.query_by_type_and_uuid(material_type, str(base_uuid))
+                base_names_for_blended_material.append(base_material.name)
+        return '/'.join(base_names_for_blended_material)
 
     @classmethod
     def _compute_full_cartesian_product(cls, cartesian_product_list_of_independent_weights,
