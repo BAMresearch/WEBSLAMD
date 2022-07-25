@@ -49,3 +49,13 @@ function collectSelection(placeholder) {
             }
         });
 }
+
+function fixInputValue(currentInputField) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
+        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
+    }
+
+    if (currentInputField.value < 0) {
+        currentInputField.value = 0;
+    }
+}

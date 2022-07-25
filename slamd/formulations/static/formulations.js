@@ -54,6 +54,20 @@ async function confirmSelection() {
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
     prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses)
     assignKeyboardEventsToFormulationsMinMaxForm();
+    assignConfirmFormulationsConfigurationEvent();
+}
+
+async function assignConfirmFormulationsConfigurationEvent() {
+    const elem = document.getElementById("confirm_formulations_configuration_button");
+
+    elem.addEventListener("click", async () => {
+        const minMaxValuesWithIncrements = collectFormulationsMinMaxValuesWithIncrements();
+        const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", minMaxValuesWithIncrements)
+        // assignKeyboardEventsToRatiosForm(true);
+        // assignAddCustomBlendEvent();
+        // assignDeleteCustomBlendEvent();
+    })
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {

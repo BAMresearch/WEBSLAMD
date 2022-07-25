@@ -41,7 +41,7 @@ async function assignConfirmBlendingConfigurationEvent() {
     const elem = document.getElementById("confirm_blending_configuration_button");
 
     elem.addEventListener("click", async () => {
-        const minMaxValuesWithIncrements = createMinMaxValuesWithIncrements();
+        const minMaxValuesWithIncrements = collectMinMaxValuesWithIncrements();
         const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
         await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements)
         assignKeyboardEventsToRatiosForm(true);

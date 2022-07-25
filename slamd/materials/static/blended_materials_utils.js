@@ -1,3 +1,8 @@
+/**
+ * Many functions look similar to the ones in blended_materials.js
+ * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
+ * common functions would lead to tight coupling between these separated usecases.
+ */
 let allRatioFieldsHaveValidInput = false;
 
 
@@ -89,7 +94,7 @@ function collectIndependentInputFields() {
     return independentInputFields;
 }
 
-function createMinMaxValuesWithIncrements() {
+function collectMinMaxValuesWithIncrements() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let minMaxValuesWithIncrements = []

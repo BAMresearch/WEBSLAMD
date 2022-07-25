@@ -1,3 +1,8 @@
+/**
+ * Many functions look similar to the ones in blended_materials.js
+ * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
+ * common functions would lead to tight coupling between these separated usecases.
+ */
 function assignKeyboardEventsToFormulationsMinMaxForm() {
     if (withConstraint) {
         addListenersToIndependentFields();
@@ -83,7 +88,7 @@ function collectInputFields(only_independent = true) {
     return inputFields;
 }
 
-function createMinMaxValuesWithIncrements() {
+function collectFormulationsMinMaxValuesWithIncrements() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let minMaxValuesWithIncrements = []
@@ -108,16 +113,6 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     if (unfilledFields.length === 0) {
         const lastMinItem = document.getElementById(`materials_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
         lastMinItem.value = (weigthConstraint - sumOfIndependentFields).toFixed(2)
-    }
-}
-
-function fixInputValue(currentInputField) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
-        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
-    }
-
-    if (currentInputField.value < 0) {
-        currentInputField.value = 0;
     }
 }
 
