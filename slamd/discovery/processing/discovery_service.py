@@ -1,41 +1,31 @@
+from slamd.common.error_handling import DatasetNotFoundException
+from slamd.common.slamd_utils import empty
+from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
-from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 
 
 class DiscoveryService:
 
     @classmethod
-    def upload_dataset(cls, submitted_form, submitted_dataset):
-        form = UploadDatasetForm(submitted_form)
+    def save_dataset(cls):
+        # Flask-WTF handles passing form data to the form for us
+        form = UploadDatasetForm()
 
-        if form.validate():
-            dataset = CsvStrategy.create_dataset(submitted_dataset)
+        if form.validate_on_submit():
+            dataset = CsvStrategy.create_dataset(form.dataset.data)
             CsvStrategy.save_dataset(dataset)
             return True, None
         return False, form
 
     @classmethod
-    def list_columns(cls, dataset):
-        # Hardcoded response until we have a reliable upload button.
-        return [
-            'Idx_Sample',
-            'SiO2',
-            'CaO',
-            'SO3',
-            'FA (kg/m3)',
-            'GGBFS (kg/m3)',
-            'Coarse aggregate (kg/m3)',
-            'Fine aggregate (kg/m3)',
-            'Total aggregates',
-            'Na2SiO3', 'Na2O (Dry)',
-            'Sio2(Dry)', 'Superplasticizer',
-            'water - eff', 'Slump - Target(mm)',
-            'CO2(kg/t) - A-priori Information',
-            'fc 28-d - Target(MPa)'
-        ]
+    def list_columns(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Material with given UUID not found')
+        return dataset.columns
 
     @classmethod
     def list_datasets(cls):
-        # Hardcoded answers until we have a reliable method in DatasetPersistence
-        return [Dataset('My dataset 1', 'Name, Type, Cost'), Dataset('My dataset 2', 'Name, Type, Compressive Strength')]
+        return DiscoveryPersistence.get_session_property()

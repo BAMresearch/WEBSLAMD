@@ -30,6 +30,13 @@ class MaterialNotFoundException(NotFound):
         super(MaterialNotFoundException, self).__init__()
 
 
+class DatasetNotFoundException(NotFound):
+
+    def __init__(self, message):
+        self.message = message
+        super(MaterialNotFoundException, self).__init__()
+
+
 class ValueNotSupportedException(BadRequest):
 
     def __init__(self, message):

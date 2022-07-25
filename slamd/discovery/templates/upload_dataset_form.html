@@ -1,4 +1,5 @@
-<form class="row g-3" action="" method="post" novalidate>
+<form class="row g-3" action="" method="post" enctype="multipart/form-data" novalidate>
+    {{ upload_dataset_form.csrf_token }}
     <div class="row g-3 align-items-end">
         <div class="col-md-11">
             {{ upload_dataset_form.dataset.label(class_="control-label") }}

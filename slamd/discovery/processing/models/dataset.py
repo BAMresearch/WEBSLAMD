@@ -5,3 +5,4 @@ from dataclasses import dataclass
 class Dataset:
     name: str = None
     columns: str = None
+    content: str = None

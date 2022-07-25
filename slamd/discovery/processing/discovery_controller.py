@@ -24,12 +24,12 @@ def discovery_page():
     )
 
 
-@discovery.route('', methods=['GET'])
+@discovery.route('', methods=['POST'])
 def upload_dataset():
-    valid, form = DiscoveryService.upload_dataset(request.form, request.files)
+    valid, form = DiscoveryService.save_dataset()
 
     if valid:
-        return redirect('/')
+        return redirect('/materials/discovery')
 
     datasets = DiscoveryService.list_datasets()
     return render_template(
