@@ -12,6 +12,6 @@ def min_max_increment_config_valid(min_max_increments_values, constraint):
         min_value = float(min_max_increments_values[i]['min'])
         max_value = float(min_max_increments_values[i]['max'])
         increment = float(min_max_increments_values[i]['increment'])
-        if _validate_ranges(increment, max_value, min_value, constraint):
+        if _validate_ranges(increment, max_value, min_value, float(constraint)):
             return False
     return True

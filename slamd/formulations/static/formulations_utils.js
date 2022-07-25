@@ -123,7 +123,7 @@ function collectFormulationsMinMaxRequestData() {
         })
     }
     return {
-        material_configuration: rowData,
+        materials_formulation_configuration: rowData,
         weight_constraint: weigthConstraint
     }
 }
