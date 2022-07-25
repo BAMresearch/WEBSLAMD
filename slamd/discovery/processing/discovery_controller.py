@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, request, make_response, jsonify, redirect
+from flask import Blueprint, render_template, make_response, jsonify, redirect
 
-from slamd.common.slamd_utils import not_empty
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
@@ -19,7 +18,7 @@ def discovery_page():
     upload_dataset_form = UploadDatasetForm()
     discovery_form = DiscoveryForm()
     datasets = DiscoveryService.list_datasets()
-    if not_empty(datasets):
+    if datasets != []:
         DiscoveryService.list_columns(datasets[0].name)
         discovery_form.materials_data_input.choices = datasets[0].columns
 
