@@ -2,6 +2,9 @@
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
+<div class="d-none">
+    {{ entry.type_field(class_="form-control", hidden=True) }}
+</div>
 <div class="col-md-3">
     {{ entry.materials_entry_name.label(class_="control-label") }}
     {{ entry.materials_entry_name(class_="form-control", disabled=True) }}

@@ -2,7 +2,6 @@ const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.locati
 let withConstraint = false
 let weigthConstraint = ""
 
-
 function toggleSelectionConfirmationButtonAfterMaterialSelection() {
     toggleBasedOnSelectionAndConstraints();
 }
@@ -45,7 +44,7 @@ async function confirmSelection() {
     const materialsPlaceholder = document.getElementById("material_selection");
     const processesPlaceholder = document.getElementById("process_selection");
 
-    const selectedMaterials = collectSelection(materialsPlaceholder);
+    const selectedMaterials = collectSelectionForFormulations(materialsPlaceholder);
     const selectedProcesses = collectSelection(processesPlaceholder);
 
     const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;
@@ -61,13 +60,9 @@ async function assignConfirmFormulationsConfigurationEvent() {
     const elem = document.getElementById("confirm_formulations_configuration_button");
 
     elem.addEventListener("click", async () => {
-        const minMaxValuesWithIncrements = collectFormulationsMinMaxValuesWithIncrements();
-        const requestBody = {
-            min_max_values_with_increments: minMaxValuesWithIncrements,
-            weight_constraint: weigthConstraint
-        }
+        const requestData = collectFormulationsMinMaxRequestData();
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestBody)
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData)
         // assignKeyboardEventsToRatiosForm(true);
         // assignAddCustomBlendEvent();
         // assignDeleteCustomBlendEvent();
@@ -77,6 +72,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
     for (let i = 0; i < selectedMaterials.length; i++) {
         document.getElementById(`materials_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
+        document.getElementById(`materials_min_max_entries-${i}-type_field`).value = selectedMaterials[i].type;
         document.getElementById(`materials_min_max_entries-${i}-materials_entry_name`).value = selectedMaterials[i].name;
         if (withConstraint) {
             if (i === selectedMaterials.length - 1) {

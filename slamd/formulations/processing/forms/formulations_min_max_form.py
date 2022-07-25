@@ -7,6 +7,8 @@ class MaterialsMinMaxEntriesForm(Form):
 
     uuid_field = StringField(label='UUID')
 
+    type_field = StringField(label='Material Type')
+
     materials_entry_name = StringField(
         label='Name',
         validators=[validators.DataRequired(message='Name cannot be empty')]

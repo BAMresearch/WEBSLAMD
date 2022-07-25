@@ -39,7 +39,7 @@ class FormulationsService:
     def _to_selection(cls, list_of_models):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
-        return list(map(lambda material: (material.uuid, f'{material.type.capitalize()}: {material.name}'), by_type))
+        return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.type.capitalize()}: {material.name}'), by_type))
 
     @classmethod
     def create_formulations_min_max_form(cls, count_materials, count_processes):
@@ -68,20 +68,27 @@ class FormulationsService:
 
     @classmethod
     def create_weights_form(cls, weights_request_data):
-        min_max_values_with_increments = weights_request_data['min_max_values_with_increments']
+        material_configuration = weights_request_data['material_configuration']
         weight_constraint = weights_request_data['weight_constraint']
 
         if empty(weight_constraint):
-            cls._create_unconstrained_weights(min_max_values_with_increments)
+            # TODO
+            cls._create_unconstrained_weights(material_configuration)
 
         else:
             if not_numeric(weight_constraint):
                 raise ValueNotSupportedException('Weight Constraint must be a number!')
 
-            if not min_max_increment_config_valid(min_max_values_with_increments, weight_constraint):
+            if not min_max_increment_config_valid(material_configuration, weight_constraint):
                 raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-            all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
+            for i in range(material_configuration):
+                material_uuid = material_configuration['uuid']
+
+
+
+
+            all_values = cls._prepare_values_for_cartesian_product(material_configuration)
 
             cartesian_product = product(*all_values)
             cartesian_product_list = list(cartesian_product)

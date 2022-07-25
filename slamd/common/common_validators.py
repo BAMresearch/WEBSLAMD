@@ -9,9 +9,9 @@ def _validate_ranges(increment, max_value, min_value, constraint):
 
 def min_max_increment_config_valid(min_max_increments_values, constraint):
     for i in range(len(min_max_increments_values) - 1):
-        min_value = min_max_increments_values[i]['min']
-        max_value = min_max_increments_values[i]['max']
-        increment = min_max_increments_values[i]['increment']
+        min_value = float(min_max_increments_values[i]['min'])
+        max_value = float(min_max_increments_values[i]['max'])
+        increment = float(min_max_increments_values[i]['increment'])
         if _validate_ranges(increment, max_value, min_value, constraint):
             return False
     return True

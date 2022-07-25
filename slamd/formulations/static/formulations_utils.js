@@ -3,6 +3,22 @@
  * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
  * common functions would lead to tight coupling between these separated usecases.
  */
+
+function collectSelectionForFormulations(placeholder) {
+    return Array.from(placeholder.children)
+        .filter(option => option.selected)
+        .map(option => {
+            let typeAndUuid = option.value.split('|');
+            const type = typeAndUuid[0]
+            const uuid = typeAndUuid[1]
+            return {
+                uuid: uuid,
+                type: type,
+                name: option.innerHTML
+            }
+        });
+}
+
 function assignKeyboardEventsToFormulationsMinMaxForm() {
     if (withConstraint) {
         addListenersToIndependentFields();
@@ -88,22 +104,28 @@ function collectInputFields(only_independent = true) {
     return inputFields;
 }
 
-function collectFormulationsMinMaxValuesWithIncrements() {
+function collectFormulationsMinMaxRequestData() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-    let minMaxValuesWithIncrements = []
+    let rowData = []
     for (let i = 0; i <= numberOfIndependentRows; i++) {
+        let uuid = document.getElementById(`materials_min_max_entries-${i}-uuid_field`)
+        let type = document.getElementById(`materials_min_max_entries-${i}-type_field`)
         let min = document.getElementById(`materials_min_max_entries-${i}-min`)
         let max = document.getElementById(`materials_min_max_entries-${i}-max`)
         let increment = document.getElementById(`materials_min_max_entries-${i}-increment`)
-        minMaxValuesWithIncrements.push({
-            idx: i,
+        rowData.push({
+            uuid: uuid.value,
+            type: type.value,
             min: parseFloat(min.value),
             max: parseFloat(max.value),
             increment: parseFloat(increment.value)
         })
     }
-    return minMaxValuesWithIncrements;
+    return {
+        material_configuration: rowData,
+        weight_constraint: weigthConstraint
+    }
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
