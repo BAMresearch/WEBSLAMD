@@ -1,22 +1,16 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, SelectField, DecimalField, DecimalRangeField
-
 from flask_wtf.file import FileField, FileAllowed, FileRequired
-from wtforms.validators import NumberRange
+from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField
 
 
 class DiscoveryForm(Form):
+
     upload_file = FileField(
-        label="",
-        validators=[FileRequired(), FileAllowed(['csv', 'CSVs only!'])]
-    )
-
-
-
-    select_model = SelectField(
-        label='Select Model',
-        validators=[validators.DataRequired()],
-        choices=['AI-Model (lolo Random Forrest', 'Statistics based model (Gaussian Process Regression)']
+        label="CSV File Upload",
+        validators=[
+            FileRequired(),
+            FileAllowed(['csv'], message='Only CSV files are allowed')
+        ]
     )
 
     materials_data_input = SelectMultipleField(
@@ -32,15 +26,26 @@ class DiscoveryForm(Form):
     )
 
     a_priori_information = SelectMultipleField(
-        label='A-priori Information',
+        label='A priori Information',
         validators=[validators.DataRequired()],
         choices=[]
     )
 
-    curiosity = DecimalRangeField('Curiosity (to control the weight of model uncertainty on predicted utility)',
-                                  default=0)
+    select_model = SelectField(
+        label='Select Model',
+        validators=[validators.DataRequired()],
+        choices=[
+            'AI Model (lolo Random Forest)',
+            'Statistics-based model (Gaussian Process Regression)'
+        ]
+    )
 
-
+    curiosity = DecimalRangeField(
+        label='Curiosity (to control the weight of model uncertainty on predicted utility)',
+        default=1.00,
+        places=2,
+        validators=[validators.NumberRange(min=0, max=10, message='The curiosity value should be between 0 and 10')]
+    )
 
     # left - exploit
     # right - explore
