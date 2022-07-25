@@ -108,7 +108,8 @@ class FormulationsService:
             for entry in full_cartesian_product:
                 ratio_form_entry = weights_form.all_weights_entries.append_entry()
                 ratio_form_entry.weights.data = entry
-            return weights_form, '   '.join(all_names)
+            base_names = '  |  '.join(all_names)
+            return weights_form, base_names.strip()
 
         return []
 
