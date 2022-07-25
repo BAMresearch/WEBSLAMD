@@ -5,6 +5,8 @@ from wtforms import StringField
 
 class WeightsEntriesForm(Form):
 
+    idx = StringField()
+
     weights = StringField(
         'Weigths',
         validators=[])
