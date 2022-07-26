@@ -8,7 +8,7 @@
 </div>
 </span>
 <h5>
-    Configured Formulation in terms of base materials:
+    Weight Ratios:
     {{ formulations_composition }}
 </h5>
 <!--Custom weights fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
@@ -28,7 +28,7 @@
             </button>
         </div>
         <div class="col-md-10">
-            {{ entry.weights(class_="form-control", disabled=True) }}
+            {{ entry.weights(class_="form-control") }}
         </div>
     </div>
 </div>

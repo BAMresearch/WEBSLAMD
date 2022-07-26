@@ -20,7 +20,7 @@ function toggleBasedOnSelectionAndConstraints() {
     }
 }
 
-function toggleSelectionConfirmationButtonAfterConstraintChange(){
+function toggleSelectionConfirmationButtonAfterConstraintChange() {
     weigthConstraint = document.getElementById("weigth_constraint").value;
     toggleBasedOnSelectionAndConstraints();
 }
@@ -63,10 +63,21 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const requestData = collectFormulationsMinMaxRequestData();
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData)
-        // assignKeyboardEventsToRatiosForm(true);
         // assignAddCustomBlendEvent();
-        // assignDeleteCustomBlendEvent();
+        assignDeleteWeightEvent();
     })
+}
+
+function assignDeleteWeightEvent() {
+    let numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
+
+    for (let i = 0; i < numberOfWeightEntries; i++) {
+        let deleteButton = document.getElementById(`delete_weight_button___${i}`);
+        deleteButton.addEventListener("click", () => {
+            document.getElementById(`all_weights_entries-${i}-weights`).remove()
+            deleteButton.remove();
+        })
+    }
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {

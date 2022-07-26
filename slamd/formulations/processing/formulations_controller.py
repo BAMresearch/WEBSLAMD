@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, make_response, jsonify, request
+from flask import Blueprint, render_template, make_response, jsonify, request, redirect
 
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.formulations_service import FormulationsService
@@ -31,5 +31,12 @@ def add_formulations_min_max_entry(count_materials, count_processes):
 def add_weights():
     weights_request_data = json.loads(request.data)
     weights_form, formulations_composition = FormulationsService.create_weights_form(weights_request_data)
-    body = {'template': render_template('weights_form.html', weights_form=weights_form, formulations_composition=formulations_composition)}
+    body = {'template': render_template('weights_form.html', weights_form=weights_form,
+                                        formulations_composition=formulations_composition)}
     return make_response(jsonify(body), 200)
+
+
+@formulations.route('', methods=['POST'])
+def submit_blending():
+    form = request.form
+    return redirect('/materials/formulations')
