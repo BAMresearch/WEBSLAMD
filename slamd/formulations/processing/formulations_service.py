@@ -22,10 +22,10 @@ class FormulationsService:
         all_materials: MaterialsForFormulations = MaterialsFacade.find_all()
 
         form = MaterialsAndProcessesSelectionForm()
-        form.powder_selection.choices = cls._to_selection(all_materials.powders)
-        form.liquid_selection.choices = cls._to_selection(all_materials.liquids)
-        form.aggregates_selection.choices = cls._to_selection(all_materials.aggregates_list)
-        form.admixture_selection.choices = cls._to_selection(all_materials.admixtures)
+        form.powder_selection.choices.extend(cls._to_selection(all_materials.powders))
+        form.liquid_selection.choices.extend(cls._to_selection(all_materials.liquids))
+        form.aggregates_selection.choices.extend(cls._to_selection(all_materials.aggregates_list))
+        form.admixture_selection.choices.extend(cls._to_selection(all_materials.admixtures))
         form.custom_selection.choices = cls._to_selection(all_materials.customs)
         form.process_selection.choices = cls._to_selection(all_materials.processes)
 

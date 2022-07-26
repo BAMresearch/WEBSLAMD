@@ -7,25 +7,25 @@ class MaterialsAndProcessesSelectionForm(Form):
     powder_selection = SelectField(
         label='Powders',
         validators=[validators.DataRequired()],
-        choices=[]
+        choices=[('', '')]
     )
 
     liquid_selection = SelectField(
         label='Liquids',
         validators=[validators.DataRequired()],
-        choices=[]
+        choices=[('', '')]
     )
 
     aggregates_selection = SelectField(
         label='Aggregates',
         validators=[validators.DataRequired()],
-        choices=[]
+        choices=[('', '')]
     )
 
     admixture_selection = SelectField(
         label='Admixture',
         validators=[validators.DataRequired()],
-        choices=[]
+        choices=[('', '')]
     )
 
     custom_selection = SelectMultipleField(

@@ -2,21 +2,12 @@ const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.locati
 let withConstraint = false
 let weigthConstraint = ""
 
-function toggleSelectionConfirmationButtonAfterMaterialSelection() {
-    toggleBasedOnSelectionAndConstraints();
-}
-
 function toggleBasedOnSelectionAndConstraints() {
-    const powder_selection = document.getElementById("powder_selection");
-    const materials_selected = Array.from(powder_selection.options).filter(option => option.selected);
-
     const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
 
     const validConstraintConfiguration = withConstraint && (weigthConstraint !== undefined && weigthConstraint !== "");
-    if (!withConstraint) {
-        changeSelectionButton.disabled = materials_selected.length === 0;
-    } else {
-        changeSelectionButton.disabled = materials_selected.length === 0 || !validConstraintConfiguration;
+    if (withConstraint) {
+        changeSelectionButton.disabled = !validConstraintConfiguration;
     }
 }
 
@@ -116,8 +107,8 @@ function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
 }
 
 window.addEventListener("load", function () {
+    document.getElementById("change_materials_and_processes_selection_button").disabled = false;
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("powder_selection").addEventListener("change", toggleSelectionConfirmationButtonAfterMaterialSelection);
     document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
     document.getElementById("weigth_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
 });
