@@ -18,9 +18,6 @@ def discovery_page():
     upload_dataset_form = UploadDatasetForm()
     discovery_form = DiscoveryForm()
     datasets = DiscoveryService.list_datasets()
-    if datasets != []:
-        DiscoveryService.list_columns(datasets[0].name)
-        discovery_form.materials_data_input.choices = datasets[0].columns
 
     return render_template(
         'discovery.html',
