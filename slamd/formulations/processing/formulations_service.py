@@ -97,7 +97,7 @@ class FormulationsService:
         weights_form = WeightsForm()
         for i, entry in enumerate(full_cartesian_product):
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
-            ratio_form_entry.weights.data = entry
+            ratio_form_entry.weights.data = '  |  '.join(entry)
             ratio_form_entry.idx.data = str(i)
         base_names = '  |  '.join(all_names)
         return weights_form, base_names.strip()
