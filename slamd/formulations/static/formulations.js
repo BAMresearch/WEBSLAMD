@@ -21,7 +21,11 @@ function toggleBasedOnSelectionAndConstraints() {
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
-    weigthConstraint = document.getElementById("weigth_constraint").value;
+    let weightConstraintInput = document.getElementById("weigth_constraint");
+
+    fixInputValue(weightConstraintInput)
+
+    weigthConstraint = weightConstraintInput.value;
     toggleBasedOnSelectionAndConstraints();
 }
 
