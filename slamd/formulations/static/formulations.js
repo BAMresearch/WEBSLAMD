@@ -43,6 +43,8 @@ function toggleWeigthConstraintInput() {
 
 async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder")
+    removeInnerHtmlFromPlaceholder("formulations_weights_placeholder")
+    document.getElementById("submit").disabled = true
     weigthConstraint = document.getElementById("weigth_constraint").value
 
     const materialsPlaceholder = document.getElementById("material_selection");
@@ -67,8 +69,8 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const requestData = collectFormulationsMinMaxRequestData();
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData)
-        // assignAddCustomBlendEvent();
         assignDeleteWeightEvent();
+        document.getElementById("submit").disabled = false
     })
 }
 

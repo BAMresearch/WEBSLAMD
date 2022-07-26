@@ -32,15 +32,15 @@ function addListenersToIndependentFields() {
     for (let item of inputFields) {
         item.min.addEventListener("keyup", () => {
             computeDependentValue("min", item.min, inputFields);
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
         item.max.addEventListener("keyup", () => {
             computeDependentValue("max", item.max, inputFields);
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
             validateIncrementValue(item.increment)
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
     }
 }
@@ -50,33 +50,25 @@ function addListenersToAllFields() {
     for (let item of inputFields) {
         item.min.addEventListener("keyup", () => {
             fixInputValue(item.min);
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
         item.max.addEventListener("keyup", () => {
             fixInputValue(item.max);
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
             fixInputValue(item.increment);
-            toggleConfirmFormulationsBlendingButton(inputFields);
+            toggleConfirmationFormulationsButtons(inputFields);
         });
     }
 }
 
-function toggleConfirmFormulationsBlendingButton(inputFields) {
+function toggleConfirmationFormulationsButtons(inputFields) {
     let allIncrementsFilled = inputFields.filter(item => item['increment'].value === "").length === 0;
     let allMinFilled = inputFields.filter(item => item['min'].value === "").length === 0;
     let allMaxFilled = inputFields.filter(item => item['max'].value === "").length === 0;
     document.getElementById("confirm_formulations_configuration_button").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
-}
-
-function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
-    if (initialCreationOfForm) {
-        allRatioFieldsHaveValidInput = true;
-        document.getElementById("submit").disabled = nameIsEmpty;
-    }
-
-    toggleSubmitButtonBasedOnRatiosAndName();
+    document.getElementById("submit").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
 /**
