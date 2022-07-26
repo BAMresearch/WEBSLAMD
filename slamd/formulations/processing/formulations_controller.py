@@ -20,6 +20,7 @@ def base_material_page():
                            formulations_min_max_form=FormulationsMinMaxForm())
 
 
+
 @formulations.route('/add_min_max_entries/<count_materials>/<count_processes>', methods=['GET'])
 def add_formulations_min_max_entry(count_materials, count_processes):
     min_max_form = FormulationsService.create_formulations_min_max_form(count_materials, count_processes)
