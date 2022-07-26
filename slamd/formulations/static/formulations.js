@@ -7,8 +7,8 @@ function toggleSelectionConfirmationButtonAfterMaterialSelection() {
 }
 
 function toggleBasedOnSelectionAndConstraints() {
-    const material_selection = document.getElementById("material_selection");
-    const materials_selected = Array.from(material_selection.options).filter(option => option.selected);
+    const powder_selection = document.getElementById("powder_selection");
+    const materials_selected = Array.from(powder_selection.options).filter(option => option.selected);
 
     const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
 
@@ -47,7 +47,7 @@ async function confirmSelection() {
     document.getElementById("submit").disabled = true
     weigthConstraint = document.getElementById("weigth_constraint").value
 
-    const materialsPlaceholder = document.getElementById("material_selection");
+    const materialsPlaceholder = document.getElementById("powder_selection");
     const processesPlaceholder = document.getElementById("process_selection");
 
     const selectedMaterials = collectSelectionForFormulations(materialsPlaceholder);
@@ -117,7 +117,7 @@ function prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses) {
 
 window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("material_selection").addEventListener("change", toggleSelectionConfirmationButtonAfterMaterialSelection);
+    document.getElementById("powder_selection").addEventListener("change", toggleSelectionConfirmationButtonAfterMaterialSelection);
     document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
     document.getElementById("weigth_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
 });

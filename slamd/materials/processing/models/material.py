@@ -21,4 +21,4 @@ class Material:
     additional_properties: list[AdditionalProperty] = None
     is_blended: bool = False
     blending_ratios: str = ''
-    created_from: List[UUID] = None
+    created_from: list[UUID] = None

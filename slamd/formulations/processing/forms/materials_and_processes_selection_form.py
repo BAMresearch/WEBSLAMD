@@ -1,11 +1,35 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField
+from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField, SelectField
 
 
 class MaterialsAndProcessesSelectionForm(Form):
 
-    material_selection = SelectMultipleField(
-        label='Materials',
+    powder_selection = SelectField(
+        label='Powders',
+        validators=[validators.DataRequired()],
+        choices=[]
+    )
+
+    liquid_selection = SelectField(
+        label='Liquids',
+        validators=[validators.DataRequired()],
+        choices=[]
+    )
+
+    aggregates_selection = SelectField(
+        label='Aggregates',
+        validators=[validators.DataRequired()],
+        choices=[]
+    )
+
+    admixture_selection = SelectField(
+        label='Admixture',
+        validators=[validators.DataRequired()],
+        choices=[]
+    )
+
+    custom_selection = SelectMultipleField(
+        label='Custom',
         validators=[validators.DataRequired()],
         choices=[]
     )
