@@ -3,7 +3,7 @@ from functools import reduce
 from itertools import product
 
 from slamd.common.common_validators import min_max_increment_config_valid
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
@@ -93,6 +93,9 @@ class FormulationsService:
             full_cartesian_product = cls._compute_full_cartesian_product(cartesian_product_list_of_independent_weights,
                                                                          materials_formulation_configuration,
                                                                          weight_constraint)
+        if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
+            raise SlamdRequestTooLargeException(
+                f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
 
         weights_form = WeightsForm()
         for i, entry in enumerate(full_cartesian_product):
