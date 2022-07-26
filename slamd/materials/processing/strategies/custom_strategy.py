@@ -37,8 +37,6 @@ class CustomStrategy(MaterialStrategy):
     @classmethod
     def convert_to_multidict(cls, custom):
         multidict = super().convert_to_multidict(custom)
-        multidict.add('custom_name', custom.custom_name)
-        multidict.add('custom_value', custom.custom_value)
         return multidict
 
     @classmethod

@@ -93,8 +93,7 @@ def test_slamd_selects_custom(client):
     template = response.json['template']
 
     assert response.status_code == 200
-    assert 'Name' in template
-    assert 'Value' in template
+    assert 'If you want to specify a custom material use additional properties below.' in template
 
 
 def test_slamd_selects_process(client):
