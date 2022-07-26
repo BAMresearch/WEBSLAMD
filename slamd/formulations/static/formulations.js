@@ -22,14 +22,18 @@ function toggleSelectionConfirmationButtonAfterConstraintChange() {
 
 function toggleWeigthConstraintInput() {
     const with_constraint = document.getElementById("with_constraint")
+    removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder")
+    removeInnerHtmlFromPlaceholder("formulations_weights_placeholder")
+
     withConstraint = with_constraint.checked;
     if (withConstraint) {
         document.getElementById("weigth_constraint").disabled = false
+        document.getElementById("change_materials_and_processes_selection_button").disabled = true;
     } else {
         document.getElementById("weigth_constraint").disabled = true
         document.getElementById("weigth_constraint").value = ""
+        document.getElementById("change_materials_and_processes_selection_button").disabled = false;
     }
-    document.getElementById("change_materials_and_processes_selection_button").disabled = true;
 }
 
 async function confirmSelection() {
@@ -38,10 +42,20 @@ async function confirmSelection() {
     document.getElementById("submit").disabled = true
     weigthConstraint = document.getElementById("weigth_constraint").value
 
-    const materialsPlaceholder = document.getElementById("powder_selection");
+    const powderPlaceholder = document.getElementById("powder_selection");
+    const liquidPlaceholder = document.getElementById("liquid_selection");
+    const aggregatesPlaceholder = document.getElementById("aggregates_selection");
+    const admixturePlaceholder = document.getElementById("admixture_selection");
+    const customPlaceholder = document.getElementById("custom_selection");
     const processesPlaceholder = document.getElementById("process_selection");
 
-    const selectedMaterials = collectSelectionForFormulations(materialsPlaceholder);
+    const selectedMaterials = []
+    selectedMaterials.push(...collectSelectionForFormulations(powderPlaceholder))
+    selectedMaterials.push(...collectSelectionForFormulations(liquidPlaceholder))
+    selectedMaterials.push(...collectSelectionForFormulations(aggregatesPlaceholder))
+    selectedMaterials.push(...collectSelectionForFormulations(admixturePlaceholder))
+    selectedMaterials.push(...collectSelectionForFormulations(customPlaceholder))
+
     const selectedProcesses = collectSelection(processesPlaceholder);
 
     const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;

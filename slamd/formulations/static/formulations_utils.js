@@ -7,6 +7,7 @@
 function collectSelectionForFormulations(placeholder) {
     return Array.from(placeholder.children)
         .filter(option => option.selected)
+        .filter(option => option.innerHTML !== "")
         .map(option => {
             let typeAndUuid = option.value.split('|');
             const type = typeAndUuid[0]
