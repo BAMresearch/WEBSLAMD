@@ -19,7 +19,7 @@ class FormulationsService:
 
     @classmethod
     def populate_selection_form(cls):
-        all_materials: MaterialsForFormulations = MaterialsFacade.find_all()
+        all_materials = MaterialsFacade.find_all()
 
         form = MaterialsAndProcessesSelectionForm()
         form.powder_selection.choices.extend(cls._to_selection(all_materials.powders))
@@ -39,19 +39,17 @@ class FormulationsService:
 
     @classmethod
     def create_formulations_min_max_form(cls, count_materials, count_processes):
-        if not_numeric(count_materials):
+        if not_empty(count_materials) and not_numeric(count_materials):
             raise ValueNotSupportedException('Cannot process selection!')
 
         if not_empty(count_processes) and not_numeric(count_processes):
             raise ValueNotSupportedException('Cannot process selection!')
 
-        count_materials = int(count_materials)
+        if not_empty(count_materials):
+            count_materials = int(count_materials)
 
         if not_empty(count_processes):
             count_processes = int(count_processes)
-
-        if count_materials == 0:
-            raise ValueNotSupportedException('No material selected!')
 
         min_max_form = FormulationsMinMaxForm()
         for i in range(count_materials):
