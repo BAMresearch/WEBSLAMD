@@ -7,29 +7,26 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 class WeightInputPreprocessor:
 
     @classmethod
-    def collect_base_names_and_weights(cls, materials_formulation_configuration, constrained=True):
+    def collect_base_names_and_weights(cls, formulation_config, constrained=True):
         all_materials_weights = []
         all_names = []
-        for i in range(len(materials_formulation_configuration)):
-            material_uuid = materials_formulation_configuration[i]['uuid']
-            material_type = materials_formulation_configuration[i]['type']
-            material = MaterialsFacade.get_material(material_type, material_uuid)
-
-            base_names_for_blended_material = cls._add_created_from_base_names(material, material_type)
+        for i, entry in enumerate(formulation_config):
+            material = MaterialsFacade.get_material(entry['type'], entry['uuid'])
+            base_names_for_blended_material = cls._add_created_from_base_names(material, entry['type'])
             all_names.append(base_names_for_blended_material)
-            if constrained:
-                if i != len(materials_formulation_configuration) - 1:
-                    blending_ratios = material.blending_ratios
-                    weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                            materials_formulation_configuration[i])
-                    all_materials_weights.append(weights_for_material)
-            else:
-                blending_ratios = material.blending_ratios
-                weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                        materials_formulation_configuration[i])
-                all_materials_weights.append(weights_for_material)
+
+            if constrained and i == len(formulation_config) - 1:
+                continue
+
+            cls._extend_all_weights(all_materials_weights, entry, material)
 
         return all_materials_weights, all_names
+
+    @classmethod
+    def _extend_all_weights(cls, all_materials_weights, entry, material):
+        blending_ratios = material.blending_ratios
+        weights_for_material = cls._create_weights_for_material(material.name, blending_ratios, entry)
+        all_materials_weights.append(weights_for_material)
 
     @classmethod
     def _add_created_from_base_names(cls, material, material_type):

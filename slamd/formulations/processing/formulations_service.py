@@ -84,17 +84,16 @@ class FormulationsService:
         return weights_form, base_names.strip()
 
     @classmethod
-    def _get_constrained_base_weights(cls, materials_formulation_config, weight_constraint):
+    def _get_constrained_base_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not min_max_increment_config_valid(materials_formulation_config, weight_constraint):
+        if not min_max_increment_config_valid(formulation_config, weight_constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(
-            materials_formulation_config)
+        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config)
 
         full_cartesian_product = BaseWeightsCalculator.compute_full_cartesian_product(all_materials_weights,
-                                                                                      materials_formulation_config,
+                                                                                      formulation_config,
                                                                                       weight_constraint)
         return full_cartesian_product, all_names
 
