@@ -4,7 +4,6 @@ from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
-from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 
 
