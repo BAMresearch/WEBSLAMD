@@ -4,7 +4,6 @@ from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
@@ -64,7 +63,7 @@ def test_create_formulations_min_max_form_does_not_raise_exception_when_params_a
 
 # TODO: use facade instead of persistence
 def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypatch):
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', _mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
     with app.test_request_context('/materials/formulations/add_weights'):
         weight_request_data = \
@@ -98,7 +97,7 @@ def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypa
 
 
 def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatch):
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', _mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
     with app.test_request_context('/materials/formulations/add_weights'):
         weight_request_data = \
@@ -126,7 +125,7 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
 
 # noinspection PyTypeChecker
 # mock uuid so we do simply use strings instead of actual uuids
-def _mock_query_by_type_and_uuid(material_type, uuid):
+def _mock_get_material(material_type, uuid):
     if material_type == 'Powder':
         if uuid == '1':
             powder = Powder(name='test blended powder', type='powder', is_blended=True, blending_ratios='0.2/0.8',

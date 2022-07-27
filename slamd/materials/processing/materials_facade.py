@@ -12,13 +12,18 @@ from slamd.materials.processing.models.process import Process
 
 @dataclass
 class MaterialsForFormulations:
-
     powders: list[Powder]
     aggregates_list: list[Aggregates]
     liquids: list[Liquid]
     admixtures: list[Admixture]
     customs: list[Custom]
     processes: list[Process]
+
+
+"""
+Represents an API for accesses from another package, in particular formulations. All calls to materials from formulation
+must be via using this facade.
+"""
 
 
 class MaterialsFacade:
@@ -33,3 +38,6 @@ class MaterialsFacade:
                                         customs=p.query_by_type(MaterialType.CUSTOM.value),
                                         processes=p.query_by_type(MaterialType.PROCESS.value))
 
+    @classmethod
+    def get_material(cls, material_type, uuid):
+        return MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)

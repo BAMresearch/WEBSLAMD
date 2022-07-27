@@ -10,7 +10,6 @@ from slamd.formulations.processing.forms.materials_and_processes_selection_form 
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.materials.processing.materials_facade import MaterialsFacade
-from slamd.materials.processing.materials_persistence import MaterialsPersistence
 
 MAX_NUMBER_OF_WEIGHTS = 100
 
@@ -69,9 +68,9 @@ class FormulationsService:
         if empty(weight_constraint):
             if not cls._unconstrained_min_max_increment_config_valid(materials_formulation_configuration):
                 raise ValueNotSupportedException('Configuration of weights is not valid!')
-            all_materials_weights = cls.collect_base_names_and_weights(all_names, materials_formulation_configuration,
-                                                                       False)
-            full_cartesian_product = cls.compute_cartesian_product(all_materials_weights)
+            all_materials_weights = cls._collect_base_names_and_weights(all_names, materials_formulation_configuration,
+                                                                        False)
+            full_cartesian_product = cls._compute_cartesian_product(all_materials_weights)
         else:
             if not_numeric(weight_constraint):
                 raise ValueNotSupportedException('Weight Constraint must be a number!')
@@ -79,9 +78,9 @@ class FormulationsService:
             if not min_max_increment_config_valid(materials_formulation_configuration, weight_constraint):
                 raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-            all_materials_weights = cls.collect_base_names_and_weights(all_names, materials_formulation_configuration)
+            all_materials_weights = cls._collect_base_names_and_weights(all_names, materials_formulation_configuration)
 
-            cartesian_product_list_of_independent_weights = cls.compute_cartesian_product(all_materials_weights)
+            cartesian_product_list_of_independent_weights = cls._compute_cartesian_product(all_materials_weights)
 
             full_cartesian_product = cls._compute_full_cartesian_product(cartesian_product_list_of_independent_weights,
                                                                          materials_formulation_configuration,
@@ -99,19 +98,19 @@ class FormulationsService:
         return weights_form, base_names.strip()
 
     @classmethod
-    def compute_cartesian_product(cls, all_materials_weights):
+    def _compute_cartesian_product(cls, all_materials_weights):
         all_independent_weights = list(map(lambda w: w.weights, all_materials_weights))
         cartesian_product_of_independent_weights = product(*all_independent_weights)
         cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
         return cartesian_product_list_of_independent_weights
 
     @classmethod
-    def collect_base_names_and_weights(cls, all_names, materials_formulation_configuration, constrained=True):
+    def _collect_base_names_and_weights(cls, all_names, materials_formulation_configuration, constrained=True):
         all_materials_weights = []
         for i in range(len(materials_formulation_configuration)):
             material_uuid = materials_formulation_configuration[i]['uuid']
             material_type = materials_formulation_configuration[i]['type']
-            material = MaterialsPersistence.query_by_type_and_uuid(material_type, material_uuid)
+            material = MaterialsFacade.get_material(material_type, material_uuid)
 
             base_names_for_blended_material = cls._add_created_from_base_names(material, material_type)
             all_names.append(base_names_for_blended_material)
@@ -136,7 +135,7 @@ class FormulationsService:
             base_names_for_blended_material.append(material.name)
         else:
             for base_uuid in material.created_from:
-                base_material = MaterialsPersistence.query_by_type_and_uuid(material_type, str(base_uuid))
+                base_material = MaterialsFacade.get_material(material_type, str(base_uuid))
                 base_names_for_blended_material.append(base_material.name)
         return '/'.join(base_names_for_blended_material)
 
@@ -159,8 +158,7 @@ class FormulationsService:
             index_of_dependent_material = len(materials_formulation_configuration) - 1
             dependent_material_uuid = materials_formulation_configuration[index_of_dependent_material]['uuid']
             dependent_material_type = materials_formulation_configuration[index_of_dependent_material]['type']
-            dependent_material = MaterialsPersistence.query_by_type_and_uuid(dependent_material_type,
-                                                                             dependent_material_uuid)
+            dependent_material = MaterialsFacade.get_material(dependent_material_type, dependent_material_uuid)
             blending_ratios = dependent_material.blending_ratios
 
             dependent_weight_ratios = ''
