@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
@@ -8,8 +6,10 @@ from slamd.formulations.processing.forms.formulations_min_max_form import Formul
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
+from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
+WEIGHT_FORM_DELIMITER = '  |  '
 MAX_NUMBER_OF_WEIGHTS = 100
 
 
@@ -63,11 +63,14 @@ class FormulationsService:
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']
 
+        # the result of the computation contains a list of lists with each containing the weights in terms of the
+        # base materials; for example full_cartesian_product =
+        # "[['3.64/14.56', '15.2', '66.6'], ['3.64/14.56', '20.3', '61.5'], ['5.74/22.96', '15.2', '56.1']]"
         if empty(weight_constraint):
             full_cartesian_product, all_names = cls._get_unconstrained_base_weights(materials_formulation_config)
         else:
             full_cartesian_product, all_names = cls._get_constrained_base_weights(materials_formulation_config,
-                                                                       weight_constraint)
+                                                                                  weight_constraint)
         if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
@@ -75,9 +78,9 @@ class FormulationsService:
         weights_form = WeightsForm()
         for i, entry in enumerate(full_cartesian_product):
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
-            ratio_form_entry.weights.data = '  |  '.join(entry)
+            ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
             ratio_form_entry.idx.data = str(i)
-        base_names = '  |  '.join(all_names)
+        base_names = WEIGHT_FORM_DELIMITER.join(all_names)
         return weights_form, base_names.strip()
 
     @classmethod
@@ -87,7 +90,8 @@ class FormulationsService:
         if not min_max_increment_config_valid(materials_formulation_config, weight_constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-        all_materials_weights, all_names = cls._collect_base_names_and_weights(materials_formulation_config)
+        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(
+            materials_formulation_config)
 
         full_cartesian_product = BaseWeightsCalculator.compute_full_cartesian_product(all_materials_weights,
                                                                                       materials_formulation_config,
@@ -95,77 +99,14 @@ class FormulationsService:
         return full_cartesian_product, all_names
 
     @classmethod
-    def _get_unconstrained_base_weights(cls, materials_formulation_configuration):
-        if not cls._unconstrained_min_max_increment_config_valid(materials_formulation_configuration):
+    def _get_unconstrained_base_weights(cls, formulation_config):
+        if not cls._unconstrained_min_max_increment_config_valid(formulation_config):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-        all_materials_weights, all_names = cls._collect_base_names_and_weights(materials_formulation_configuration, False)
+        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config,
+                                                                                                  False)
         full_cartesian_product = BaseWeightsCalculator.compute_cartesian_product(all_materials_weights)
         return full_cartesian_product, all_names
-
-    @classmethod
-    def _collect_base_names_and_weights(cls, materials_formulation_configuration, constrained=True):
-        all_materials_weights = []
-        all_names = []
-        for i in range(len(materials_formulation_configuration)):
-            material_uuid = materials_formulation_configuration[i]['uuid']
-            material_type = materials_formulation_configuration[i]['type']
-            material = MaterialsFacade.get_material(material_type, material_uuid)
-
-            base_names_for_blended_material = cls._add_created_from_base_names(material, material_type)
-            all_names.append(base_names_for_blended_material)
-            if constrained:
-                if i != len(materials_formulation_configuration) - 1:
-                    blending_ratios = material.blending_ratios
-                    weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                            materials_formulation_configuration[i])
-                    all_materials_weights.append(weights_for_material)
-            else:
-                blending_ratios = material.blending_ratios
-                weights_for_material = cls._create_weights_for_material(material.name, blending_ratios,
-                                                                        materials_formulation_configuration[i])
-                all_materials_weights.append(weights_for_material)
-
-        return all_materials_weights, all_names
-
-    @classmethod
-    def _add_created_from_base_names(cls, material, material_type):
-        base_names_for_blended_material = []
-        if material.created_from is None:
-            base_names_for_blended_material.append(material.name)
-        else:
-            for base_uuid in material.created_from:
-                base_material = MaterialsFacade.get_material(material_type, str(base_uuid))
-                base_names_for_blended_material.append(base_material.name)
-        return '/'.join(base_names_for_blended_material)
-
-    @classmethod
-    def _create_weights_for_material(cls, material_name, blending_ratios, material_configuration):
-        if empty(blending_ratios):
-            return MaterialsWeights(material_name=material_name, weights=cls._create_weigths(material_configuration))
-
-        ratios = blending_ratios.split('/')
-        weights_for_blends = cls._create_weigths(material_configuration)
-
-        weights_for_all_base_materials_of_blend = []
-        for weight in weights_for_blends:
-            weights_of_base_material = ''
-            for ratio in ratios:
-                weights_of_base_material += f'{round(float(ratio) * float(weight), 2)}/'
-            weights_of_base_material = weights_of_base_material.strip()[:-1]
-            weights_for_all_base_materials_of_blend.append(weights_of_base_material)
-        return MaterialsWeights(material_name=material_name, weights=weights_for_all_base_materials_of_blend)
-
-    @classmethod
-    def _create_weigths(cls, material_configuration):
-        values_for_given_base_material = []
-        current_value = float(material_configuration['min'])
-        max = float(material_configuration['max'])
-        increment = float(material_configuration['increment'])
-        while current_value <= max:
-            values_for_given_base_material.append(str(round(current_value, 2)))
-            current_value += increment
-        return values_for_given_base_material
 
     @classmethod
     def _unconstrained_min_max_increment_config_valid(cls, materials_formulation_configuration):
@@ -181,16 +122,3 @@ class FormulationsService:
     def _validate_unconstrained_ranges(cls, increment, max_value, min_value):
         return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
-
-
-"""
-Weights are defined at the level of base materials which were used for blending. The material_name refers to the name
-of the material used for creating a formulation. This can either be a blended material or a base material. In the latter
-case, the weights simply correspond to the weigth passed in the input fields. 
-"""
-
-
-@dataclass
-class MaterialsWeights:
-    material_name: str
-    weights: list[str]
