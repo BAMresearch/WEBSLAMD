@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from slamd.common.slamd_utils import empty
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
