@@ -64,33 +64,7 @@ def test_create_formulations_min_max_form_does_not_raise_exception_when_params_a
 
 # TODO: use facade instead of persistence
 def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypatch):
-    # noinspection PyTypeChecker
-    # mock uuid so we do simply use strings instead of actual uuids
-    def mock_query_by_type_and_uuid(material_type, uuid):
-        if material_type == 'Powder':
-            if uuid == '1':
-                powder = Powder(name='test blended powder', type='powder', is_blended=True, blending_ratios='0.2/0.8',
-                                created_from=['4', '5'])
-                powder.uuid = '1'
-                return powder
-            elif uuid == '4':
-                powder = Powder(name='test powder 1', type='powder')
-                powder.uuid = '4'
-                return powder
-            else:
-                powder = Powder(name='test powder 2', type='powder')
-                powder.uuid = '5'
-                return powder
-        elif material_type == 'Aggregates' and uuid == '2':
-            aggregates = Aggregates(name='test aggregate', type='aggregates')
-            aggregates.uuid = '2'
-            return aggregates
-        else:
-            custom = Custom(name='test custom', type='custom')
-            custom.uuid = '3'
-            return custom
-
-    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', _mock_query_by_type_and_uuid)
 
     with app.test_request_context('/materials/formulations/add_weights'):
         weight_request_data = \
@@ -121,3 +95,57 @@ def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypa
                                                  {'idx': '9', 'weights': '4.0/16.0  |  30.0  |  17.0'},
                                                  {'idx': '10', 'weights': '4.0/16.0  |  50.0  |  7.0'},
                                                  {'idx': '11', 'weights': '4.0/16.0  |  50.0  |  17.0'}]
+
+
+def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatch):
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', _mock_query_by_type_and_uuid)
+
+    with app.test_request_context('/materials/formulations/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration': [
+                    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40,
+                     'increment': 10.5},
+                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25,
+                     'increment': 5.1},
+                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35,
+                     'increment': None}],
+                'weight_constraint': '100'
+            }
+
+        form, base_names = FormulationsService.create_weights_form(weight_request_data)
+
+        assert base_names == 'test powder 1/test powder 2  |  test aggregate  |  test custom'
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '3.64/14.56  |  15.2  |  66.6'},
+                                                 {'idx': '1', 'weights': '3.64/14.56  |  20.3  |  61.5'},
+                                                 {'idx': '2', 'weights': '5.74/22.96  |  15.2  |  56.1'},
+                                                 {'idx': '3', 'weights': '5.74/22.96  |  20.3  |  51.0'},
+                                                 {'idx': '4', 'weights': '7.84/31.36  |  15.2  |  45.6'},
+                                                 {'idx': '5', 'weights': '7.84/31.36  |  20.3  |  40.5'}]
+
+
+# noinspection PyTypeChecker
+# mock uuid so we do simply use strings instead of actual uuids
+def _mock_query_by_type_and_uuid(material_type, uuid):
+    if material_type == 'Powder':
+        if uuid == '1':
+            powder = Powder(name='test blended powder', type='powder', is_blended=True, blending_ratios='0.2/0.8',
+                            created_from=['4', '5'])
+            powder.uuid = '1'
+            return powder
+        elif uuid == '4':
+            powder = Powder(name='test powder 1', type='powder')
+            powder.uuid = '4'
+            return powder
+        else:
+            powder = Powder(name='test powder 2', type='powder')
+            powder.uuid = '5'
+            return powder
+    elif material_type == 'Aggregates' and uuid == '2':
+        aggregates = Aggregates(name='test aggregate', type='aggregates')
+        aggregates.uuid = '2'
+        return aggregates
+    else:
+        custom = Custom(name='test custom', type='custom')
+        custom.uuid = '3'
+        return custom

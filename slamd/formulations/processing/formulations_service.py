@@ -69,7 +69,8 @@ class FormulationsService:
         if empty(weight_constraint):
             if not cls._unconstrained_min_max_increment_config_valid(materials_formulation_configuration):
                 raise ValueNotSupportedException('Configuration of weights is not valid!')
-            all_materials_weights = cls.collect_base_names_and_weights(all_names, materials_formulation_configuration, False)
+            all_materials_weights = cls.collect_base_names_and_weights(all_names, materials_formulation_configuration,
+                                                                       False)
             full_cartesian_product = cls.compute_cartesian_product(all_materials_weights)
         else:
             if not_numeric(weight_constraint):
@@ -200,7 +201,7 @@ class FormulationsService:
         max = float(material_configuration['max'])
         increment = float(material_configuration['increment'])
         while current_value <= max:
-            values_for_given_base_material.append(str(current_value))
+            values_for_given_base_material.append(str(round(current_value, 2)))
             current_value += increment
         return values_for_given_base_material
 
@@ -225,6 +226,8 @@ Weights are defined at the level of base materials which were used for blending.
 of the material used for creating a formulation. This can either be a blended material or a base material. In the latter
 case, the weights simply correspond to the weigth passed in the input fields. 
 """
+
+
 @dataclass
 class MaterialsWeights:
     material_name: str
