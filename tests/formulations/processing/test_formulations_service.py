@@ -1,7 +1,7 @@
 import pytest
 
 from slamd import create_app
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -70,10 +70,8 @@ def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypa
             {
                 'materials_formulation_configuration':
                     [
-                        {'uuid': '1', 'type': 'Powder', 'min': 10, 'max': 20,
-                         'increment': 5},
-                        {'uuid': '2', 'type': 'Aggregates', 'min': 30, 'max': 50,
-                         'increment': 20},
+                        {'uuid': '1', 'type': 'Powder', 'min': 10, 'max': 20, 'increment': 5},
+                        {'uuid': '2', 'type': 'Aggregates', 'min': 30, 'max': 50, 'increment': 20},
                         {'uuid': '3', 'type': 'Custom', 'min': 7, 'max': 17, 'increment': 10}
                     ],
                 'weight_constraint': ''
@@ -103,12 +101,9 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
         weight_request_data = \
             {
                 'materials_formulation_configuration': [
-                    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40,
-                     'increment': 10.5},
-                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25,
-                     'increment': 5.1},
-                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35,
-                     'increment': None}],
+                    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 10.5},
+                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 5.1},
+                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}],
                 'weight_constraint': '100'
             }
 
@@ -122,6 +117,22 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
                                                  {'idx': '4', 'weights': '7.84/31.36  |  15.2  |  45.6'},
                                                  {'idx': '5', 'weights': '7.84/31.36  |  20.3  |  40.5'}]
 
+
+def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):
+    monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
+
+    with app.test_request_context('/materials/formulations/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration': [
+                    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 0.1},
+                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 0.2},
+                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}],
+                'weight_constraint': '100'
+            }
+
+        with pytest.raises(SlamdRequestTooLargeException):
+            FormulationsService.create_weights_form(weight_request_data)
 
 # noinspection PyTypeChecker
 # mock uuid so we do simply use strings instead of actual uuids
