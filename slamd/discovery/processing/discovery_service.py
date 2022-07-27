@@ -1,3 +1,5 @@
+from werkzeug.datastructures import CombinedMultiDict
+
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
@@ -9,11 +11,10 @@ from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 class DiscoveryService:
 
     @classmethod
-    def save_dataset(cls):
-        # Flask-WTF handles passing form data to the form for us
-        form = UploadDatasetForm()
+    def save_dataset(cls, submitted_form, submitted_file):
+        form = UploadDatasetForm(CombinedMultiDict((submitted_file, submitted_form)))
 
-        if form.validate_on_submit():
+        if form.validate():
             dataset = CsvStrategy.create_dataset(form.dataset.data)
             CsvStrategy.save_dataset(dataset)
             return True, None

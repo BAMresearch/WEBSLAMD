@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, make_response, jsonify, redirect
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
@@ -29,7 +29,7 @@ def discovery_page():
 
 @discovery.route('', methods=['POST'])
 def upload_dataset():
-    valid, form = DiscoveryService.save_dataset()
+    valid, form = DiscoveryService.save_dataset(request.form, request.files)
 
     if valid:
         return redirect('/materials/discovery')
