@@ -12,12 +12,14 @@ function toggleBasedOnSelectionAndConstraints() {
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
+    weigthConstraint = document.getElementById("weigth_constraint").value;
+    toggleBasedOnSelectionAndConstraints();
+}
+
+function autocorrectWeightValue(){
     let weightConstraintInput = document.getElementById("weigth_constraint");
 
     fixInputValue(weightConstraintInput)
-
-    weigthConstraint = weightConstraintInput.value;
-    toggleBasedOnSelectionAndConstraints();
 }
 
 function toggleWeigthConstraintInput() {
@@ -85,4 +87,5 @@ window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
     document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
     document.getElementById("weigth_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("weigth_constraint").addEventListener("keyup", autocorrectWeightValue);
 });
