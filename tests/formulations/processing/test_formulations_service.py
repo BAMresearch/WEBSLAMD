@@ -61,7 +61,6 @@ def test_create_formulations_min_max_form_does_not_raise_exception_when_params_a
         FormulationsService.create_formulations_min_max_form('1', '2')
 
 
-# TODO: use facade instead of persistence
 def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypatch):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
@@ -133,6 +132,7 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
 
         with pytest.raises(SlamdRequestTooLargeException):
             FormulationsService.create_weights_form(weight_request_data)
+
 
 # noinspection PyTypeChecker
 # mock uuid so we do simply use strings instead of actual uuids
