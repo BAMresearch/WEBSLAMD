@@ -37,7 +37,3 @@ class DiscoveryForm(Form):
         places=2,
         validators=[validators.NumberRange(min=0, max=10, message='The curiosity value should be between 0 and 10')]
     )
-
-    # left - exploit
-    # right - explore
-    # AI Model LOLO as a built-in

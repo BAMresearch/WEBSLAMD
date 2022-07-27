@@ -34,7 +34,7 @@ class DatasetNotFoundException(NotFound):
 
     def __init__(self, message):
         self.message = message
-        super(MaterialNotFoundException, self).__init__()
+        super(DatasetNotFoundException, self).__init__()
 
 
 class ValueNotSupportedException(BadRequest):

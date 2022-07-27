@@ -1,4 +1,3 @@
 function updateCuriosityValue(curiosity) {
-    // Round the value to two decimal places
-    document.getElementById('selected-range').value = Math.round(curiosity * 100) / 100;
+    document.getElementById('selected-range').value = curiosity.toFixed(2);
 }
