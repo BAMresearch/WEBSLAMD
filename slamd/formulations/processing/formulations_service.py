@@ -9,7 +9,7 @@ from slamd.formulations.processing.forms.formulations_min_max_form import Formul
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
-from slamd.materials.processing.materials_facade import MaterialsForFormulations, MaterialsFacade
+from slamd.materials.processing.materials_facade import MaterialsFacade
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 
 MAX_NUMBER_OF_WEIGHTS = 100

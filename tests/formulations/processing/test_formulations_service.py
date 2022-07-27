@@ -4,6 +4,9 @@ from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
+from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.aggregates import Aggregates
+from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
@@ -57,3 +60,64 @@ def test_create_formulations_min_max_form_raises_exception_when_processes_count_
 def test_create_formulations_min_max_form_does_not_raise_exception_when_params_are_valid(monkeypatch):
     with app.test_request_context('/materials/formulations'):
         FormulationsService.create_formulations_min_max_form('1', '2')
+
+
+# TODO: use facade instead of persistence
+def test_create_weights_form_computes_all_weights_in_unconstrained_case(monkeypatch):
+    # noinspection PyTypeChecker
+    # mock uuid so we do simply use strings instead of actual uuids
+    def mock_query_by_type_and_uuid(material_type, uuid):
+        if material_type == 'Powder':
+            if uuid == '1':
+                powder = Powder(name='test blended powder', type='powder', is_blended=True, blending_ratios='0.2/0.8',
+                                created_from=['4', '5'])
+                powder.uuid = '1'
+                return powder
+            elif uuid == '4':
+                powder = Powder(name='test powder 1', type='powder')
+                powder.uuid = '4'
+                return powder
+            else:
+                powder = Powder(name='test powder 2', type='powder')
+                powder.uuid = '5'
+                return powder
+        elif material_type == 'Aggregates' and uuid == '2':
+            aggregates = Aggregates(name='test aggregate', type='aggregates')
+            aggregates.uuid = '2'
+            return aggregates
+        else:
+            custom = Custom(name='test custom', type='custom')
+            custom.uuid = '3'
+            return custom
+
+    monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
+
+    with app.test_request_context('/materials/formulations/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration':
+                    [
+                        {'uuid': '1', 'type': 'Powder', 'min': 10, 'max': 20,
+                         'increment': 5},
+                        {'uuid': '2', 'type': 'Aggregates', 'min': 30, 'max': 50,
+                         'increment': 20},
+                        {'uuid': '3', 'type': 'Custom', 'min': 7, 'max': 17, 'increment': 10}
+                    ],
+                'weight_constraint': ''
+            }
+
+        form, base_names = FormulationsService.create_weights_form(weight_request_data)
+
+        assert base_names == 'test powder 1/test powder 2  |  test aggregate  |  test custom'
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '2.0/8.0  |  30.0  |  7.0'},
+                                                 {'idx': '1', 'weights': '2.0/8.0  |  30.0  |  17.0'},
+                                                 {'idx': '2', 'weights': '2.0/8.0  |  50.0  |  7.0'},
+                                                 {'idx': '3', 'weights': '2.0/8.0  |  50.0  |  17.0'},
+                                                 {'idx': '4', 'weights': '3.0/12.0  |  30.0  |  7.0'},
+                                                 {'idx': '5', 'weights': '3.0/12.0  |  30.0  |  17.0'},
+                                                 {'idx': '6', 'weights': '3.0/12.0  |  50.0  |  7.0'},
+                                                 {'idx': '7', 'weights': '3.0/12.0  |  50.0  |  17.0'},
+                                                 {'idx': '8', 'weights': '4.0/16.0  |  30.0  |  7.0'},
+                                                 {'idx': '9', 'weights': '4.0/16.0  |  30.0  |  17.0'},
+                                                 {'idx': '10', 'weights': '4.0/16.0  |  50.0  |  7.0'},
+                                                 {'idx': '11', 'weights': '4.0/16.0  |  50.0  |  17.0'}]
