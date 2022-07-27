@@ -20,12 +20,14 @@ class WeightInputPreprocessor:
 
             cls._extend_all_weights(all_materials_weights, entry, material)
 
+        # all_materials_weights contains unconstrained weights in terms of the base materials, e.g.
+        # all_materials_weights=[['3.64/14.56', '5.74/22.96', '7.84/31.36'], ['15.2', '20.3']]
         return all_materials_weights, all_names
 
     @classmethod
     def _extend_all_weights(cls, all_materials_weights, entry, material):
         blending_ratios = material.blending_ratios
-        weights_for_material = cls._create_weights_for_material(material.name, blending_ratios, entry)
+        weights_for_material = cls._create_weights_for_material(blending_ratios, entry)
         all_materials_weights.append(weights_for_material)
 
     @classmethod
@@ -40,9 +42,9 @@ class WeightInputPreprocessor:
         return '/'.join(base_names_for_blended_material)
 
     @classmethod
-    def _create_weights_for_material(cls, material_name, blending_ratios, material_configuration):
+    def _create_weights_for_material(cls, blending_ratios, material_configuration):
         if empty(blending_ratios):
-            return MaterialsWeights(material_name=material_name, weights=cls._create_weigths(material_configuration))
+            return cls._create_weigths(material_configuration)
 
         ratios = blending_ratios.split('/')
         weights_for_blends = cls._create_weigths(material_configuration)
@@ -54,7 +56,7 @@ class WeightInputPreprocessor:
                 weights_of_base_material += f'{round(float(ratio) * float(weight), 2)}/'
             weights_of_base_material = weights_of_base_material.strip()[:-1]
             weights_for_all_base_materials_of_blend.append(weights_of_base_material)
-        return MaterialsWeights(material_name=material_name, weights=weights_for_all_base_materials_of_blend)
+        return weights_for_all_base_materials_of_blend
 
     @classmethod
     def _create_weigths(cls, material_configuration):
@@ -66,16 +68,3 @@ class WeightInputPreprocessor:
             values_for_given_base_material.append(str(round(current_value, 2)))
             current_value += increment
         return values_for_given_base_material
-
-
-"""
-Weights are defined at the level of base materials which were used for blending. The material_name refers to the name
-of the material used for creating a formulation. This can either be a blended material or a base material. In the latter
-case, the weights simply correspond to the weigth passed in the input fields. 
-"""
-
-
-@dataclass
-class MaterialsWeights:
-    material_name: str
-    weights: list[str]

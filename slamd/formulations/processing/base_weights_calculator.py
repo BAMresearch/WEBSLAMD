@@ -9,14 +9,15 @@ class BaseWeightsCalculator:
 
     @classmethod
     def compute_cartesian_product(cls, all_materials_weights):
-        all_independent_weights = list(map(lambda w: w.weights, all_materials_weights))
-        cartesian_product_of_independent_weights = product(*all_independent_weights)
+        cartesian_product_of_independent_weights = product(*all_materials_weights)
         cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
         return cartesian_product_list_of_independent_weights
 
     @classmethod
-    def compute_full_cartesian_product(cls, all_materials_weights, materials_formulation_configuration, weight_constraint):
-        cartesian_product_list_of_independent_weights = BaseWeightsCalculator.compute_cartesian_product(all_materials_weights)
+    def compute_full_cartesian_product(cls, all_materials_weights, materials_formulation_configuration,
+                                       weight_constraint):
+        cartesian_product_list_of_independent_weights = BaseWeightsCalculator.compute_cartesian_product(
+            all_materials_weights)
         full_cartesian_product = []
         for item in cartesian_product_list_of_independent_weights:
 
