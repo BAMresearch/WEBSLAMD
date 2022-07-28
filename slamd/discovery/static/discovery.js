@@ -1,3 +1,4 @@
 function updateCuriosityValue(curiosity) {
-    document.getElementById('selected-range').value = curiosity.toFixed(2);
+    value = parseFloat(curiosity);
+    document.getElementById('selected-range').value = parseFloat(value.toFixed(2));
 }
