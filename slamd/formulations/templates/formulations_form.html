@@ -1,0 +1,82 @@
+{{ materials_and_processes_selection_form.hidden_tag() }}
+{% from 'action_buttons.html' import create_change_selection_button -%}
+
+<h3>Materials formulations</h3>
+<form class="row g-3" action="" method="post" novalidate>
+    {{ materials_and_processes_selection_form.csrf_token }}
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.powder_selection(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.liquid_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.liquid_selection(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.aggregates_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.aggregates_selection(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.admixture_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.admixture_selection(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.custom_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.custom_selection(class_="form-control form-select") }}
+    </div>
+    <div class="col-md-6">
+        <div>
+            {{ materials_and_processes_selection_form.process_selection.label(class_="control-label") }}
+            {{ materials_and_processes_selection_form.process_selection(class_="form-control form-select") }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="formulations_constraint">
+            <div>
+                {{ materials_and_processes_selection_form.with_constraint.label(class_="control-label") }}
+                {{ materials_and_processes_selection_form.with_constraint() }}
+            </div>
+            <div>
+                {{ materials_and_processes_selection_form.weigth_constraint.label(class_="control-label") }}
+                {{ materials_and_processes_selection_form.weigth_constraint(class_="form-control", disabled=True) }}
+            </div>
+        </div>
+    </div>
+    <div>
+        {{ create_change_selection_button("change_materials_and_processes_selection_button",
+        "confirm_materials_and_processes_selection_button",
+        "Choose at least one material for creating materials formulations") }}
+    </div>
+
+    <div class="justify-content-center">
+        <div id="formulations_min_max_placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
+    </div>
+
+    <div class="justify-content-center">
+        <div id="formulations_weights_placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
+    </div>
+
+    <div class="justify-content-center">
+        <div id="dataframe_placeholder"></div>
+    </div>
+
+    <div class="form-group mb-12">
+        <div class="col-sm-offset-2 col-sm-10" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="top"
+             title="For enabling submission please choose materials configure all weights and increments.">
+            {{ materials_and_processes_selection_form.submit(class_="btn btn-primary", data_bs_toggle="modal",
+            data_bs_target="#submit_blending_modal", disabled=True) }}
+        </div>
+    </div>
+
+    <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submit_blending_modal_label">Created materials formulations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -7,7 +7,7 @@
     Note that also decimals with up to two decimal places are allowed.
 </div>
 </span>
-<!--Custom ratio fields can be dynammically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
+<!--Custom ratio fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
 <!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
 {% for entry in ratio_form.all_ratio_entries %}
 <div class="col-md-3">
@@ -16,11 +16,11 @@
 {% endfor %}
 <div id="add_custom_blend_button_wrapper" title="Add additional blend configurations manually">
     <button class="btn btn-secondary col-12" type="button" id="add_custom_blend_button">
-        Add custom blend
+        Add blend
     </button>
 </div>
 <div id="delete_custom_blend_button_wrapper" title="Delete the last blending ratio field">
     <button class="btn btn-danger col-12" type="button" id="delete_custom_blend_button">
-        Delete custom blend
+        Delete blend
     </button>
 </div>

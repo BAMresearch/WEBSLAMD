@@ -1,7 +1,22 @@
 from flask import session
 
+from slamd.materials.processing.material_type import MaterialType
+
 
 class MaterialsPersistence:
+
+    @classmethod
+    def find_all_materials(cls):
+        all_material_types = MaterialType.get_all_materials()
+        all_materials = []
+        for material_type in all_material_types:
+            materials = cls.query_by_type(material_type)
+            all_materials.append(materials)
+        return all_materials
+
+    @classmethod
+    def find_all_processes(cls):
+        return cls.query_by_type('process')
 
     @classmethod
     def save(cls, material_type, material):

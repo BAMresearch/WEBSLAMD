@@ -155,7 +155,7 @@ def test_creates_min_max_form_creates_forms_and_returns_completeness_information
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
 
     with app.test_request_context('/materials/blended/add_min_max_entries/powder/2'):
-        form, complete = BlendedMaterialsService.create_min_max_form('powder', 2, ['uuid1', 'uuid2', 'uuid1'])
+        form, complete = BlendedMaterialsService.create_min_max_form('powder', 2, ['uuid1', 'uuid2', 'uuid3'])
 
     assert len(form.all_min_max_entries.data) == 2
     assert form.all_min_max_entries.data[0] == {'uuid_field': None, 'blended_material_name': None, 'increment': None,
@@ -290,6 +290,9 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
     assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.4'
 
+    assert mock_save_called_with_first_blended_material.blending_ratios == '0.4/0.4/0.2'
+    assert mock_save_called_with_first_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
+
     assert mock_save_called_with_second_blended_material.composition.fe3_o2 == 13.0
     assert mock_save_called_with_second_blended_material.composition.si_o2 == 6.08
     assert mock_save_called_with_second_blended_material.composition.al2_o3 == 7.0
@@ -311,6 +314,9 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_second_blended_material.additional_properties[2].name == 'Other Category'
     assert mock_save_called_with_second_blended_material.additional_properties[2].value == '0.3'
 
+    assert mock_save_called_with_second_blended_material.blending_ratios == '0.4/0.3/0.3'
+    assert mock_save_called_with_second_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
+
 
 def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_material,
                                      mock_save_called_with_second_blended_material):
@@ -331,6 +337,9 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
     assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.2'
 
+    assert mock_save_called_with_first_blended_material.blending_ratios == '0.4/0.4/0.2'
+    assert mock_save_called_with_first_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
+
     assert mock_save_called_with_second_blended_material.composition.fine_aggregates == 18.1
     assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == 5.69
     assert mock_save_called_with_second_blended_material.composition.fa_density == 5.8
@@ -339,6 +348,9 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
     assert mock_save_called_with_second_blended_material.costs.costs == 35.0
     assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
+
+    assert mock_save_called_with_second_blended_material.blending_ratios == '0.4/0.3/0.3'
+    assert mock_save_called_with_second_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
 
 
 def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
@@ -368,6 +380,9 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.additional_properties[2].name == 'Other Category'
     assert mock_save_called_with_first_blended_material.additional_properties[2].value == '0.2'
 
+    assert mock_save_called_with_first_blended_material.blending_ratios == '0.4/0.4/0.2'
+    assert mock_save_called_with_first_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
+
     assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == 18.1
     assert mock_save_called_with_second_blended_material.composition.na_o_h == 5.69
     assert mock_save_called_with_second_blended_material.composition.na2_si_o3_specific == 5.8
@@ -384,6 +399,9 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
     assert mock_save_called_with_second_blended_material.costs.costs == 35.0
     assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
+
+    assert mock_save_called_with_second_blended_material.blending_ratios == '0.4/0.3/0.3'
+    assert mock_save_called_with_second_blended_material.created_from == ['uuid1', 'uuid2', 'uuid3']
 
 
 def test_delete_material_calls_persistence_and_returns_remaining_materials(monkeypatch):
@@ -419,6 +437,6 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     assert dto.type == 'Powder'
     assert dto.all_properties == 'Fe₂O₃: 23.3, Specific gravity: 12, test prop: test value'
 
-    assert result.ctx == 'blended'
+    assert result.ctx == 'blended materials'
     assert mock_delete_by_type_and_uuid_called_with == (
         'powder', 'uuid to delete')

@@ -469,7 +469,7 @@ def test_list_all_creates_all_materials_for_view(monkeypatch):
     result = BaseMaterialService.list_materials(blended=False)
 
     _assert_test_powders(result.all_materials)
-    assert result.ctx == 'base'
+    assert result.ctx == 'base materials / processes'
     assert mock_query_by_type_called_with == 'powder'
 
 

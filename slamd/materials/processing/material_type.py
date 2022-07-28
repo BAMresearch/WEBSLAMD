@@ -12,3 +12,11 @@ class MaterialType(Enum):
     @staticmethod
     def get_all_types():
         return [e.value for e in MaterialType]
+
+    @staticmethod
+    def get_all_materials():
+        return [e.value for e in MaterialType if e.value != 'process']
+
+    @staticmethod
+    def get_all_processes():
+        return [e.value for e in MaterialType if e.value == 'process']

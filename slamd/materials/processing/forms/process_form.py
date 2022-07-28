@@ -6,21 +6,21 @@ from slamd.materials.processing.forms.materials_form import MaterialsForm
 class ProcessForm(MaterialsForm):
 
     duration = DecimalField(
-        label='Duration',
+        label='Duration (days)',
         validators=[
             validators.Optional()
         ]
     )
 
     temperature = DecimalField(
-        label='Temperature',
+        label='Temperature (°C)',
         validators=[
             validators.Optional()
         ]
     )
 
     relative_humidity = DecimalField(
-        label='Relative Humidity',
+        label='Relative Humidity (%)',
         validators=[
             validators.Optional()
         ]

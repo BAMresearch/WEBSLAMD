@@ -1,0 +1,14 @@
+<head>
+    <meta charset="UTF-8">
+    <title>SLAMD - Materials Formulations</title>
+    <link rel="stylesheet" href="{{url_for('formulations.static', filename='formulations.css')}}">
+</head>
+
+{% extends 'index.html' %}
+{% block content %}
+<main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
+    {% include 'formulations_form.html' %}
+</main>
+<script src="{{url_for('formulations.static', filename='formulations.js')}}"></script>
+<script src="{{url_for('formulations.static', filename='formulations_utils.js')}}"></script>
+{%endblock%}

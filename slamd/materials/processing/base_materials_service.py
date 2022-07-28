@@ -10,7 +10,7 @@ class BaseMaterialService(MaterialsService):
 
     @classmethod
     def create_materials_response(cls, materials):
-        return MaterialsResponse(materials, 'base')
+        return MaterialsResponse(materials, 'base materials / processes')
 
     @classmethod
     def create_material_form(cls, type):

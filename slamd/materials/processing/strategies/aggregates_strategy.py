@@ -1,9 +1,11 @@
 from dataclasses import fields
+
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
-from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class AggregatesStrategy(MaterialStrategy):
@@ -33,6 +35,26 @@ class AggregatesStrategy(MaterialStrategy):
                 cls.include('CA Density', aggregates.composition.ca_density)]
 
     @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
+        composition_complete = cls._check_completeness_of_composition(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete and composition_complete
+
+    @classmethod
+    def _check_completeness_of_composition(cls, base_materials_as_dict):
+        pcc = PropertyCompletenessChecker
+
+        fine_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fine_aggregates')
+        coarse_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'coarse_aggregates')
+        fa_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fa_density')
+        ca_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ca_density')
+
+        return fine_aggregates_complete and coarse_aggregates_complete and fa_density_complete and \
+               ca_density_complete
+
+    @classmethod
     def convert_to_multidict(cls, aggregates):
         multidict = super().convert_to_multidict(aggregates)
         # Iterate over the fields of Composition and convert them to string
@@ -53,14 +75,17 @@ class AggregatesStrategy(MaterialStrategy):
                           composition=composition,
                           additional_properties=additional_properties,
                           is_blended=True,
-                          blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                          blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                          created_from=cls.created_from(base_aggregates_as_dict))
 
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_aggregates_as_dict):
         bpc = BlendingPropertiesCalculator
 
-        blended_fine_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'fine_aggregates')
-        blended_coarse_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'coarse_aggregates')
+        blended_fine_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                   'fine_aggregates')
+        blended_coarse_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                     'coarse_aggregates')
         blended_fa_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'fa_density')
         blended_ca_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'ca_density')
 

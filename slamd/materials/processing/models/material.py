@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID, uuid1
 from dataclasses import dataclass, field
 from slamd.materials.processing.models.additional_property import AdditionalProperty
@@ -20,3 +21,4 @@ class Material:
     additional_properties: list[AdditionalProperty] = None
     is_blended: bool = False
     blending_ratios: str = ''
+    created_from: list[UUID] = None

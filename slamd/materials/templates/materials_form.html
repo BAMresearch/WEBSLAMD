@@ -2,7 +2,7 @@
 {% from 'errors.html' import with_errors -%}
 {% from 'render_material_type_form.j2' import render_material_type_form -%}
 
-<h3>New material</h3>
+<h3>New material / process</h3>
 <form class="row g-3" action="" method="post" novalidate>
     {{ form.csrf_token }}
     <div class="col-md-6">
@@ -110,7 +110,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="submitFormModalLabel">New material submitted</h5>
+                    <h5 class="modal-title" id="submitFormModalLabel">New material / process submitted</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>

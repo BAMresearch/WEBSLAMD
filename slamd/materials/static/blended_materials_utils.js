@@ -1,17 +1,10 @@
-const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
-
+/**
+ * Many functions look similar to the ones in blended_materials.js
+ * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
+ * common functions would lead to tight coupling between these separated usecases.
+ */
 let allRatioFieldsHaveValidInput = false;
 
-function collectBaseMaterialSelection(placeholder) {
-    return Array.from(placeholder.children)
-        .filter(option => option.selected)
-        .map(option => {
-            return {
-                uuid: option.value,
-                name: option.innerHTML
-            }
-        });
-}
 
 function countSelectedBaseMaterials(placeholder) {
     let count = 0;
@@ -19,11 +12,6 @@ function countSelectedBaseMaterials(placeholder) {
         return Array.from(placeholder.children).filter(option => option.selected).length
     }
     return count;
-}
-
-function removeInnerHtmlFromPlaceholder(placeholderID) {
-    let placeholder = document.getElementById(placeholderID);
-    placeholder.innerHTML = "";
 }
 
 function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
@@ -35,6 +23,25 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
             document.getElementById(`all_min_max_entries-${i}-max`).disabled = true;
             document.getElementById(`all_min_max_entries-${i}-min`).disabled = true;
         }
+    }
+}
+
+function assignKeyboardEventsToMinMaxForm() {
+    let independentInputFields = collectIndependentInputFields();
+
+    for (let item of independentInputFields) {
+        item.min.addEventListener("keyup", () => {
+            computeDependentValue("min", item.min, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.max.addEventListener("keyup", () => {
+            computeDependentValue("max", item.max, independentInputFields);
+            toggleConfirmBlendingButton(independentInputFields);
+        });
+        item.increment.addEventListener("keyup", () => {
+            validateIncrementValue(item.increment)
+            toggleConfirmBlendingButton(independentInputFields);
+        });
     }
 }
 
@@ -65,25 +72,6 @@ function collectRatioFields() {
     return ratioInputFields;
 }
 
-function assignKeyboardEventsToMinMaxForm() {
-    let independentInputFields = collectIndependentInputFields();
-
-    for (let item of independentInputFields) {
-        item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields);
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-        item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
-            toggleConfirmBlendingButton(independentInputFields);
-        });
-    }
-}
-
 /**
  * The method extracts all min, max and increment input fields except the last one as the latter will be computed dynamically in terms
  * of all the other min/max values. The number of min items always equals the number of min items. Therefore we can get the
@@ -106,7 +94,7 @@ function collectIndependentInputFields() {
     return independentInputFields;
 }
 
-function createMinMaxValuesWithIncrements() {
+function collectMinMaxValuesWithIncrements() {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     let minMaxValuesWithIncrements = []
@@ -160,7 +148,11 @@ function validateIncrementValue(increment) {
         increment.value = parseFloat(increment.value).toFixed(2);
     }
 
-    if (increment.value > 100) {
+    if (parseFloat(increment.value) < 0) {
+        increment.value = 0;
+    }
+
+    if (parseFloat(increment.value) > 100) {
         increment.value = 100;
     }
 }

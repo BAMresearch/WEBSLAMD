@@ -80,7 +80,7 @@ def prepare_test_base_powders_for_blending(material_type, uuid):
                                                 AdditionalProperty(name='Prop2', value='Category'),
                                                 AdditionalProperty(name='Prop3', value='Not in powder 2'),
                                                 AdditionalProperty(name='Prop4', value='10.2')])
-        powder1.uuid = 'uuid1'
+        powder1.uuid = 'uuid3'
         return powder1
     return None
 

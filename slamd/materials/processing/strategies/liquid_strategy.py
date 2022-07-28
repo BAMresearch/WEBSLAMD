@@ -5,6 +5,7 @@ from slamd.materials.processing.models.liquid import Liquid, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
 
 class LiquidStrategy(MaterialStrategy):
@@ -46,7 +47,35 @@ class LiquidStrategy(MaterialStrategy):
                       composition=composition,
                       additional_properties=additional_properties,
                       is_blended=True,
-                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                      created_from=cls.created_from(base_liquid_as_dict))
+
+    @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
+        composition_complete = cls._check_completeness_of_composition(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete and composition_complete
+
+    @classmethod
+    def _check_completeness_of_composition(cls, base_materials_as_dict):
+        pcc = PropertyCompletenessChecker
+
+        na2_si_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na2_si_o3')
+        na_o_h_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na_o_h')
+        na2_si_o3_specific_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na2_si_o3_specific')
+        na_o_h_specific_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na_o_h_specific')
+        total_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'total')
+        h2_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'h2_o')
+        na2_o_dry_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na2_o_dry')
+        si_o2_dry_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'si_o2_dry')
+        water_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'water')
+        na_o_h_total_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na_o_h_total')
+
+        return na2_si_o3_complete and na_o_h_complete and na2_si_o3_specific_complete and na_o_h_specific_complete \
+               and total_complete and h2_o_complete and na2_o_dry_complete and si_o2_dry_complete and water_complete \
+               and na_o_h_total_complete
 
     @classmethod
     def gather_composition_information(cls, liquid):

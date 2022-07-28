@@ -1,4 +1,5 @@
 from slamd.materials.processing.models.custom import Custom
+from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 
 
@@ -10,19 +11,34 @@ class CustomStrategy(MaterialStrategy):
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
             costs=cls.extract_cost_properties(submitted_material),
-            custom_name=submitted_material['custom_name'],
-            custom_value=submitted_material['custom_value'],
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
 
     @classmethod
-    def gather_composition_information(cls, custom):
-        return [cls.include('Name', custom.custom_name),
-                cls.include('Value', custom.custom_value)]
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_customs_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_customs_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_customs_as_dict)
+
+        return Custom(type=base_customs_as_dict[0]['type'],
+                      name=f'{blended_material_name}-{idx}',
+                      costs=costs,
+                      additional_properties=additional_properties,
+                      is_blended=True,
+                      blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios),
+                      created_from=cls.created_from(base_customs_as_dict))
+
+    @classmethod
+    def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
+        costs_complete = cls.check_completeness_of_costs(base_materials_as_dict)
+        additional_properties_complete = cls.check_completeness_of_additional_properties(base_materials_as_dict)
+
+        return costs_complete and additional_properties_complete
 
     @classmethod
     def convert_to_multidict(cls, custom):
         multidict = super().convert_to_multidict(custom)
-        multidict.add('custom_name', custom.custom_name)
-        multidict.add('custom_value', custom.custom_value)
         return multidict
+
+    @classmethod
+    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
+        pass

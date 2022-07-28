@@ -1,4 +1,5 @@
 const ACTION_BUTTON_DELIMITER = "___"
+const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
 async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
@@ -30,5 +31,31 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
     } else {
         const error = await response.text()
         document.write(error);
+    }
+}
+
+function removeInnerHtmlFromPlaceholder(placeholderID) {
+    let placeholder = document.getElementById(placeholderID);
+    placeholder.innerHTML = "";
+}
+
+function collectSelection(placeholder) {
+    return Array.from(placeholder.children)
+        .filter(option => option.selected)
+        .map(option => {
+            return {
+                uuid: option.value,
+                name: option.innerHTML
+            }
+        });
+}
+
+function fixInputValue(currentInputField) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
+        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
+    }
+
+    if (currentInputField.value < 0) {
+        currentInputField.value = 0;
     }
 }

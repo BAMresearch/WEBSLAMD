@@ -14,7 +14,7 @@ class MaterialsForm(Form):
     )
 
     material_type = SelectField(
-        label='Material type',
+        label='Material type / Process',
         validators=[validators.DataRequired()],
         choices=['Powder', 'Liquid', 'Aggregates',
                  'Admixture', 'Process', 'Custom']

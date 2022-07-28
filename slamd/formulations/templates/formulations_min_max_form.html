@@ -1,0 +1,39 @@
+{% for entry in formulations_min_max_form.materials_min_max_entries %}
+<div class="d-none">
+    {{ entry.uuid_field(class_="form-control", hidden=True) }}
+</div>
+<div class="d-none">
+    {{ entry.type_field(class_="form-control", hidden=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.materials_entry_name.label(class_="control-label") }}
+    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.increment.label(class_="control-label") }}
+    {{ entry.increment(class_="form-control") }}
+</div>
+<div class="col-md-3">
+    {{ entry.min.label(class_="control-label") }}
+    {{ entry.min(class_="form-control") }}
+</div>
+<div class="col-md-3">
+    {{ entry.max.label(class_="control-label") }}
+    {{ entry.max(class_="form-control") }}
+</div>
+{% endfor %}
+
+{% for entry in formulations_min_max_form.processes_entries %}
+<div class="d-none">
+    {{ entry.uuid_field(class_="form-control", hidden=True) }}
+</div>
+<div class="col-md-3">
+    {{ entry.process_name(class_="form-control", disabled=True) }}
+</div>
+{% endfor %}
+
+<div data-bs-toggle="tooltip" data-bs-placement="top" title="Preview of the chosen formulations in terms of its base material composition">
+    <button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button" disabled>
+        Show mixture in terms of base material composition
+    </button>
+</div>
