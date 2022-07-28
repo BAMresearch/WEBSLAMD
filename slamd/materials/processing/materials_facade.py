@@ -8,6 +8,9 @@ from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
+from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
+from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
+from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 
 @dataclass
@@ -45,3 +48,17 @@ class MaterialsFacade:
     @classmethod
     def get_process(cls, process_uuid):
         return cls.get_material('process', process_uuid)
+
+    @classmethod
+    def materials_formulation_as_dict(cls, materials, processes):
+        full_dict = {}
+        names = []
+        for material in materials:
+            names.append(material.name)
+            if material.type.lower() == 'powder':
+                full_dict = {**full_dict, **PowderStrategy.convert_to_multidict(material)}
+            if material.type.lower() == 'custom':
+                full_dict = {**full_dict, **CustomStrategy.convert_to_multidict(material)}
+        for process in processes:
+            full_dict = {**full_dict, **ProcessStrategy.convert_to_multidict(process)}
+        return full_dict, names

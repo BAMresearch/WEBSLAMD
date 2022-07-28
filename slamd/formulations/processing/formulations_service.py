@@ -1,5 +1,3 @@
-import pandas as pd
-
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
@@ -7,11 +5,11 @@ from slamd.formulations.processing.forms.formulations_min_max_form import Formul
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
+from slamd.formulations.processing.formulations_converter import FormulationsConverter
+from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
-from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
-from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 
 WEIGHT_FORM_DELIMITER = '  |  '
 MAX_NUMBER_OF_WEIGHTS = 100
@@ -145,25 +143,8 @@ class FormulationsService:
         for process_uuid in process_uuids:
             processes.append(MaterialsFacade.get_process(process_uuid))
 
-        full_dict = {}
-        names = []
-        for material in materials:
-            names.append(material.name)
-            if material.type.lower() == 'powder':
-                full_dict = PowderStrategy.convert_to_multidict(material)
-            if material.type.lower() == 'custom':
-                full_dict = {**full_dict, **CustomStrategy.convert_to_multidict(material)}
+        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product)
 
-        all_rows = []
-        for weights in weight_product:
-            final_dict = {}
-            weight_dict = {}
-            for i, weight in enumerate(weights):
-                weight_dict[names[i]] = weight
-            all_rows.append({**full_dict, **weight_dict})
+        FormulationsPersistence.save(dataframe)
 
-            # TODO extend dictionary by dedicated row
-            pass
-
-        dataframe = pd.DataFrame(all_rows)
         return dataframe
