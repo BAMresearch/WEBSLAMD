@@ -1,0 +1,14 @@
+{% from 'errors.html' import with_errors -%}
+<form class="row g-3" action="" method="post" enctype="multipart/form-data" novalidate>
+    {{ upload_dataset_form.csrf_token }}
+    <div class="row g-3 align-items-end">
+        <div class="col-md-11">
+            {{ upload_dataset_form.dataset.label(class_="control-label") }}
+            {{ upload_dataset_form.dataset(class_="form-control form-select dataset-input") }}
+            {{ with_errors(upload_dataset_form.dataset) }}
+        </div>
+        <div class="col-md-1">
+            {{ upload_dataset_form.upload_button(class_="btn btn-primary") }}
+        </div>
+    </div>
+</form>
