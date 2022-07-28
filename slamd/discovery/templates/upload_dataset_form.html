@@ -1,7 +1,8 @@
 {% from 'errors.html' import with_errors -%}
 
-{{ upload_dataset_form.hidden_tag() }}
+
 <form class="row g-3" action="" method="post" enctype="multipart/form-data" novalidate>
+    {{ upload_dataset_form.hidden_tag() }}
     {{ upload_dataset_form.csrf_token }}
     <div class="row g-3 align-items-end">
         <div class="col-md-11">
