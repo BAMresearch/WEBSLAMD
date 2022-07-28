@@ -7,6 +7,7 @@ import config
 from slamd.common.error_handling import handle_404, handle_400, handle_413
 from slamd.common.landing_controller import landing
 from slamd.formulations.processing.formulations_controller import formulations
+from slamd.discovery.processing.discovery_controller import discovery
 from slamd.materials.processing.base_materials_controller import base_materials
 from slamd.materials.processing.blended_materials_controller import blended_materials
 
@@ -25,6 +26,7 @@ def create_app(env=None, with_session=True):
     app.register_blueprint(base_materials)
     app.register_blueprint(blended_materials)
     app.register_blueprint(formulations)
+    app.register_blueprint(discovery)
 
     app.register_error_handler(404, lambda err: handle_404(err))
     app.register_error_handler(400, lambda err: handle_400(err))

@@ -1,0 +1,17 @@
+<h3>All datasets</h3>
+<table id="datasets_table" class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Columns</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for dataset in datasets %}
+    <tr>
+        <td>{{ dataset.name }}</td>
+        <td>{{ dataset.columns }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
