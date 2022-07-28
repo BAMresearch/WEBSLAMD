@@ -16,7 +16,7 @@ app = create_app('testing', with_session=False)
 
 def test_save_dataset_returns_form_with_errors_when_empty():
     with app.test_request_context('/materials/discovery'):
-        valid, form = DiscoveryService.save_dataset()
+        valid, form = DiscoveryService.save_dataset(ImmutableMultiDict(), ImmutableMultiDict())
         assert valid is False
         assert isinstance(form, UploadDatasetForm)
 

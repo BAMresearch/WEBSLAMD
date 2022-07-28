@@ -26,7 +26,7 @@ def test_slamd_shows_discovery_page(client, monkeypatch):
 def test_slamd_creates_new_dataset_when_saving_is_successful(client, monkeypatch):
     app = create_app('testing', with_session=False)
 
-    def mock_save_dataset():
+    def mock_save_dataset(submitted_form, submitted_file):
         return (True, None)
 
     with app.test_request_context('/materials/discovery'):
