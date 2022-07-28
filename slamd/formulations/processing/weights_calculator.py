@@ -5,7 +5,7 @@ from slamd.common.slamd_utils import empty
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
-class BaseWeightsCalculator:
+class WeightsCalculator:
 
     @classmethod
     def compute_cartesian_product(cls, all_materials_weights):
@@ -16,7 +16,7 @@ class BaseWeightsCalculator:
     @classmethod
     def compute_full_cartesian_product(cls, all_materials_weights, materials_formulation_configuration,
                                        weight_constraint):
-        cartesian_product_list_of_independent_weights = BaseWeightsCalculator.compute_cartesian_product(
+        cartesian_product_list_of_independent_weights = WeightsCalculator.compute_cartesian_product(
             all_materials_weights)
         full_cartesian_product = []
         for item in cartesian_product_list_of_independent_weights:

@@ -47,6 +47,6 @@ def submit_formulations():
 
     #html = html.replace('<th>','<th style="background-color: royalblue; color: white">')
 
-    body = {'template': render_template('formulations_dataframe.html', df=dataframe.to_html())}
+    body = {'template': render_template('formulations_dataframe.html', df=dataframe.to_html(index=False, table_id='formulations_dataframe'))}
 
     return make_response(jsonify(body), 200)

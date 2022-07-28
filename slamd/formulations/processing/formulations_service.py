@@ -3,13 +3,15 @@ import pandas as pd
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
-from slamd.formulations.processing.base_weights_calculator import BaseWeightsCalculator
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
+from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
+from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
+from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 
 WEIGHT_FORM_DELIMITER = '  |  '
 MAX_NUMBER_OF_WEIGHTS = 100
@@ -94,9 +96,9 @@ class FormulationsService:
 
         all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config)
 
-        full_cartesian_product = BaseWeightsCalculator.compute_full_cartesian_product(all_materials_weights,
-                                                                                      formulation_config,
-                                                                                      weight_constraint)
+        full_cartesian_product = WeightsCalculator.compute_full_cartesian_product(all_materials_weights,
+                                                                                  formulation_config,
+                                                                                  weight_constraint)
         return full_cartesian_product, all_names
 
     @classmethod
@@ -106,7 +108,7 @@ class FormulationsService:
 
         all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config,
                                                                                                   False)
-        full_cartesian_product = BaseWeightsCalculator.compute_cartesian_product(all_materials_weights)
+        full_cartesian_product = WeightsCalculator.compute_cartesian_product(all_materials_weights)
         return full_cartesian_product, all_names
 
     @classmethod
@@ -124,12 +126,16 @@ class FormulationsService:
         return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
 
-    # to be implemented in the next story
     @classmethod
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         weigth_constraint = formulations_data['materials_request_data']['weight_constraint']
         process_uuids = formulations_data['processes_request_data']['processes']
+
+        all_weights = []
+        if empty(weigth_constraint):
+            all_weights = WeightInputPreprocessor.collect_weights_for_creation_of_formulation_batch(materials_data)
+        weight_product = WeightsCalculator.compute_cartesian_product(all_weights)
 
         materials = []
         for material_data in materials_data:
@@ -140,10 +146,24 @@ class FormulationsService:
             processes.append(MaterialsFacade.get_process(process_uuid))
 
         full_dict = {}
+        names = []
         for material in materials:
+            names.append(material.name)
             if material.type.lower() == 'powder':
-                full_dict['name'] = [material.name]
-                full_dict['type'] = [material.type]
+                full_dict = PowderStrategy.convert_to_multidict(material)
+            if material.type.lower() == 'custom':
+                full_dict = {**full_dict, **CustomStrategy.convert_to_multidict(material)}
 
-        dataframe = pd.DataFrame(full_dict)
+        all_rows = []
+        for weights in weight_product:
+            final_dict = {}
+            weight_dict = {}
+            for i, weight in enumerate(weights):
+                weight_dict[names[i]] = weight
+            all_rows.append({**full_dict, **weight_dict})
+
+            # TODO extend dictionary by dedicated row
+            pass
+
+        dataframe = pd.DataFrame(all_rows)
         return dataframe
