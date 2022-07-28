@@ -66,7 +66,23 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData)
         assignDeleteWeightEvent();
-        document.getElementById("submit").disabled = false
+        assignCreateFormulationsBatchEvent()
+    })
+}
+
+function assignCreateFormulationsBatchEvent(){
+    document.getElementById("create_formulations_batch_button").addEventListener("click", async () => {
+
+        const materialsRequestData = collectFormulationsMinMaxRequestData();
+        const processesRequestData = collectProcessesRequestData();
+
+        const formulationsRequest = {
+            materials_request_data: materialsRequestData,
+            processes_request_data: processesRequestData
+        }
+
+        const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+        await postDataAndEmbedTemplateInPlaceholder(url, "dataframe_placeholder", formulationsRequest)
     })
 }
 

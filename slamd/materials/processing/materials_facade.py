@@ -41,3 +41,7 @@ class MaterialsFacade:
     @classmethod
     def get_material(cls, material_type, uuid):
         return MaterialsPersistence.query_by_type_and_uuid(material_type, uuid)
+
+    @classmethod
+    def get_process(cls, process_uuid):
+        return cls.get_material('process', process_uuid)

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
@@ -121,3 +123,27 @@ class FormulationsService:
     def _validate_unconstrained_ranges(cls, increment, max_value, min_value):
         return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
+
+    # to be implemented in the next story
+    @classmethod
+    def create_materials_formulations(cls, formulations_data):
+        materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
+        weigth_constraint = formulations_data['materials_request_data']['weight_constraint']
+        process_uuids = formulations_data['processes_request_data']['processes']
+
+        materials = []
+        for material_data in materials_data:
+            materials.append(MaterialsFacade.get_material(material_data['type'], material_data['uuid']))
+
+        processes = []
+        for process_uuid in process_uuids:
+            processes.append(MaterialsFacade.get_process(process_uuid))
+
+        full_dict = {}
+        for material in materials:
+            if material.type.lower() == 'powder':
+                full_dict['name'] = [material.name]
+                full_dict['type'] = [material.type]
+
+        dataframe = pd.DataFrame(full_dict)
+        return dataframe

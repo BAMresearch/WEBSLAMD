@@ -4,6 +4,8 @@
  * common functions would lead to tight coupling between these separated usecases.
  */
 
+const TYPE_UUID_DELIMITER = "|";
+
 function collectAllSelectedMaterials() {
     const powderPlaceholder = document.getElementById("powder_selection");
     const liquidPlaceholder = document.getElementById("liquid_selection");
@@ -134,6 +136,23 @@ function collectFormulationsMinMaxRequestData() {
     return {
         materials_formulation_configuration: rowData,
         weight_constraint: weigthConstraint
+    }
+}
+
+// there are two elements for each process, one hidden and one visible. Therefore we divide by 2
+function collectProcessesRequestData(){
+    const numberOfIndependentRows = document.querySelectorAll('[id^="processes_entries-"]').length / 2 - 1;
+
+    let rowData = []
+    for (let i = 0; i <= numberOfIndependentRows; i++) {
+        const typeWithUUID = document.getElementById(`processes_entries-${i}-uuid_field`).value
+        const uuid = typeWithUUID.split(TYPE_UUID_DELIMITER)[1]
+        rowData.push({
+            uuid: uuid,
+        })
+    }
+    return {
+        processes: rowData,
     }
 }
 
