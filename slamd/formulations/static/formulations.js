@@ -84,7 +84,7 @@ function assignCreateFormulationsBatchEvent() {
         }
 
         const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
-        await postDataAndEmbedTemplateInPlaceholder(url, "dataframe_placeholder", formulationsRequest)
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest)
     })
 }
 

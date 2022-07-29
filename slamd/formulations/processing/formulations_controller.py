@@ -42,7 +42,7 @@ def submit_formulations():
     formulations_request_data = json.loads(request.data)
     dataframe, all_dtos, target_list = FormulationsService.create_materials_formulations(formulations_request_data)
 
-    body = {'template': render_template('formulations_dataframe.html',
+    body = {'template': render_template('formulations_tables.html',
                                         df=dataframe.to_html(index=False, table_id='formulations_dataframe'),
                                         all_dtos=all_dtos, target_list=target_list)}
 

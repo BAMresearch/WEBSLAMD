@@ -10,12 +10,12 @@
     </thead>
     <tbody>
     {% for item in all_dtos %}
+    {% set outer_loop = loop %}
     <tr>
         <td>{{ item.properties }}</td>
         {% for target in item.targets %}
         <td>
-            <label for="{{ target }}"></label>
-            <input class="form-control" id="{{ target }}" name="targets_field" type="text" value="">
+            <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" name="targets_field" type="text" value="">
         </td>
         {% endfor %}
     </tr>
