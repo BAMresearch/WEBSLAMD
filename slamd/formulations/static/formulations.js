@@ -16,7 +16,7 @@ function toggleSelectionConfirmationButtonAfterConstraintChange() {
     toggleBasedOnSelectionAndConstraints();
 }
 
-function autocorrectWeightValue(){
+function autocorrectWeightValue() {
     let weightConstraintInput = document.getElementById("weigth_constraint");
 
     fixInputValue(weightConstraintInput)
@@ -70,15 +70,17 @@ async function assignConfirmFormulationsConfigurationEvent() {
     })
 }
 
-function assignCreateFormulationsBatchEvent(){
+function assignCreateFormulationsBatchEvent() {
     document.getElementById("create_formulations_batch_button").addEventListener("click", async () => {
 
         const materialsRequestData = collectFormulationsMinMaxRequestData();
         const processesRequestData = collectProcessesRequestData();
+        const targets = document.getElementById("targets_field").value;
 
         const formulationsRequest = {
             materials_request_data: materialsRequestData,
-            processes_request_data: processesRequestData
+            processes_request_data: processesRequestData,
+            targets: targets
         }
 
         const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
@@ -98,10 +100,17 @@ function assignDeleteWeightEvent() {
     }
 }
 
+function toggleFormulationConfirmationButton() {
+    const targets = document.getElementById("targets_field").value;
+    let regex = new RegExp("\^([a-zA-Z\\d]+;)*[a-zA-Z\\d]+$");
+
+    document.getElementById("change_materials_and_processes_selection_button").disabled = !regex.test(targets);
+}
+
 window.addEventListener("load", function () {
-    document.getElementById("change_materials_and_processes_selection_button").disabled = false;
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
     document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
     document.getElementById("weigth_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("weigth_constraint").addEventListener("keyup", autocorrectWeightValue);
+    document.getElementById("targets_field").addEventListener("keyup", toggleFormulationConfirmationButton);
 });
