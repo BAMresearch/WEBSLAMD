@@ -1,8 +1,8 @@
+from pandas import DataFrame
 from dataclasses import dataclass
 
 
 @dataclass
 class Dataset:
     name: str = None
-    columns: str = None
-    content: str = None
+    dataframe: DataFrame = None

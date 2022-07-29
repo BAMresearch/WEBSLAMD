@@ -1,5 +1,6 @@
 import pytest
 from io import BytesIO
+from pandas import DataFrame
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
@@ -61,13 +62,13 @@ def test_list_columns_returns_columns_of_dataset_with_given_name(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         nonlocal mock_query_dataset_by_name_called_with
         mock_query_dataset_by_name_called_with = dataset_name
-        return Dataset('test csv_strategy', ['column1', 'column2', 'column3'])
+        return Dataset('test csv_strategy', dataframe=DataFrame([1, 2, 3], columns=['Index']))
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
 
     columns = DiscoveryService.list_columns('test csv_strategy')
     assert mock_query_dataset_by_name_called_with == 'test csv_strategy'
-    assert columns == ['column1', 'column2', 'column3']
+    assert columns == ['Index']
 
 
 def test_list_columns_raises_dataset_not_found_when_invalid_name_is_given():
