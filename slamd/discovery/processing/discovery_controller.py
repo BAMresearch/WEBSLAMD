@@ -45,5 +45,13 @@ def upload_dataset():
 
 @discovery.route('/<dataset>/columns', methods=['GET'])
 def get_dataset_columns(dataset):
-    columns = DiscoveryService.list_columns(dataset)
-    return make_response(jsonify(columns), 200)
+    discovery_form = DiscoveryForm()
+    discovery_form.materials_data_input.choices = DiscoveryService.list_columns(dataset)
+
+    datasets = DiscoveryService.list_datasets()
+    return render_template(
+        'discovery.html',
+        upload_dataset_form=UploadDatasetForm(),
+        discovery_form=discovery_form,
+        datasets=datasets
+    )
