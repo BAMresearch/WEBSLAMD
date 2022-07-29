@@ -105,3 +105,35 @@ def test_query_dataset_by_name_returns_none_if_not_found(monkeypatch):
     result = DiscoveryPersistence.query_dataset_by_name('not found')
     assert result is None
     assert mock_get_session_property_called is True
+
+
+def test_find_all_datasets_returns_empty_list_at_start(monkeypatch):
+    mock_get_session_property_called = False
+
+    def mock_get_session_property():
+        nonlocal mock_get_session_property_called
+        mock_get_session_property_called = True
+        return {}
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+
+    result = DiscoveryPersistence.find_all_datasets()
+    assert len(result) == 0
+    assert result == []
+    assert mock_get_session_property_called is True
+
+
+def test_find_all_datasets_returns_datasets_as_list(monkeypatch):
+    mock_get_session_property_called = False
+
+    def mock_get_session_property():
+        nonlocal mock_get_session_property_called
+        mock_get_session_property_called = True
+        return {'dataset 1': Dataset('dataset 1'), 'dataset 2': Dataset('dataset 2')}
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+
+    result = DiscoveryPersistence.find_all_datasets()
+    assert len(result) == 2
+    assert result == [Dataset('dataset 1'), Dataset('dataset 2')]
+    assert mock_get_session_property_called is True
