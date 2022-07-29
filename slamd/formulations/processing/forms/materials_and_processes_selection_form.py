@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField, SelectField
+from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField, SelectField, StringField
 
 
 class MaterialsAndProcessesSelectionForm(Form):
-
     powder_selection = SelectField(
         label='Powders',
         validators=[validators.DataRequired()],
@@ -39,6 +38,9 @@ class MaterialsAndProcessesSelectionForm(Form):
         validators=[validators.DataRequired()],
         choices=[]
     )
+
+    targets_field = StringField(
+        'Targets (Specify various target values. Follow the pattern "target 1; target 2; target 3".)')
 
     with_constraint = BooleanField(label='Do you want to set a weight constraint for formulations?')
 
