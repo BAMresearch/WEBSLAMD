@@ -1,9 +1,8 @@
-import uuid
 from abc import ABC, abstractmethod
 
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.slamd_utils import empty, not_empty
+from slamd.common.slamd_utils import empty, not_empty, numeric
 from slamd.common.slamd_utils import join_all, float_if_not_empty, str_if_not_none
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -24,6 +23,16 @@ class MaterialStrategy(ABC):
     @abstractmethod
     def gather_composition_information(cls, material):
         pass
+
+    @classmethod
+    def for_formulation(cls, material):
+        multidict = MultiDict([
+            (f'delivery_time ({material.type}|{material.name})', float_if_not_empty(material.costs.delivery_time)),
+            (f'costs ({material.type}|{material.name})', float_if_not_empty(material.costs.costs)),
+            (f'co2_footprint ({material.type}|{material.name})', float_if_not_empty(material.costs.co2_footprint)),
+        ])
+        cls._convert_additional_properties_for_formulation(multidict, material)
+        return multidict
 
     @classmethod
     def create_dto(cls, material):
@@ -112,6 +121,14 @@ class MaterialStrategy(ABC):
         for (index, property) in enumerate(additional_properties):
             multidict.add(f'additional_properties-{index}-property_name', property.name)
             multidict.add(f'additional_properties-{index}-property_value', property.value)
+
+    @classmethod
+    def _convert_additional_properties_for_formulation(cls, multidict, material):
+        for (index, property) in enumerate(material.additional_properties):
+            value = property.value
+            if numeric(value):
+                value = float(value)
+            multidict.add(f'{property.name} ({material.type}|{material.name})', value)
 
     @classmethod
     def _extract_additional_property_by_label(cls, submitted_material, label):

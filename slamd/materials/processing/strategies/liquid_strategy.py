@@ -125,3 +125,11 @@ class LiquidStrategy(MaterialStrategy):
                                   si_o2_dry=blended_si_o2_dry, water=blended_water, na_o_h_total=blended_na_o_h_total)
 
         return composition
+
+    @classmethod
+    def for_formulation(cls, liquid):
+        multidict = super().for_formulation(liquid)
+        for field in fields(liquid.composition):
+            field_value = float_if_not_empty(getattr(liquid.composition, field.name))
+            multidict.add(field.name, field_value)
+        return multidict
