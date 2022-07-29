@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.admixture import Admixture
@@ -55,10 +56,8 @@ class MaterialsFacade:
         names = []
         for material in materials:
             names.append(material.name)
-            if material.type.lower() == 'powder':
-                full_dict = {**full_dict, **PowderStrategy.convert_to_multidict(material)}
-            if material.type.lower() == 'custom':
-                full_dict = {**full_dict, **CustomStrategy.convert_to_multidict(material)}
+            strategy = MaterialFactory.create_strategy(material.type.lower())
+            full_dict = {**full_dict, **strategy.convert_to_multidict(material)}
         for process in processes:
             full_dict = {**full_dict, **ProcessStrategy.convert_to_multidict(process)}
         return full_dict, names
