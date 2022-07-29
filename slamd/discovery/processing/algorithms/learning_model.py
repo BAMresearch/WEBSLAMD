@@ -21,11 +21,11 @@ class LearningModel:
     @classmethod
     def run(cls):
         # Run the model on the given dataset
-        print("Running....")
+        print('Running....')
         user_input = UserInput(curiosity=2.0)
         data = ModelData(user_input=user_input)
         return []
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     LearningModel.run()
