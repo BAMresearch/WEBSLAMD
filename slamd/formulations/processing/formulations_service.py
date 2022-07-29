@@ -129,12 +129,12 @@ class FormulationsService:
     @classmethod
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
-        weigth_constraint = formulations_data['materials_request_data']['weight_constraint']
+        weight_constraint = formulations_data['materials_request_data']['weight_constraint']
         processes_data = formulations_data['processes_request_data']['processes']
         targets = formulations_data['targets']
 
         all_weights = []
-        if empty(weigth_constraint):
+        if empty(weight_constraint):
             all_weights = WeightInputPreprocessor.collect_weights_for_creation_of_formulation_batch(materials_data)
         weight_product = WeightsCalculator.compute_cartesian_product(all_weights)
 

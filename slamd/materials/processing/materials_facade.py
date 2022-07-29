@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -9,8 +10,6 @@ from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
-from slamd.materials.processing.strategies.custom_strategy import CustomStrategy
-from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 
@@ -61,5 +60,5 @@ class MaterialsFacade:
         for process in processes:
             full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
 
-        full_dict = {k: v for k, v in full_dict.items() if v is not None and v != ''}
+        full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
         return full_dict, names
