@@ -21,7 +21,7 @@ def test_save_dataset_sets_new_dataset(monkeypatch):
     assert mock_set_session_property_called_with == dataset
 
 
-def test_save_dataset_appends_datset_to_existing_ones(monkeypatch):
+def test_save_dataset_appends_dataset_to_existing_ones(monkeypatch):
     def mock_get_session_property():
         return [Dataset('test dataset')]
 
