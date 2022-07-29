@@ -1,14 +1,15 @@
-import pandas as pd
-
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import not_numeric, not_empty, empty
-from slamd.formulations.processing.base_weights_calculator import BaseWeightsCalculator
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
+from slamd.formulations.processing.formulations_converter import FormulationsConverter
+from slamd.formulations.processing.formulations_dto import FormulationsDto
+from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
+from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 WEIGHT_FORM_DELIMITER = '  |  '
@@ -94,9 +95,9 @@ class FormulationsService:
 
         all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config)
 
-        full_cartesian_product = BaseWeightsCalculator.compute_full_cartesian_product(all_materials_weights,
-                                                                                      formulation_config,
-                                                                                      weight_constraint)
+        full_cartesian_product = WeightsCalculator.compute_full_cartesian_product(all_materials_weights,
+                                                                                  formulation_config,
+                                                                                  weight_constraint)
         return full_cartesian_product, all_names
 
     @classmethod
@@ -106,7 +107,7 @@ class FormulationsService:
 
         all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config,
                                                                                                   False)
-        full_cartesian_product = BaseWeightsCalculator.compute_cartesian_product(all_materials_weights)
+        full_cartesian_product = WeightsCalculator.compute_cartesian_product(all_materials_weights)
         return full_cartesian_product, all_names
 
     @classmethod
@@ -124,26 +125,55 @@ class FormulationsService:
         return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
 
-    # to be implemented in the next story
+    # TODO: Implement constraint case / validate pattern of targets / move creation of dto to converter
     @classmethod
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
-        weigth_constraint = formulations_data['materials_request_data']['weight_constraint']
-        process_uuids = formulations_data['processes_request_data']['processes']
+        weight_constraint = formulations_data['materials_request_data']['weight_constraint']
+        processes_data = formulations_data['processes_request_data']['processes']
+        targets = formulations_data['targets']
+
+        all_weights = []
+        if empty(weight_constraint):
+            all_weights = WeightInputPreprocessor.collect_weights_for_creation_of_formulation_batch(materials_data)
+        weight_product = WeightsCalculator.compute_cartesian_product(all_weights)
 
         materials = []
         for material_data in materials_data:
             materials.append(MaterialsFacade.get_material(material_data['type'], material_data['uuid']))
 
         processes = []
-        for process_uuid in process_uuids:
-            processes.append(MaterialsFacade.get_process(process_uuid))
+        for process in processes_data:
+            processes.append(MaterialsFacade.get_process(process['uuid']))
 
-        full_dict = {}
-        for material in materials:
-            if material.type.lower() == 'powder':
-                full_dict['name'] = [material.name]
-                full_dict['type'] = [material.type]
+        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product, targets)
+        FormulationsPersistence.save(dataframe)
 
-        dataframe = pd.DataFrame(full_dict)
-        return dataframe
+        as_dict = dataframe.transpose().to_dict()
+
+        all_dtos = []
+        for key, inner_dict in as_dict.items():
+            properties = cls._create_properties(inner_dict, targets)
+            target_list = cls._create_targets(inner_dict, targets)
+            dto = FormulationsDto(properties=properties, targets=target_list)
+            all_dtos.append(dto)
+        return dataframe, all_dtos, targets.split(';')
+
+    @classmethod
+    def _create_properties(cls, inner_dict, targets):
+        properties = ''
+        target_list = targets.split(';')
+        properties_dict = {k: v for k, v in inner_dict.items() if k not in target_list}
+        for key, value in properties_dict.items():
+            properties += f'{key}: {value}; '
+        properties = properties.strip()[:-1]
+        return properties
+
+    @classmethod
+    def _create_targets(cls, inner_dict, targets):
+        targets_as_dto = []
+        target_list = targets.split(';')
+        target_dict = {k: v for k, v in inner_dict.items() if k in target_list}
+        for key, value in target_dict.items():
+            targets_as_dto.append(value)
+        return targets_as_dto

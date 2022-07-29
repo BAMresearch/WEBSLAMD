@@ -40,5 +40,9 @@ class CustomStrategy(MaterialStrategy):
         return multidict
 
     @classmethod
-    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
+    def _compute_blended_composition(cls, normalized_ratios, base_customs_as_dict):
         pass
+
+    @classmethod
+    def for_formulation(cls, custom):
+        return super().for_formulation(custom)

@@ -36,17 +36,15 @@ def add_weights():
                                         formulations_composition=formulations_composition)}
     return make_response(jsonify(body), 200)
 
+# TODO: implement constrained scenario; extend dataset batch by batch instead of always creating a new one; save final dataframe in session; add unit test
 
 @formulations.route('/create_formulations_batch', methods=['POST'])
 def submit_formulations():
     formulations_request_data = json.loads(request.data)
-    dataframe = FormulationsService.create_materials_formulations(formulations_request_data)
+    dataframe, all_dtos, target_list = FormulationsService.create_materials_formulations(formulations_request_data)
 
-    # dataframe['name'] = [f'<input class="form-control" id="weigth_constraint" name="weigth_constraint" step="any" type="number" value="{x}">' for x in dataframe['name']]
-    # html = dataframe.to_html(index=False, table_id='formulations_dataframe', escape=False)
-
-    #html = html.replace('<th>','<th style="background-color: royalblue; color: white">')
-
-    body = {'template': render_template('formulations_dataframe.html', df=dataframe.to_html())}
+    body = {'template': render_template('formulations_tables.html',
+                                        df=dataframe.to_html(index=False, table_id='formulations_dataframe'),
+                                        all_dtos=all_dtos, target_list=target_list)}
 
     return make_response(jsonify(body), 200)

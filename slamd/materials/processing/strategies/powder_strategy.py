@@ -157,3 +157,13 @@ class PowderStrategy(MaterialStrategy):
                                                                     'structure', 'gravity')
 
         return Structure(fine=blended_fine, gravity=blended_gravity)
+
+    @classmethod
+    def for_formulation(cls, powder):
+        multidict = super().for_formulation(powder)
+        for field in fields(powder.composition):
+            field_value = float_if_not_empty(getattr(powder.composition, field.name))
+            multidict.add(field.name, field_value)
+        multidict.add('fine', float_if_not_empty(powder.structure.fine))
+        multidict.add('gravity', float_if_not_empty(powder.structure.gravity))
+        return multidict

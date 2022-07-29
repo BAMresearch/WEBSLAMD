@@ -42,6 +42,12 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="formulations_targets">
+            {{ materials_and_processes_selection_form.targets_field.label(class_="control-label") }}
+            {{ materials_and_processes_selection_form.targets_field(class_="form-control") }}
+        </div>
+    </div>
     <div>
         {{ create_change_selection_button("change_materials_and_processes_selection_button",
         "confirm_materials_and_processes_selection_button",
@@ -57,7 +63,7 @@
     </div>
 
     <div class="justify-content-center">
-        <div id="dataframe_placeholder"></div>
+        <div id="formulations_tables_placeholder"></div>
     </div>
 
     <div class="form-group mb-12">

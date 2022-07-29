@@ -5,6 +5,13 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 class WeightInputPreprocessor:
 
     @classmethod
+    def collect_weights_for_creation_of_formulation_batch(cls, materials_data):
+        weights_for_all_materials = []
+        for material_data in materials_data:
+            weights_for_all_materials.append(cls._create_weigths(material_data))
+        return weights_for_all_materials
+
+    @classmethod
     def collect_base_names_and_weights(cls, formulation_config, constrained=True):
         all_materials_weights = []
         all_names = []
