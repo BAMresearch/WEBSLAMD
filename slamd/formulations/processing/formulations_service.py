@@ -124,6 +124,7 @@ class FormulationsService:
         return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
                or not_numeric(min_value) or not_numeric(increment)
 
+    # TODO: Implement constraint case
     @classmethod
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
@@ -144,7 +145,7 @@ class FormulationsService:
             processes.append(MaterialsFacade.get_process(process['uuid']))
 
         dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product)
-
+        # dataframe.to_csv('./test_slamd.csv')
         FormulationsPersistence.save(dataframe)
 
         return dataframe

@@ -61,5 +61,5 @@ class MaterialsFacade:
         for process in processes:
             full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
 
-        full_dict = {k: v for k, v in full_dict.items() if v is not None}
+        full_dict = {k: v for k, v in full_dict.items() if v is not None and v != ''}
         return full_dict, names
