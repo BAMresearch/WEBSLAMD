@@ -42,3 +42,7 @@ class CustomStrategy(MaterialStrategy):
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
         pass
+
+    @classmethod
+    def for_formulation(cls, material):
+        pass

@@ -30,3 +30,7 @@ class ProcessStrategy(MaterialStrategy):
         multidict.add('temperature', str_if_not_none(process.temperature))
         multidict.add('relative_humidity', str_if_not_none(process.relative_humidity))
         return multidict
+
+    @classmethod
+    def for_formulation(cls, material):
+        pass

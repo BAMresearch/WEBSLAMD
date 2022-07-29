@@ -57,7 +57,7 @@ class MaterialsFacade:
         for material in materials:
             names.append(material.name)
             strategy = MaterialFactory.create_strategy(material.type.lower())
-            full_dict = {**full_dict, **strategy.convert_to_multidict(material)}
+            full_dict = {**full_dict, **strategy.for_formulation(material)}
         for process in processes:
-            full_dict = {**full_dict, **ProcessStrategy.convert_to_multidict(process)}
+            full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
         return full_dict, names

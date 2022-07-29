@@ -93,3 +93,7 @@ class AggregatesStrategy(MaterialStrategy):
                                   fa_density=blended_fa_density, ca_density=blended_ca_density)
 
         return composition
+
+    @classmethod
+    def for_formulation(cls, material):
+        pass
