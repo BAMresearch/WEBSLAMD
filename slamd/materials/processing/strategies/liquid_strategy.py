@@ -127,5 +127,9 @@ class LiquidStrategy(MaterialStrategy):
         return composition
 
     @classmethod
-    def for_formulation(cls, material):
-        pass
+    def for_formulation(cls, liquid):
+        multidict = super().for_formulation(liquid)
+        for field in fields(liquid.composition):
+            field_value = float_if_not_empty(getattr(liquid.composition, field.name))
+            multidict.add(field.name, field_value)
+        return multidict

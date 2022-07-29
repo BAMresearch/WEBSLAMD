@@ -95,5 +95,9 @@ class AggregatesStrategy(MaterialStrategy):
         return composition
 
     @classmethod
-    def for_formulation(cls, material):
-        pass
+    def for_formulation(cls, aggregates):
+        multidict = super().for_formulation(aggregates)
+        for field in fields(aggregates.composition):
+            field_value = float_if_not_empty(getattr(aggregates.composition, field.name))
+            multidict.add(field.name, field_value)
+        return multidict

@@ -47,5 +47,8 @@ class AdmixtureStrategy(MaterialStrategy):
         return multidict
 
     @classmethod
-    def for_formulation(cls, material):
-        pass
+    def for_formulation(cls, admixture):
+        multidict = super().for_formulation(admixture)
+        multidict.add('composition', float_if_not_empty(admixture.composition))
+        multidict.add('admixture type', str_if_not_none(admixture.admixture_type))
+        return multidict
