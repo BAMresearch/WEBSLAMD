@@ -9,4 +9,4 @@ class Dataset:
 
     @property
     def columns(self):
-        return self.dataframe.columns
+        return list(self.dataframe.columns)
