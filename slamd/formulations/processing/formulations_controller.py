@@ -45,8 +45,9 @@ def submit_formulations():
     # dataframe['name'] = [f'<input class="form-control" id="weigth_constraint" name="weigth_constraint" step="any" type="number" value="{x}">' for x in dataframe['name']]
     # html = dataframe.to_html(index=False, table_id='formulations_dataframe', escape=False)
 
-    #html = html.replace('<th>','<th style="background-color: royalblue; color: white">')
+    # html = html.replace('<th>','<th style="background-color: royalblue; color: white">')
 
-    body = {'template': render_template('formulations_dataframe.html', df=dataframe.to_html(index=False, table_id='formulations_dataframe'))}
+    body = {'template': render_template('formulations_dataframe.html', df=dataframe.to_html(index=False,
+                                                                                            table_id='formulations_dataframe'))}
 
     return make_response(jsonify(body), 200)

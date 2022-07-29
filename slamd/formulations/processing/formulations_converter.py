@@ -16,6 +16,6 @@ class FormulationsConverter:
             weight_dict = {}
             for i, weight in enumerate(weights):
                 weight_dict[f'{names[i]} (kg)'] = weight
-            all_rows.append({**full_dict, **weight_dict})
+            all_rows.append({**weight_dict, **full_dict})
         dataframe = pd.DataFrame(all_rows)
         return dataframe

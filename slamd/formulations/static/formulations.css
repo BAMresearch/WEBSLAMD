@@ -5,3 +5,7 @@
 .formulations_targets {
     padding-top: 45px;
 }
+
+table, th, td {
+    border: 1px solid;
+}

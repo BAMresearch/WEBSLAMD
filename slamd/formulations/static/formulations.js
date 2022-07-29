@@ -102,7 +102,7 @@ function assignDeleteWeightEvent() {
 
 function toggleFormulationConfirmationButton() {
     const targets = document.getElementById("targets_field").value;
-    let regex = new RegExp("\^([a-zA-Z\\d]+;)*[a-zA-Z\\d]+$");
+    let regex = new RegExp("\^([a-zA-Z\\d ]+;)*[a-zA-Z\\d ]+$");
 
     document.getElementById("change_materials_and_processes_selection_button").disabled = !regex.test(targets);
 }
