@@ -1,1 +1,24 @@
 {{ df | safe }}
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Properties</th>
+        {% for item in target_list %}
+        <th>{{ item }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in all_dtos %}
+    <tr>
+        <td>{{ item.properties }}</td>
+        {% for target in item.targets %}
+        <td>
+            <label for="{{ target }}"></label>
+            <input class="form-control" id="{{ target }}" name="targets_field" type="text" value="">
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

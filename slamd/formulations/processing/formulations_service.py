@@ -6,6 +6,7 @@ from slamd.formulations.processing.forms.materials_and_processes_selection_form 
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
+from slamd.formulations.processing.formulations_dto import FormulationsDto
 from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
@@ -149,4 +150,31 @@ class FormulationsService:
         # dataframe.to_csv('./test_slamd.csv')
         FormulationsPersistence.save(dataframe)
 
-        return dataframe
+        as_dict = dataframe.transpose().to_dict()
+
+        all_dtos = []
+        for key, inner_dict in as_dict.items():
+            properties = cls._create_properties(inner_dict, targets)
+            target_list = cls._create_targets(inner_dict, targets)
+            dto = FormulationsDto(properties=properties, targets=target_list)
+            all_dtos.append(dto)
+        return dataframe, all_dtos, targets.split(';')
+
+    @classmethod
+    def _create_properties(cls, inner_dict, targets):
+        properties = ''
+        target_list = targets.split(';')
+        properties_dict = {k: v for k, v in inner_dict.items() if k not in target_list}
+        for key, value in properties_dict.items():
+            properties += f'{key}: {value}; '
+        properties = properties.strip()[:-1]
+        return properties
+
+    @classmethod
+    def _create_targets(cls, inner_dict, targets):
+        targets_as_dto = []
+        target_list = targets.split(';')
+        target_dict = {k: v for k, v in inner_dict.items() if k in target_list}
+        for key, value in target_dict.items():
+            targets_as_dto.append(value)
+        return targets_as_dto
