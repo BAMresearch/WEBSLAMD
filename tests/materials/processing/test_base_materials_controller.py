@@ -89,7 +89,7 @@ def test_slamd_selects_admixture(client):
 
 
 def test_slamd_selects_custom(client):
-    response = client.get("/materials/base/custom")
+    response = client.get('/materials/base/custom')
     template = response.json['template']
 
     assert response.status_code == 200

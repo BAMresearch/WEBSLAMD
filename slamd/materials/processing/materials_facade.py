@@ -20,13 +20,11 @@ class MaterialsForFormulations:
     processes: list[Process]
 
 
-"""
-Represents an API for accesses from another package, in particular formulations. All calls to materials from formulation
-must be via using this facade.
-"""
-
-
 class MaterialsFacade:
+    """
+    Represents an API for accesses from another package, in particular formulations. All calls to materials from formulation
+    must be via using this facade.
+    """
 
     @classmethod
     def find_all(cls):

@@ -33,7 +33,7 @@ def test_save_dataset_saves_dataset(monkeypatch):
     def mock_create_dataset(file_data):
         nonlocal mock_create_dataset_called_with
         mock_create_dataset_called_with = file_data
-        return "TestDataset.csv"
+        return 'TestDataset.csv'
 
     monkeypatch.setattr(CsvStrategy, 'create_dataset', mock_create_dataset)
 
@@ -53,7 +53,7 @@ def test_save_dataset_saves_dataset(monkeypatch):
         assert valid is True
         assert form is None
         assert mock_create_dataset_called_with == file_data
-        assert mock_save_dataset_called_with == "TestDataset.csv"
+        assert mock_save_dataset_called_with == 'TestDataset.csv'
 
 
 def test_list_columns_returns_columns_of_dataset_with_given_name(monkeypatch):
