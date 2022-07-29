@@ -24,7 +24,7 @@ class DiscoveryService:
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
             raise DatasetNotFoundException('Material with given UUID not found')
-        return dataset.dataframe.columns
+        return dataset.columns
 
     @classmethod
     def list_datasets(cls):

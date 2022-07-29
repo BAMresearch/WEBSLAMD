@@ -6,3 +6,7 @@ from dataclasses import dataclass
 class Dataset:
     name: str = None
     dataframe: DataFrame = None
+
+    @property
+    def columns(self):
+        return self.dataframe.columns

@@ -12,8 +12,8 @@ def test_create_dataset_parses_file_storage_correctly(monkeypatch):
     file_data = FileStorage(filename='TestDataset.csv', stream=stream)
     dataset = CsvStrategy.create_dataset(file_data)
     assert dataset.name == 'TestDataset.csv'
-    assert len(dataset.dataframe.columns) == 3
-    for col in zip(dataset.dataframe.columns, ['column1', 'column2', 'column3']):
+    assert len(dataset.columns) == 3
+    for col in zip(dataset.columns, ['column1', 'column2', 'column3']):
         assert col[0] == col[1]
     assert dataset.dataframe.iloc[0].tolist() == [1, 2, 3]
     assert dataset.dataframe.iloc[1].tolist() == [4, 5, 6]
