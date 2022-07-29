@@ -60,4 +60,6 @@ class MaterialsFacade:
             full_dict = {**full_dict, **strategy.for_formulation(material)}
         for process in processes:
             full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
+
+        full_dict = {k: v for k, v in full_dict.items() if v is not None}
         return full_dict, names

@@ -128,7 +128,7 @@ class FormulationsService:
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         weigth_constraint = formulations_data['materials_request_data']['weight_constraint']
-        processes = formulations_data['processes_request_data']['processes']
+        processes_data = formulations_data['processes_request_data']['processes']
 
         all_weights = []
         if empty(weigth_constraint):
@@ -140,8 +140,8 @@ class FormulationsService:
             materials.append(MaterialsFacade.get_material(material_data['type'], material_data['uuid']))
 
         processes = []
-        for process in processes:
-            processes.append(MaterialsFacade.get_process(process['process_uuid']))
+        for process in processes_data:
+            processes.append(MaterialsFacade.get_process(process['uuid']))
 
         dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product)
 
