@@ -78,26 +78,26 @@ def test_list_columns_raises_dataset_not_found_when_invalid_name_is_given():
 
 
 def test_list_datasets_returns_empty_list_when_no_datasets(monkeypatch):
-    def mock_get_session_property():
+    def mock_find_all_datasets():
         return []
 
-    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', mock_find_all_datasets)
     datasets = DiscoveryService.list_datasets()
     assert datasets == []
 
 
 def test_list_datasets_returns_all_datasets(monkeypatch):
-    def mock_get_session_property():
+    def mock_find_all_datasets():
         return [
-            Dataset('Dataset 1', ['column1', 'column2', 'column3']),
-            Dataset('Dataset 2', ['column1', 'column2', 'column3']),
-            Dataset('Dataset 3', ['column1', 'column2', 'column3'])
+            Dataset('Dataset 1'),
+            Dataset('Dataset 2'),
+            Dataset('Dataset 3')
         ]
 
-    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', mock_find_all_datasets)
 
     datasets = DiscoveryService.list_datasets()
     assert len(datasets) == 3
-    assert datasets[0] == Dataset('Dataset 1', ['column1', 'column2', 'column3'])
-    assert datasets[1] == Dataset('Dataset 2', ['column1', 'column2', 'column3'])
-    assert datasets[2] == Dataset('Dataset 3', ['column1', 'column2', 'column3'])
+    assert datasets[0] == Dataset('Dataset 1')
+    assert datasets[1] == Dataset('Dataset 2')
+    assert datasets[2] == Dataset('Dataset 3')

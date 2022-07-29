@@ -5,7 +5,12 @@ class DiscoveryPersistence:
 
     @classmethod
     def save_dataset(cls, dataset):
-        cls.extend_session_property(dataset)
+        before = cls.get_session_property()
+
+        if not before:
+            cls.set_session_property({dataset.name: dataset})
+        else:
+            cls.extend_session_property(dataset)
 
     @classmethod
     def delete_dataset_by_name(cls, dataset_name):
@@ -35,6 +40,9 @@ class DiscoveryPersistence:
         return session.get('datasets', {})
 
     @classmethod
+    def set_session_property(cls, datasets):
+        session['datasets'] = datasets
+
+    @classmethod
     def extend_session_property(cls, dataset):
-        datasets = cls.get_session_property()
-        datasets[dataset.name] = dataset
+        session['datasets'][dataset.name] = dataset

@@ -8,17 +8,17 @@ def test_save_dataset_sets_new_dataset(monkeypatch):
 
     mock_set_session_property_called_with = None
 
-    def mock_extend_session_property(dataset):
+    def mock_set_session_property(datasets):
         nonlocal mock_set_session_property_called_with
-        mock_set_session_property_called_with = dataset
+        mock_set_session_property_called_with = datasets
         return None
 
     monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
-    monkeypatch.setattr(DiscoveryPersistence, 'extend_session_property', mock_extend_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'set_session_property', mock_set_session_property)
 
     dataset = Dataset(name='test name')
     DiscoveryPersistence.save_dataset(dataset)
-    assert mock_set_session_property_called_with == dataset
+    assert mock_set_session_property_called_with == {dataset.name: dataset}
 
 
 def test_save_dataset_appends_dataset_to_existing_ones(monkeypatch):
