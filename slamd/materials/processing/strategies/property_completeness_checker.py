@@ -74,6 +74,21 @@ class PropertyCompletenessChecker:
             additional_properties_for_all_base_materials.append(base_powder['additional_properties'])
         return additional_properties_for_all_base_materials
 
+    @classmethod
+    def find_admixture_properties_defined_in_all_base_materials(cls, base_materials_as_dict):
+        additional_properties_for_all_base_materials = cls._collect_all_admixture_properties(base_materials_as_dict)
+        #ToDo: change function to match or add new weighted feature
+        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: cls._keep_matching(x, y),
+                                                                   additional_properties_for_all_base_materials)
+        return properties_with_key_defined_in_all_base_materials
+
+    @classmethod
+    def _collect_all_admixture_properties(cls, base_materials_as_dict):
+        admixture_properties_for_all_base_materials = []
+        for base_powder in base_materials_as_dict:
+            admixture_properties_for_all_base_materials.append(base_powder['admixture'])
+        return admixture_properties_for_all_base_materials
+
     # we throw away all properties with keys (names) either not contained in additional_properties of all base materials
     # or if the key is contained in additional_properties of all base materials but the types of the values are not
     # matching as otherwise we cannot clearly separate continuous from categorical variables

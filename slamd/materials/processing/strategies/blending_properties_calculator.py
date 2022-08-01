@@ -96,6 +96,39 @@ class BlendingPropertiesCalculator:
         return matching_properties_for_all_base_materials
 
     @classmethod
+    def compute_admixture_properties(cls, normalized_ratios, base_materials_as_dict):
+        matching_properties_for_all_base_materials = cls._find_admixture_properties_contained_in_all_base_materials(
+            base_materials_as_dict)
+
+        blended_admixture_properties = []
+        for i in range(len(matching_properties_for_all_base_materials[0])):
+            ratios_with_property_values = zip(normalized_ratios, matching_properties_for_all_base_materials)
+            # Create list of property names together with their weighted values and an information about the
+            # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
+            mapped_properties = list(
+                map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
+            if numeric(mapped_properties[0][1]):
+                cls._add_continuous_additional_properties(blended_admixture_properties, mapped_properties)
+            else:
+                cls.add_categorical_additional_properties(blended_admixture_properties, mapped_properties)
+        return matching_properties_for_all_base_materials
+
+    @classmethod
+    def _find_admixture_properties_contained_in_all_base_materials(cls, base_materials_as_dict):
+        properties_with_key_defined_in_all_base_materials = \
+            PropertyCompletenessChecker.find_admixture_properties_defined_in_all_base_materials(base_materials_as_dict)
+        key_defined_in_all_base_materials = list(
+            map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
+        matching_properties_for_all_base_materials = []
+        for base_material_dict in base_materials_as_dict:
+            matching_properties_for_base_material = list(
+                filter(lambda prop: prop.name in key_defined_in_all_base_materials,
+                       base_material_dict['admixture']))
+
+            matching_properties_for_all_base_materials.append(matching_properties_for_base_material)
+        return matching_properties_for_all_base_materials
+
+    @classmethod
     def add_categorical_additional_properties(cls, blended_additional_properties, mapped_properties):
         for item in mapped_properties:
             blended_property_names = [x.name for x in blended_additional_properties]

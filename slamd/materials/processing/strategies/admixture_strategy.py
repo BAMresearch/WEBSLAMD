@@ -1,5 +1,7 @@
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.admixture import Admixture
+from slamd.materials.processing.ratio_parser import RatioParser
+from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
@@ -40,6 +42,22 @@ class AdmixtureStrategy(MaterialStrategy):
         return composition_complete and admixture_type_complete
 
     @classmethod
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+        composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
+        admixture_type = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+
+        return Admixture(type=base_powders_as_dict[0]['type'],
+                         name=f'{blended_material_name}-{idx}',
+                         composition=composition,
+                         admixture_type=admixture_type,
+                         costs=costs,
+                         additional_properties=additional_properties,
+                         is_blended=True,
+                         blending_ratios=RatioParser.ratio_list_to_ratio_string(normalized_ratios))
+
+    @classmethod
     def convert_to_multidict(cls, admixture):
         multidict = super().convert_to_multidict(admixture)
         multidict.add('composition', str_if_not_none(admixture.composition))
@@ -52,3 +70,8 @@ class AdmixtureStrategy(MaterialStrategy):
         multidict.add('composition', float_if_not_empty(admixture.composition))
         multidict.add('admixture type', str_if_not_none(admixture.admixture_type))
         return multidict
+
+    @classmethod
+    def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
+        bpc = BlendingPropertiesCalculator
+        return bpc.compute_admixture_properties(normalized_ratios, base_powders_as_dict)
