@@ -47,7 +47,7 @@ class MaterialsAndProcessesSelectionForm(Form):
         label='2 - Do you want to set a weight constraint for formulations?'
     )
 
-    weigth_constraint = DecimalField(
+    weight_constraint = DecimalField(
         label='Constraint (Sum of materials used for formulation) (kg)'
     )
 
