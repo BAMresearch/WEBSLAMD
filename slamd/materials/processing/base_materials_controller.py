@@ -38,7 +38,7 @@ def submit_base_material():
     valid, form = BaseMaterialService.save_material(request.form)
 
     if valid:
-        return redirect('/')
+        return redirect('/materials/base')
 
     materials_response = BaseMaterialService.list_materials(blended=False)
     return render_template('base_materials.html', form=form, materials_response=materials_response)
@@ -57,7 +57,7 @@ def edit_material(material_type, uuid):
     valid, form = BaseMaterialService.edit_material(material_type, uuid, request.form)
 
     if valid:
-        return redirect('/')
+        return redirect('/materials/base')
 
     materials_response = BaseMaterialService.list_materials(blended=False)
     return render_template('base_materials.html', form=form, materials_response=materials_response)
