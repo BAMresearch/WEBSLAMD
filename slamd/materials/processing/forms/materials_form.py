@@ -9,12 +9,12 @@ from slamd.materials.processing.forms.add_property_form import AddPropertyForm
 class MaterialsForm(Form):
 
     material_name = StringField(
-        label='Name',
+        label='1 - Name',
         validators=[validators.DataRequired(message='Material name cannot be empty')]
     )
 
     material_type = SelectField(
-        label='Material type / Process',
+        label='2 - Material type / Process',
         validators=[validators.DataRequired()],
         choices=['Powder', 'Liquid', 'Aggregates',
                  'Admixture', 'Process', 'Custom']
@@ -46,4 +46,4 @@ class MaterialsForm(Form):
                                       min_entries=0,
                                       max_entries=10)
 
-    submit = SubmitField('Save material')
+    submit = SubmitField('6 - Save material')
