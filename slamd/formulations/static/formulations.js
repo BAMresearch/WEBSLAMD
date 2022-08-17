@@ -22,7 +22,7 @@ function autocorrectWeightValue() {
     fixInputValue(weightConstraintInput)
 }
 
-function toggleWeigthConstraintInput() {
+function toggleWeightConstraintInput() {
     const with_constraint = document.getElementById("with_constraint")
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder")
     removeInnerHtmlFromPlaceholder("formulations_weights_placeholder")
@@ -109,7 +109,7 @@ function toggleFormulationConfirmationButton() {
 
 window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("with_constraint").addEventListener("change", toggleWeigthConstraintInput);
+    document.getElementById("with_constraint").addEventListener("change", toggleWeightConstraintInput);
     document.getElementById("weight_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
     document.getElementById("targets_field").addEventListener("keyup", toggleFormulationConfirmationButton);

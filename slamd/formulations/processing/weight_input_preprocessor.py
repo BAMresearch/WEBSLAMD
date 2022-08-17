@@ -8,7 +8,7 @@ class WeightInputPreprocessor:
     def collect_weights_for_creation_of_formulation_batch(cls, materials_data):
         weights_for_all_materials = []
         for material_data in materials_data:
-            weights_for_all_materials.append(cls._create_weigths(material_data))
+            weights_for_all_materials.append(cls._create_weights(material_data))
         return weights_for_all_materials
 
     @classmethod
@@ -49,10 +49,10 @@ class WeightInputPreprocessor:
     @classmethod
     def _create_weights_for_material(cls, blending_ratios, material_configuration):
         if empty(blending_ratios):
-            return cls._create_weigths(material_configuration)
+            return cls._create_weights(material_configuration)
 
         ratios = blending_ratios.split('/')
-        weights_for_blends = cls._create_weigths(material_configuration)
+        weights_for_blends = cls._create_weights(material_configuration)
 
         weights_for_all_base_materials_of_blend = []
         for weight in weights_for_blends:
@@ -64,7 +64,7 @@ class WeightInputPreprocessor:
         return weights_for_all_base_materials_of_blend
 
     @classmethod
-    def _create_weigths(cls, material_configuration):
+    def _create_weights(cls, material_configuration):
         values_for_given_base_material = []
         current_value = float(material_configuration['min'])
         max = float(material_configuration['max'])
