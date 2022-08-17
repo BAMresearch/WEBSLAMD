@@ -66,8 +66,9 @@
             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree">
                 <div class="accordion-body">
                     <div>
-                        Here you can add custom properties. Note that for sequential learning, values which correspond to any number will be
-                        interpreted as continuous variables. Thus in case you want to add a catergorical variable, use a string which is not a number.
+                        Here you can add custom properties. Note that for sequential learning,
+                        values which correspond to any number will be interpreted as continuous variables.
+                        To add a categorical variable, use a string which is not a number.
                     </div>
                     <div class="additional-properties">
                         <div id="additional-properties-placeholder">
@@ -100,8 +101,9 @@
         </div>
     </div>
     <div class="form-group mb-3">
-        <div class="col-sm-offset-2 col-sm-10">
-            {{ form.submit(class_="btn btn-primary", data_bs_toggle="modal", data_bs_target="#submitFormModal") }}
+        <div class="col-sm-offset-2 col-sm-12">
+            {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal", data_bs_target="#submitFormModal")
+            }}
         </div>
     </div>
     <!-- Submit form modal -->
