@@ -20,8 +20,8 @@ def base_material_page():
 
 @base_materials.route('/<type>', methods=['GET'])
 def select_base_material_type(type):
-    template_file, form = BaseMaterialService.create_material_form(type)
-    body = {'template': render_template(template_file, form=form)}
+    form = BaseMaterialService.create_material_form(type)
+    body = {'template': render_template('material_type_form.html', form=form)}
     return make_response(jsonify(body), 200)
 
 

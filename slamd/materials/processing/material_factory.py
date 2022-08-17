@@ -37,8 +37,8 @@ class MaterialFactory:
             raise MaterialNotFoundException('The requested type is not supported!')
 
         if submitted_material is None:
-            # Create an empty form
-            return cls()
+            # Create an empty form, assigning the type in the correct format for the user
+            return cls(material_type=type.capitalize())
         else:
             # Populate a form with user data
             return cls(submitted_material)

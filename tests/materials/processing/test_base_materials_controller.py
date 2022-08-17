@@ -10,7 +10,9 @@ from slamd.materials.processing.materials_service import MaterialsResponse
 
 def test_slamd_shows_form_and_table(client, monkeypatch):
     def mock_list_materials(blended):
-        return MaterialsResponse([{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}], 'base materials / processes')
+        return MaterialsResponse(
+            [{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}],
+            'base materials / processes')
 
     monkeypatch.setattr(BaseMaterialService, 'list_materials', mock_list_materials)
 
@@ -93,7 +95,7 @@ def test_slamd_selects_custom(client):
     template = response.json['template']
 
     assert response.status_code == 200
-    assert 'If you want to specify a custom material use additional properties below.' in template
+    assert template == ''
 
 
 def test_slamd_selects_process(client):
