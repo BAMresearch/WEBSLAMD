@@ -15,7 +15,7 @@ base_materials = Blueprint('base_materials', __name__,
 
 @base_materials.route('', methods=['GET'])
 def base_material_page():
-    form = BaseMaterialService.create_material_form("powder")
+    form = BaseMaterialService.create_material_form('powder')
     materials_response = BaseMaterialService.list_materials(blended=False)
     return render_template('base_materials.html', form=form, materials_response=materials_response)
 
