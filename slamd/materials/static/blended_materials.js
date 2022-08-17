@@ -1,5 +1,3 @@
-const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`
-
 let nameIsEmpty = true;
 
 /**
@@ -62,31 +60,8 @@ function checkNameIsNotEmpty() {
     document.getElementById("submit").disabled = nameIsEmpty || !allRatioFieldsHaveValidInput;
 }
 
-/**
- * The input parameter corresponds to the id of the html button element. It is specified in materials_table.html
- * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
- * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
- *
- * @param id
- * @param material_type
- * @param token
- */
-async function deleteMaterial(id, material_type, token) {
-    token = document.getElementById("csrf_token").value
-    let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-    try {
-        const url = `${BLENDED_MATERIALS_URL}/${material_type.toLowerCase()}/${uuid}`;
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                'X-CSRF-TOKEN': token
-            }
-        });
-        const form = await response.json();
-        document.getElementById("materials_table_placeholder").innerHTML = form["template"];
-    } catch (error) {
-        console.log(error);
-    }
+async function deleteMaterial(id, material_type) {
+    deleteMaterialByType(id, material_type, true)
 }
 
 window.addEventListener("load", function () {
