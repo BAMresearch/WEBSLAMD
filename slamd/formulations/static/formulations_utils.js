@@ -92,7 +92,7 @@ function toggleConfirmationFormulationsButtons(inputFields) {
 
 /**
  * Similar to the logic defined in the corresponding method of blended_materials_utils.js. However, since it is possible
- * to define formulations without weigth constraints we internally take this possibility into account.
+ * to define formulations without weight constraints we internally take this possibility into account.
  */
 function collectInputFields(only_independent = true) {
     let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
