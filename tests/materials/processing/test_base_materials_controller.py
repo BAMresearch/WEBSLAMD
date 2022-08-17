@@ -12,7 +12,8 @@ def test_slamd_shows_form_and_table(client, monkeypatch):
     def mock_list_materials(blended):
         return MaterialsResponse(
             [{'uuid': 'test', 'name': 'test powder', 'type': 'Powder'}],
-            'base materials / processes')
+            'base materials / processes'
+        )
 
     monkeypatch.setattr(BaseMaterialService, 'list_materials', mock_list_materials)
 

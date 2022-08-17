@@ -16,7 +16,6 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type', mock_query_by_type)
 
     with app.test_request_context('/materials/base'):
-
         response = client.get('/materials/base')
 
     assert response.status_code == 200
