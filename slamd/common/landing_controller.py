@@ -1,8 +1,8 @@
-from flask import Blueprint, redirect
+from flask import Blueprint, render_template
 
 landing = Blueprint('landing', __name__)
 
 
 @landing.route('/', methods=['GET'])
 def landing_page():
-    return redirect('/materials/base')
+    return render_template('landing_page.html')
