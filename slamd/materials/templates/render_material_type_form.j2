@@ -10,7 +10,7 @@
     {% elif form.material_type.data == 'Admixture' %}
         {% include 'admixture_form.html' %}
     {% elif form.material_type.data == 'Custom' %}
-            {% include 'custom_form.html' %}
+        {% include 'custom_form.html' %}
     {% else %}
         {% include 'powder_form.html' %}
     {% endif %}
