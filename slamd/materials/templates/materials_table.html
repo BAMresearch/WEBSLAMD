@@ -2,26 +2,28 @@
 {% from 'action_buttons.html' import create_edit_button -%}
 
 <h3>All {{ materials_response.ctx }}</h3>
-<table id="base_materials_table" class="table table-bordered table-striped">
+<table id="materials_table" class="table table-bordered table-striped table-hover">
     <thead>
-    <tr>
-        <th>Actions</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Properties</th>
-    </tr>
+        <tr>
+            <th>Actions</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Properties</th>
+        </tr>
     </thead>
     <tbody>
-    {% for item in materials_response.all_materials %}
-    <tr>
-        <td>
-            {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
-            {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 12, 12) }}
-        </td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.type }}</td>
-        <td>{{ item.all_properties }}</td>
-    </tr>
-    {% endfor %}
+        {% for item in materials_response.all_materials %}
+        <tr>
+            <td>
+                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+                {% if materials_response.ctx != 'blended materials' %}
+                {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+                {% endif %}
+            </td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.all_properties }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>

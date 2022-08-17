@@ -60,7 +60,7 @@ function deleteAdditionalProperty() {
 }
 
 /**
- * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
+ * The input parameter corresponds to the id of the html button element. It is specified in materials_table.html
  * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
  * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
  *
