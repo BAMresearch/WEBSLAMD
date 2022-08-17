@@ -16,20 +16,8 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
  * @param isBlended
  */
  async function deleteMaterialByType(id, material_type, isBlended) {
-    token = document.getElementById("csrf_token").value
-    let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-    try {
-        const endpoint = isBlended ? BLENDED_MATERIALS_URL : BASE_MATERIALS_URL;
-        const url = endpoint + `/${material_type.toLowerCase()}/${uuid}`;
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                'X-CSRF-TOKEN': token
-            }
-        });
-        const form = await response.json();
-        document.getElementById("materials_table_placeholder").innerHTML = form["template"];
-    } catch (error) {
-        console.log(error);
-    }
+    const uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
+    const endpoint = isBlended ? BLENDED_MATERIALS_URL : BASE_MATERIALS_URL;
+    const url = endpoint + `/${material_type.toLowerCase()}/${uuid}`;
+    await deleteDataAndEmbedTemplateInPlaceholder(url, "materials_table_placeholder");
 }

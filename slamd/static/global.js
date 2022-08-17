@@ -34,6 +34,23 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
     }
 }
 
+async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderID) {
+    const token = document.getElementById("csrf_token").value
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'X-CSRF-TOKEN': token
+        },
+    });
+    if (response.ok) {
+        const form = await response.json();
+        document.getElementById(placeholderID).innerHTML = form["template"];
+    } else {
+        const error = await response.text()
+        document.write(error);
+    }
+}
+
 function removeInnerHtmlFromPlaceholder(placeholderID) {
     let placeholder = document.getElementById(placeholderID);
     placeholder.innerHTML = "";
