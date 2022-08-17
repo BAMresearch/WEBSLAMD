@@ -8,11 +8,10 @@ describe("Test landing page", () => {
   })
 
   it("Page loads", () => {
-    cy.title().should("contain", "SLAMD - Base Materials")
+    cy.title().should("contain", "SLAMD - Sequential Learning App for Materials Discovery")
     cy.findAllByText("SLAMD Dashboard").should("have.length", 2)
-    cy.url().should('include', '/materials/base')
-    cy.url().should('eq', 'http://localhost:5001/materials/base')
-    cy.findByText("New material / process").should("exist")
-    cy.findByText("Material type / Process").should("exist")
+    cy.url().should('eq', 'http://localhost:5001/')
+    cy.findByText("Step 1: Define base materials and processes").should("exist")
+    cy.findByText("Step 2: Blend base materials to create blended materials").should("exist")
   })
 })
