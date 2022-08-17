@@ -11,7 +11,7 @@ async function selectBaseMaterialType() {
 
     const elem = document.getElementById("base_type");
     const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
-    await fetchEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
+    await fetchDataAndEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
 
     document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
 }

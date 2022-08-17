@@ -4,7 +4,7 @@ const MAX_ADDITIONAL_PROPERTIES = 10;
 function selectMaterialType() {
     const elem = document.getElementById("material_type");
     const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
-    fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
+    fetchDataAndEmbedTemplateInPlaceholder(url, "template-placeholder");
 }
 
 function collectAdditionalProperties(newPropIndex) {

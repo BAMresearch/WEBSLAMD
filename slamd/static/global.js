@@ -1,7 +1,7 @@
 const ACTION_BUTTON_DELIMITER = "___"
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
-async function fetchEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
+async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
     if (response.ok) {
         const form = await response.json();
