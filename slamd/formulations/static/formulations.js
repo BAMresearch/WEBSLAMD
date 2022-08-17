@@ -1,18 +1,18 @@
 const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations`
 let withConstraint = false
-let weigthConstraint = ""
+let weightConstraint = ""
 
 function toggleBasedOnSelectionAndConstraints() {
     const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
 
-    const validConstraintConfiguration = withConstraint && (weigthConstraint !== undefined && weigthConstraint !== "");
+    const validConstraintConfiguration = withConstraint && (weightConstraint !== undefined && weightConstraint !== "");
     if (withConstraint) {
         changeSelectionButton.disabled = !validConstraintConfiguration;
     }
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
-    weigthConstraint = document.getElementById("weight_constraint").value;
+    weightConstraint = document.getElementById("weight_constraint").value;
     toggleBasedOnSelectionAndConstraints();
 }
 
@@ -42,7 +42,7 @@ async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder")
     removeInnerHtmlFromPlaceholder("formulations_weights_placeholder")
     document.getElementById("submit").disabled = true
-    weigthConstraint = document.getElementById("weight_constraint").value
+    weightConstraint = document.getElementById("weight_constraint").value
 
     const selectedMaterials = collectAllSelectedMaterials();
 

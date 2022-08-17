@@ -135,7 +135,7 @@ function collectFormulationsMinMaxRequestData() {
     }
     return {
         materials_formulation_configuration: rowData,
-        weight_constraint: weigthConstraint
+        weight_constraint: weightConstraint
     }
 }
 
@@ -162,7 +162,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     const unfilledFields = independentMinMaxInputFields.filter(item => item[type].value === "");
     if (unfilledFields.length === 0) {
         const lastMinItem = document.getElementById(`materials_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
-        lastMinItem.value = (weigthConstraint - sumOfIndependentFields).toFixed(2)
+        lastMinItem.value = (weightConstraint - sumOfIndependentFields).toFixed(2)
     }
 }
 
@@ -174,9 +174,9 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
         .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y, 0);
 
-    if (sumOfIndependentFields > weigthConstraint) {
-        currentInputField.value = (weigthConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
-        sumOfIndependentFields = weigthConstraint
+    if (sumOfIndependentFields > weightConstraint) {
+        currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
+        sumOfIndependentFields = weightConstraint
     }
     return sumOfIndependentFields;
 }
@@ -190,8 +190,8 @@ function validateIncrementValue(increment) {
         increment.value = 0;
     }
 
-    if (parseFloat(increment.value) > parseFloat(weigthConstraint)) {
-        increment.value = weigthConstraint;
+    if (parseFloat(increment.value) > parseFloat(weightConstraint)) {
+        increment.value = weightConstraint;
     }
 }
 
@@ -209,8 +209,8 @@ function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
         }
     }
     if (selectedMaterials.length === 1) {
-        document.getElementById("materials_min_max_entries-0-min").value = weigthConstraint
-        document.getElementById("materials_min_max_entries-0-max").value = weigthConstraint
+        document.getElementById("materials_min_max_entries-0-min").value = weightConstraint
+        document.getElementById("materials_min_max_entries-0-max").value = weightConstraint
         if (withConstraint) {
             document.getElementById("confirm_formulations_configuration_button").disabled = false
         }
