@@ -1,11 +1,10 @@
-const BASE_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/base`
 const WARNING_MAX_ADDITIONAL_PROPERTIES = "<p class=\"text-warning\">You may define up to 10 additional properties</p>";
 const MAX_ADDITIONAL_PROPERTIES = 10;
 
 function selectMaterialType() {
     const elem = document.getElementById("material_type");
     const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
-    fetchEmbedTemplateInPlaceholder(url, "template-placeholder");
+    fetchDataAndEmbedTemplateInPlaceholder(url, "template-placeholder");
 }
 
 function collectAdditionalProperties(newPropIndex) {
@@ -59,31 +58,8 @@ function deleteAdditionalProperty() {
     }
 }
 
-/**
- * The input parameter corresponds to the id of the html button element. It is specified in base_materials_table.html
- * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
- * identifying the corresponding model object. To extract it for calling our API, we use the special delimiter.
- *
- * @param id
- * @param material_type
- * @param token
- */
-async function deleteMaterial(id, material_type, token) {
-    token = document.getElementById("csrf_token").value
-    let uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
-    try {
-        const url = `${BASE_MATERIALS_URL}/${material_type.toLowerCase()}/${uuid}`;
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                'X-CSRF-TOKEN': token
-            }
-        });
-        const form = await response.json();
-        document.getElementById("materials_table_placeholder").innerHTML = form["template"];
-    } catch (error) {
-        console.log(error);
-    }
+async function deleteMaterial(id, material_type) {
+    deleteMaterialByType(id, material_type, false)
 }
 
 window.addEventListener("load", function () {

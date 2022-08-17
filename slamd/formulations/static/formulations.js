@@ -50,7 +50,7 @@ async function confirmSelection() {
     const selectedProcesses = collectSelection(processesPlaceholder);
 
     const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;
-    await fetchEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
+    await fetchDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
 
     prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
     prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses)
