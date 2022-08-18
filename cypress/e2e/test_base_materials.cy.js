@@ -48,7 +48,7 @@ describe('Test base materials page', () => {
 
         // Fill out structural composition properties
         cy.findByText("Structural composition").should("exist")
-        cy.findByLabelText("Fine modules (m2/kg)").type("123.45")
+        cy.findByLabelText("Fine modules (m²/kg)").type("123.45")
         cy.findByLabelText("Specific gravity (m%)").type("67.890")
 
         // Fill out additional properties
