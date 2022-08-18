@@ -123,9 +123,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
-        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
-    }
+    currentInputField.value = roundToTwoDecimalPlaces(currentInputField.value);
 
     if (currentInputField.value < 0) {
         currentInputField.value = 0;
@@ -144,9 +142,7 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 function validateIncrementValue(increment) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(increment.value)) {
-        increment.value = parseFloat(increment.value).toFixed(2);
-    }
+    increment.value = roundToTwoDecimalPlaces(increment.value);
 
     if (parseFloat(increment.value) < 0) {
         increment.value = 0;

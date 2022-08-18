@@ -140,7 +140,7 @@ function collectFormulationsMinMaxRequestData() {
 }
 
 // there are two elements for each process, one hidden and one visible. Therefore we divide by 2
-function collectProcessesRequestData(){
+function collectProcessesRequestData() {
     const numberOfIndependentRows = document.querySelectorAll('[id^="processes_entries-"]').length / 2 - 1;
 
     let rowData = []
@@ -182,9 +182,7 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 function validateIncrementValue(increment) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(increment.value)) {
-        increment.value = parseFloat(increment.value).toFixed(2);
-    }
+    increment.value = roundToTwoDecimalPlaces(increment.value);
 
     if (parseFloat(increment.value) < 0) {
         increment.value = 0;
