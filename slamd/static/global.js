@@ -13,8 +13,13 @@ function clipNegativeValues(number) {
     return parseFloat(number) < 0 ? 0 : number;
 }
 
-function correctInputFieldValue(inputFieldElem) {
-    inputFieldElem.value = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
+function correctInputFieldValue(inputFieldElem, maxValue) {
+    const newValue = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
+    if (!maxValue) {
+        inputFieldElem.value = newValue;
+    } else {
+        inputFieldElem.value = newValue > maxValue ? maxValue : newValue;
+    }
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {

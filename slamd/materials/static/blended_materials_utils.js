@@ -39,7 +39,7 @@ function assignKeyboardEventsToMinMaxForm() {
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
+            correctInputFieldValue(item.increment, 100);
             toggleConfirmBlendingButton(independentInputFields);
         });
     }
@@ -135,13 +135,6 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
         sumOfIndependentFields = 100
     }
     return sumOfIndependentFields;
-}
-
-function validateIncrementValue(increment) {
-    correctInputFieldValue(increment);
-    if (parseFloat(increment.value) > 100) {
-        increment.value = 100;
-    }
 }
 
 /**

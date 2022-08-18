@@ -58,7 +58,7 @@ function addListenersToIndependentFields() {
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
+            correctInputFieldValue(item.increment, parseFloat(weightConstraint));
             toggleConfirmationFormulationsButtons(inputFields);
         });
     }
@@ -179,13 +179,6 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
         sumOfIndependentFields = weightConstraint
     }
     return sumOfIndependentFields;
-}
-
-function validateIncrementValue(increment) {
-    correctInputFieldValue(increment);
-    if (parseFloat(increment.value) > parseFloat(weightConstraint)) {
-        increment.value = weightConstraint;
-    }
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
