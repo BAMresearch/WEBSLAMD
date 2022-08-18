@@ -76,3 +76,12 @@ function fixInputValue(currentInputField) {
         currentInputField.value = 0;
     }
 }
+
+/**
+ * Enable tooltips everywhere
+ * See Bootstrap docs: https://getbootstrap.com/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
+ */
+ const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+ const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+   return new bootstrap.Tooltip(tooltipTriggerEl)
+ })
