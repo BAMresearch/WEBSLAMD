@@ -123,7 +123,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-    currentInputField.value = roundToTwoDecimalPlaces(clipNegativeValues(currentInputField.value));
+    correctInputFieldValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
@@ -138,7 +138,7 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 function validateIncrementValue(increment) {
-    increment.value = roundToTwoDecimalPlaces(clipNegativeValues(increment.value));
+    correctInputFieldValue(increment);
     if (parseFloat(increment.value) > 100) {
         increment.value = 100;
     }

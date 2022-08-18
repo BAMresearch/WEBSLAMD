@@ -182,7 +182,7 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 function validateIncrementValue(increment) {
-    increment.value = roundToTwoDecimalPlaces(clipNegativeValues(increment.value));
+    correctInputFieldValue(increment);
     if (parseFloat(increment.value) > parseFloat(weightConstraint)) {
         increment.value = weightConstraint;
     }

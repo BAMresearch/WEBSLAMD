@@ -13,6 +13,10 @@ function clipNegativeValues(number) {
     return parseFloat(number) < 0 ? 0 : number;
 }
 
+function correctInputFieldValue(inputFieldElem) {
+    inputFieldElem.value = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
+}
+
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
     if (response.ok) {
@@ -77,10 +81,6 @@ function collectSelection(placeholder) {
                 name: option.innerHTML
             }
         });
-}
-
-function correctInputFieldValue(inputFieldElem) {
-    inputFieldElem.value = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
 }
 
 function enableTooltip(elem) {
