@@ -188,19 +188,13 @@ function assignAddCustomBlendEvent() {
 }
 
 function assignDeleteCustomBlendEvent() {
-    const placeholder = document.getElementById("blending_ratio_placeholder");
     const button = document.getElementById("delete_custom_blend_button");
     enableTooltip(button);
 
     button.addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
-
-        for (let div of placeholder.children) {
-            let input = div.children[0]
-            if (input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`) {
-                placeholder.removeChild(div);
-            }
-        }
+        const elem = document.getElementById(`all_ratio_entries-${numberOfRatioFields}-ratio`);
+        elem.parentElement.remove()
 
         let ratioInputFields = collectRatioFields();
         let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
