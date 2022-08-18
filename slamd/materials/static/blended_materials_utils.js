@@ -1,7 +1,7 @@
 /**
  * Many functions look similar to the ones in blended_materials.js
- * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
- * common functions would lead to tight coupling between these separated usecases.
+ * Nevertheless, we choose not to extract common functions as the two use cases are in general not related and the
+ * common functions would lead to tight coupling between these separated use cases.
  */
 let allRatioFieldsHaveValidInput = false;
 
