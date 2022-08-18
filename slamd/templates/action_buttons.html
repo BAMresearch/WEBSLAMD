@@ -1,5 +1,5 @@
 {% macro create_delete_button(id, type, width, height) -%}
-<div class="slamd_tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete material">
+<div class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
     <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
         <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor"
             viewBox="0 0 16 16">
@@ -34,8 +34,9 @@
 {% endmacro %}
 
 {% macro create_edit_button(id, type, width, height) -%}
-<a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
-    data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
+<a class="btn btn-secondary d-inline-block" id="'{{ id }}'"
+    href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}" data-bs-toggle="tooltip"
+    data-bs-placement="right" title="Edit material">
     <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor"
         viewBox="0 0 16 16" class="bi bi-pencil">
         <path
