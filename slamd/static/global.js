@@ -77,11 +77,15 @@ function fixInputValue(currentInputField) {
     }
 }
 
+function enableTooltip(elem) {
+    return new bootstrap.Tooltip(elem, { trigger: "hover" });
+}
+
 /**
  * Enable tooltips everywhere
  * See Bootstrap docs: https://getbootstrap.com/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
  */
- const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
- const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-   return new bootstrap.Tooltip(tooltipTriggerEl, { trigger: "hover" })
- })
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl, { trigger: "hover" });
+});

@@ -164,8 +164,10 @@ function validateIncrementValue(increment) {
  */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
+    const button = document.getElementById("add_custom_blend_button");
+    enableTooltip(button);
 
-    document.getElementById("add_custom_blend_button").addEventListener("click", () => {
+    button.addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
         let div = document.createElement("div");
         div.className = "col-md-3"
@@ -188,8 +190,10 @@ function assignAddCustomBlendEvent() {
 
 function assignDeleteCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
+    const button = document.getElementById("delete_custom_blend_button");
+    enableTooltip(button);
 
-    document.getElementById("delete_custom_blend_button").addEventListener("click", () => {
+    button.addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
 
         for (let div of placeholder.children) {
