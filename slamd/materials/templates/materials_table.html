@@ -15,10 +15,12 @@
         {% for item in materials_response.all_materials %}
         <tr>
             <td>
-                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
-                {% if materials_response.ctx != 'blended materials' %}
-                {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 12, 12) }}
-                {% endif %}
+                <div class="btn-group">
+                    {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+                    {% if materials_response.ctx != 'blended materials' %}
+                    {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+                    {% endif %}
+                </div>
             </td>
             <td>{{ item.name }}</td>
             <td>{{ item.type }}</td>
