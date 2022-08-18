@@ -68,15 +68,15 @@ function addListenersToAllFields() {
     const inputFields = collectInputFields(false);
     for (let item of inputFields) {
         item.min.addEventListener("keyup", () => {
-            fixInputValue(item.min);
+            correctInputFieldValue(item.min);
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.max.addEventListener("keyup", () => {
-            fixInputValue(item.max);
+            correctInputFieldValue(item.max);
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            fixInputValue(item.increment);
+            correctInputFieldValue(item.increment);
             toggleConfirmationFormulationsButtons(inputFields);
         });
     }
@@ -167,7 +167,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-    fixInputValue(currentInputField);
+    correctInputFieldValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")

@@ -19,7 +19,7 @@ function toggleSelectionConfirmationButtonAfterConstraintChange() {
 function autocorrectWeightValue() {
     let weightConstraintInput = document.getElementById("weight_constraint");
 
-    fixInputValue(weightConstraintInput)
+    correctInputFieldValue(weightConstraintInput)
 }
 
 function toggleWeightConstraintInput() {

@@ -79,8 +79,8 @@ function collectSelection(placeholder) {
         });
 }
 
-function fixInputValue(currentInputField) {
-    currentInputField.value = roundToTwoDecimalPlaces(clipNegativeValues(currentInputField.value));
+function correctInputFieldValue(inputFieldElem) {
+    inputFieldElem.value = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
 }
 
 function enableTooltip(elem) {
