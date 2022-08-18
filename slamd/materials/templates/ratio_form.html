@@ -1,13 +1,11 @@
 {% from 'errors.html' import with_errors -%}
 
-<span class="border border-light bg-light">
-    <div>
-        In case you want to edit the fields below, follow the pattern number/number/number...
-        N times where N is the number of selected base materials.
-        For example, in case you selected from 3 base materials a valid entry would be 10/20/70.
-        Note that also decimals with up to two decimal places are allowed.
-    </div>
-</span>
+<div class="col-md-12 p-1 border rounded bg-light">
+    In case you want to edit the fields below, follow the pattern number/number/number...
+    N times where N is the number of selected base materials.
+    For example, in case you selected from 3 base materials a valid entry would be 10/20/70.
+    Note that also decimals with up to two decimal places are allowed.
+</div>
 <!--Custom ratio fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
 <!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
 {% for entry in ratio_form.all_ratio_entries %}
