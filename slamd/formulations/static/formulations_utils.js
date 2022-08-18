@@ -58,7 +58,7 @@ function addListenersToIndependentFields() {
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
+            correctInputFieldValue(item.increment, parseFloat(weightConstraint));
             toggleConfirmationFormulationsButtons(inputFields);
         });
     }
@@ -68,15 +68,15 @@ function addListenersToAllFields() {
     const inputFields = collectInputFields(false);
     for (let item of inputFields) {
         item.min.addEventListener("keyup", () => {
-            fixInputValue(item.min);
+            correctInputFieldValue(item.min);
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.max.addEventListener("keyup", () => {
-            fixInputValue(item.max);
+            correctInputFieldValue(item.max);
             toggleConfirmationFormulationsButtons(inputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            fixInputValue(item.increment);
+            correctInputFieldValue(item.increment);
             toggleConfirmationFormulationsButtons(inputFields);
         });
     }
@@ -92,7 +92,7 @@ function toggleConfirmationFormulationsButtons(inputFields) {
 
 /**
  * Similar to the logic defined in the corresponding method of blended_materials_utils.js. However, since it is possible
- * to define formulations without weigth constraints we internally take this possibility into account.
+ * to define formulations without weight constraints we internally take this possibility into account.
  */
 function collectInputFields(only_independent = true) {
     let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
@@ -135,12 +135,12 @@ function collectFormulationsMinMaxRequestData() {
     }
     return {
         materials_formulation_configuration: rowData,
-        weight_constraint: weigthConstraint
+        weight_constraint: weightConstraint
     }
 }
 
 // there are two elements for each process, one hidden and one visible. Therefore we divide by 2
-function collectProcessesRequestData(){
+function collectProcessesRequestData() {
     const numberOfIndependentRows = document.querySelectorAll('[id^="processes_entries-"]').length / 2 - 1;
 
     let rowData = []
@@ -162,37 +162,23 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
     const unfilledFields = independentMinMaxInputFields.filter(item => item[type].value === "");
     if (unfilledFields.length === 0) {
         const lastMinItem = document.getElementById(`materials_min_max_entries-${independentMinMaxInputFields.length}-${type}`);
-        lastMinItem.value = (weigthConstraint - sumOfIndependentFields).toFixed(2)
+        lastMinItem.value = (weightConstraint - sumOfIndependentFields).toFixed(2)
     }
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-    fixInputValue(currentInputField);
+    correctInputFieldValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
         .map(item => parseFloat(item[type].value))
         .reduce((x, y) => x + y, 0);
 
-    if (sumOfIndependentFields > weigthConstraint) {
-        currentInputField.value = (weigthConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
-        sumOfIndependentFields = weigthConstraint
+    if (sumOfIndependentFields > weightConstraint) {
+        currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2)
+        sumOfIndependentFields = weightConstraint
     }
     return sumOfIndependentFields;
-}
-
-function validateIncrementValue(increment) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(increment.value)) {
-        increment.value = parseFloat(increment.value).toFixed(2);
-    }
-
-    if (parseFloat(increment.value) < 0) {
-        increment.value = 0;
-    }
-
-    if (parseFloat(increment.value) > parseFloat(weigthConstraint)) {
-        increment.value = weigthConstraint;
-    }
 }
 
 function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
@@ -209,8 +195,8 @@ function prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials) {
         }
     }
     if (selectedMaterials.length === 1) {
-        document.getElementById("materials_min_max_entries-0-min").value = weigthConstraint
-        document.getElementById("materials_min_max_entries-0-max").value = weigthConstraint
+        document.getElementById("materials_min_max_entries-0-min").value = weightConstraint
+        document.getElementById("materials_min_max_entries-0-max").value = weightConstraint
         if (withConstraint) {
             document.getElementById("confirm_formulations_configuration_button").disabled = false
         }

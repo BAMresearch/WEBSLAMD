@@ -4,7 +4,7 @@ const MAX_ADDITIONAL_PROPERTIES = 10;
 function selectMaterialType() {
     const elem = document.getElementById("material_type");
     const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
-    fetchDataAndEmbedTemplateInPlaceholder(url, "template-placeholder");
+    fetchDataAndEmbedTemplateInPlaceholder(url, "material-type-form-placeholder");
 }
 
 function collectAdditionalProperties(newPropIndex) {
@@ -59,11 +59,16 @@ function deleteAdditionalProperty() {
 }
 
 async function deleteMaterial(id, material_type) {
-    deleteMaterialByType(id, material_type, false)
+    deleteMaterialByType(id, material_type, false);
+}
+
+function autocorrectDeliveryTime(event) {
+    correctInputFieldValue(event.target);
 }
 
 window.addEventListener("load", function () {
     document.getElementById("material_type").addEventListener("change", selectMaterialType);
-    document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty)
-    document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty)
+    document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty);
+    document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty);
+    document.getElementById("delivery_time").addEventListener("keyup", autocorrectDeliveryTime);
 });

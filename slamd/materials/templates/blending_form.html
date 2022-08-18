@@ -18,11 +18,9 @@
         {% include 'base_material_selection.html' %}
     </div>
 
-    <div>
-        {{ create_change_selection_button("change_base_material_selection_button",
-        "confirm_base_material_selection_button",
-        "Select at least two base materials") }}
-    </div>
+    {{ create_change_selection_button("change_base_material_selection_button",
+    "confirm_base_material_selection_button",
+    "Select at least two base materials") }}
 
     <div class="justify-content-center">
         <div id="min-max-placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
@@ -33,15 +31,15 @@
     </div>
 
     <div class="form-group mb-12">
-        <div class="col-sm-offset-2 col-sm-10" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="top"
-             title="For enabling submission please specify a name and configure a valid configuration.">
-            {{ blending_name_and_type_form.submit(class_="btn btn-primary", data_bs_toggle="modal",
+        <div class="col-sm-offset-2 col-sm-12" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="For enabling submission please specify a name and configure a valid configuration.">
+            {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
             data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>
     </div>
 
     <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
-         aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

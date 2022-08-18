@@ -1,9 +1,7 @@
 import json
-
 from flask import Blueprint, render_template, request, make_response, jsonify, redirect
 
 from slamd.materials.processing.base_materials_service import BaseMaterialService
-from slamd.materials.processing.forms.powder_form import PowderForm
 
 base_materials = Blueprint('base_materials', __name__,
                            template_folder='../templates',
@@ -14,14 +12,15 @@ base_materials = Blueprint('base_materials', __name__,
 
 @base_materials.route('', methods=['GET'])
 def base_material_page():
+    form = BaseMaterialService.create_material_form('powder')
     materials_response = BaseMaterialService.list_materials(blended=False)
-    return render_template('base_materials.html', form=PowderForm(), materials_response=materials_response)
+    return render_template('base_materials.html', form=form, materials_response=materials_response)
 
 
 @base_materials.route('/<type>', methods=['GET'])
 def select_base_material_type(type):
-    template_file, form = BaseMaterialService.create_material_form(type)
-    body = {'template': render_template(template_file, form=form)}
+    form = BaseMaterialService.create_material_form(type)
+    body = {'template': render_template('material_type_form.html', form=form)}
     return make_response(jsonify(body), 200)
 
 

@@ -67,18 +67,18 @@ def test_gather_composition_properties_adds_all_properties():
     )
 
     result = LiquidStrategy.gather_composition_information(liquid)
-    assert result == ['Na₂SiO₃: 12.3, ',
-                      'NaOH: 23.4, ',
-                      'Na₂SiO₃ specific: 34.5, ',
-                      'NaOH specific: 45.6, ',
-                      'Total solution: 56.7, ',
-                      'Na₂O: 67.8, ',
-                      'SiO₂: 78.9, ',
-                      'H₂O: 89.0, ',
-                      'Na₂O: 0.98, ',
-                      'SiO₂: 9.87, ',
-                      'Water: 8.76, ',
-                      'Total NaOH: 7.65, ']
+    assert result == ['Na₂SiO₃ (m%): 12.3, ',
+                      'NaOH (m%): 23.4, ',
+                      'Na₂SiO₃ specific (m%): 34.5, ',
+                      'NaOH specific (m%): 45.6, ',
+                      'Total solution (m%): 56.7, ',
+                      'Na₂O (I) (%): 67.8, ',
+                      'SiO₂ (I) (%): 78.9, ',
+                      'H₂O (%): 89.0, ',
+                      'Na₂O (dry) (m%): 0.98, ',
+                      'SiO₂ (dry) (m%): 9.87, ',
+                      'Water (m%): 8.76, ',
+                      'Total NaOH (m%): 7.65, ']
 
 
 def test_convert_to_multidict_adds_all_properties():

@@ -9,29 +9,29 @@ describe('Test base materials page', () => {
 
     it('Material types are listed correctly', () => {
         cy.findByText("Powder").should("exist")
-        cy.findByLabelText("Material type / Process").select("Powder")
-        cy.findByLabelText("Material type / Process").select("Liquid")
-        cy.findByLabelText("Material type / Process").select("Aggregates")
-        cy.findByLabelText("Material type / Process").select("Aggregates")
-        cy.findByLabelText("Material type / Process").select("Admixture")
-        cy.findByLabelText("Material type / Process").select("Process")
-        cy.findByLabelText("Material type / Process").select("Custom")
-        cy.findByLabelText("Material type / Process").select("Powder")
+        cy.findByLabelText("2 - Material type / Process").select("Powder")
+        cy.findByLabelText("2 - Material type / Process").select("Liquid")
+        cy.findByLabelText("2 - Material type / Process").select("Aggregates")
+        cy.findByLabelText("2 - Material type / Process").select("Aggregates")
+        cy.findByLabelText("2 - Material type / Process").select("Admixture")
+        cy.findByLabelText("2 - Material type / Process").select("Process")
+        cy.findByLabelText("2 - Material type / Process").select("Custom")
+        cy.findByLabelText("2 - Material type / Process").select("Powder")
     })
 
     it('Create powder', () => {
         // Fill out name and material type
-        cy.findByLabelText("Name").type("My Powder")
-        cy.findByLabelText("Material type / Process").select("Powder")
+        cy.findByLabelText("1 - Name").type("My Powder")
+        cy.findByLabelText("2 - Material type / Process").select("Powder")
 
         // Fill out cost properties
-        cy.findByText("Cost").click()
+        cy.findByText("3 - Cost").click()
         cy.findByLabelText("CO₂ footprint (kg)").type("12.34")
         cy.findByLabelText("Costs (€/kg)").type("34.56")
         cy.findByLabelText("Delivery time (days)").type("56.78")
 
         // Fill out composition properties
-        cy.findByText("Composition").click()
+        cy.findByText("4 - Composition").click()
         cy.findByText("Molecular composition").scrollIntoView()
         cy.findByLabelText("Fe₂O₃ (m%)").type("12.3")
         cy.findByLabelText("SiO₂ (m%)").type("23.4")
@@ -48,11 +48,11 @@ describe('Test base materials page', () => {
 
         // Fill out structural composition properties
         cy.findByText("Structural composition").should("exist")
-        cy.findByLabelText("Fine modules (m2/kg)").type("123.45")
+        cy.findByLabelText("Fine modules (m²/kg)").type("123.45")
         cy.findByLabelText("Specific gravity (m%)").type("67.890")
 
         // Fill out additional properties
-        cy.findByText("Additional Properties - Leave empty if not needed.").click().scrollIntoView()
+        cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView()
         cy.findByText("Add property").click()
         cy.findAllByLabelText("Name").last().type("Prop 0")
         cy.findAllByLabelText("Value").last().type("Value 0")
@@ -61,7 +61,7 @@ describe('Test base materials page', () => {
         cy.findAllByLabelText("Value").last().type("Value 1")
 
         // Save material and check that it is listed
-        cy.findByText("Save material").click()
+        cy.findByText("6 - Save material").click()
         cy.findByText("All base materials / processes").should("exist")
         cy.findByText("My Powder").should("exist")
     })

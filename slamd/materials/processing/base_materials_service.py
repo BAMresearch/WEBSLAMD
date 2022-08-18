@@ -14,9 +14,7 @@ class BaseMaterialService(MaterialsService):
 
     @classmethod
     def create_material_form(cls, type):
-        template_file = f'{type}_form.html'
-        form = MaterialFactory.create_material_form(type=type)
-        return template_file, form
+        return MaterialFactory.create_material_form(type=type)
 
     @classmethod
     def create_additional_property_form(cls, additional_property_entries):

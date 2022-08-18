@@ -23,7 +23,7 @@ async function confirmSelection() {
     const placeholder = document.getElementById("base_material_selection");
 
     const selectedMaterials = collectSelection(placeholder);
-    let uuids = selectedMaterials.map(material=>material.uuid);
+    let uuids = selectedMaterials.map(material => material.uuid);
 
     const type = document.getElementById('base_type').value
 
@@ -37,6 +37,7 @@ async function confirmSelection() {
 
 async function assignConfirmBlendingConfigurationEvent() {
     const elem = document.getElementById("confirm_blending_configuration_button");
+    enableTooltip(elem);
 
     elem.addEventListener("click", async () => {
         const minMaxValuesWithIncrements = collectMinMaxValuesWithIncrements();

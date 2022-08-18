@@ -1,7 +1,7 @@
 /**
  * Many functions look similar to the ones in blended_materials.js
- * Nevertheless, we choose not to extract common functions as the two usecases are in general not related and the
- * common functions would lead to tight coupling between these separated usecases.
+ * Nevertheless, we choose not to extract common functions as the two use cases are in general not related and the
+ * common functions would lead to tight coupling between these separated use cases.
  */
 let allRatioFieldsHaveValidInput = false;
 
@@ -39,7 +39,7 @@ function assignKeyboardEventsToMinMaxForm() {
             toggleConfirmBlendingButton(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
-            validateIncrementValue(item.increment)
+            correctInputFieldValue(item.increment, 100);
             toggleConfirmBlendingButton(independentInputFields);
         });
     }
@@ -123,13 +123,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
-        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
-    }
-
-    if (currentInputField.value < 0) {
-        currentInputField.value = 0;
-    }
+    correctInputFieldValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter(item => item[type].value !== "")
@@ -143,29 +137,17 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
     return sumOfIndependentFields;
 }
 
-function validateIncrementValue(increment) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(increment.value)) {
-        increment.value = parseFloat(increment.value).toFixed(2);
-    }
-
-    if (parseFloat(increment.value) < 0) {
-        increment.value = 0;
-    }
-
-    if (parseFloat(increment.value) > 100) {
-        increment.value = 100;
-    }
-}
-
 /**
  * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
  * requires a certain structure of DOM elements within the blending_ratio_placeholder. Thus, when changing this function always
- * check the corresponding html dom structure and vice versa.
+ * check the corresponding HTML DOM structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
     const placeholder = document.getElementById("blending_ratio_placeholder");
+    const button = document.getElementById("add_custom_blend_button");
+    enableTooltip(button);
 
-    document.getElementById("add_custom_blend_button").addEventListener("click", () => {
+    button.addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
         let div = document.createElement("div");
         div.className = "col-md-3"
@@ -177,8 +159,7 @@ function assignAddCustomBlendEvent() {
         input.className = "form-control";
         div.appendChild(input);
 
-        const button_wrapper = document.getElementById("add_custom_blend_button_wrapper");
-        placeholder.insertBefore(div, button_wrapper);
+        placeholder.insertBefore(div, button);
 
         allRatioFieldsHaveValidInput = false;
         document.getElementById("submit").disabled = true;
@@ -187,17 +168,13 @@ function assignAddCustomBlendEvent() {
 }
 
 function assignDeleteCustomBlendEvent() {
-    const placeholder = document.getElementById("blending_ratio_placeholder");
+    const button = document.getElementById("delete_custom_blend_button");
+    enableTooltip(button);
 
-    document.getElementById("delete_custom_blend_button").addEventListener("click", () => {
+    button.addEventListener("click", () => {
         const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
-
-        for (let div of placeholder.children) {
-            let input = div.children[0]
-            if (input.id === `all_ratio_entries-${numberOfRatioFields}-ratio`) {
-                placeholder.removeChild(div);
-            }
-        }
+        const elem = document.getElementById(`all_ratio_entries-${numberOfRatioFields}-ratio`);
+        elem.parentElement.remove()
 
         let ratioInputFields = collectRatioFields();
         let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;

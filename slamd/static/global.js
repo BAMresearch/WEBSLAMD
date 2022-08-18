@@ -1,6 +1,27 @@
 const ACTION_BUTTON_DELIMITER = "___"
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
+function roundToTwoDecimalPlaces(number) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(number)) {
+        return parseFloat(number).toFixed(2);
+    } else {
+        return number;
+    }
+}
+
+function clipNegativeValues(number) {
+    return parseFloat(number) < 0 ? 0 : number;
+}
+
+function correctInputFieldValue(inputFieldElem, maxValue) {
+    const newValue = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
+    if (!maxValue) {
+        inputFieldElem.value = newValue;
+    } else {
+        inputFieldElem.value = newValue > maxValue ? maxValue : newValue;
+    }
+}
+
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
     const response = await fetch(url);
     if (response.ok) {
@@ -67,12 +88,15 @@ function collectSelection(placeholder) {
         });
 }
 
-function fixInputValue(currentInputField) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(currentInputField.value)) {
-        currentInputField.value = parseFloat(currentInputField.value).toFixed(2);
-    }
-
-    if (currentInputField.value < 0) {
-        currentInputField.value = 0;
-    }
+function enableTooltip(elem) {
+    return new bootstrap.Tooltip(elem, { trigger: "hover" });
 }
+
+/**
+ * Enable tooltips everywhere
+ * See Bootstrap docs: https://getbootstrap.com/docs/5.0/components/tooltips/#example-enable-tooltips-everywhere
+ */
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl, { trigger: "hover" });
+});
