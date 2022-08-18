@@ -179,8 +179,7 @@ function assignAddCustomBlendEvent() {
         input.className = "form-control";
         div.appendChild(input);
 
-        const button_wrapper = document.getElementById("add_custom_blend_button_wrapper");
-        placeholder.insertBefore(div, button_wrapper);
+        placeholder.insertBefore(div, button);
 
         allRatioFieldsHaveValidInput = false;
         document.getElementById("submit").disabled = true;
