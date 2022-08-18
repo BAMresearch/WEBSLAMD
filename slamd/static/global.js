@@ -1,13 +1,16 @@
 const ACTION_BUTTON_DELIMITER = "___"
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
-function roundToTwoDecimalPlaces(value) {
-    if (MORE_THAN_TWO_DECIMAL_PLACES.test(value)) {
-        return parseFloat(increment.value).toFixed(2);
+function roundToTwoDecimalPlaces(number) {
+    if (MORE_THAN_TWO_DECIMAL_PLACES.test(number)) {
+        return parseFloat(number).toFixed(2);
     } else {
-        // This is a programming error. It shouldn't happen during runtime.
-        throw `roundToTwoDecimalPlaces received an invalid number ${value}`;
+        return number;
     }
+}
+
+function clipNegativeValues(number) {
+    return parseFloat(number) < 0 ? 0 : number;
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
@@ -77,10 +80,7 @@ function collectSelection(placeholder) {
 }
 
 function fixInputValue(currentInputField) {
-    currentInputField.value = roundToTwoDecimalPlaces(currentInputField.value);
-    if (currentInputField.value < 0) {
-        currentInputField.value = 0;
-    }
+    currentInputField.value = roundToTwoDecimalPlaces(clipNegativeValues(currentInputField.value));
 }
 
 function enableTooltip(elem) {
