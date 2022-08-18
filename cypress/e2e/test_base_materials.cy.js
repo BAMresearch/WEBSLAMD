@@ -131,4 +131,12 @@ describe("Test base materials page", () => {
         cy.findByText("All base materials / processes").should("exist");
         cy.findByText("My Custom Material").should("exist");
     });
+
+    it("Delivery time is corrected automatically", () => {
+        // Fill out cost properties
+        cy.findByText("3 - Cost").click();
+        cy.findByLabelText("Delivery time (days)").type("123");
+        cy.findByLabelText("Delivery time (days)").type("{moveToStart}-");
+        cy.findByLabelText("Delivery time (days)").should('have.value', 0);
+    });
 });
