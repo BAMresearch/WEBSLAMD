@@ -59,20 +59,23 @@ async function confirmSelection() {
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
-    const elem = document.getElementById("confirm_formulations_configuration_button");
+    const button = document.getElementById("confirm_formulations_configuration_button");
+    enableTooltip(button);
 
-    elem.addEventListener("click", async () => {
+    button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData();
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData)
         assignDeleteWeightEvent();
         assignCreateFormulationsBatchEvent()
-    })
+    });
 }
 
 function assignCreateFormulationsBatchEvent() {
-    document.getElementById("create_formulations_batch_button").addEventListener("click", async () => {
+    const button = document.getElementById("create_formulations_batch_button");
+    enableTooltip(button);
 
+    button.addEventListener("click", async () => {
         const materialsRequestData = collectFormulationsMinMaxRequestData();
         const processesRequestData = collectProcessesRequestData();
         const targets = document.getElementById("targets_field").value;
@@ -85,7 +88,7 @@ function assignCreateFormulationsBatchEvent() {
 
         const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest)
-    })
+    });
 }
 
 function assignDeleteWeightEvent() {
