@@ -9,6 +9,9 @@
     <div class="row g-3 mb-3">
         <div class="col-md-8 col-sd-8">
             <h3>SLAMD - Sequential Learning App for Materials Discovery</h3>
+            <p>
+                Navigate to the different sections using the menu in the upper left corner.
+            </p>
 
             <h5>Step 1: Define base materials and processes</h5>
             <p>
@@ -58,7 +61,8 @@
 
     <h3>Links</h3>
     <div class="d-flex flex-row bd-highlight mb-3">
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="Visit GitHub repository">
             <a class="btn btn-secondary text-white" href="https://github.com/BAMresearch/WEBSLAMD" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-github"
                     viewBox="0 0 16 16">
@@ -68,14 +72,14 @@
                 GitHub Repository
             </a>
         </div>
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit BAM website">
             <a class="btn btn-danger text-white" href="https://www.bam.de/" target="_blank">
                 <img src="{{ url_for('static', filename='bam_logo.jfif') }}" alt="" width="20" height="20"
                     class="rounded-circle me-2">
                 BAM website
             </a>
         </div>
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Open User Manual">
             <a class="btn btn-primary" href="/static/SLAMD-UserManual.pdf" target="_blank" aria-controls="manual">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-book"
                     viewBox="0 0 16 16">
