@@ -12,7 +12,6 @@ describe("Test base materials page", () => {
         cy.findByLabelText("2 - Material type / Process").select("Powder");
         cy.findByLabelText("2 - Material type / Process").select("Liquid");
         cy.findByLabelText("2 - Material type / Process").select("Aggregates");
-        cy.findByLabelText("2 - Material type / Process").select("Aggregates");
         cy.findByLabelText("2 - Material type / Process").select("Admixture");
         cy.findByLabelText("2 - Material type / Process").select("Process");
         cy.findByLabelText("2 - Material type / Process").select("Custom");
