@@ -43,20 +43,20 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def gather_composition_information(cls, powder):
-        return [cls.include('Fe₂O₃', powder.composition.fe3_o2),
-                cls.include('SiO₂', powder.composition.si_o2),
-                cls.include('Al₂O₃', powder.composition.al2_o3),
-                cls.include('CaO', powder.composition.ca_o),
-                cls.include('MgO', powder.composition.mg_o),
-                cls.include('Na₂O', powder.composition.na2_o),
-                cls.include('K₂O', powder.composition.k2_o),
-                cls.include('SO₃', powder.composition.s_o3),
-                cls.include('TiO₂', powder.composition.ti_o2),
-                cls.include('P₂O₅', powder.composition.p2_o5),
-                cls.include('SrO', powder.composition.sr_o),
-                cls.include('Mn₂O₃', powder.composition.mn2_o3),
-                cls.include('Fine modules', powder.structure.fine),
-                cls.include('Specific gravity', powder.structure.gravity)]
+        return [cls.include('Fe₂O₃ (m%)', powder.composition.fe3_o2),
+                cls.include('SiO₂ (m%)', powder.composition.si_o2),
+                cls.include('Al₂O₃ (m%)', powder.composition.al2_o3),
+                cls.include('CaO (m%)', powder.composition.ca_o),
+                cls.include('MgO (m%)', powder.composition.mg_o),
+                cls.include('Na₂O (m%)', powder.composition.na2_o),
+                cls.include('K₂O (m%)', powder.composition.k2_o),
+                cls.include('SO₃ (m%)', powder.composition.s_o3),
+                cls.include('TiO₂ (m%)', powder.composition.ti_o2),
+                cls.include('P₂O₅ (m%)', powder.composition.p2_o5),
+                cls.include('SrO (m%)', powder.composition.sr_o),
+                cls.include('Mn₂O₃ (m%)', powder.composition.mn2_o3),
+                cls.include('Fine modules (m²/kg)', powder.structure.fine),
+                cls.include('Specific gravity (m%)', powder.structure.gravity)]
 
     @classmethod
     def convert_to_multidict(cls, powder):
@@ -113,8 +113,8 @@ class PowderStrategy(MaterialStrategy):
         mn2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
 
         return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
-               mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
-               sr_o_complete and mn2_o3_complete
+            mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
+            sr_o_complete and mn2_o3_complete
 
     @classmethod
     def _check_completeness_of_structure(cls, base_materials_as_dict):

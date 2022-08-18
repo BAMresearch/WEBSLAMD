@@ -43,10 +43,10 @@ def test_gather_composition_properties_adds_all_properties():
     )
 
     result = AggregatesStrategy.gather_composition_information(aggregates)
-    assert result == ['Fine Aggregates: 123.45, ',
-                      'Coarse Aggregates: 67.89, ',
-                      'FA Density: 987.6, ',
-                      'CA Density: 543.2, ']
+    assert result == ['Fine Aggregates (kg/m³): 123.45, ',
+                      'Coarse Aggregates (kg/m³): 67.89, ',
+                      'FA Density (kg/m³): 987.6, ',
+                      'CA Density (kg/m³): 543.2, ']
 
 
 def test_convert_to_multidict_adds_all_properties():

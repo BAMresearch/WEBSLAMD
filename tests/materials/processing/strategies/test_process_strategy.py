@@ -37,8 +37,9 @@ def test_gather_composition_properties_adds_all_properties():
     )
 
     result = ProcessStrategy.gather_composition_information(process)
-    assert result == ['Duration: 3.21, ',
-                      'Temperature: 6.54, ', 'Relative Humidity: 9.87, ']
+    assert result == ['Duration (days): 3.21, ',
+                      'Temperature (°C): 6.54, ',
+                      'Relative Humidity (%): 9.87, ']
 
 
 def test_convert_to_multidict_adds_all_properties():

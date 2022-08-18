@@ -29,10 +29,10 @@ class AggregatesStrategy(MaterialStrategy):
 
     @classmethod
     def gather_composition_information(cls, aggregates):
-        return [cls.include('Fine Aggregates', aggregates.composition.fine_aggregates),
-                cls.include('Coarse Aggregates', aggregates.composition.coarse_aggregates),
-                cls.include('FA Density', aggregates.composition.fa_density),
-                cls.include('CA Density', aggregates.composition.ca_density)]
+        return [cls.include('Fine Aggregates (kg/m³)', aggregates.composition.fine_aggregates),
+                cls.include('Coarse Aggregates (kg/m³)', aggregates.composition.coarse_aggregates),
+                cls.include('FA Density (kg/m³)', aggregates.composition.fa_density),
+                cls.include('CA Density (kg/m³)', aggregates.composition.ca_density)]
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
@@ -52,7 +52,7 @@ class AggregatesStrategy(MaterialStrategy):
         ca_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ca_density')
 
         return fine_aggregates_complete and coarse_aggregates_complete and fa_density_complete and \
-               ca_density_complete
+            ca_density_complete
 
     @classmethod
     def convert_to_multidict(cls, aggregates):
