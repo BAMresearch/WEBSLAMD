@@ -27,11 +27,3 @@
         z-index: 999;
     }
 }
-
-.sidebar .nav-link {
-    color: #333;
-}
-
-.sidebar .nav-link.active {
-    color: #0d6efd;
-}
