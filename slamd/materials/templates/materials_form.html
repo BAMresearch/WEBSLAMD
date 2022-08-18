@@ -37,6 +37,7 @@
                         <div class="col-md-4">
                             {{ form.delivery_time.label(class_="control-label") }}
                             {{ form.delivery_time(class_="form-control") }}
+                            {{ with_errors(form.delivery_time) }}
                         </div>
                     </div>
                 </div>

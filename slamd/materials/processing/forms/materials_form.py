@@ -37,7 +37,8 @@ class MaterialsForm(Form):
     delivery_time = DecimalField(
         label='Delivery time (days)',
         validators=[
-            validators.Optional()
+            validators.Optional(),
+            validators.NumberRange(min=0, message='Delivery time must be nonnegative')
         ]
     )
 
