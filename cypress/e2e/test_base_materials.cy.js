@@ -1,9 +1,5 @@
-describe("Test base materials page", () => {
+describe("Test creating base materials", () => {
     beforeEach(() => {
-        // Cypress starts out with a blank slate for each test
-        // so we must tell it to visit our website with the `cy.visit()` command.
-        // Since we want to visit the same URL at the start of all our tests,
-        // we include it in our beforeEach function so that it runs before each test
         cy.visit("http://localhost:5001/materials/base");
     });
 
@@ -137,5 +133,28 @@ describe("Test base materials page", () => {
         cy.findByLabelText("Delivery time (days)").type("123");
         cy.findByLabelText("Delivery time (days)").type("{moveToStart}-");
         cy.findByLabelText("Delivery time (days)").should("have.value", 0);
+    });
+});
+
+describe("Test deleting base materials", () => {
+    beforeEach(() => {
+        cy.createExamplePowders();
+        cy.visit("http://localhost:5001/materials/base");
+        cy.findByText("Example Powder 1").should("exist");
+        cy.findByText("Example Powder 2").should("exist");
+    });
+
+
+    it("Can delete two powders", () => {
+        cy.get('a[class="btn btn-danger"]').eq(0).click();
+        // Wait for the modal animation to finish
+        cy.wait(400);
+        cy.findAllByText("Confirm").first().click();
+        // Check that the table entry was deleted
+        cy.get('a[class="btn btn-danger"]').should("have.length", 1);
+        cy.get('a[class="btn btn-danger"]').eq(0).click();
+        // Wait for the modal animation to finish
+        cy.wait(400);
+        cy.findAllByText("Confirm").first().click();
     });
 });
