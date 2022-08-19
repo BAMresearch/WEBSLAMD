@@ -14,7 +14,7 @@ describe("Test blending materials page", () => {
     });
 });
 
-describe("Test blending powders", () => {
+describe("Test blending powders and blended material deletion", () => {
     beforeEach(() => {
         cy.createExamplePowders();
         cy.visit("http://localhost:5001/materials/blended");
@@ -76,6 +76,16 @@ describe("Test blending powders", () => {
         cy.findByText("Example Blended Powder-8").should("exist");
         cy.findByText("Example Blended Powder-9").should("exist");
         cy.findByText("Example Blended Powder-10").should("exist");
+
+        for (let i = 11; i > 0; --i) {
+            // Delete all blended powders one by one
+            cy.get(".btn-group").last().click();
+            // Wait for the modal animation to finish
+            cy.wait(400);
+            cy.findAllByText("Confirm").last().click();
+            // Check that the entry was deleted
+            cy.get(".btn-group").should("have.length", i - 1);
+        }
     });
 });
 
@@ -193,7 +203,7 @@ describe("Test blending liquids and property interpolation", () => {
     });
 });
 
-describe("Test blending aggregates", () => {
+describe("Test blending aggregates and incomplete data", () => {
     beforeEach(() => {
         cy.createExampleAggregates();
         cy.visit("http://localhost:5001/materials/blended");
