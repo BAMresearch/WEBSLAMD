@@ -35,7 +35,7 @@ describe("Test blending powders and blended material deletion", () => {
         cy.findByText("Confirm").click();
 
         // Fill in the increment, min, max values
-        cy.findAllByLabelText("Increment (%)").first().type(10);
+        cy.findAllByLabelText("Increment (%)").first().type(20);
         cy.findAllByLabelText("Min (%)").first().type(0);
         cy.findAllByLabelText("Max (%)").first().type(100);
         // Check the autocompletion feature
@@ -45,22 +45,17 @@ describe("Test blending powders and blended material deletion", () => {
 
         // Check that the configurations were generated correctly
         cy.findByDisplayValue("0/100").should("exist");
-        cy.findByDisplayValue("10/90").should("exist");
         cy.findByDisplayValue("20/80").should("exist");
-        cy.findByDisplayValue("30/70").should("exist");
         cy.findByDisplayValue("40/60").should("exist");
-        cy.findByDisplayValue("50/50").should("exist");
         cy.findByDisplayValue("60/40").should("exist");
-        cy.findByDisplayValue("70/30").should("exist");
         cy.findByDisplayValue("80/20").should("exist");
-        cy.findByDisplayValue("90/10").should("exist");
         cy.findByDisplayValue("100/0").should("exist");
 
         // Delete the last two blends and add them again
         cy.findByText("Delete blend").click().click();
         cy.findByText("Add blend").click().click();
-        cy.get('input[id="all_ratio_entries-9-ratio"]').type("90/10");
-        cy.get('input[id="all_ratio_entries-10-ratio"]').type("100/0");
+        cy.get('input[id="all_ratio_entries-4-ratio"]').type("80/20");
+        cy.get('input[id="all_ratio_entries-5-ratio"]').type("100/0");
         cy.findByText("6 - Create blended materials").click();
 
         // Check that the blended powders were generated correctly
@@ -71,14 +66,9 @@ describe("Test blending powders and blended material deletion", () => {
         cy.findByText("Example Blended Powder-3").should("exist");
         cy.findByText("Example Blended Powder-4").should("exist");
         cy.findByText("Example Blended Powder-5").should("exist");
-        cy.findByText("Example Blended Powder-6").should("exist");
-        cy.findByText("Example Blended Powder-7").should("exist");
-        cy.findByText("Example Blended Powder-8").should("exist");
-        cy.findByText("Example Blended Powder-9").should("exist");
-        cy.findByText("Example Blended Powder-10").should("exist");
 
         // Delete all blended powders one by one
-        for (let i = 11; i > 0; --i) {
+        for (let i = 6; i > 0; --i) {
             cy.get(".btn-group").last().click();
             // Wait for the modal animation to finish
             cy.wait(400);
