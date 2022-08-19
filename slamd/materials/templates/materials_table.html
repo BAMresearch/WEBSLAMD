@@ -5,23 +5,27 @@
 <table id="materials_table" class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
-            <th>Actions</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Properties</th>
+            <th scope="col" class="col-1">Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="col-1">Type</th>
+            <th scope="col">Properties</th>
         </tr>
     </thead>
     <tbody>
         {% for item in materials_response.all_materials %}
         <tr>
-            <td>
-                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+            <th scope="row" class="col-1">
                 {% if materials_response.ctx != 'blended materials' %}
-                {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 12, 12) }}
+                <div class="btn-group" role="group" aria-label="Delete/edit actions">
+                    {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 16, 16) }}
+                    {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 16, 16) }}
+                </div>
+                {% else %}
+                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 16, 16) }}
                 {% endif %}
-            </td>
+            </th>
             <td>{{ item.name }}</td>
-            <td>{{ item.type }}</td>
+            <td class="col-1">{{ item.type }}</td>
             <td>{{ item.all_properties }}</td>
         </tr>
         {% endfor %}

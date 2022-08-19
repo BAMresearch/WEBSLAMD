@@ -1,0 +1,8 @@
+{
+  "material_name": "Example Custom 2",
+  "material_type": "Custom",
+  "co2_footprint": "5",
+  "costs": "100",
+  "delivery_time": "10",
+  "submit": "6 - Save material"
+}

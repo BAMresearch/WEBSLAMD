@@ -1,15 +1,11 @@
+{% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
+
 {% macro create_delete_button(id, type, width, height) -%}
-<div class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
-    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor"
-            viewBox="0 0 16 16">
-            <path
-                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-            <path fill-rule="evenodd"
-                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-        </svg>
-    </button>
-</div>
+<button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
+    <span data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
+        {{ delete_icon(width, height, "currentColor") }}
+    </span>
+</button>
 <div class="modal fade" id="{{'delete_modal_' + id}}" tabindex="-1" aria-labelledby="{{'delete_modal_label_' + id }}"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -34,23 +30,18 @@
 {% endmacro %}
 
 {% macro create_edit_button(id, type, width, height) -%}
-<a class="btn btn-secondary d-inline-block" id="'{{ id }}'"
-    href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}" data-bs-toggle="tooltip"
-    data-bs-placement="right" title="Edit material">
-    <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}" fill="currentColor"
-        viewBox="0 0 16 16" class="bi bi-pencil">
-        <path
-            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-    </svg>
+<a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
+    data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
+    {{ edit_icon(width, height, "currentColor") }}
 </a>
 {% endmacro %}
 
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
-<div data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}">
-    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-toggle="modal" disabled
-        data-bs-target="#change_modal">4 - Confirm Selection
+<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}">
+    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change_modal"
+        data-bs-toggle="modal" title="Confirm selection" disabled>4 - Confirm Selection
     </button>
-</div>
+</span>
 <div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="change_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -77,12 +68,6 @@
 <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/columns"
     id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
     title="Select dataset">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-square"
-        viewBox="0 0 16 16">
-        <path
-            d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z" />
-        <path
-            d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
-    </svg>
+    {{ check_icon(16, 16, "currentColor") }}
 </a>
 {% endmacro %}
