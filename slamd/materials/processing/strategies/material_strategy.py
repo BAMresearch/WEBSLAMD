@@ -134,8 +134,9 @@ class MaterialStrategy(ABC):
     def _extract_additional_property_by_label(cls, submitted_material, label):
         return [submitted_material[k] for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
+
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders):
+    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_materials_as_dict):
         pass
 
     @classmethod
@@ -156,9 +157,11 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def check_completeness_of_costs(cls, base_materials_as_dict):
-        co2_footprint_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'co2_footprint')
+        co2_footprint_complete = PropertyCompletenessChecker.is_complete(
+            base_materials_as_dict, 'costs', 'co2_footprint')
         costs_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'costs')
-        delivery_time_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'costs', 'delivery_time')
+        delivery_time_complete = PropertyCompletenessChecker.is_complete(
+            base_materials_as_dict, 'costs', 'delivery_time')
 
         return co2_footprint_complete and costs_complete and delivery_time_complete
 
