@@ -83,7 +83,7 @@ describe("Test blending powders and blended material deletion", () => {
             // Wait for the modal animation to finish
             cy.wait(400);
             cy.findAllByText("Confirm").last().click();
-            // Check that the entry was deleted
+            // Check that the table entry was deleted
             cy.get(".btn-group").should("have.length", i - 1);
         }
     });
