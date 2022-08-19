@@ -77,8 +77,8 @@ describe("Test blending powders and blended material deletion", () => {
         cy.findByText("Example Blended Powder-9").should("exist");
         cy.findByText("Example Blended Powder-10").should("exist");
 
+        // Delete all blended powders one by one
         for (let i = 11; i > 0; --i) {
-            // Delete all blended powders one by one
             cy.get(".btn-group").last().click();
             // Wait for the modal animation to finish
             cy.wait(400);
