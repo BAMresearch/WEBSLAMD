@@ -69,12 +69,12 @@ describe("Test blending powders and blended material deletion", () => {
 
     // Delete all blended powders one by one
     for (let i = 6; i > 0; --i) {
-      cy.get(".btn-group").last().click();
+      cy.get("th > button").last().click();
       // Wait for the modal animation to finish
       cy.wait(400);
       cy.findAllByText("Confirm").last().click();
       // Check that the table entry was deleted
-      cy.get(".btn-group").should("have.length", i - 1);
+      cy.get("th > button").should("have.length", i - 1);
     }
   });
 });
