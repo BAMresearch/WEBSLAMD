@@ -116,7 +116,7 @@ describe("Test blending liquids and property interpolation", () => {
         cy.findByDisplayValue("80/20").should("exist");
         cy.findByText("6 - Create blended materials").click();
 
-        // Check that the blended powders were generated correctly
+        // Check that the blended liquids were generated correctly
         cy.findByText("All blended materials").scrollIntoView();
         cy.findByText("Example Blended Liquid-0").should("exist");
         cy.findByText("Example Blended Liquid-1").should("exist");
@@ -202,8 +202,46 @@ describe("Test blending aggregates and incomplete data", () => {
         cy.findByText("Example Aggregates 2").should("exist");
     });
 
-    it("Create blended aggregates", () => {
+    it("Create blended aggregates with additional properties", () => {
+        cy.findByLabelText("1 - Name").type("Example Blended Aggregates");
+        cy.findByLabelText("2 - Material type").select("Aggregates");
+        cy.findByLabelText("3 - Base materials").select(["Example Aggregates 1", "Example Aggregates 2"]);
+        cy.findByText("4 - Confirm Selection").click();
+        // Wait for the modal animation to finish
+        cy.wait(400);
+        cy.findByText("Change Selection").should("exist");
+        cy.findByText("Do you really want to change the chosen selection?").should("exist");
+        cy.findByText("Close").should("exist");
+        cy.findByText("Confirm").click();
 
+        // Fill in the increment, min, max values
+        cy.findAllByLabelText("Increment (%)").first().type(40);
+        cy.findAllByLabelText("Min (%)").first().type(20);
+        cy.findAllByLabelText("Max (%)").first().type(80);
+        // Check the autocompletion feature
+        cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
+        cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
+        cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+
+        // Check that the configurations were generated correctly
+        cy.findByDisplayValue("20/80").should("exist");
+        cy.findByDisplayValue("60/40").should("exist");
+        cy.findByText("6 - Create blended materials").click();
+
+        // Check that the blended aggregates were generated correctly
+        cy.findByText("All blended materials").scrollIntoView();
+        cy.findByText("Example Blended Aggregates-0").should("exist");
+        cy.findByText("Example Blended Aggregates-1").should("exist");
+
+        // Check that only the properties common to both base materials were interpolated
+        cy.findByText("Costs (€/kg): 6.0", { exact: false }).should("exist");
+        cy.findByText("CO₂ footprint (kg): 6.0", { exact: false }).should("exist");
+        cy.findAllByText("Delivery time (days): 10.0", { exact: false }).first().should("exist");
+        cy.findByText("Example shared property: 6.0", { exact: false }).should("exist");
+        cy.findByText("Costs (€/kg): 8.0", { exact: false }).should("exist");
+        cy.findByText("CO₂ footprint (kg): 8.0", { exact: false }).should("exist");
+        cy.findAllByText("Delivery time (days): 10.0", { exact: false }).last().should("exist");
+        cy.findByText("Example shared property: 8.0", { exact: false }).should("exist");
     });
 });
 

@@ -5,8 +5,12 @@
     "costs": "10",
     "delivery_time": "10",
     "fine_aggregates": "10",
-    "coarse_aggregates": "10",
+    "coarse_aggregates": "",
     "fa_density": "10",
-    "ca_density": "10",
+    "ca_density": "",
+    "additional_properties-0-property_name": "Example shared property",
+    "additional_properties-0-property_value": "10",
+    "additional_properties-1-property_name": "Example disjoint property (A)",
+    "additional_properties-1-property_value": "10",
     "submit": "6 - Save material"
 }
