@@ -8,7 +8,7 @@ function selectMaterialType() {
 }
 
 function collectAdditionalProperties(newPropIndex) {
-  usersInputs = [];
+  const usersInputs = [];
   if (newPropIndex <= 0) {
     return usersInputs;
   }
