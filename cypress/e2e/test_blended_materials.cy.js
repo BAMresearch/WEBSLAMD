@@ -315,3 +315,47 @@ describe("Test blending three custom materials with properties with negative val
     });
 });
 
+describe("Test autocorrect features", () => {
+    beforeEach(() => {
+        cy.createExamplePowders();
+        cy.visit("http://localhost:5001/materials/blended");
+        cy.findByText("Example Powder 1").should("exist");
+        cy.findByText("Example Powder 2").should("exist");
+    });
+
+    it("Increment, min and max fields are corrected automatically", () => {
+        cy.findByLabelText("1 - Name").type("Example Blended Powder");
+        cy.findByLabelText("2 - Material type").select("Powder");
+        cy.findByLabelText("3 - Base materials").select(["Example Powder 1", "Example Powder 2"]);
+        cy.findByText("4 - Confirm Selection").click();
+        // Wait for the modal animation to finish
+        cy.wait(400);
+        cy.findByText("Change Selection").should("exist");
+        cy.findByText("Do you really want to change the chosen selection?").should("exist");
+        cy.findByText("Close").should("exist");
+        cy.findByText("Confirm").click();
+
+        // Check that it clips the value to 100 from above
+        cy.findAllByLabelText("Increment (%)").first().type("123");
+        cy.findAllByLabelText("Increment (%)").first().should("have.value", 100);
+        // Check that it clips the value to 0 from below
+        cy.findAllByLabelText("Increment (%)").first().type("{moveToStart}-");
+        cy.findAllByLabelText("Increment (%)").first().should("have.value", 0);
+
+        // Check that it clips the value to 100 from above
+        cy.findAllByLabelText("Min (%)").first().type("123");
+        cy.findAllByLabelText("Min (%)").first().should("have.value", "100.00");
+        // Check that it clips the value to 0 from below
+        cy.findAllByLabelText("Min (%)").first().type("{moveToStart}-");
+        cy.findAllByLabelText("Min (%)").first().should("have.value", 0);
+
+        // Check that it clips the value to 100 from above
+        cy.findAllByLabelText("Max (%)").first().type("123");
+        cy.findAllByLabelText("Max (%)").first().should("have.value", "100.00");
+        // Check that it clips the value to 0 from below
+        cy.findAllByLabelText("Max (%)").first().type("{moveToStart}-");
+        cy.findAllByLabelText("Max (%)").first().should("have.value", 0);
+    });
+});
+
+
