@@ -1,11 +1,11 @@
 {% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
-<div data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
-    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
+<span data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
+    <a class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
         {{ delete_icon(width, height, "currentColor") }}
-    </button>
-</div>
+    </a>
+</span>
 <div class="modal fade" id="{{'delete_modal_' + id}}" tabindex="-1" aria-labelledby="{{'delete_modal_label_' + id }}"
     aria-hidden="true">
     <div class="modal-dialog">
