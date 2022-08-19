@@ -1,0 +1,12 @@
+{
+    "material_name": "Example Aggregates 2",
+    "material_type": "Aggregates",
+    "co2_footprint": "10",
+    "costs": "10",
+    "delivery_time": "10",
+    "fine_aggregates": "10",
+    "coarse_aggregates": "10",
+    "fa_density": "10",
+    "ca_density": "10",
+    "submit": "6 - Save material"
+}

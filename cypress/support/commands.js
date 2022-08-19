@@ -1,6 +1,11 @@
 // For more comprehensive examples of custom
 // commands please read more here:
 // https://on.cypress.io/custom-commands
+
+// Needed for Cypress testing library
+// https://testing-library.com/docs/cypress-testing-library/intro/
+import "@testing-library/cypress/add-commands"
+
 Cypress.Commands.add("getCsrfToken", () => {
     cy.request("GET", "http://localhost:5001/materials/base").then((response) => {
         // Cypress sets the session cookie automatically for us
@@ -35,6 +40,23 @@ Cypress.Commands.add("createExamplePowders", () => {
     });
 });
 
-// Needed for Cypress testing library
-// https://testing-library.com/docs/cypress-testing-library/intro/
-import "@testing-library/cypress/add-commands"
+Cypress.Commands.add("createExampleLiquids", () => {
+    cy.getCsrfToken().then((csrfToken) => {
+        cy.createBaseMaterial("example_liquid_1", csrfToken);
+        cy.createBaseMaterial("example_liquid_2", csrfToken);
+    });
+});
+
+Cypress.Commands.add("createExampleAggregates", () => {
+    cy.getCsrfToken().then((csrfToken) => {
+        cy.createBaseMaterial("example_aggregates_1", csrfToken);
+        cy.createBaseMaterial("example_aggregates_2", csrfToken);
+    });
+});
+
+Cypress.Commands.add("createExampleAdmixtures", () => {
+    cy.getCsrfToken().then((csrfToken) => {
+        cy.createBaseMaterial("example_admixture_1", csrfToken);
+        cy.createBaseMaterial("example_admixture_2", csrfToken);
+    });
+});
