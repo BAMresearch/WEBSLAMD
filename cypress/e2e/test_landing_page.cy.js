@@ -16,21 +16,21 @@ describe("Test landing page", () => {
   });
 
   it("Link to GitHub repo is present", () => {
-    cy.findByText("GitHub Repository").should($a => {
+    cy.findByText("GitHub Repository").should(($a) => {
       expect($a.attr("href"), "href").to.contain("github.com");
       expect($a.attr("target"), "target").to.equal("_blank");
     });
   });
 
   it("Link to BAM website is present", () => {
-    cy.findByText("BAM website").should($a => {
+    cy.findByText("BAM website").should(($a) => {
       expect($a.attr("href"), "href").to.contain("bam.de");
       expect($a.attr("target"), "target").to.equal("_blank");
     });
   });
 
   it("Link to User Manual is present", () => {
-    cy.findByText("User Manual").should($a => {
+    cy.findByText("User Manual").should(($a) => {
       expect($a.attr("href"), "href").to.contain("/static/SLAMD-UserManual.pdf");
       expect($a.attr("target"), "target").to.equal("_blank");
     });
