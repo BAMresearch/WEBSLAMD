@@ -8,8 +8,9 @@ class WeightsEntriesForm(Form):
     idx = StringField()
 
     weights = StringField(
-        'Weigths',
-        validators=[])
+        label='Weights',
+        validators=[]
+    )
 
 
 class WeightsForm(Form):

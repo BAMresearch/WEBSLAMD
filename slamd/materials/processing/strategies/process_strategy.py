@@ -19,9 +19,9 @@ class ProcessStrategy(MaterialStrategy):
 
     @classmethod
     def gather_composition_information(cls, process):
-        return [cls.include('Duration', process.duration),
-                cls.include('Temperature', process.temperature),
-                cls.include('Relative Humidity', process.relative_humidity)]
+        return [cls.include('Duration (days)', process.duration),
+                cls.include('Temperature (°C)', process.temperature),
+                cls.include('Relative Humidity (%)', process.relative_humidity)]
 
     @classmethod
     def convert_to_multidict(cls, process):

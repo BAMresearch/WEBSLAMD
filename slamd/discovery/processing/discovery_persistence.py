@@ -8,15 +8,14 @@ class DiscoveryPersistence:
         before = cls.get_session_property()
 
         if not before:
-            cls.set_session_property([dataset])
+            cls.set_session_property({dataset.name: dataset})
         else:
             cls.extend_session_property(dataset)
 
     @classmethod
     def delete_dataset_by_name(cls, dataset_name):
         datasets = cls.get_session_property()
-        remaining_datasets = list(filter(lambda ds: ds.name != dataset_name, datasets))
-        cls.set_session_property(remaining_datasets)
+        return datasets.pop(dataset_name, None)
 
     @classmethod
     def query_dataset_by_name(cls, dataset_name):
@@ -25,11 +24,12 @@ class DiscoveryPersistence:
         Return None if no matching element was found.
         """
         datasets = cls.get_session_property()
-        for ds in datasets:
-            if ds.name == dataset_name:
-                return ds
-        # Nothing found
-        return None
+        return datasets.get(dataset_name, None)
+
+    @classmethod
+    def find_all_datasets(cls):
+        datasets = cls.get_session_property()
+        return list(datasets.values())
 
     """
     Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
@@ -37,7 +37,7 @@ class DiscoveryPersistence:
     """
     @classmethod
     def get_session_property(cls):
-        return session.get('datasets', [])
+        return session.get('datasets', {})
 
     @classmethod
     def set_session_property(cls, datasets):
@@ -45,4 +45,4 @@ class DiscoveryPersistence:
 
     @classmethod
     def extend_session_property(cls, dataset):
-        session['datasets'].append(dataset)
+        session['datasets'][dataset.name] = dataset

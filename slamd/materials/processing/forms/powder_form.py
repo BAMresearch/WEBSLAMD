@@ -90,7 +90,7 @@ class PowderForm(MaterialsForm):
     )
 
     fine = DecimalField(
-        label='Fine modules (m2/kg)',
+        label='Fine modules (m²/kg)',
         validators=[
             validators.Optional()
         ]

@@ -12,8 +12,12 @@ def test_create_dataset_parses_file_storage_correctly(monkeypatch):
     file_data = FileStorage(filename='TestDataset.csv', stream=stream)
     dataset = CsvStrategy.create_dataset(file_data)
     assert dataset.name == 'TestDataset.csv'
-    assert dataset.columns == ['column1', 'column2', 'column3']
-    assert dataset.content == content
+    assert len(dataset.columns) == 3
+    for col in zip(dataset.columns, ['column1', 'column2', 'column3']):
+        assert col[0] == col[1]
+    assert dataset.dataframe.iloc[0].tolist() == [1, 2, 3]
+    assert dataset.dataframe.iloc[1].tolist() == [4, 5, 6]
+    assert dataset.dataframe.iloc[2].tolist() == [7, 8, 9]
 
 
 def test_save_dataset_calls_discovery_persistence(monkeypatch):
@@ -26,6 +30,6 @@ def test_save_dataset_calls_discovery_persistence(monkeypatch):
 
     monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', mock_save_dataset)
 
-    dataset = Dataset(name='TestDataset.csv', columns='column1,column2,column3', content='1,2,3\n4,5,6\n7,8,9')
+    dataset = Dataset(name='TestDataset.csv')
     CsvStrategy.save_dataset(dataset)
     assert mock_save_dataset_called_with == dataset

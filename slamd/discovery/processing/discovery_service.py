@@ -28,4 +28,4 @@ class DiscoveryService:
 
     @classmethod
     def list_datasets(cls):
-        return DiscoveryPersistence.get_session_property()
+        return DiscoveryPersistence.find_all_datasets()

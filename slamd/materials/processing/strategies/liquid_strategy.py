@@ -74,23 +74,23 @@ class LiquidStrategy(MaterialStrategy):
         na_o_h_total_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'na_o_h_total')
 
         return na2_si_o3_complete and na_o_h_complete and na2_si_o3_specific_complete and na_o_h_specific_complete \
-               and total_complete and h2_o_complete and na2_o_dry_complete and si_o2_dry_complete and water_complete \
-               and na_o_h_total_complete
+            and total_complete and h2_o_complete and na2_o_dry_complete and si_o2_dry_complete and water_complete \
+            and na_o_h_total_complete
 
     @classmethod
     def gather_composition_information(cls, liquid):
-        return [cls.include('Na₂SiO₃', liquid.composition.na2_si_o3),
-                cls.include('NaOH', liquid.composition.na_o_h),
-                cls.include('Na₂SiO₃ specific', liquid.composition.na2_si_o3_specific),
-                cls.include('NaOH specific', liquid.composition.na_o_h_specific),
-                cls.include('Total solution', liquid.composition.total),
-                cls.include('Na₂O', liquid.composition.na2_o),
-                cls.include('SiO₂', liquid.composition.si_o2),
-                cls.include('H₂O', liquid.composition.h2_o),
-                cls.include('Na₂O', liquid.composition.na2_o_dry),
-                cls.include('SiO₂', liquid.composition.si_o2_dry),
-                cls.include('Water', liquid.composition.water),
-                cls.include('Total NaOH', liquid.composition.na_o_h_total)]
+        return [cls.include('Na₂SiO₃ (m%)', liquid.composition.na2_si_o3),
+                cls.include('NaOH (m%)', liquid.composition.na_o_h),
+                cls.include('Na₂SiO₃ specific (m%)', liquid.composition.na2_si_o3_specific),
+                cls.include('NaOH specific (m%)', liquid.composition.na_o_h_specific),
+                cls.include('Total solution (m%)', liquid.composition.total),
+                cls.include('Na₂O (I) (%)', liquid.composition.na2_o),
+                cls.include('SiO₂ (I) (%)', liquid.composition.si_o2),
+                cls.include('H₂O (%)', liquid.composition.h2_o),
+                cls.include('Na₂O (dry) (m%)', liquid.composition.na2_o_dry),
+                cls.include('SiO₂ (dry) (m%)', liquid.composition.si_o2_dry),
+                cls.include('Water (m%)', liquid.composition.water),
+                cls.include('Total NaOH (m%)', liquid.composition.na_o_h_total)]
 
     @classmethod
     def convert_to_multidict(cls, liquid):

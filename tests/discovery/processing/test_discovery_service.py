@@ -1,5 +1,6 @@
 import pytest
 from io import BytesIO
+from pandas import DataFrame
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
@@ -32,7 +33,7 @@ def test_save_dataset_saves_dataset(monkeypatch):
     def mock_create_dataset(file_data):
         nonlocal mock_create_dataset_called_with
         mock_create_dataset_called_with = file_data
-        return "TestDataset.csv"
+        return 'TestDataset.csv'
 
     monkeypatch.setattr(CsvStrategy, 'create_dataset', mock_create_dataset)
 
@@ -52,7 +53,7 @@ def test_save_dataset_saves_dataset(monkeypatch):
         assert valid is True
         assert form is None
         assert mock_create_dataset_called_with == file_data
-        assert mock_save_dataset_called_with == "TestDataset.csv"
+        assert mock_save_dataset_called_with == 'TestDataset.csv'
 
 
 def test_list_columns_returns_columns_of_dataset_with_given_name(monkeypatch):
@@ -61,13 +62,13 @@ def test_list_columns_returns_columns_of_dataset_with_given_name(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         nonlocal mock_query_dataset_by_name_called_with
         mock_query_dataset_by_name_called_with = dataset_name
-        return Dataset('test csv_strategy', ['column1', 'column2', 'column3'])
+        return Dataset('test csv_strategy', dataframe=DataFrame([1, 2, 3], columns=['Index']))
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
 
     columns = DiscoveryService.list_columns('test csv_strategy')
     assert mock_query_dataset_by_name_called_with == 'test csv_strategy'
-    assert columns == ['column1', 'column2', 'column3']
+    assert columns == ['Index']
 
 
 def test_list_columns_raises_dataset_not_found_when_invalid_name_is_given():
@@ -77,26 +78,26 @@ def test_list_columns_raises_dataset_not_found_when_invalid_name_is_given():
 
 
 def test_list_datasets_returns_empty_list_when_no_datasets(monkeypatch):
-    def mock_get_session_property():
+    def mock_find_all_datasets():
         return []
 
-    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', mock_find_all_datasets)
     datasets = DiscoveryService.list_datasets()
     assert datasets == []
 
 
 def test_list_datasets_returns_all_datasets(monkeypatch):
-    def mock_get_session_property():
+    def mock_find_all_datasets():
         return [
-            Dataset('Dataset 1', ['column1', 'column2', 'column3']),
-            Dataset('Dataset 2', ['column1', 'column2', 'column3']),
-            Dataset('Dataset 3', ['column1', 'column2', 'column3'])
+            Dataset('Dataset 1'),
+            Dataset('Dataset 2'),
+            Dataset('Dataset 3')
         ]
 
-    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', mock_find_all_datasets)
 
     datasets = DiscoveryService.list_datasets()
     assert len(datasets) == 3
-    assert datasets[0] == Dataset('Dataset 1', ['column1', 'column2', 'column3'])
-    assert datasets[1] == Dataset('Dataset 2', ['column1', 'column2', 'column3'])
-    assert datasets[2] == Dataset('Dataset 3', ['column1', 'column2', 'column3'])
+    assert datasets[0] == Dataset('Dataset 1')
+    assert datasets[1] == Dataset('Dataset 2')
+    assert datasets[2] == Dataset('Dataset 3')

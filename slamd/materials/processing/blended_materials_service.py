@@ -110,7 +110,7 @@ class BlendedMaterialsService(MaterialsService):
 
         for i, ratio_list in enumerate(list_of_normalized_ratios_lists):
             if len(ratio_list) != len(base_materials_as_dict):
-                raise ValueNotSupportedException("Ratios cannot be matched with base materials!")
+                raise ValueNotSupportedException('Ratios cannot be matched with base materials!')
 
             material_name = submitted_blending_configuration['blended_material_name']
             blended_material = strategy.create_blended_material(i, material_name, ratio_list, base_materials_as_dict)
@@ -120,7 +120,7 @@ class BlendedMaterialsService(MaterialsService):
     def _validate_configuration(cls, submitted_blending_configuration):
         blending_name_any_type_form = BlendingNameAndTypeForm(submitted_blending_configuration)
         if not blending_name_any_type_form.validate():
-            raise ValueNotSupportedException("The blending name is empty or already used!")
+            raise ValueNotSupportedException('The blending name is empty or already used!')
 
         all_ratios_as_string = [value for key, value in submitted_blending_configuration.items() if
                                 'all_ratio_entries-' in key]
@@ -130,7 +130,7 @@ class BlendedMaterialsService(MaterialsService):
 
         base_material_uuids = submitted_blending_configuration.getlist('base_material_selection')
         if not cls._ratios_are_valid(all_ratios_as_string, len(base_material_uuids)):
-            raise ValueNotSupportedException("There are invalid ratios. Make sure they satisfy the correct pattern!")
+            raise ValueNotSupportedException('There are invalid ratios. Make sure they satisfy the correct pattern!')
 
         return all_ratios_as_string, base_material_uuids
 

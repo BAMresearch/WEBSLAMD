@@ -1,7 +1,10 @@
+{% from 'action_buttons.html' import create_select_dataset_button -%}
+
 <h3>All datasets</h3>
-<table id="datasets_table" class="table table-bordered table-striped">
+<table id="datasets_table" class="table table-bordered table-striped table-hover">
     <thead>
     <tr>
+        <th>Actions</th>
         <th>Name</th>
         <th>Columns</th>
     </tr>
@@ -9,6 +12,9 @@
     <tbody>
     {% for dataset in datasets %}
     <tr>
+        <td>
+            {{ create_select_dataset_button(dataset.name, 12, 12) }}
+        </td>
         <td>{{ dataset.name }}</td>
         <td>{{ dataset.columns }}</td>
     </tr>

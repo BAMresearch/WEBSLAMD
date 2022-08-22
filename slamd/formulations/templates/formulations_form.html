@@ -37,8 +37,8 @@
                 {{ materials_and_processes_selection_form.with_constraint() }}
             </div>
             <div>
-                {{ materials_and_processes_selection_form.weigth_constraint.label(class_="control-label") }}
-                {{ materials_and_processes_selection_form.weigth_constraint(class_="form-control", disabled=True) }}
+                {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
+                {{ materials_and_processes_selection_form.weight_constraint(class_="form-control", disabled=True) }}
             </div>
         </div>
     </div>
@@ -67,15 +67,15 @@
     </div>
 
     <div class="form-group mb-12">
-        <div class="col-sm-offset-2 col-sm-10" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="top"
-             title="For enabling submission please choose materials configure all weights and increments.">
-            {{ materials_and_processes_selection_form.submit(class_="btn btn-primary", data_bs_toggle="modal",
+        <div class="col-sm-offset-2 col-sm-12" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="For enabling submission please choose materials configure all weights and increments.">
+            {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
             data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>
     </div>
 
     <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
-         aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

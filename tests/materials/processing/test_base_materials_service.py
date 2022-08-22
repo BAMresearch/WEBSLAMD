@@ -25,44 +25,44 @@ app = create_app('testing', with_session=False)
 
 def test_create_material_form_creates_powder():
     with app.test_request_context('/materials/base/powder'):
-        file, form = BaseMaterialService.create_material_form('powder')
-        assert file == 'powder_form.html'
+        form = BaseMaterialService.create_material_form('powder')
         assert isinstance(form, PowderForm)
+        assert form.material_type.data == 'Powder'
 
 
 def test_create_material_form_creates_liquid():
     with app.test_request_context('/materials/base/liquid'):
-        file, form = BaseMaterialService.create_material_form('liquid')
-        assert file == 'liquid_form.html'
+        form = BaseMaterialService.create_material_form('liquid')
         assert isinstance(form, LiquidForm)
+        assert form.material_type.data == 'Liquid'
 
 
 def test_create_material_form_creates_aggregates():
     with app.test_request_context('/materials/base/aggregates'):
-        file, form = BaseMaterialService.create_material_form('aggregates')
-        assert file == 'aggregates_form.html'
+        form = BaseMaterialService.create_material_form('aggregates')
         assert isinstance(form, AggregatesForm)
+        assert form.material_type.data == 'Aggregates'
 
 
 def test_create_material_form_creates_process():
     with app.test_request_context('/materials/base/process'):
-        file, form = BaseMaterialService.create_material_form('process')
-        assert file == 'process_form.html'
+        form = BaseMaterialService.create_material_form('process')
         assert isinstance(form, ProcessForm)
+        assert form.material_type.data == 'Process'
 
 
 def test_create_material_form_creates_admixture():
     with app.test_request_context('/materials/base/admixture'):
-        file, form = BaseMaterialService.create_material_form('admixture')
-        assert file == 'admixture_form.html'
+        form = BaseMaterialService.create_material_form('admixture')
         assert isinstance(form, AdmixtureForm)
+        assert form.material_type.data == 'Admixture'
 
 
 def test_create_material_form_creates_custom():
     with app.test_request_context('/materials/base/custom'):
-        file, form = BaseMaterialService.create_material_form('custom')
-        assert file == 'custom_form.html'
+        form = BaseMaterialService.create_material_form('custom')
         assert isinstance(form, CustomForm)
+        assert form.material_type.data == 'Custom'
 
 
 def test_create_material_form_raises_bad_request_when_invalid_form_is_requested():
@@ -508,4 +508,4 @@ def _assert_test_powders(all_materials):
     dto = all_materials[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃: 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Specific gravity (m%): 12, test prop: test value'

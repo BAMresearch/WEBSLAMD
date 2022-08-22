@@ -31,9 +31,8 @@
     {{ entry.process_name(class_="form-control", disabled=True) }}
 </div>
 {% endfor %}
-
-<div data-bs-toggle="tooltip" data-bs-placement="top" title="Preview of the chosen formulations in terms of its base material composition">
-    <button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button" disabled>
-        Show mixture in terms of base material composition
-    </button>
-</div>
+<button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button"
+    data-bs-toggle="tooltip" data-bs-placement="bottom"
+    title="Preview the chosen formulations in terms of their base material composition" disabled>
+    5 - Show mixture in terms of base material composition
+</button>

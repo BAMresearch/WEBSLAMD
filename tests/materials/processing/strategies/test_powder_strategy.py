@@ -77,20 +77,20 @@ def test_gather_composition_properties_adds_all_properties():
     )
 
     result = PowderStrategy.gather_composition_information(powder)
-    assert result == ['Fe₂O₃: 12.3, ',
-                      'SiO₂: 23.4, ',
-                      'Al₂O₃: 34.5, ',
-                      'CaO: 45.6, ',
-                      'MgO: 56.7, ',
-                      'Na₂O: 67.8, ',
-                      'K₂O: 78.9, ',
-                      'SO₃: 89.0, ',
-                      'TiO₂: 0.98, ',
-                      'P₂O₅: 9.87, ',
-                      'SrO: 8.76, ',
-                      'Mn₂O₃: 7.65, ',
-                      'Fine modules: 123.45, ',
-                      'Specific gravity: 678.9, ']
+    assert result == ['Fe₂O₃ (m%): 12.3, ',
+                      'SiO₂ (m%): 23.4, ',
+                      'Al₂O₃ (m%): 34.5, ',
+                      'CaO (m%): 45.6, ',
+                      'MgO (m%): 56.7, ',
+                      'Na₂O (m%): 67.8, ',
+                      'K₂O (m%): 78.9, ',
+                      'SO₃ (m%): 89.0, ',
+                      'TiO₂ (m%): 0.98, ',
+                      'P₂O₅ (m%): 9.87, ',
+                      'SrO (m%): 8.76, ',
+                      'Mn₂O₃ (m%): 7.65, ',
+                      'Fine modules (m²/kg): 123.45, ',
+                      'Specific gravity (m%): 678.9, ']
 
 
 def test_convert_to_multidict_adds_all_properties():
@@ -175,7 +175,8 @@ def test_check_completeness_of_base_material_properties_returns_false_when_one_p
     assert complete is False
 
 
-def test_check_completeness_of_base_material_properties_returns_false_when_additional_properties_are_incomplete(monkeypatch):
+def test_check_completeness_of_base_material_properties_returns_false_when_additional_properties_are_incomplete(
+        monkeypatch):
     def mock_is_complete(materials_as_dict, key1, key2):
         return True
 
