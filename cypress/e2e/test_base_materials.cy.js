@@ -99,7 +99,7 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Composition").should("not.exist");
 
     // Fill out additional properties
-    cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
+    cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
     cy.findAllByLabelText("Name").last().type("Prop 0");
     cy.findAllByLabelText("Value").last().type("Value 0");
