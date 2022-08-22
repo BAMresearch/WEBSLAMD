@@ -85,8 +85,8 @@ class PropertyCompletenessChecker:
     @classmethod
     def _collect_all_admixture_properties(cls, base_materials_as_dict):
         admixture_properties_for_all_base_materials = []
-        for base_powder in base_materials_as_dict:
-            admixture_properties_for_all_base_materials.append(base_powder['admixture'])
+        for base_admixture in base_materials_as_dict:
+            admixture_properties_for_all_base_materials.append(base_admixture['admixture'])
         return admixture_properties_for_all_base_materials
 
     # we throw away all properties with keys (names) either not contained in additional_properties of all base materials
