@@ -39,27 +39,44 @@ class FormulationsService:
         return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
 
     @classmethod
-    def create_formulations_min_max_form(cls, count_materials, count_processes):
-        if not_empty(count_materials) and not_numeric(count_materials):
-            raise ValueNotSupportedException('Cannot process selection!')
+    def create_formulations_min_max_form(cls, formulation_selection):
+        powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
+        liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
+        aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
 
-        if not_empty(count_processes) and not_numeric(count_processes):
-            raise ValueNotSupportedException('Cannot process selection!')
-
-        if not_empty(count_materials):
-            count_materials = int(count_materials)
-
-        if not_empty(count_processes):
-            count_processes = int(count_processes)
+        if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
+            raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 
         min_max_form = FormulationsMinMaxForm()
-        for i in range(count_materials):
-            min_max_form.materials_min_max_entries.append_entry()
 
-        for i in range(count_processes):
-            min_max_form.processes_entries.append_entry()
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries,
+                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries,
+                                       'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries,
+                                       'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
+
+        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Admixture')
+        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Custom')
+        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
         return min_max_form
+
+    @classmethod
+    def _create_non_editable_entries(cls, formulation_selection, min_max_form, type):
+        selection_for_type = [item for item in formulation_selection if item['type'] == type]
+        for item in selection_for_type:
+            cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['name'], type)
+
+    @classmethod
+    def _create_min_max_form_entry(cls, entries, name, type):
+        entry = entries.append_entry()
+        entry.materials_entry_name.data = name
+        entry.type_field.data = type
+        if type == 'Aggregates':
+            entry.increment.render_kw = {'disabled': 'disabled'}
+            entry.min.render_kw = {'disabled': 'disabled'}
+            entry.max.render_kw = {'disabled': 'disabled'}
 
     @classmethod
     def create_weights_form(cls, weights_request_data):

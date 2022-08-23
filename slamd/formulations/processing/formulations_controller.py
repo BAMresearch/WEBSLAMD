@@ -21,9 +21,10 @@ def base_material_page():
                            formulations_min_max_form=FormulationsMinMaxForm())
 
 
-@formulations.route('/add_min_max_entries/<count_materials>/<count_processes>', methods=['GET'])
-def add_formulations_min_max_entry(count_materials, count_processes):
-    min_max_form = FormulationsService.create_formulations_min_max_form(count_materials, count_processes)
+@formulations.route('/add_min_max_entries', methods=['POST'])
+def add_formulations_min_max_entry():
+    formulation_selection = json.loads(request.data)
+    min_max_form = FormulationsService.create_formulations_min_max_form(formulation_selection)
     body = {'template': render_template('formulations_min_max_form.html', formulations_min_max_form=min_max_form)}
     return make_response(jsonify(body), 200)
 

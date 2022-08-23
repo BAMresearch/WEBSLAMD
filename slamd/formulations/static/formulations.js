@@ -45,14 +45,9 @@ async function confirmSelection() {
 
   const selectedMaterials = collectFormulationSelection();
 
-  const processesPlaceholder = document.getElementById("process_selection");
-  const selectedProcesses = collectSelection(processesPlaceholder);
+  const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
+  await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
 
-  const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;
-  await fetchDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
-
-  prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
-  prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses);
   assignKeyboardEventsToFormulationsMinMaxForm();
   assignConfirmFormulationsConfigurationEvent();
 }
