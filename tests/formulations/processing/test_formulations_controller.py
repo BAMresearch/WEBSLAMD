@@ -26,27 +26,35 @@ def test_slamd_shows_formulations_page(client, monkeypatch):
     assert 'Admixture' in html
     assert 'Custom' in html
     assert 'Processes' in html
-    assert 'Do you want to set a weight constraint for formulations?' in html
+    assert 'Constraint' in html
     assert 'Confirm Selection' in html
 
     assert 'Test Aggregate' in html
 
 
 def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
-    response = client.get('/materials/formulations/add_min_max_entries/2/1')
+    request = json.dumps(
+        [
+            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-1'},
+            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-2'},
+            {'uuid': 'fe6af2c7-22a8-11ed-8e81-2079188bdeea', 'type': 'Process', 'name': 'Process 1'}
+        ]
+    )
+
+    response = client.post('/materials/formulations/add_min_max_entries', data=request)
 
     assert response.status_code == 200
 
     template = json.loads(response.data.decode('utf-8'))['template']
-    assert 'processes_entries-0-process_name' in template
-    assert 'processes_entries-0-increment' not in template
-    assert 'processes_entries-0-min' not in template
-    assert 'processes_entries-0-max' not in template
+    assert 'non_editable_entries-0-materials_entry_name' in template
+    assert 'non_editable_entries-0-increment' not in template
+    assert 'non_editable_entries-0-min' not in template
+    assert 'non_editable_entries-0-max' not in template
 
-    assert 'processes_entries-1-process_name' not in template
-    assert 'processes_entries-1-increment' not in template
-    assert 'processes_entries-1-min' not in template
-    assert 'processes_entries-1-max' not in template
+    assert 'non_editable_entries-1-materials_entry_name' not in template
+    assert 'non_editable_entries-1-increment' not in template
+    assert 'non_editable_entries-1-min' not in template
+    assert 'non_editable_entries-1-max' not in template
 
     assert 'materials_min_max_entries-0-materials_entry_name' in template
     assert 'materials_min_max_entries-0-increment' in template

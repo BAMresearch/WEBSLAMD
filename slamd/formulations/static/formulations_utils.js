@@ -40,14 +40,6 @@ function collectSelectionForFormulations(placeholder) {
         });
 }
 
-function assignKeyboardEventsToFormulationsMinMaxForm() {
-    if (withConstraint) {
-        addListenersToIndependentFields();
-    } else {
-        addListenersToAllFields();
-    }
-}
-
 function addListenersToIndependentFields() {
     const inputFields = collectInputFields();
     for (let item of inputFields) {
@@ -61,24 +53,6 @@ function addListenersToIndependentFields() {
         });
         item.increment.addEventListener("keyup", () => {
             correctInputFieldValue(item.increment, parseFloat(weightConstraint));
-            toggleConfirmationFormulationsButtons(inputFields);
-        });
-    }
-}
-
-function addListenersToAllFields() {
-    const inputFields = collectInputFields(false);
-    for (let item of inputFields) {
-        item.min.addEventListener("keyup", () => {
-            correctInputFieldValue(item.min);
-            toggleConfirmationFormulationsButtons(inputFields);
-        });
-        item.max.addEventListener("keyup", () => {
-            correctInputFieldValue(item.max);
-            toggleConfirmationFormulationsButtons(inputFields);
-        });
-        item.increment.addEventListener("keyup", () => {
-            correctInputFieldValue(item.increment);
             toggleConfirmationFormulationsButtons(inputFields);
         });
     }

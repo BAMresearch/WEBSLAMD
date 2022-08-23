@@ -44,8 +44,9 @@ class FormulationsService:
         liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
         aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
 
-        if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
-            raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
+        # TODO: properly handle cases where e.g. no aggregates are specified
+        # if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
+        #     raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 
         min_max_form = FormulationsMinMaxForm()
 
