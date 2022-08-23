@@ -12,7 +12,7 @@ For the setup it is assumed that you first navigate to the root directory of the
 to adjust the paths below accordingly.
 
 - Create a new venv running ``python3 -m venv <name_of_virtualenv>``
-- Enter venv by executing ``.\venv\Scripts\<name_of_virtualenv>`` (Windows) or ``source /<name_of_virtualenv>/bin/activate`` (Unix and Mac)
+- Enter venv by executing ``.\<name_of_virtualenv>\Scripts\activate`` (Windows) or ``source /<name_of_virtualenv>/bin/activate`` (Unix and Mac)
 - Install all dependencies via ``pip3 install -r requirements.txt``
 
 ### Starting the App
