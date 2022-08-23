@@ -3,25 +3,26 @@ from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, 
 
 
 class MaterialsAndProcessesSelectionForm(Form):
-    powder_selection = SelectField(
+
+    powder_selection = SelectMultipleField(
         label='1.1 - Powders',
         validators=[validators.DataRequired()],
         choices=[('', '')]
     )
 
-    liquid_selection = SelectField(
+    liquid_selection = SelectMultipleField(
         label='1.2 - Liquids',
         validators=[validators.DataRequired()],
         choices=[('', '')]
     )
 
-    aggregates_selection = SelectField(
+    aggregates_selection = SelectMultipleField(
         label='1.3 - Aggregates',
         validators=[validators.DataRequired()],
         choices=[('', '')]
     )
 
-    admixture_selection = SelectField(
+    admixture_selection = SelectMultipleField(
         label='1.4 - Admixture',
         validators=[validators.DataRequired()],
         choices=[('', '')]
@@ -37,10 +38,6 @@ class MaterialsAndProcessesSelectionForm(Form):
         label='1.6 - Processes',
         validators=[validators.DataRequired()],
         choices=[]
-    )
-
-    targets_field = StringField(
-        label='3 - Targets (Specify various target values. Follow the pattern "target 1; target 2; target 3".)'
     )
 
     with_constraint = BooleanField(

@@ -6,7 +6,7 @@
 
 const TYPE_UUID_DELIMITER = "|";
 
-function collectAllSelectedMaterials() {
+function collectFormulationSelection() {
   const powderPlaceholder = document.getElementById("powder_selection");
   const liquidPlaceholder = document.getElementById("liquid_selection");
   const aggregatesPlaceholder = document.getElementById("aggregates_selection");

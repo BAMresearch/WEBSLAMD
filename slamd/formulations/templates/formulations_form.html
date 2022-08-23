@@ -42,16 +42,10 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="formulations_targets">
-            {{ materials_and_processes_selection_form.targets_field.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.targets_field(class_="form-control") }}
-        </div>
-    </div>
     <div>
         {{ create_change_selection_button("change_materials_and_processes_selection_button",
         "confirm_materials_and_processes_selection_button",
-        "Choose at least one material for creating materials formulations") }}
+        "Choose at least one powder, a liquid and an aggregate for creating materials formulations") }}
     </div>
 
     <div class="justify-content-center">
