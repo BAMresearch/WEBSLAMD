@@ -315,6 +315,76 @@ describe("Test blending three custom materials with properties with negative val
   });
 });
 
+describe("Test blending three admixtures with properties with negative values", () => {
+  beforeEach(() => {
+    cy.createExampleAdmixtures();
+    cy.visit("http://localhost:5001/materials/blended");
+    cy.findByLabelText("2 - Material type").select("Admixture");
+    cy.findByText("Example Admixture 1").should("exist");
+    cy.findByText("Example Admixture 2").should("exist");
+    cy.findByText("Example Admixture 3").should("exist");
+  });
+
+  it("Create blend from three admixtures", () => {
+    cy.findByLabelText("1 - Name").type("Example Blended Admixture");
+    cy.findByLabelText("2 - Material type").select("Admixture");
+    cy.findByLabelText("3 - Base materials").select(["Example Admixture 1", "Example Admixture 2", "Example Admixture 3"]);
+    cy.findByText("4 - Confirm Selection").click();
+    // Wait for the modal animation to finish
+    cy.wait(400);
+    cy.findByText("Change Selection").should("exist");
+    cy.findByText("Do you really want to change the chosen selection?").should("exist");
+    cy.findByText("Close").should("exist");
+    cy.findByText("Confirm").click();
+
+    // Fill in the increment, min, max values
+    cy.findAllByLabelText("Increment (%)").first().type(50);
+    cy.findAllByLabelText("Min (%)").first().type(20);
+    cy.findAllByLabelText("Max (%)").first().type(75);
+    cy.findAllByLabelText("Increment (%)").eq(1).type(5);
+    cy.findAllByLabelText("Min (%)").eq(1).type(20);
+    cy.findAllByLabelText("Max (%)").eq(1).type(25);
+    // Check the autocompletion feature
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+
+    // Check that the configurations were generated correctly
+    cy.findByDisplayValue("20/20/60").should("exist");
+    cy.findByDisplayValue("20/25/55").should("exist");
+    cy.findByDisplayValue("70/20/10").should("exist");
+    cy.findByDisplayValue("70/25/5").should("exist");
+    cy.findByText("6 - Create blended materials").click();
+
+    // Check that the blended admixtures were generated correctly
+    cy.findByText("All blended materials").scrollIntoView();
+    cy.findByText("Example Blended Admixture-0").should("exist");
+    cy.findByText("Example Blended Admixture-1").should("exist");
+    cy.findByText("Example Blended Admixture-2").should("exist");
+    cy.findByText("Example Blended Admixture-3").should("exist");
+
+    // Check that the properties for the first blend were interpolated correctly
+    cy.findByText("Costs (€/kg): 15.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg): -4.4", { exact: false }).should("exist");
+    cy.findAllByText("Delivery time (days): 20.0", { exact: false }).first().should("exist");
+
+    // Check that the properties for the second blend were interpolated correctly
+    cy.findByText("Costs (€/kg): 20.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg): -3.65", { exact: false }).should("exist");
+    cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
+
+    // Check that the properties for the third blend were interpolated correctly
+    cy.findByText("Costs (€/kg): 22.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg): 2.1", { exact: false }).should("exist");
+    cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
+
+    // Check that the properties for the last blend were interpolated correctly
+    cy.findByText("Costs (€/kg): 28.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg): 2.85", { exact: false }).should("exist");
+    cy.findAllByText("Delivery time (days): 20.0", { exact: false }).last().should("exist");
+  });
+});
+
 describe("Test autocorrect features", () => {
   beforeEach(() => {
     cy.createExamplePowders();

@@ -127,6 +127,49 @@ describe("Test creating base materials", () => {
     cy.findByText("My Custom Material").should("exist");
   });
 
+  it("Create admixture", () => {
+    // Fill out name and material type
+    cy.findByLabelText("1 - Name").type("My Admixture");
+    cy.findByLabelText("2 - Material type / Process").select("Admixture");
+
+    // Fill out cost properties
+    cy.findByText("3 - Cost").click();
+    cy.findByLabelText("CO₂ footprint (kg)").type("12.34");
+    cy.findByLabelText("Costs (€/kg)").type("34.56");
+    cy.findByLabelText("Delivery time (days)").type("56.78");
+
+    // No properties for Admixture
+    cy.findByText("4 - Composition").should("not.exist");
+
+    // Fill out additional properties
+    cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
+    cy.findByText("Add property").click();
+    cy.findAllByLabelText("Name").last().type("Prop 0");
+    cy.findAllByLabelText("Value").last().type("Value 0");
+    cy.findByText("Add property").click();
+    cy.findAllByLabelText("Name").last().type("Prop 1");
+    cy.findAllByLabelText("Value").last().type("Value 1");
+    cy.findByText("Add property").click();
+    cy.findAllByLabelText("Name").last().type("Prop 2");
+    cy.findAllByLabelText("Value").last().type("Value 2");
+
+    // Delete additional properties one by one
+    cy.findByText("Delete last property").click();
+    cy.findByText("Prop 2").should("not.exist");
+    cy.findByText("Value 2").should("not.exist");
+    cy.findByText("Delete last property").click();
+    cy.findByText("Prop 1").should("not.exist");
+    cy.findByText("Value 1").should("not.exist");
+    cy.findByText("Delete last property").click();
+    cy.findByText("Prop 0").should("not.exist");
+    cy.findByText("Value 0").should("not.exist");
+
+    // Save material and check that it is listed
+    cy.findByText("6 - Save material").click();
+    cy.findByText("All base materials / processes").should("exist");
+    cy.findByText("My Admixture").should("exist");
+  });
+
   it("Delivery time is corrected automatically", () => {
     // Fill out cost properties
     cy.findByText("3 - Cost").click();

@@ -51,6 +51,7 @@ def test_slamd_selects_powder(client):
     assert 'SrO' in template
     assert 'Mn₂O₃' in template
 
+    assert '4 - Composition' in template
     assert '5 - Additional Properties - Leave empty if not needed.' in template
 
 
@@ -72,6 +73,7 @@ def test_slamd_selects_liquid(client):
     assert 'Water' in template
     assert 'Total NaOH' in template
 
+    assert '4 - Composition' in template
     assert '5 - Additional Properties - Leave empty if not needed.' in template
 
 
@@ -85,6 +87,7 @@ def test_slamd_selects_aggregates(client):
     assert 'FA Density' in template
     assert 'CA Density' in template
 
+    assert '4 - Composition' in template
     assert '5 - Additional Properties - Leave empty if not needed.' in template
 
 
@@ -93,10 +96,9 @@ def test_slamd_selects_admixture(client):
     template = response.json['template']
 
     assert response.status_code == 200
-    assert 'Composition' in template
-    assert 'Type' in template
 
-    assert '5 - Additional Properties - Leave empty if not needed.' in template
+    assert '4 - Composition' not in template
+    assert '4 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_custom(client):
@@ -104,6 +106,8 @@ def test_slamd_selects_custom(client):
     template = response.json['template']
 
     assert response.status_code == 200
+
+    assert '4 - Composition' not in template
     assert '4 - Additional Properties - Leave empty if not needed.' in template
 
 
