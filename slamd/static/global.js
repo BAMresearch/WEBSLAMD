@@ -3,18 +3,24 @@ const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
 function roundToTwoDecimalPlaces(inputFieldElem) {
   if (MORE_THAN_TWO_DECIMAL_PLACES.test(inputFieldElem.value)) {
-    inputFieldElem.value = parseFloat(number).toFixed(2);
+    inputFieldElem.value = parseFloat(inputFieldElem.value).toFixed(2);
   }
 }
 
 function clipMinValue(inputFieldElem, minValue) {
-  if (minValue && parseFloat(inputFieldElem.value) < minValue) {
+  if (typeof inputFieldElem.value === "undefined" || inputFieldElem.value === null) {
+    return;
+  }
+  if (parseFloat(inputFieldElem.value) < minValue) {
     inputFieldElem.value = minValue;
   }
 }
 
 function clipMaxValue(inputFieldElem, maxValue) {
-  if (maxValue && parseFloat(inputFieldElem.value) > maxValue) {
+  if (typeof inputFieldElem.value === "undefined" || inputFieldElem.value === null) {
+    return;
+  }
+  if (parseFloat(inputFieldElem.value) > maxValue) {
     inputFieldElem.value = maxValue;
   }
 }
