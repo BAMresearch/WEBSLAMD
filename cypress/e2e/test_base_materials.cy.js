@@ -133,6 +133,8 @@ describe("Test creating base materials", () => {
     cy.findByLabelText("Delivery time (days)").type("123");
     cy.findByLabelText("Delivery time (days)").type("{moveToStart}-");
     cy.findByLabelText("Delivery time (days)").should("have.value", 0);
+    cy.findByLabelText("Delivery time (days)").clear().type("-0.2");
+    cy.findByLabelText("Delivery time (days)").should("have.value", 0);
   });
 });
 

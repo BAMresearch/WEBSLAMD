@@ -338,9 +338,15 @@ describe("Test autocorrect features", () => {
     // Check that it clips the value to 100 from above
     cy.findAllByLabelText("Increment (%)").first().type("123");
     cy.findAllByLabelText("Increment (%)").first().should("have.value", 100);
-    // Check that it clips the value to 0 from below
+    // Check that it clips the value to 0.01 from below
     cy.findAllByLabelText("Increment (%)").first().type("{moveToStart}-");
-    cy.findAllByLabelText("Increment (%)").first().should("have.value", 0);
+    cy.findAllByLabelText("Increment (%)").first().should("have.value", 0.01);
+    // Check that it rounds the value 0 to 0.01
+    cy.findAllByLabelText("Increment (%)").first().clear().type("0");
+    cy.findAllByLabelText("Increment (%)").first().should("have.value", 0.01);
+    // Check that it rounds the value to two decimals
+    cy.findAllByLabelText("Increment (%)").first().clear().type("45.678");
+    cy.findAllByLabelText("Increment (%)").first().should("have.value", 45.68);
 
     // Check that it clips the value to 100 from above
     cy.findAllByLabelText("Min (%)").first().type("123");
@@ -348,6 +354,9 @@ describe("Test autocorrect features", () => {
     // Check that it clips the value to 0 from below
     cy.findAllByLabelText("Min (%)").first().type("{moveToStart}-");
     cy.findAllByLabelText("Min (%)").first().should("have.value", 0);
+    // Check that it rounds the value to two decimals
+    cy.findAllByLabelText("Min (%)").first().clear().type("45.678");
+    cy.findAllByLabelText("Min (%)").first().should("have.value", 45.68);
 
     // Check that it clips the value to 100 from above
     cy.findAllByLabelText("Max (%)").first().type("123");
@@ -355,5 +364,8 @@ describe("Test autocorrect features", () => {
     // Check that it clips the value to 0 from below
     cy.findAllByLabelText("Max (%)").first().type("{moveToStart}-");
     cy.findAllByLabelText("Max (%)").first().should("have.value", 0);
+    // Check that it rounds the value to two decimals
+    cy.findAllByLabelText("Max (%)").first().clear().type("45.678");
+    cy.findAllByLabelText("Max (%)").first().should("have.value", 45.68);
   });
 });
