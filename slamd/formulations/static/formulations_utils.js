@@ -150,18 +150,25 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
     correctInputFieldValue(currentInputField);
 
+    const powderWeight = independentMinMaxInputFields
+        .filter((item) => item[inputFieldName].name === 'Powder')
+        .map((item) => parseFloat(item[inputFieldName].value))[0]
+
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter((item) => item[inputFieldName].value !== "")
-        .map((item) => findWeightOfMaterial(item, inputFieldName))
+        .map((item) => findWeightOfMaterial(item, inputFieldName, powderWeight, currentInputField))
         .reduce((x, y) => x + y, 0);
 
-    if (sumOfIndependentFields > weightConstraint) {
+    /*if (sumOfIndependentFields > weightConstraint) {
         currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
         sumOfIndependentFields = weightConstraint;
-    }
+    }*/
     return sumOfIndependentFields;
 }
 
-function findWeightOfMaterial(item, inputFieldName) {
+function findWeightOfMaterial(item, inputFieldName, powderWeight, currentInputField) {
+    if (currentInputField.name === 'Liquid' && item[inputFieldName].name === 'Liquid') {
+        return parseFloat((parseFloat(currentInputField.value)*powderWeight).toFixed(2));
+    }
     return parseFloat(item[inputFieldName].value);
 }
