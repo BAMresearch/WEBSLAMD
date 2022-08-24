@@ -32,9 +32,8 @@ def add_formulations_min_max_entry():
 @formulations.route('/add_weights', methods=['POST'])
 def add_weights():
     weights_request_data = json.loads(request.data)
-    weights_form, formulations_composition = FormulationsService.create_weights_form(weights_request_data)
-    body = {'template': render_template('weights_form.html', weights_form=weights_form,
-                                        formulations_composition=formulations_composition)}
+    weights_form = FormulationsService.create_weights_form(weights_request_data)
+    body = {'template': render_template('weights_form.html', weights_form=weights_form)}
     return make_response(jsonify(body), 200)
 
 # TODO: implement constrained scenario; extend dataset batch by batch instead of always creating a new one; save final dataframe in session; add unit test

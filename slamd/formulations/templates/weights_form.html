@@ -1,4 +1,4 @@
-{% from 'icons.html' import edit_icon -%}
+{% from 'icons.html' import delete_icon -%}
 
 <div class="p-1 border rounded bg-light">
     <div>
@@ -7,10 +7,6 @@
         create another blended material.
     </div>
 </div>
-<h5>
-    Weights:
-    {{ formulations_composition }}
-</h5>
 <!--Custom weights fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
 <!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
 {% for entry in weights_form.all_weights_entries %}
@@ -18,11 +14,11 @@
     <div class="row g-1">
         <div class="col-md-2">
             <button class="btn btn-danger" id="{{'delete_weight_button___' + entry.idx.data}}" type="button">
-                {{ edit_icon(24, 24, "currentColor") }}
+                {{ delete_icon(24, 24, "currentColor") }}
             </button>
         </div>
         <div class="col-md-10">
-            {{ entry.weights(class_="form-control", disabled=True) }}
+            {{ entry.weights(class_="form-control") }}
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@ from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 WEIGHT_FORM_DELIMITER = '  |  '
-MAX_NUMBER_OF_WEIGHTS = 100
+MAX_NUMBER_OF_WEIGHTS = 10000
 
 
 class FormulationsService:
@@ -94,13 +94,12 @@ class FormulationsService:
         weight_constraint = weights_request_data['weight_constraint']
 
         # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # base materials; for example full_cartesian_product =
-        # "[['3.64/14.56', '15.2', '66.6'], ['3.64/14.56', '20.3', '61.5'], ['5.74/22.96', '15.2', '56.1']]"
+        # various materials used for blending; for example full_cartesian_product =
+        # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
         if empty(weight_constraint):
-            full_cartesian_product, all_names = cls._get_unconstrained_base_weights(materials_formulation_config)
+            raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
-            full_cartesian_product, all_names = cls._get_constrained_base_weights(materials_formulation_config,
-                                                                                  weight_constraint)
+            full_cartesian_product = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
         if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
@@ -110,47 +109,18 @@ class FormulationsService:
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
             ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
             ratio_form_entry.idx.data = str(i)
-        base_names = WEIGHT_FORM_DELIMITER.join(all_names)
-        return weights_form, base_names.strip()
+        return weights_form
 
     @classmethod
-    def _get_constrained_base_weights(cls, formulation_config, weight_constraint):
+    def _get_constrained_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
         if not min_max_increment_config_valid(formulation_config, weight_constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config)
+        all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        full_cartesian_product = WeightsCalculator.compute_full_cartesian_product(all_materials_weights,
-                                                                                  formulation_config,
-                                                                                  weight_constraint)
-        return full_cartesian_product, all_names
-
-    @classmethod
-    def _get_unconstrained_base_weights(cls, formulation_config):
-        if not cls._unconstrained_min_max_increment_config_valid(formulation_config):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
-
-        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config,
-                                                                                                  False)
-        full_cartesian_product = WeightsCalculator.compute_cartesian_product(all_materials_weights)
-        return full_cartesian_product, all_names
-
-    @classmethod
-    def _unconstrained_min_max_increment_config_valid(cls, materials_formulation_configuration):
-        for i in range(len(materials_formulation_configuration) - 1):
-            min_value = float(materials_formulation_configuration[i]['min'])
-            max_value = float(materials_formulation_configuration[i]['max'])
-            increment = float(materials_formulation_configuration[i]['increment'])
-            if cls._validate_unconstrained_ranges(increment, max_value, min_value):
-                return False
-        return True
-
-    @classmethod
-    def _validate_unconstrained_ranges(cls, increment, max_value, min_value):
-        return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
-               or not_numeric(min_value) or not_numeric(increment)
+        return WeightsCalculator.compute_full_cartesian_product(all_materials_weights, weight_constraint)
 
     # TODO: Implement constraint case / validate pattern of targets / move creation of dto to converter
     @classmethod
