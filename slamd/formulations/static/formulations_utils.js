@@ -40,19 +40,19 @@ function collectSelectionForFormulations(placeholder) {
 }
 
 function addListenersToIndependentFields() {
-    const inputFields = collectInputFields();
-    for (let item of inputFields) {
+    const independentInputFields = collectInputFields();
+    for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, inputFields);
-            toggleConfirmationFormulationsButtons(inputFields);
+            computeDependentValue("min", item.min, independentInputFields);
+            toggleConfirmationFormulationsButtons(independentInputFields);
         });
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, inputFields);
-            toggleConfirmationFormulationsButtons(inputFields);
+            computeDependentValue("max", item.max, independentInputFields);
+            toggleConfirmationFormulationsButtons(independentInputFields);
         });
         item.increment.addEventListener("keyup", () => {
             correctInputFieldValue(item.increment, parseFloat(weightConstraint));
-            toggleConfirmationFormulationsButtons(inputFields);
+            toggleConfirmationFormulationsButtons(independentInputFields);
         });
     }
 }
@@ -135,24 +135,24 @@ function collectProcessesRequestData() {
     };
 }
 
-function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
-    let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, type, currentInputField);
+function computeDependentValue(inputFieldName, currentInputField, independentMinMaxInputFields) {
+    let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField);
 
-    const unfilledFields = independentMinMaxInputFields.filter((item) => item[type].value === "");
+    const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
     if (unfilledFields.length === 0) {
         const lastMinItem = document.getElementById(
-            `materials_min_max_entries-${independentMinMaxInputFields.length}-${type}`
+            `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
         );
         lastMinItem.value = (weightConstraint - sumOfIndependentFields).toFixed(2);
     }
 }
 
-function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
+function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
     correctInputFieldValue(currentInputField);
 
     let sumOfIndependentFields = independentMinMaxInputFields
-        .filter((item) => item[type].value !== "")
-        .map((item) => parseFloat(item[type].value))
+        .filter((item) => item[inputFieldName].value !== "")
+        .map((item) => findWeightOfMaterial(item, inputFieldName))
         .reduce((x, y) => x + y, 0);
 
     if (sumOfIndependentFields > weightConstraint) {
@@ -160,4 +160,8 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
         sumOfIndependentFields = weightConstraint;
     }
     return sumOfIndependentFields;
+}
+
+function findWeightOfMaterial(item, inputFieldName) {
+    return parseFloat(item[inputFieldName].value);
 }

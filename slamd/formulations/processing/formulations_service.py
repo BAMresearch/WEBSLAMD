@@ -45,8 +45,8 @@ class FormulationsService:
         aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
 
         # TODO: properly handle cases where e.g. no aggregates are specified
-        # if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
-        #     raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
+        if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
+            raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 
         min_max_form = FormulationsMinMaxForm()
 
@@ -74,6 +74,10 @@ class FormulationsService:
         entry = entries.append_entry()
         entry.materials_entry_name.data = name
         entry.type_field.data = type
+        if type == 'Powder' or type == 'Liquid' or type == 'Aggregates':
+            entry.increment.name = type
+            entry.min.name = type
+            entry.max.name = type
         if type == 'Aggregates':
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
