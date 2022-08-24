@@ -1,25 +1,28 @@
 const ACTION_BUTTON_DELIMITER = "___";
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
-function roundToTwoDecimalPlaces(number) {
-  if (MORE_THAN_TWO_DECIMAL_PLACES.test(number)) {
-    return parseFloat(number).toFixed(2);
-  } else {
-    return number;
+function roundToTwoDecimalPlaces(inputFieldElem) {
+  if (MORE_THAN_TWO_DECIMAL_PLACES.test(inputFieldElem.value)) {
+    inputFieldElem.value = parseFloat(number).toFixed(2);
   }
 }
 
-function clipNegativeValues(number) {
-  return parseFloat(number) < 0 ? 0 : number;
+function clipNegativeValues(inputFieldElem) {
+  if (parseFloat(inputFieldElem.value) < 0) {
+    inputFieldElem.value = 0;
+  }
+}
+
+function clipMaxValue(inputFieldElem, maxValue) {
+  if (maxValue && parseFloat(inputFieldElem.value) > maxValue) {
+    inputFieldElem.value = maxValue;
+  }
 }
 
 function correctInputFieldValue(inputFieldElem, maxValue) {
-  const newValue = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
-  if (!maxValue) {
-    inputFieldElem.value = newValue;
-  } else {
-    inputFieldElem.value = newValue > maxValue ? maxValue : newValue;
-  }
+  roundToTwoDecimalPlaces(inputFieldElem);
+  clipNegativeValues(inputFieldElem);
+  clipMaxValue(inputFieldElem, maxValue);
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
