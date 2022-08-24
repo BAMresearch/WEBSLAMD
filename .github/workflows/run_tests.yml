@@ -26,5 +26,9 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: chrome
-          start: chmod +x run.sh && ./run.sh 015e583cdcfaf32e3166eb8f871d71c98abc6ac52c901fa4317bf3657f41023d
+          start: flask run
           wait-on: "http://localhost:5001"
+        env:
+          FLASK_APP: app.py
+          FLASK_ENV: development
+          SECRET_KEY: SECRET_KEY
