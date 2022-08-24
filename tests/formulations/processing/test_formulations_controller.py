@@ -33,14 +33,16 @@ def test_slamd_shows_formulations_page(client, monkeypatch):
 
 
 def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
+
     request = json.dumps(
         [
             {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-1'},
             {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-2'},
+            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Liquid', 'name': 'Blended Liquid 1-1'},
+            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Aggregates', 'name': 'Blended Aggregates 1-1'},
             {'uuid': 'fe6af2c7-22a8-11ed-8e81-2079188bdeea', 'type': 'Process', 'name': 'Process 1'}
         ]
     )
-
     response = client.post('/materials/formulations/add_min_max_entries', data=request)
 
     assert response.status_code == 200
@@ -50,6 +52,7 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     assert 'non_editable_entries-0-increment' not in template
     assert 'non_editable_entries-0-min' not in template
     assert 'non_editable_entries-0-max' not in template
+    assert 'Process 1' in template
 
     assert 'non_editable_entries-1-materials_entry_name' not in template
     assert 'non_editable_entries-1-increment' not in template
@@ -60,11 +63,24 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     assert 'materials_min_max_entries-0-increment' in template
     assert 'materials_min_max_entries-0-min' in template
     assert 'materials_min_max_entries-0-max' in template
+    assert 'Powders (Blended Powder 1-1, Blended Powder 1-2)' in template
 
     assert 'materials_min_max_entries-1-materials_entry_name' in template
     assert 'materials_min_max_entries-1-increment' in template
     assert 'materials_min_max_entries-1-min' in template
     assert 'materials_min_max_entries-1-max' in template
+    assert 'Liquids (Blended Liquid 1-1)' in template
+
+    assert 'materials_min_max_entries-2-materials_entry_name' in template
+    assert 'materials_min_max_entries-2-increment' in template
+    assert 'materials_min_max_entries-2-min' in template
+    assert 'materials_min_max_entries-2-max' in template
+    assert 'Aggregates (Blended Aggregates 1-1)' in template
+
+    assert 'materials_min_max_entries-3-materials_entry_name' not in template
+    assert 'materials_min_max_entries-3-increment' not in template
+    assert 'materials_min_max_entries-3-min' not in template
+    assert 'materials_min_max_entries-3-max' not in template
 
     assert 'Show mixture in terms of base material composition' in template
 
