@@ -26,7 +26,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           browser: chrome
-          start: flask run
+          start: python app.py
           wait-on: "http://localhost:5001"
         env:
           FLASK_APP: app.py
