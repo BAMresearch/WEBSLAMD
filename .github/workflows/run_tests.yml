@@ -1,9 +1,8 @@
-# .github/workflows/app.yaml
-name: Run tests with PyTest
+name: Run unit tests with PyTest and acceptance tests with Cypress
 on: push
 
 jobs:
-  run-unit-tests:
+  run-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -19,6 +18,14 @@ jobs:
           cache: 'pip'
       - run: pip install -r requirements.txt
       
-      - name: Run test suite
+      - name: Run unit test suite (PyTest)
         run: |
           pytest -v
+
+      - name: Run acceptance test suite (Cypress)
+        uses: cypress-io/github-action@v3
+        with:
+          project: ./webslamd
+          browser: chrome
+          start: python app.py
+          wait-on: "http://localhost:5001"
