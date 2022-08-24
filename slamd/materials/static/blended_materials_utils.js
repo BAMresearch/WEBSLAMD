@@ -38,7 +38,7 @@ function assignKeyboardEventsToMinMaxForm() {
       toggleConfirmBlendingButton(independentInputFields);
     });
     item.increment.addEventListener("keyup", () => {
-      correctInputFieldValue(item.increment, 100);
+      correctInputFieldValue(item.increment, 0.01, 100);
       toggleConfirmBlendingButton(independentInputFields);
     });
   }
@@ -126,7 +126,7 @@ function computeDependentValue(type, currentInputField, independentMinMaxInputFi
 }
 
 function autocorrectInput(independentMinMaxInputFields, type, currentInputField) {
-  correctInputFieldValue(currentInputField);
+  correctInputFieldValue(currentInputField, 0);
 
   let sumOfIndependentFields = independentMinMaxInputFields
     .filter((item) => item[type].value !== "")

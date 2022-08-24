@@ -7,9 +7,9 @@ function roundToTwoDecimalPlaces(inputFieldElem) {
   }
 }
 
-function clipNegativeValues(inputFieldElem) {
-  if (parseFloat(inputFieldElem.value) < 0) {
-    inputFieldElem.value = 0;
+function clipMinValue(inputFieldElem, minValue) {
+  if (minValue && parseFloat(inputFieldElem.value) < minValue) {
+    inputFieldElem.value = minValue;
   }
 }
 
@@ -19,9 +19,9 @@ function clipMaxValue(inputFieldElem, maxValue) {
   }
 }
 
-function correctInputFieldValue(inputFieldElem, maxValue) {
+function correctInputFieldValue(inputFieldElem, minValue, maxValue) {
   roundToTwoDecimalPlaces(inputFieldElem);
-  clipNegativeValues(inputFieldElem);
+  clipMinValue(inputFieldElem, minValue);
   clipMaxValue(inputFieldElem, maxValue);
 }
 
