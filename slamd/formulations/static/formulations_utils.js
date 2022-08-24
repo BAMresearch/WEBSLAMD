@@ -39,17 +39,39 @@ function collectSelectionForFormulations(placeholder) {
         });
 }
 
+function updateWZRatio(fieldName, currentInputField, independentInputFields) {
+    const powderWeight = independentInputFields
+        .filter((item) => item[fieldName].name === 'Powder')
+        .map((item) => parseFloat(item[fieldName].value))[0]
+
+    let wzRatio = "Not available; you need to set the weight of the powders.";
+    if (powderWeight) {
+        wzRatio = (parseFloat(currentInputField.value) / powderWeight).toFixed(2);
+    }
+    document.getElementById(currentInputField.id).setAttribute('title', `W/Z Ratio: ${wzRatio}`);
+}
+
 function addListenersToIndependentFields() {
     const independentInputFields = collectInputFields();
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
             computeDependentValue("min", item.min, independentInputFields);
+            updateWZRatio("min", item.min, independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
+        if (item.min.name === 'Liquid') {
+            document.getElementById(item.min.id).setAttribute('title', `W/Z Ratio: Not available; you need to set the weight of the powders.`);
+        }
+
         item.max.addEventListener("keyup", () => {
             computeDependentValue("max", item.max, independentInputFields);
+            updateWZRatio("max", item.max, independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
+        if (item.max.name === 'Liquid') {
+            document.getElementById(item.max.id).setAttribute('title', `W/Z Ratio: Not available; you need to set the weight of the powders.`);
+        }
+
         item.increment.addEventListener("keyup", () => {
             correctInputFieldValue(item.increment, parseFloat(weightConstraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
@@ -150,25 +172,14 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
     correctInputFieldValue(currentInputField);
 
-    const powderWeight = independentMinMaxInputFields
-        .filter((item) => item[inputFieldName].name === 'Powder')
-        .map((item) => parseFloat(item[inputFieldName].value))[0]
-
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter((item) => item[inputFieldName].value !== "")
-        .map((item) => findWeightOfMaterial(item, inputFieldName, powderWeight, currentInputField))
+        .map((item) => parseFloat(item[inputFieldName].value))
         .reduce((x, y) => x + y, 0);
 
-    /*if (sumOfIndependentFields > weightConstraint) {
+    if (sumOfIndependentFields > weightConstraint) {
         currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
         sumOfIndependentFields = weightConstraint;
-    }*/
-    return sumOfIndependentFields;
-}
-
-function findWeightOfMaterial(item, inputFieldName, powderWeight, currentInputField) {
-    if (currentInputField.name === 'Liquid' && item[inputFieldName].name === 'Liquid') {
-        return parseFloat((parseFloat(currentInputField.value)*powderWeight).toFixed(2));
     }
-    return parseFloat(item[inputFieldName].value);
+    return sumOfIndependentFields;
 }

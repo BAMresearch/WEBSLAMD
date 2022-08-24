@@ -14,11 +14,11 @@ class MaterialsMinMaxEntriesForm(Form):
         validators=[validators.DataRequired(message='Name cannot be empty')]
     )
 
-    increment = DecimalField('Increment (for Powders/Aggregates: kg, for Liquids: w/z ratio)')
+    increment = DecimalField('Increment (kg)')
 
-    min = DecimalField('Min (for Powders/Aggregates: kg, for Liquids: w/z ratio)')
+    min = DecimalField('Min (kg)')
 
-    max = DecimalField('Max (for Powders/Aggregates: kg, for Liquids: w/z ratio)')
+    max = DecimalField('Max (kg)')
 
 
 class NonEditableFormulationItemsForm(Form):
