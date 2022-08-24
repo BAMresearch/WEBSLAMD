@@ -23,9 +23,8 @@ jobs:
           pytest -v
 
       - name: Run acceptance test suite (Cypress)
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v4
         with:
-          project: ./webslamd
           browser: chrome
           start: python app.py
           wait-on: "http://localhost:5001"
