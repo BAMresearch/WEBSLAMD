@@ -2,10 +2,20 @@ const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.locati
 let weightConstraint = "";
 
 function toggleBasedOnSelectionAndConstraints() {
-    const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
+    const powderPlaceholder = document.getElementById("powder_selection");
+    const liquidPlaceholder = document.getElementById("liquid_selection");
+    const aggregatesPlaceholder = document.getElementById("aggregates_selection");
 
+    const powderSelected = atLeastOneItemIsSelected(powderPlaceholder)
+    const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder)
+    const aggregatesSelected = atLeastOneItemIsSelected(aggregatesPlaceholder)
+
+    const validSelectionConfiguration = powderSelected && liquidSelected && aggregatesSelected;
     const validConstraintConfiguration = weightConstraint !== undefined && weightConstraint !== "";
-    changeSelectionButton.disabled = !validConstraintConfiguration;
+
+    const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
+    changeSelectionButton.disabled = !(validSelectionConfiguration && validConstraintConfiguration);
+
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
@@ -80,4 +90,7 @@ window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
     document.getElementById("weight_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
+    document.getElementById("powder_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("aggregates_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
 });
