@@ -4,7 +4,6 @@
  * common functions would lead to tight coupling between these separated usecases.
  */
 
-const TYPE_UUID_DELIMITER = "|";
 let allWeightFieldsHaveValidInput = false;
 
 function collectFormulationSelection() {
@@ -143,12 +142,11 @@ function collectFormulationsMinMaxRequestData() {
 
 // there are two elements for each process, one hidden and one visible. Therefore we divide by 2
 function collectProcessesRequestData() {
-    const numberOfIndependentRows = document.querySelectorAll('[id^="processes_entries-"]').length / 2 - 1;
+    const numberOfIndependentRows = document.querySelectorAll('[id^="non_editable_entries-"]').length / 2;
 
     let rowData = [];
-    for (let i = 0; i <= numberOfIndependentRows; i++) {
-        const typeWithUUID = document.getElementById(`processes_entries-${i}-uuid_field`).value;
-        const uuid = typeWithUUID.split(TYPE_UUID_DELIMITER)[1];
+    for (let i = 0; i < numberOfIndependentRows; i++) {
+        const uuid = document.getElementById(`non_editable_entries-${i}-uuid_field`).value;
         rowData.push({
             uuid: uuid,
         });
