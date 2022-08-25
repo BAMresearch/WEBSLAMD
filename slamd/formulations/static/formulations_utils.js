@@ -45,11 +45,15 @@ function updateWZRatio(fieldName, currentInputField, independentInputFields) {
         .filter((item) => item[fieldName].name === 'Powder')
         .map((item) => parseFloat(item[fieldName].value))[0]
 
-    let wzRatio = "Not available; you need to set the weight of the powders.";
-    if (powderWeight) {
-        wzRatio = (parseFloat(currentInputField.value) / powderWeight).toFixed(2);
+    let liquid = independentInputFields
+        .filter((item) => item[fieldName].name === 'Liquid')[0];
+    const liquidWeight = liquid[fieldName].value
+
+    let wcRatio = "Not available; you need to set the weight of the powders.";
+    if (liquidWeight && powderWeight) {
+        wcRatio = (liquidWeight / powderWeight).toFixed(2);
     }
-    document.getElementById(currentInputField.id).setAttribute('title', `W/Z Ratio: ${wzRatio}`);
+    document.getElementById(liquid[fieldName].id).setAttribute('title', `W/C Ratio: ${wcRatio}`);
 }
 
 function addListenersToIndependentFields() {
@@ -60,18 +64,14 @@ function addListenersToIndependentFields() {
             updateWZRatio("min", item.min, independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
-        if (item.min.name === 'Liquid') {
-            document.getElementById(item.min.id).setAttribute('title', `W/Z Ratio: Not available; you need to set the weight of the powders.`);
-        }
+        document.getElementById(item.min.id).setAttribute('title', "");
 
         item.max.addEventListener("keyup", () => {
             computeDependentValue("max", item.max, independentInputFields);
             updateWZRatio("max", item.max, independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
-        if (item.max.name === 'Liquid') {
-            document.getElementById(item.max.id).setAttribute('title', `W/Z Ratio: Not available; you need to set the weight of the powders.`);
-        }
+        document.getElementById(item.max.id).setAttribute('title', "");
 
         item.increment.addEventListener("keyup", () => {
             correctInputFieldValue(item.increment, parseFloat(weightConstraint));

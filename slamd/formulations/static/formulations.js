@@ -15,7 +15,6 @@ function toggleBasedOnSelectionAndConstraints() {
 
     const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
     changeSelectionButton.disabled = !(validSelectionConfiguration && validConstraintConfiguration);
-
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
