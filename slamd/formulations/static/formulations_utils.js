@@ -156,6 +156,38 @@ function collectProcessesRequestData() {
     };
 }
 
+function collectMaterialRequestData() {
+    const numberOfMaterialsRows = document.querySelectorAll('[id$="-min"]').length - 1;
+
+    let rowData = [];
+    for (let i = 0; i <= numberOfMaterialsRows; i++) {
+        let uuids = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
+        let type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
+        rowData.push({
+            uuids: uuids.value,
+            type: type.value,
+        });
+    }
+    return {
+        materials_formulation_configuration: rowData,
+    };
+}
+
+function collectWeights(){
+    const numberOfWeightFields = document.querySelectorAll('[id^="all_weights_entries-"]').length -1;
+
+    let weightData = [];
+    for (let i = 0; i <= numberOfWeightFields; i++) {
+        let weights = document.getElementById(`all_weights_entries-${i}-weights`);
+        weightData.push({
+            weights: weights.value,
+        });
+    }
+    return {
+        all_weights: weightData,
+    };
+}
+
 function computeDependentValue(inputFieldName, currentInputField, independentMinMaxInputFields) {
     let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField);
 

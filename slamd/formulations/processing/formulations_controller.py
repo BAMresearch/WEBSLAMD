@@ -38,6 +38,7 @@ def add_weights():
 
 # TODO: implement constrained scenario; extend dataset batch by batch instead of always creating a new one; save final dataframe in session; add unit test
 
+
 @formulations.route('/create_formulations_batch', methods=['POST'])
 def submit_formulations():
     formulations_request_data = json.loads(request.data)

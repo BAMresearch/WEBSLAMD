@@ -61,11 +61,13 @@ function assignCreateFormulationsBatchEvent() {
     enableTooltip(button);
 
     button.addEventListener("click", async () => {
-        const materialsRequestData = collectFormulationsMinMaxRequestData();
+        const materialsRequestData = collectMaterialRequestData();
+        const weightsRequestData = collectWeights();
         const processesRequestData = collectProcessesRequestData();
 
         const formulationsRequest = {
             materials_request_data: materialsRequestData,
+            weights_request_data: weightsRequestData,
             processes_request_data: processesRequestData,
         };
 

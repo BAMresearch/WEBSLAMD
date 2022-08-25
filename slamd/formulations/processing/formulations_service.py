@@ -1,6 +1,6 @@
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
-from slamd.common.slamd_utils import not_numeric, not_empty, empty
+from slamd.common.slamd_utils import not_numeric, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
@@ -139,7 +139,6 @@ class FormulationsService:
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         weight_constraint = formulations_data['materials_request_data']['weight_constraint']
         processes_data = formulations_data['processes_request_data']['processes']
-        targets = formulations_data['targets']
 
         all_weights = []
         if empty(weight_constraint):
@@ -154,18 +153,18 @@ class FormulationsService:
         for process in processes_data:
             processes.append(MaterialsFacade.get_process(process['uuid']))
 
-        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product, targets)
+        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product)
         FormulationsPersistence.save(dataframe)
 
         as_dict = dataframe.transpose().to_dict()
 
         all_dtos = []
         for key, inner_dict in as_dict.items():
-            properties = cls._create_properties(inner_dict, targets)
-            target_list = cls._create_targets(inner_dict, targets)
+            properties = cls._create_properties(inner_dict)
+            target_list = cls._create_targets(inner_dict)
             dto = FormulationsDto(properties=properties, targets=target_list)
             all_dtos.append(dto)
-        return dataframe, all_dtos, targets.split(';')
+        return dataframe, all_dtos
 
     @classmethod
     def _create_properties(cls, inner_dict, targets):
