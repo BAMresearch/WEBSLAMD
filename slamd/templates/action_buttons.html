@@ -66,8 +66,37 @@
 
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
 <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}"
-    id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+    id="'{{ 'select_dataset_button_' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
     title="Select dataset">
-    {{ check_icon(16, 16, "currentColor") }}
+    {{ check_icon(width, height, "currentColor") }}
 </a>
+{% endmacro %}
+
+{% macro create_delete_dataset_button(dataset_name, width, height) -%}
+<button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete dataset">
+    <span data-bs-toggle="modal" data-bs-target="{{ '#delete_dataset_modal_' + dataset_name }}">
+        {{ delete_icon(width, height, "currentColor") }}
+    </span>
+</button>
+<div class="modal fade" id="{{ 'delete_dataset_modal_' + dataset_name }}" tabindex="-1"
+    aria-labelledby="{{ 'delete_dataset_modal_label_' + dataset_name }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ 'delete_dataset_modal_label_' + dataset_name }}">Delete dataset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete the chosen dataset?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                </button>
+                <button type="button" id="{{ dataset_name }}" class="btn btn-primary"
+                    onclick="deleteDataset('{{ dataset_name }}')" data-bs-dismiss="modal">Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endmacro %}

@@ -5,6 +5,10 @@ function updateCuriosityValue(curiosity) {
   document.getElementById("selected-range").value = parseFloat(value.toFixed(2));
 }
 
+async function deleteDataset(datasetName) {
+  console.log(datasetName);
+}
+
 function filterUnselectedOptionsAndAssignToSelectElement(options, selectorElementID) {
   let options_not_selected = "";
 
