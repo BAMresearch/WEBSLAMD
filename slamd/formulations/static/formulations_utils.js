@@ -179,9 +179,7 @@ function collectWeights(){
     let weightData = [];
     for (let i = 0; i <= numberOfWeightFields; i++) {
         let weights = document.getElementById(`all_weights_entries-${i}-weights`);
-        weightData.push({
-            weights: weights.value,
-        });
+        weightData.push(weights.value);
     }
     return {
         all_weights: weightData,

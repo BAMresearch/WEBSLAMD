@@ -1,5 +1,8 @@
+from itertools import product
+
 from slamd.common.common_validators import min_max_increment_config_valid
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
+    MaterialNotFoundException
 from slamd.common.slamd_utils import not_numeric, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
@@ -69,7 +72,7 @@ class FormulationsService:
 
         if len(custom_names):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
-                                       'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+                                           'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
 
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                        'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
@@ -133,37 +136,57 @@ class FormulationsService:
 
         return WeightsCalculator.compute_full_cartesian_product(all_materials_weights, weight_constraint)
 
-    # TODO: Implement constraint case / validate pattern of targets / move creation of dto to converter
     @classmethod
     def create_materials_formulations(cls, formulations_data):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
-        weight_constraint = formulations_data['materials_request_data']['weight_constraint']
         processes_data = formulations_data['processes_request_data']['processes']
+        weights_data = formulations_data['weights_request_data']['all_weights']
 
-        all_weights = []
-        if empty(weight_constraint):
-            all_weights = WeightInputPreprocessor.collect_weights_for_creation_of_formulation_batch(materials_data)
-        weight_product = WeightsCalculator.compute_cartesian_product(all_weights)
+        powders = []
+        liquids = []
+        aggregates = []
+        admixtures = []
+        customs = []
+        for materials_for_type_data in materials_data:
+            uuids = materials_for_type_data['uuids'].split(',')
+            for uuid in uuids:
+                material_type = materials_for_type_data['type']
+                if material_type.lower() == MaterialsFacade.POWDER:
+                    powders.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.LIQUID:
+                    liquids.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.AGGREGATES:
+                    aggregates.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.ADMIXTURE:
+                    admixtures.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.CUSTOM:
+                    customs.append(MaterialsFacade.get_material(material_type, uuid))
+                else:
+                    raise MaterialNotFoundException('Cannot process the requested material!')
+        materials = [powders, liquids, aggregates]
+        if len(admixtures) > 0:
+            materials.append(admixtures)
+        if len(customs) > 0:
+            materials.append(customs)
 
-        materials = []
-        for material_data in materials_data:
-            materials.append(MaterialsFacade.get_material(material_data['type'], material_data['uuid']))
+        material_combinations_for_formulations = list(product(*materials))
 
         processes = []
         for process in processes_data:
             processes.append(MaterialsFacade.get_process(process['uuid']))
 
-        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product)
+        dataframe = FormulationsConverter.formulation_to_df(material_combinations_for_formulations, processes,
+                                                            weights_data)
         FormulationsPersistence.save(dataframe)
 
         as_dict = dataframe.transpose().to_dict()
 
         all_dtos = []
-        for key, inner_dict in as_dict.items():
-            properties = cls._create_properties(inner_dict)
-            target_list = cls._create_targets(inner_dict)
-            dto = FormulationsDto(properties=properties, targets=target_list)
-            all_dtos.append(dto)
+        # for key, inner_dict in as_dict.items():
+        #     properties = cls._create_properties(inner_dict)
+        #     target_list = cls._create_targets(inner_dict)
+        #     dto = FormulationsDto(properties=properties, targets=target_list)
+        #     all_dtos.append(dto)
         return dataframe, all_dtos
 
     @classmethod

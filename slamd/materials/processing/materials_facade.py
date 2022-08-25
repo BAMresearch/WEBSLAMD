@@ -29,6 +29,13 @@ class MaterialsFacade:
     must be via using this facade.
     """
 
+    POWDER = MaterialType.POWDER.value
+    LIQUID = MaterialType.LIQUID.value
+    AGGREGATES = MaterialType.AGGREGATES.value
+    ADMIXTURE = MaterialType.ADMIXTURE.value
+    CUSTOM = MaterialType.CUSTOM.value
+    PROCESS = MaterialType.PROCESS.value
+
     @classmethod
     def find_all(cls):
         p = MaterialsPersistence
@@ -50,13 +57,13 @@ class MaterialsFacade:
     @classmethod
     def materials_formulation_as_dict(cls, materials, processes):
         full_dict = {}
-        names = []
-        for material in materials:
-            names.append(material.name)
+        types = []
+        for material in list(materials):
+            types.append(material.type)
             strategy = MaterialFactory.create_strategy(material.type.lower())
             full_dict = {**full_dict, **strategy.for_formulation(material)}
         for process in processes:
             full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
 
         full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
-        return full_dict, names
+        return full_dict, types

@@ -27,9 +27,9 @@ class MaterialStrategy(ABC):
     @classmethod
     def for_formulation(cls, material):
         multidict = MultiDict([
-            (f'delivery_time ({material.type}|{material.name})', float_if_not_empty(material.costs.delivery_time)),
-            (f'costs ({material.type}|{material.name})', float_if_not_empty(material.costs.costs)),
-            (f'co2_footprint ({material.type}|{material.name})', float_if_not_empty(material.costs.co2_footprint)),
+            (f'delivery_time ({material.type})', float_if_not_empty(material.costs.delivery_time)),
+            (f'costs ({material.type})', float_if_not_empty(material.costs.costs)),
+            (f'co2_footprint ({material.type})', float_if_not_empty(material.costs.co2_footprint)),
         ])
         cls._convert_additional_properties_for_formulation(multidict, material)
         return multidict
@@ -128,7 +128,7 @@ class MaterialStrategy(ABC):
             value = property.value
             if numeric(value):
                 value = float(value)
-            multidict.add(f'{property.name} ({material.type}|{material.name})', value)
+            multidict.add(f'{property.name} ({material.type})', value)
 
     @classmethod
     def _extract_additional_property_by_label(cls, submitted_material, label):

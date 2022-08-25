@@ -4,18 +4,21 @@ import pandas as pd
 
 class FormulationsConverter:
 
+    """
+    The parameter material_combinations is a list of tuples where each element in the list represents a variation of one
+    of the materials for a given type. E.g. if two powders P1 and P2, one liquid L and one aggregate A were chosen,
+    this list would contain two elements [(P1, L, A), (P2, L, A)]
+    """
     @classmethod
-    def formulation_to_df(cls, materials, processes, weight_product, targets):
-        full_dict, names = MaterialsFacade.materials_formulation_as_dict(materials, processes)
-        all_targets = targets.split(';')
-        for target in all_targets:
-            full_dict[target] = ''
-
+    def formulation_to_df(cls, material_combinations, processes, weight_data):
         all_rows = []
-        for weights in weight_product:
-            weight_dict = {}
-            for i, weight in enumerate(weights):
-                weight_dict[f'{names[i]} (kg)'] = weight
-            all_rows.append({**weight_dict, **full_dict})
+        for material_combination in material_combinations:
+            full_dict, types = MaterialsFacade.materials_formulation_as_dict(material_combination, processes)
+
+            for weights in weight_data:
+                weight_dict = {}
+                for i, weight in enumerate(weights.split('/')):
+                    weight_dict[f'{types[i]} (kg)'] = weight
+                all_rows.append({**weight_dict, **full_dict})
         dataframe = pd.DataFrame(all_rows)
         return dataframe
