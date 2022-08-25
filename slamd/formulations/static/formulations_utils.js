@@ -5,6 +5,7 @@
  */
 
 const TYPE_UUID_DELIMITER = "|";
+let allWeightFieldsHaveValidInput = false;
 
 function collectFormulationSelection() {
     const powderPlaceholder = document.getElementById("powder_selection");
@@ -182,4 +183,40 @@ function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentI
         sumOfIndependentFields = weightConstraint;
     }
     return sumOfIndependentFields;
+}
+
+function assignKeyboardEventsToWeightForm(initialCreationOfForm = false) {
+    if (initialCreationOfForm) {
+        allWeightFieldsHaveValidInput = true;
+    }
+
+    toggleSubmitButtonBasedOnWeights();
+}
+
+function toggleSubmitButtonBasedOnWeights() {
+    let weightFields = collectWeightFields();
+    let numberOfMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    for (let weightInput of weightFields) {
+        weightInput.addEventListener("keyup", () => {
+            toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields);
+        });
+    }
+}
+
+function collectWeightFields() {
+    const numberOfWeightFields = document.querySelectorAll('[id$="-weights"]').length;
+
+    let weightFields = [];
+    for (let i = 0; i < numberOfWeightFields; i++) {
+        let weights = document.getElementById(`all_weights_entries-${i}-weights`);
+        weightFields.push(weights);
+    }
+    return weightFields;
+}
+
+function toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields) {
+    let regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfMaterials + "}$");
+    let nonMatchingInputs = weightFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
+    allWeightFieldsHaveValidInput = nonMatchingInputs <= 0;
+    document.getElementById("create_formulations_batch_button").disabled = !allWeightFieldsHaveValidInput;
 }

@@ -51,6 +51,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const requestData = collectFormulationsMinMaxRequestData();
         const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
+        assignKeyboardEventsToWeightForm(true);
         assignDeleteWeightEvent();
         assignCreateFormulationsBatchEvent();
     });
