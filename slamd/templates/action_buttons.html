@@ -65,7 +65,7 @@
 {% endmacro %}
 
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
-<a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/columns"
+<a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}"
     id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
     title="Select dataset">
     {{ check_icon(16, 16, "currentColor") }}
