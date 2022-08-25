@@ -41,6 +41,9 @@ async function getDiscoveryConfigurationForm(event, placeholderId) {
 
 function onChangeMaterialsDataInput(event) {
   updateTargetPropertiesChoices(event);
+  // Delete all options for the third multi-select field
+  removeInnerHtmlFromPlaceholder("a_priori_information");
+  // Remove all forms corresponding to the two next multi-select fields
   removeInnerHtmlFromPlaceholder("target-configuration-form-placeholder");
   removeInnerHtmlFromPlaceholder("a-priori-information-configuration-form-placeholder");
 }
@@ -48,6 +51,8 @@ function onChangeMaterialsDataInput(event) {
 function onChangeTargetProperties(event) {
   updateAPrioriInformationChoices(event);
   getDiscoveryConfigurationForm(event, "target-configuration-form-placeholder");
+  // Remove all forms corresponding to the next multi-select field
+  removeInnerHtmlFromPlaceholder("a-priori-information-configuration-form-placeholder");
 }
 
 function onChangeAPrioriInformation(event) {
