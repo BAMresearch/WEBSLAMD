@@ -41,6 +41,8 @@ async function getDiscoveryConfigurationForm(event, placeholderId) {
 
 function onChangeMaterialsDataInput(event) {
   updateTargetPropertiesChoices(event);
+  removeInnerHtmlFromPlaceholder("target-configuration-form-placeholder");
+  removeInnerHtmlFromPlaceholder("a-priori-information-configuration-form-placeholder");
 }
 
 function onChangeTargetProperties(event) {
