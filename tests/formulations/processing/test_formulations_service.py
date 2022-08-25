@@ -59,12 +59,12 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
 
         form = FormulationsService.create_weights_form(weight_request_data)
 
-        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2  |  15.2  |  66.6'},
-                                                 {'idx': '1', 'weights': '18.2  |  20.3  |  61.5'},
-                                                 {'idx': '2', 'weights': '28.7  |  15.2  |  56.1'},
-                                                 {'idx': '3', 'weights': '28.7  |  20.3  |  51.0'},
-                                                 {'idx': '4', 'weights': '39.2  |  15.2  |  45.6'},
-                                                 {'idx': '5', 'weights': '39.2  |  20.3  |  40.5'}]
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2/15.2/66.6'},
+                                                 {'idx': '1', 'weights': '18.2/20.3/61.5'},
+                                                 {'idx': '2', 'weights': '28.7/15.2/56.1'},
+                                                 {'idx': '3', 'weights': '28.7/20.3/51.0'},
+                                                 {'idx': '4', 'weights': '39.2/15.2/45.6'},
+                                                 {'idx': '5', 'weights': '39.2/20.3/40.5'}]
 
 
 def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):
