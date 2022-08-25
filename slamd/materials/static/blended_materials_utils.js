@@ -38,7 +38,7 @@ function assignKeyboardEventsToMinMaxForm() {
       toggleConfirmBlendingButton(independentInputFields);
     });
     item.increment.addEventListener("keyup", () => {
-      correctInputFieldValue(item.increment, 0.01, 100);
+      correctInputFieldValue(item.increment, 0, 100);
       toggleConfirmBlendingButton(independentInputFields);
     });
   }

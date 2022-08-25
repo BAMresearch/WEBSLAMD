@@ -76,7 +76,7 @@ function addListenersToAllFields() {
       toggleConfirmationFormulationsButtons(inputFields);
     });
     item.increment.addEventListener("keyup", () => {
-      correctInputFieldValue(item.increment, 0.01);
+      correctInputFieldValue(item.increment, 0);
       toggleConfirmationFormulationsButtons(inputFields);
     });
   }
