@@ -25,7 +25,7 @@ function updateAPrioriInformationChoices(event) {
   filterUnselectedOptionsAndAssignToSelectElement(event.target.options, "a_priori_information");
 }
 
-async function getDiscoveryConfigurationForm(event) {
+async function getDiscoveryConfigurationForm(event, placeholderId) {
   const names = [];
   for (const option of event.target.options) {
     if (option.selected) {
@@ -34,7 +34,7 @@ async function getDiscoveryConfigurationForm(event) {
   }
 
   const url = `${DISCOVERY_URL}/create_discovery_configuration_form`;
-  await postDataAndEmbedTemplateInPlaceholder(url, "discovery-configuration-form-placeholder", {
+  await postDataAndEmbedTemplateInPlaceholder(url, placeholderId, {
     names,
   });
 }
@@ -45,10 +45,15 @@ function onChangeMaterialsDataInput(event) {
 
 function onChangeTargetProperties(event) {
   updateAPrioriInformationChoices(event);
-  getDiscoveryConfigurationForm(event);
+  getDiscoveryConfigurationForm(event, "target-configuration-form-placeholder");
+}
+
+function onChangeAPrioriInformation(event) {
+  getDiscoveryConfigurationForm(event, "a-priori-information-configuration-form-placeholder");
 }
 
 window.addEventListener("load", () => {
   document.getElementById("materials_data_input").addEventListener("change", onChangeMaterialsDataInput);
   document.getElementById("target_properties").addEventListener("change", onChangeTargetProperties);
+  document.getElementById("a_priori_information").addEventListener("change", onChangeAPrioriInformation);
 });
