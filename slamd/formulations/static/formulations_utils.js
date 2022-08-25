@@ -40,7 +40,7 @@ function collectSelectionForFormulations(placeholder) {
         });
 }
 
-function updateWZRatio(fieldName, currentInputField, independentInputFields) {
+function updateWZRatio(fieldName, independentInputFields) {
     const powderWeight = independentInputFields
         .filter((item) => item[fieldName].name === 'Powder')
         .map((item) => parseFloat(item[fieldName].value))[0]
@@ -49,7 +49,7 @@ function updateWZRatio(fieldName, currentInputField, independentInputFields) {
         .filter((item) => item[fieldName].name === 'Liquid')[0];
     const liquidWeight = liquid[fieldName].value
 
-    let wcRatio = "Not available; you need to set the weight of the powders.";
+    let wcRatio = "Not available; you need to set the weight of the powders and liquids.";
     if (liquidWeight && powderWeight) {
         wcRatio = (liquidWeight / powderWeight).toFixed(2);
     }
@@ -61,14 +61,14 @@ function addListenersToIndependentFields() {
     for (let item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
             computeDependentValue("min", item.min, independentInputFields);
-            updateWZRatio("min", item.min, independentInputFields);
+            updateWZRatio("min", independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.min.id).setAttribute('title', "");
 
         item.max.addEventListener("keyup", () => {
             computeDependentValue("max", item.max, independentInputFields);
-            updateWZRatio("max", item.max, independentInputFields);
+            updateWZRatio("max", independentInputFields);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.max.id).setAttribute('title', "");

@@ -43,10 +43,14 @@ class FormulationsService:
         powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
         liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
         aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_names = [item['name'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_names = [item['name'] for item in formulation_selection if item['type'] == 'Custom']
 
         powder_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Powder']
         liquid_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Liquid']
         aggregates_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
         # TODO: properly handle cases where e.g. no aggregates are specified
         if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
@@ -58,11 +62,18 @@ class FormulationsService:
                                        'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+
+        if len(admixture_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
+                                           'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
+
+        if len(custom_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
+                                       'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                        'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
 
-        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Admixture')
-        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Custom')
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
         return min_max_form
