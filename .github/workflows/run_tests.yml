@@ -28,6 +28,7 @@ jobs:
           browser: chrome
           start: python app.py
           wait-on: "http://localhost:5001"
+          config: video=false
         env:
           FLASK_APP: app.py
           FLASK_ENV: development
