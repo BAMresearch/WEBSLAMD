@@ -1,0 +1,19 @@
+{% for target in form.target_configurations %}
+<div class="row g-3 mb-3">
+    <div class="col-md-4">
+        {{ target.name }}
+    </div>
+    <div class="col-md-4">
+        {% for radio_option in target.max_or_min %}
+        <div class="form-check">
+            {{ radio_option(class_="form-check-input") }}
+            {{ radio_option.label(class_="form-check-label") }}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-4">
+        {{ target.weight.label(class_="control-label") }}
+        {{ target.weight(class_="form-control") }}
+    </div>
+</div>
+{% endfor %}

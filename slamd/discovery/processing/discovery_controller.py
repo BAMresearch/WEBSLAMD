@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, request, render_template, make_response, jsonify, redirect
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
@@ -55,3 +56,11 @@ def get_dataset_columns(dataset):
         discovery_form=discovery_form,
         datasets=datasets
     )
+
+
+@discovery.route('/create_discovery_configuration_form', methods=['POST'])
+def create_discovery_configuration_form():
+    request_body = json.loads(request.data)
+    form = DiscoveryService.create_discovery_configuration_form(request_body['names'])
+    body = {'template': render_template('discovery_configuration_form.html', form=form)}
+    return make_response(jsonify(body), 200)
