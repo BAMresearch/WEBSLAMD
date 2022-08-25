@@ -73,7 +73,7 @@ function addListenersToIndependentFields() {
         document.getElementById(item.max.id).setAttribute('title', "");
 
         item.increment.addEventListener("keyup", () => {
-            correctInputFieldValue(item.increment, parseFloat(weightConstraint));
+            correctInputFieldValue(item.increment, 0, parseFloat(weightConstraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
     }
@@ -169,7 +169,7 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 }
 
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
-    correctInputFieldValue(currentInputField);
+    correctInputFieldValue(currentInputField, 0);
 
     let sumOfIndependentFields = independentMinMaxInputFields
         .filter((item) => item[inputFieldName].value !== "")

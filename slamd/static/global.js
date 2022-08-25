@@ -1,25 +1,34 @@
 const ACTION_BUTTON_DELIMITER = "___";
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
 
-function roundToTwoDecimalPlaces(number) {
-  if (MORE_THAN_TWO_DECIMAL_PLACES.test(number)) {
-    return parseFloat(number).toFixed(2);
-  } else {
-    return number;
+function roundInputFieldValueToTwoDecimalPlaces(inputFieldElem) {
+  if (MORE_THAN_TWO_DECIMAL_PLACES.test(inputFieldElem.value)) {
+    inputFieldElem.value = parseFloat(inputFieldElem.value).toFixed(2);
   }
 }
 
-function clipNegativeValues(number) {
-  return parseFloat(number) < 0 ? 0 : number;
+function clipMinInputFieldValue(inputFieldElem, minValue) {
+  if (typeof minValue !== "number" || isNaN(minValue) || !isFinite(minValue)) {
+    return;
+  }
+  if (parseFloat(inputFieldElem.value) < minValue) {
+    inputFieldElem.value = minValue;
+  }
 }
 
-function correctInputFieldValue(inputFieldElem, maxValue) {
-  const newValue = roundToTwoDecimalPlaces(clipNegativeValues(inputFieldElem.value));
-  if (!maxValue) {
-    inputFieldElem.value = newValue;
-  } else {
-    inputFieldElem.value = newValue > maxValue ? maxValue : newValue;
+function clipMaxInputFieldValue(inputFieldElem, maxValue) {
+  if (typeof maxValue !== "number" || isNaN(maxValue) || !isFinite(maxValue)) {
+    return;
   }
+  if (parseFloat(inputFieldElem.value) > maxValue) {
+    inputFieldElem.value = maxValue;
+  }
+}
+
+function correctInputFieldValue(inputFieldElem, minValue, maxValue) {
+  roundInputFieldValueToTwoDecimalPlaces(inputFieldElem);
+  clipMinInputFieldValue(inputFieldElem, minValue);
+  clipMaxInputFieldValue(inputFieldElem, maxValue);
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {

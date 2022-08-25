@@ -47,11 +47,14 @@ describe("Test creating base materials", () => {
     cy.findByLabelText("Specific gravity (m%)").type("67.890");
 
     // Fill out additional properties
+    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
+    cy.wait("@add_property");
     cy.findAllByLabelText("Name").last().type("Prop 0");
     cy.findAllByLabelText("Value").last().type("Value 0");
     cy.findByText("Add property").click();
+    cy.wait("@add_property");
     cy.findAllByLabelText("Name").last().type("Prop 1");
     cy.findAllByLabelText("Value").last().type("Value 1");
 
@@ -99,14 +102,18 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Composition").should("not.exist");
 
     // Fill out additional properties
+    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
+    cy.wait("@add_property");
     cy.findAllByLabelText("Name").last().type("Prop 0");
     cy.findAllByLabelText("Value").last().type("Value 0");
     cy.findByText("Add property").click();
+    cy.wait("@add_property");
     cy.findAllByLabelText("Name").last().type("Prop 1");
     cy.findAllByLabelText("Value").last().type("Value 1");
     cy.findByText("Add property").click();
+    cy.wait("@add_property");
     cy.findAllByLabelText("Name").last().type("Prop 2");
     cy.findAllByLabelText("Value").last().type("Value 2");
 
@@ -175,6 +182,8 @@ describe("Test creating base materials", () => {
     cy.findByText("3 - Cost").click();
     cy.findByLabelText("Delivery time (days)").type("123");
     cy.findByLabelText("Delivery time (days)").type("{moveToStart}-");
+    cy.findByLabelText("Delivery time (days)").should("have.value", 0);
+    cy.findByLabelText("Delivery time (days)").clear().type("-0.2");
     cy.findByLabelText("Delivery time (days)").should("have.value", 0);
   });
 });

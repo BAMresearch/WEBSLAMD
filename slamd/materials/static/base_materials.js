@@ -65,7 +65,7 @@ async function deleteMaterial(id, material_type) {
 }
 
 function autocorrectDeliveryTime(event) {
-  correctInputFieldValue(event.target);
+  correctInputFieldValue(event.target, 0);
 }
 
 window.addEventListener("load", function () {
