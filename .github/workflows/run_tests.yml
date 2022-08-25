@@ -1,9 +1,8 @@
-# .github/workflows/app.yaml
-name: Run tests with PyTest
-on: push
+name: Run unit tests with PyTest and acceptance tests with Cypress
+on: [pull_request]
 
 jobs:
-  run-unit-tests:
+  run-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -19,6 +18,18 @@ jobs:
           cache: 'pip'
       - run: pip install -r requirements.txt
       
-      - name: Run test suite
+      - name: Run unit test suite (PyTest)
         run: |
           pytest -v
+
+      - name: Run acceptance test suite (Cypress)
+        uses: cypress-io/github-action@v4
+        with:
+          browser: chrome
+          start: python app.py
+          wait-on: "http://localhost:5001"
+          config: video=false
+        env:
+          FLASK_APP: app.py
+          FLASK_ENV: development
+          SECRET_KEY: SECRET_KEY
