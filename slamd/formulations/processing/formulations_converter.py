@@ -36,9 +36,9 @@ class FormulationsConverter:
         dataframe['total costs'] = dataframe.apply(lambda row: cls._compute_sum(row, 'costs'), axis=1)
         dataframe['total co2_footprint'] = dataframe.apply(lambda row: cls._compute_sum(row, 'co2_footprint'), axis=1)
         dataframe['total delivery_time '] = dataframe.apply(lambda row: cls._compute_max(row), axis=1)
-        dataframe = dataframe.drop([x for x in dataframe if x.startswith('costs')], 1)
-        dataframe = dataframe.drop([x for x in dataframe if x.startswith('co2_footprint')], 1)
-        dataframe = dataframe.drop([x for x in dataframe if x.startswith('delivery_time ')], 1)
+        dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('costs')]
+        dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('co2_footprint')]
+        dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('delivery_time')]
         return dataframe
 
     @classmethod
