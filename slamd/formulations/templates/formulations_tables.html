@@ -1,5 +1,11 @@
 {% if df is not none %}
     {{ df | safe }}
+    <label class="control-label" for="target_value">Target Name</label>
+    <input class="form-control" id="target_value" name="targets_field" type="text" value="">
+    <button class="btn btn-secondary col-12" type="button" id="add_target_button" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="Add targets to your formulation">
+        Add target
+    </button>
     <table class="table table-bordered table-striped">
         <thead>
         <tr>

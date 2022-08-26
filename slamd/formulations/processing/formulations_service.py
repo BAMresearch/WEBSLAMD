@@ -51,6 +51,20 @@ class FormulationsService:
         return dataframe, all_dtos
 
     @classmethod
+    def add_target_name(cls, target_request):
+        dataframe = None
+        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        if temporary_dataset:
+            dataframe = temporary_dataset.dataframe
+        dataframe['Target:' + target_request['target_name']] = None
+
+        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
+        FormulationsPersistence.save_batch(temporary_dataset)
+
+        all_dtos = cls._create_all_dtos(dataframe, True)
+        return dataframe, all_dtos
+
+    @classmethod
     def _to_selection(cls, list_of_models):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
@@ -184,13 +198,15 @@ class FormulationsService:
         return dataframe, all_dtos
 
     @classmethod
-    def _create_all_dtos(cls, dataframe):
+    def _create_all_dtos(cls, dataframe, add_target=False):
         if dataframe is None:
             return []
-
+        target_names = []
+        if add_target:
+            target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
         all_dtos = []
         for i in range(len(dataframe.index)):
-            dto = FormulationsDto(index=i, targets=[])
+            dto = FormulationsDto(index=i, targets=target_names)
             all_dtos.append(dto)
         return all_dtos
 
