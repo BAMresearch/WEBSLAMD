@@ -1,11 +1,14 @@
 from flask import session
 
+TEMPORARY_FORMULATION = 'temporary.csv'
+
 
 class FormulationsPersistence:
 
     @classmethod
-    def save_batch(cls, dataset):
-        cls.set_session_property({dataset.name: dataset})
+    def save_temporary_dataset(cls, dataset):
+        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        cls.save_dataset(dataset)
 
     @classmethod
     def save_dataset(cls, dataset):

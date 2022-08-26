@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, make_response, jsonify, request
+from flask import Blueprint, render_template, make_response, jsonify, request, redirect
 
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.formulations_service import FormulationsService
@@ -83,3 +83,10 @@ def add_target():
                                         target_list=target_list)}
 
     return make_response(jsonify(body), 200)
+
+
+@formulations.route('', methods=['POST'])
+def submit_base_material():
+    FormulationsService.save_dataset(request.form)
+
+    return redirect('/materials/formulations')

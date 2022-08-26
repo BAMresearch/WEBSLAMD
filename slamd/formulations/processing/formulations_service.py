@@ -62,7 +62,7 @@ class FormulationsService:
         dataframe['Target:' + target_request['target_name']] = None
 
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
-        FormulationsPersistence.save_batch(temporary_dataset)
+        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
 
         all_dtos = cls._create_all_dtos(dataframe)
         target_list = []
@@ -197,7 +197,7 @@ class FormulationsService:
                 f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
 
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
-        FormulationsPersistence.save_batch(temporary_dataset)
+        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
 
         all_dtos = cls._create_all_dtos(dataframe)
         target_list = []
@@ -266,3 +266,14 @@ class FormulationsService:
     @classmethod
     def delete_formulation(cls):
         FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+
+    @classmethod
+    def save_dataset(cls, form):
+        filename = form['dataset_name']
+        if not filename.endswith('.csv'):
+            filename = filename + '.csv'
+        formulation_to_be_saved_as_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        formulation_to_be_saved_as_dataset.name = filename
+        if formulation_to_be_saved_as_dataset:
+            FormulationsPersistence.save_dataset(formulation_to_be_saved_as_dataset)

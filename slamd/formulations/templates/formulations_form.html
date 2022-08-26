@@ -36,6 +36,12 @@
             {{ materials_and_processes_selection_form.weight_constraint(class_="form-control") }}
         </div>
     </div>
+    <div class="col-md-6 formulations_constraint">
+        <div>
+            {{ materials_and_processes_selection_form.dataset_name.label(class_="control-label") }}
+            {{ materials_and_processes_selection_form.dataset_name(class_="form-control") }}
+        </div>
+    </div>
     <div>
         {{ create_change_selection_button("change_materials_and_processes_selection_button",
         "confirm_materials_and_processes_selection_button",
