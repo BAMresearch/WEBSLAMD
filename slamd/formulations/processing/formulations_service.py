@@ -142,6 +142,26 @@ class FormulationsService:
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['weights_request_data']['all_weights']
 
+        materials = cls._prepare_materials_for_taking_direct_product(materials_data)
+
+        material_combinations_for_formulations = list(product(*materials))
+
+        processes = []
+        for process in processes_data:
+            processes.append(MaterialsFacade.get_process(process['uuid']))
+
+        dataframe = FormulationsConverter.formulation_to_df(material_combinations_for_formulations, processes,
+                                                            weights_data)
+        FormulationsPersistence.save(dataframe)
+
+        all_dtos = []
+        for i in range(len(dataframe.index)):
+            dto = FormulationsDto(index=i, targets=[])
+            all_dtos.append(dto)
+        return dataframe, all_dtos
+
+    @classmethod
+    def _prepare_materials_for_taking_direct_product(cls, materials_data):
         powders = []
         liquids = []
         aggregates = []
@@ -168,33 +188,12 @@ class FormulationsService:
             materials.append(admixtures)
         if len(customs) > 0:
             materials.append(customs)
-
-        material_combinations_for_formulations = list(product(*materials))
-
-        processes = []
-        for process in processes_data:
-            processes.append(MaterialsFacade.get_process(process['uuid']))
-
-        dataframe = FormulationsConverter.formulation_to_df(material_combinations_for_formulations, processes,
-                                                            weights_data)
-        FormulationsPersistence.save(dataframe)
-
-        as_dict = dataframe.transpose().to_dict()
-
-        all_dtos = []
-        # for key, inner_dict in as_dict.items():
-        #     properties = cls._create_properties(inner_dict)
-        #     target_list = cls._create_targets(inner_dict)
-        #     dto = FormulationsDto(properties=properties, targets=target_list)
-        #     all_dtos.append(dto)
-        return dataframe, all_dtos
+        return materials
 
     @classmethod
-    def _create_properties(cls, inner_dict, targets):
+    def _create_properties(cls, inner_dict):
         properties = ''
-        target_list = targets.split(';')
-        properties_dict = {k: v for k, v in inner_dict.items() if k not in target_list}
-        for key, value in properties_dict.items():
+        for key, value in inner_dict.items():
             properties += f'{key}: {value}; '
         properties = properties.strip()[:-1]
         return properties
