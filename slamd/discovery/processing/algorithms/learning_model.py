@@ -16,6 +16,16 @@ class UserInput:
     sigma_factor: float = 1
     # Prediction quantile for distance-based utility (smaller values recommended for weak predictors):
     prediction_quantile_distance: float = 1
+    # Target properties
+    targets: list[str] = ['fc 28-d - Target (MPa)']
+    # A Priori Information
+    fixed_targets: list[str] = ['CO2 (kg/t) - A-priori Information']
+    # Features, columns used for training the algorithm
+    features: list[str] = [
+        'Idx_Sample', 'SiO2', 'CaO', 'SO3', 'FA (kg/m3)', 'GGBFS (kg/m3)', 'Coarse aggregate (kg/m3)',
+        'Fine aggregate (kg/m3)', 'Total aggregates', 'Na2SiO3', 'Na2O (Dry)', 'Sio2 (Dry)', 'Superplasticizer',
+        'water -eff'
+    ]
 
 
 class LearningModel:
@@ -28,7 +38,8 @@ class LearningModel:
         dataframe = pd.read_csv('MaterialsDiscoveryExampleData.csv')
         dataframe.apply(pd.to_numeric, errors='ignore')
         experiment = DiscoveryExperiment(dataframe, user_input.model, user_input.strategy,
-                                         user_input.sigma_factor, user_input.prediction_quantile_distance)
+                                         user_input.sigma_factor, user_input.prediction_quantile_distance,
+                                         user_input.targets)
 
         result = experiment.start_learning()
         print(result)

@@ -1,26 +1,32 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from lolopy.learners import RandomForestRegressor
+from scipy.spatial import distance_matrix
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel
+
 
 class DiscoveryExperiment():
-    dataframe = df_converter()
-    features_df = df_converter()
-    target_df = df_converter()
-    fixed_target_df = df_converter()
 
-    show_df = None
-    y_pred_dtr_mean = None
-    y_pred_dtr_std = None
-    y_pred_dtr = None
-
-    def __init__(self, dataframe, model, strategy, sigma, distance):
+    def __init__(self, dataframe, model, strategy, sigma, distance, targets, fixed_targets, features):
         self.dataframe = dataframe
         self.model = model
         self.strategy = strategy
+        self.features_df = dataframe
+        self.target_df = dataframe
+        self.fixed_target_df = dataframe
 
         self.sigma = sigma
         self.distance = distance
+        self.targets = targets
+        self.fixed_targets = fixed_targets
+        self.features = features
 
-        first_selected_target = list(confirm_target(target_selection_application))[0]
+        first_selected_target = self.targets[0]
         self.PredIdx = pd.isnull(self.dataframe[[first_selected_target]]).to_numpy().nonzero()[0]
         self.SampIdx = self.dataframe.index.difference(self.PredIdx)
 
@@ -36,19 +42,28 @@ class DiscoveryExperiment():
         self.dataframe = dataframe_norm
         self.fixed_target_df = fixed_target_df_norm
 
-    def start_learning(self):
-        self.dataframe = decide_max_or_min(box_targets, confirm_target(target_selection_application), self.dataframe)
-        self.dataframe = decide_max_or_min(box_fixed_targets, confirm_fixed_target(
-            fixed_target_selection_application), self.dataframe)
+    # Utility Methods
+    def decide_max_or_min(self, source, columns, dataframe):
+        row_list = [source.children[decide].children[0].value for decide in range(len(columns))]
 
-        self.fixed_target_selection_idxs = confirm_fixed_target(fixed_target_selection_application)
+        for column in range(len(columns)):
+            if (row_list[column] == "minimize"):
+                dataframe[columns[column]] = dataframe[columns[column]]*(-1)
+
+        return dataframe
+
+    def start_learning(self):
+        self.dataframe = self.decide_max_or_min(box_targets, self.targets, self.dataframe)
+        self.dataframe = self.decide_max_or_min(box_fixed_targets, self.fixed_targets, self.dataframe)
+
+        self.fixed_target_selection_idxs = self.fixed_targets
 
         self.fixed_target_df = self.dataframe[self.fixed_target_selection_idxs]
 
-        self.target_selection_idxs = confirm_target(target_selection_application)
+        self.target_selection_idxs = self.targets
 
-        self.features_df = self.dataframe[confirm_features(feature_selector_application)]
-        self.target_df = self.dataframe[confirm_target(target_selection_application)]
+        self.features_df = self.dataframe[self.features]
+        self.target_df = self.dataframe[self.targets]
 
         self.decide_model(self.model)
 
@@ -61,45 +76,40 @@ class DiscoveryExperiment():
 
         novelty_factor = min_distances*(max_of_min_distances**(-1))
 
-        with out_app:
-            out_app.clear_output()
+        # normierten datafram
+        df = self.dataframe  # .abs
+        df = df.iloc[self.PredIdx].assign(Utility=pd.Series(util).values)
+        df = df.loc[self.PredIdx].assign(Novelty=pd.Series(novelty_factor).values)
 
-            # normierten datafram
+        if self.Uncertainty.ndim > 1:
+            for i in range(len(self.target_selection_idxs)):
 
-            df = df_converter()  # .abs
-            df = df.iloc[self.PredIdx].assign(Utility=pd.Series(util).values)
-            df = df.loc[self.PredIdx].assign(Novelty=pd.Series(novelty_factor).values)
+                df[self.target_selection_idxs[i]] = self.Expected_Pred[:, i]
+                uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs[i]+' )'
+                df[uncertainty_name_column] = self.Uncertainty[:, i].tolist()
 
-            if(self.Uncertainty.ndim > 1):
-                for i in range(len(self.target_selection_idxs)):
+        else:
+            df[self.target_selection_idxs] = self.Expected_Pred.reshape(len(self.Expected_Pred), 1)
+            uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs+' )'
+            df[uncertainty_name_column] = self.Uncertainty.reshape(len(self.Uncertainty), 1)
 
-                    df[self.target_selection_idxs[i]] = self.Expected_Pred[:, i]
-                    uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs[i]+' )'
-                    df[uncertainty_name_column] = self.Uncertainty[:, i].tolist()
+        show_df = df.sort_values(by='Utility', ascending=False)
 
-            else:
-                df[self.target_selection_idxs] = self.Expected_Pred.reshape(len(self.Expected_Pred), 1)
-                uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs+' )'
-                df[uncertainty_name_column] = self.Uncertainty.reshape(len(self.Uncertainty), 1)
+        target_list = show_df[self.target_selection_idxs]
+        if len(self.fixed_target_selection_idxs) > 0:
+            target_list = pd.concat((target_list, show_df[self.fixed_target_selection_idxs]), axis=1)
+        target_list = pd.concat((target_list, show_df['Utility']), axis=1)
 
-            show_df = df.sort_values(by='Utility', ascending=False)
+        print('')
+        print('Pareto plot (predicted property trade-off)')
 
-            target_list = show_df[self.target_selection_idxs]
-            if len(self.fixed_target_selection_idxs) > 0:
-                target_list = pd.concat((target_list, show_df[self.fixed_target_selection_idxs]), axis=1)
-            target_list = pd.concat((target_list, show_df['Utility']), axis=1)
-            #target_list=pd.concat((target_list, show_df['Novelty']), axis=1)
+        g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue="Utility")
+        g.map_diag(sns.histplot, hue=None, color=".3")
+        g.map_lower(sns.scatterplot)
+        g.add_legend()
+        plt.show()
 
-            print('')
-            print('Pareto plot (predicted property trade-off)')
-
-            g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue="Utility")
-            g.map_diag(sns.histplot, hue=None, color=".3")
-            g.map_lower(sns.scatterplot)
-            g.add_legend()
-            plt.show()
-
-            return show_df
+        return show_df
 
     def weight_fixed_tars(self):
 
@@ -128,15 +138,15 @@ class DiscoveryExperiment():
 
         self.scale_data()
 
-        if(len(confirm_fixed_target(fixed_target_selection_application)) > 0):
+        if(len(self.fixed_targets) > 0):
             fixed_targets_in_prediction = self.weight_fixed_tars()
         else:
             fixed_targets_in_prediction = np.zeros(len(self.PredIdx))
 
         if(len(self.target_selection_idxs) > 1):
-            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.sum(axis=1)+(slider_of_for_std_App.value*Uncertainty_norm.sum(axis=1))
+            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.sum(axis=1)+(self.sigma*Uncertainty_norm.sum(axis=1))
         else:
-            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.squeeze()+(slider_of_for_std_App.value*Uncertainty_norm.squeeze())
+            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.squeeze()+(self.sigma*Uncertainty_norm.squeeze())
 
         return util
 
@@ -144,7 +154,7 @@ class DiscoveryExperiment():
 
         for i in range(len(self.target_selection_idxs)):
 
-            kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
+            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             dtr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
 
             dtr.fit(self.features_df.iloc[self.SampIdx].to_numpy(),
