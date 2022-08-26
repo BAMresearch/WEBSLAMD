@@ -1,3 +1,4 @@
+from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.materials_facade import MaterialsFacade
 import pandas as pd
 
@@ -21,9 +22,24 @@ class FormulationsConverter:
                 for i, weight in enumerate(weights.split('/')):
                     weight_dict[f'{types[i]} (kg)'] = weight
                     costs_for_type = full_dict.get(f'costs ({types[i]})', None)
+
                     if costs_for_type:
                         full_dict[f'costs ({types[i]})'] = full_dict[f'costs ({types[i]})'] * float(weight)
+
+                    co2_footprint_for_type = full_dict.get(f'co2_footprint ({types[i]})', None)
+                    if co2_footprint_for_type:
+                        full_dict[f'co2_footprint ({types[i]})'] = full_dict[f'co2_footprint ({types[i]})'] * float(weight)
+
                 all_rows.append({**weight_dict, **full_dict})
                 full_dict = original_dict.copy()
         dataframe = pd.DataFrame(all_rows)
+        dataframe['costs'] = dataframe.apply(lambda row: cls.label_race(row), axis=1)
         return dataframe
+
+    @classmethod
+    def label_race(cls, row):
+        full_dict = {k: v for k, v in dict(row).items() if 'costs' in k}
+        total_costs = 0
+        for value in full_dict.values():
+            total_costs += value
+        return total_costs
