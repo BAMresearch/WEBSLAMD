@@ -20,6 +20,7 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
+MAX_DATASET_SIZE = 10000
 
 
 class FormulationsService:
@@ -160,6 +161,10 @@ class FormulationsService:
 
         if previous_batch_df:
             dataframe = pd.concat([previous_batch_df.dataframe, dataframe], ignore_index=True)
+
+        if len(dataframe.index) > MAX_DATASET_SIZE:
+            raise SlamdRequestTooLargeException(
+                f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
 
         temporary_dataset = Dataset('temporary.csv', dataframe)
         FormulationsPersistence.save_batch(temporary_dataset)
