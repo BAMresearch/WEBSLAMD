@@ -44,4 +44,4 @@ class MaterialsAndProcessesSelectionForm(Form):
         label='1.7 - Constraint (Sum of materials used for formulation) (kg)'
     )
 
-    submit = SubmitField(label='7 - Create materials formulations')
+    submit = SubmitField(label='7 - Submit Dataset')

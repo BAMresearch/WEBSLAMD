@@ -37,9 +37,6 @@ def add_weights():
     return make_response(jsonify(body), 200)
 
 
-# TODO: implement constrained scenario; extend dataset batch by batch instead of always creating a new one; save final dataframe in session; add unit test
-
-
 @formulations.route('/create_formulations_batch', methods=['POST'])
 def submit_formulations():
     formulations_request_data = json.loads(request.data)
@@ -49,5 +46,15 @@ def submit_formulations():
                                         df=dataframe.to_html(table_id='formulations_dataframe',
                                                              classes='table table-bordered table-striped table-hover'),
                                         all_dtos=all_dtos)}
+
+    return make_response(jsonify(body), 200)
+
+
+@formulations.route('', methods=['DELETE'])
+def delete_formulation():
+    FormulationsService.delete_formulation()
+    body = {'template': render_template('formulations_tables.html',
+                                        df=None,
+                                        all_dtos=[])}
 
     return make_response(jsonify(body), 200)

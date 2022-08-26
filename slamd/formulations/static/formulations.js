@@ -53,6 +53,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
         assignKeyboardEventsToWeightForm(true);
         assignDeleteWeightEvent();
         assignCreateFormulationsBatchEvent();
+        document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
     });
 }
 
@@ -86,6 +87,10 @@ function assignDeleteWeightEvent() {
             deleteButton.remove();
         });
     }
+}
+
+async function deleteFormulations() {
+    await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations_tables_placeholder");
 }
 
 window.addEventListener("load", function () {

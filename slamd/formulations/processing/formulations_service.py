@@ -216,3 +216,7 @@ class FormulationsService:
         for key, value in target_dict.items():
             targets_as_dto.append(value)
         return targets_as_dto
+
+    @classmethod
+    def delete_formulation(cls):
+        FormulationsPersistence.delete_dataset_by_name('temporary.csv')

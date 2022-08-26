@@ -15,7 +15,8 @@
         <td>{{ item.index }}</td>
         {% for target in item.targets %}
         <td>
-            <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" name="targets_field" type="text" value="">
+            <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                   name="targets_field" type="text" value="">
         </td>
         {% endfor %}
     </tr>
