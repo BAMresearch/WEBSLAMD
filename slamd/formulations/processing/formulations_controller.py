@@ -17,11 +17,14 @@ def base_material_page():
     form = FormulationsService.populate_selection_form()
     df, all_dtos = FormulationsService.get_formulations()
 
+    df_table = None
+    if df is not None:
+        df_table = df.to_html(table_id='formulations_dataframe', classes='table table-bordered table-striped table-hover')
+
     return render_template('formulations.html',
                            materials_and_processes_selection_form=form,
                            formulations_min_max_form=FormulationsMinMaxForm(),
-                           df=df.to_html(table_id='formulations_dataframe',
-                                         classes='table table-bordered table-striped table-hover'),
+                           df=df_table,
                            all_dtos=all_dtos)
 
 
