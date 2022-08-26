@@ -90,7 +90,6 @@ class FormulationsService:
         admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
         custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
-        # TODO: properly handle cases where e.g. no aggregates are specified
         if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
             raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 

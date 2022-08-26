@@ -128,7 +128,7 @@ class MaterialStrategy(ABC):
             value = property.value
             if numeric(value):
                 value = float(value)
-            multidict.add(f'{property.name} ({material.type})', value)
+            multidict.add(property.name, value)
 
     @classmethod
     def _extract_additional_property_by_label(cls, submitted_material, label):

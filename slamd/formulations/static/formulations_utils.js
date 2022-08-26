@@ -173,13 +173,12 @@ function collectMaterialRequestData() {
     };
 }
 
-function collectWeights(){
-    const numberOfWeightFields = document.querySelectorAll('[id^="all_weights_entries-"]').length -1;
+function collectWeights() {
+    let weightFields = document.querySelectorAll('[id^="all_weights_entries-"]');
 
     let weightData = [];
-    for (let i = 0; i <= numberOfWeightFields; i++) {
-        let weights = document.getElementById(`all_weights_entries-${i}-weights`);
-        weightData.push(weights.value);
+    for (let weightField of weightFields) {
+        weightData.push(weightField.value);
     }
     return {
         all_weights: weightData,
