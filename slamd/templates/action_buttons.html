@@ -74,16 +74,16 @@
 
 {% macro create_delete_dataset_button(dataset_name, width, height) -%}
 <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete dataset">
-    <span data-bs-toggle="modal" data-bs-target="{{ '#delete_dataset_modal_' + dataset_name.replace('.', '') }}">
+    <span data-bs-toggle="modal" data-bs-target="{{ '#delete_dataset_modal_' + dataset_name.replace('.', '_') }}">
         {{ delete_icon(width, height, "currentColor") }}
     </span>
 </button>
-<div class="modal fade" id="{{ 'delete_dataset_modal_' + dataset_name.replace('.', '') }}" tabindex="-1"
-    aria-labelledby="{{ 'delete_dataset_modal_label_' + dataset_name.replace('.', '') }}" aria-hidden="true">
+<div class="modal fade" id="{{ 'delete_dataset_modal_' + dataset_name.replace('.', '_') }}" tabindex="-1"
+    aria-labelledby="{{ 'delete_dataset_modal_label_' + dataset_name.replace('.', '_') }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="{{ 'delete_dataset_modal_label_' + dataset_name.replace('.', '') }}">
+                <h5 class="modal-title" id="{{ 'delete_dataset_modal_label_' + dataset_name.replace('.', '_') }}">
                     Delete Dataset</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
