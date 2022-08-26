@@ -1,5 +1,7 @@
 from itertools import product
 
+import pandas as pd
+
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
@@ -11,6 +13,7 @@ from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
 from slamd.formulations.processing.formulations_dto import FormulationsDto
 from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
+from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
@@ -138,6 +141,8 @@ class FormulationsService:
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):
+        previous_batch_df = FormulationsPersistence.query_dataset_by_name('temporary.csv')
+
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['weights_request_data']['all_weights']
@@ -152,7 +157,12 @@ class FormulationsService:
 
         dataframe = FormulationsConverter.formulation_to_df(material_combinations_for_formulations, processes,
                                                             weights_data)
-        FormulationsPersistence.save(dataframe)
+
+        if previous_batch_df:
+            dataframe = pd.concat([previous_batch_df.dataframe, dataframe], ignore_index=True)
+
+        temporary_dataset = Dataset('temporary.csv', dataframe)
+        FormulationsPersistence.save_batch(temporary_dataset)
 
         all_dtos = []
         for i in range(len(dataframe.index)):
