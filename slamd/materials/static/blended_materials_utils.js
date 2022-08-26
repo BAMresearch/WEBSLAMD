@@ -48,7 +48,7 @@ function toggleConfirmBlendingButton(independentInputFields) {
   let allIncrementsFilled = independentInputFields.filter((item) => item["increment"].value === "").length === 0;
   let allMinFilled = independentInputFields.filter((item) => item["min"].value === "").length === 0;
   let allMaxFilled = independentInputFields.filter((item) => item["max"].value === "").length === 0;
-  document.getElementById("confirm_blending_configuration_button").disabled = !(
+  document.getElementById("confirm-blending-configuration-button").disabled = !(
     allIncrementsFilled &&
     allMinFilled &&
     allMaxFilled
@@ -142,12 +142,12 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 
 /**
  * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
- * requires a certain structure of DOM elements within the blending_ratio_placeholder. Thus, when changing this function always
+ * requires a certain structure of DOM elements within the blending-ratio-placeholder. Thus, when changing this function always
  * check the corresponding HTML DOM structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
-  const placeholder = document.getElementById("blending_ratio_placeholder");
-  const button = document.getElementById("add_custom_blend_button");
+  const placeholder = document.getElementById("blending-ratio-placeholder");
+  const button = document.getElementById("add-custom-blend-button");
   enableTooltip(button);
 
   button.addEventListener("click", () => {
@@ -171,7 +171,7 @@ function assignAddCustomBlendEvent() {
 }
 
 function assignDeleteCustomBlendEvent() {
-  const button = document.getElementById("delete_custom_blend_button");
+  const button = document.getElementById("delete-custom-blend-button");
   enableTooltip(button);
 
   button.addEventListener("click", () => {
