@@ -33,14 +33,27 @@ class FormulationsConverter:
                 all_rows.append({**weight_dict, **full_dict})
                 full_dict = original_dict.copy()
         dataframe = pd.DataFrame(all_rows)
-        dataframe['total costs'] = dataframe.apply(lambda row: cls.compute_total_costs(row), axis=1)
+        dataframe['total costs'] = dataframe.apply(lambda row: cls._compute_sum(row, 'costs'), axis=1)
+        dataframe['total co2_footprint'] = dataframe.apply(lambda row: cls._compute_sum(row, 'co2_footprint'), axis=1)
+        dataframe['total delivery_time '] = dataframe.apply(lambda row: cls._compute_max(row), axis=1)
         dataframe = dataframe.drop([x for x in dataframe if x.startswith('costs')], 1)
+        dataframe = dataframe.drop([x for x in dataframe if x.startswith('co2_footprint')], 1)
+        dataframe = dataframe.drop([x for x in dataframe if x.startswith('delivery_time ')], 1)
         return dataframe
 
     @classmethod
-    def compute_total_costs(cls, row):
-        cost_entries = {k: v for k, v in dict(row).items() if 'costs' in k}
+    def _compute_sum(cls, row, property_name):
+        entries_for_property_name = {k: v for k, v in dict(row).items() if property_name in k}
         total_costs = 0
-        for value in cost_entries.values():
+        for value in entries_for_property_name.values():
             total_costs += value
         return total_costs
+
+    @classmethod
+    def _compute_max(cls, row):
+        delivery_time_entries = {k: v for k, v in dict(row).items() if 'delivery_time' in k}
+        max = 0
+        for value in delivery_time_entries.values():
+            if value > max:
+                max = value
+        return max
