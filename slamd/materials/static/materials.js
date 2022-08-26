@@ -19,5 +19,5 @@ async function deleteMaterialByType(id, material_type, isBlended) {
   const uuid = id.split(ACTION_BUTTON_DELIMITER)[1];
   const endpoint = isBlended ? BLENDED_MATERIALS_URL : BASE_MATERIALS_URL;
   const url = endpoint + `/${material_type.toLowerCase()}/${uuid}`;
-  await deleteDataAndEmbedTemplateInPlaceholder(url, "materials_table_placeholder");
+  await deleteDataAndEmbedTemplateInPlaceholder(url, "materials-table-placeholder");
 }
