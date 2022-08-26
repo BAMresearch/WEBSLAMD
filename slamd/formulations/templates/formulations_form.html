@@ -50,8 +50,16 @@
         <div id="formulations_weights_placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
     </div>
 
+    <button class="btn btn-danger col-12" type="button" id="delete_formulations_batches_button" data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+        Delete Material Formulation
+    </button>
+
     <div class="justify-content-center">
-        <div id="formulations_tables_placeholder"></div>
+        <div id="formulations_tables_placeholder">
+            {% include 'formulations_tables.html' %}
+        </div>
     </div>
 
     <div class="form-group mb-12">

@@ -15,10 +15,14 @@ formulations = Blueprint('formulations', __name__,
 @formulations.route('', methods=['GET'])
 def base_material_page():
     form = FormulationsService.populate_selection_form()
+    df, all_dtos = FormulationsService.get_formulations()
 
     return render_template('formulations.html',
                            materials_and_processes_selection_form=form,
-                           formulations_min_max_form=FormulationsMinMaxForm())
+                           formulations_min_max_form=FormulationsMinMaxForm(),
+                           df=df.to_html(table_id='formulations_dataframe',
+                                         classes='table table-bordered table-striped table-hover'),
+                           all_dtos=all_dtos)
 
 
 @formulations.route('/add_min_max_entries', methods=['POST'])

@@ -53,7 +53,6 @@ async function assignConfirmFormulationsConfigurationEvent() {
         assignKeyboardEventsToWeightForm(true);
         assignDeleteWeightEvent();
         assignCreateFormulationsBatchEvent();
-        document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
     });
 }
 
@@ -100,4 +99,5 @@ window.addEventListener("load", function () {
     document.getElementById("powder_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
     document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
     document.getElementById("aggregates_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
 });

@@ -18,6 +18,8 @@ from slamd.formulations.processing.weight_input_preprocessor import WeightInputP
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
+TEMPORARY_FORMULATION = 'temporary.csv'
+
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
 MAX_DATASET_SIZE = 10000
@@ -38,6 +40,15 @@ class FormulationsService:
         form.process_selection.choices = cls._to_selection(all_materials.processes)
 
         return form
+
+    @classmethod
+    def get_formulations(cls):
+        dataframe = None
+        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        if temporary_dataset:
+            dataframe = temporary_dataset.dataframe
+        all_dtos = cls._create_all_dtos(dataframe)
+        return dataframe, all_dtos
 
     @classmethod
     def _to_selection(cls, list_of_models):
@@ -142,7 +153,7 @@ class FormulationsService:
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):
-        previous_batch_df = FormulationsPersistence.query_dataset_by_name('temporary.csv')
+        previous_batch_df = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
 
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
@@ -166,14 +177,22 @@ class FormulationsService:
             raise SlamdRequestTooLargeException(
                 f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
 
-        temporary_dataset = Dataset('temporary.csv', dataframe)
+        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
         FormulationsPersistence.save_batch(temporary_dataset)
+
+        all_dtos = cls._create_all_dtos(dataframe)
+        return dataframe, all_dtos
+
+    @classmethod
+    def _create_all_dtos(cls, dataframe):
+        if dataframe is None:
+            return []
 
         all_dtos = []
         for i in range(len(dataframe.index)):
             dto = FormulationsDto(index=i, targets=[])
             all_dtos.append(dto)
-        return dataframe, all_dtos
+        return all_dtos
 
     @classmethod
     def _prepare_materials_for_taking_direct_product(cls, materials_data):
@@ -224,4 +243,4 @@ class FormulationsService:
 
     @classmethod
     def delete_formulation(cls):
-        FormulationsPersistence.delete_dataset_by_name('temporary.csv')
+        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
