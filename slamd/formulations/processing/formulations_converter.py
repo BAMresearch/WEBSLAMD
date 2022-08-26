@@ -33,13 +33,14 @@ class FormulationsConverter:
                 all_rows.append({**weight_dict, **full_dict})
                 full_dict = original_dict.copy()
         dataframe = pd.DataFrame(all_rows)
-        dataframe['costs'] = dataframe.apply(lambda row: cls.label_race(row), axis=1)
+        dataframe['total costs'] = dataframe.apply(lambda row: cls.compute_total_costs(row), axis=1)
+        dataframe = dataframe.drop([x for x in dataframe if x.startswith('costs')], 1)
         return dataframe
 
     @classmethod
-    def label_race(cls, row):
-        full_dict = {k: v for k, v in dict(row).items() if 'costs' in k}
+    def compute_total_costs(cls, row):
+        cost_entries = {k: v for k, v in dict(row).items() if 'costs' in k}
         total_costs = 0
-        for value in full_dict.values():
+        for value in cost_entries.values():
             total_costs += value
         return total_costs
