@@ -64,21 +64,10 @@
 
     <div class="form-group mb-12">
         <div class="col-sm-offset-2 col-sm-12" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
-             title="For enabling submission please choose materials configure all weights and increments.">
+             title="Save your created formulation as a dataset to be used for materials discovery.">
             {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
             data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>
     </div>
 
-    <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="submit_blending_modal_label">Created materials formulations</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
 </form>
