@@ -110,6 +110,7 @@ function toggleFormulationConfirmationButton() {
 }
 
 window.addEventListener("load", function () {
+  document.getElementById("nav-bar-formulations").setAttribute("class", "nav-link active");
   document
     .getElementById("confirm_materials_and_processes_selection_button")
     .addEventListener("click", confirmSelection);

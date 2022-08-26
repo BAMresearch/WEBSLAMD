@@ -65,6 +65,7 @@ function onChangeAPrioriInformation(event) {
 }
 
 window.addEventListener("load", () => {
+  document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("materials_data_input").addEventListener("change", onChangeMaterialsDataInput);
   document.getElementById("target_properties").addEventListener("change", onChangeTargetProperties);
   document.getElementById("a_priori_information").addEventListener("change", onChangeAPrioriInformation);

@@ -66,6 +66,7 @@ async function deleteMaterial(id, material_type) {
 }
 
 window.addEventListener("load", function () {
+  document.getElementById("nav-bar-blended").setAttribute("class", "nav-link active");
   document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
   document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
   document.getElementById("blended_material_name").addEventListener("change", checkNameIsNotEmpty);
