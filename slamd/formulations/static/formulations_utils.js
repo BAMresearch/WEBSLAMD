@@ -88,7 +88,6 @@ function toggleConfirmationFormulationsButtons(inputFields) {
         allMinFilled &&
         allMaxFilled
     );
-    document.getElementById("submit").disabled = !(allIncrementsFilled && allMinFilled && allMaxFilled);
 }
 
 /**

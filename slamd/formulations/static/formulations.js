@@ -73,6 +73,7 @@ function assignCreateFormulationsBatchEvent() {
 
         const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest);
+        document.getElementById("submit").disabled = false;
         document.getElementById("add_target_button").addEventListener("click", addTarget);
     });
 }
@@ -91,7 +92,7 @@ function assignDeleteWeightEvent() {
 
 async function deleteFormulations() {
     await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations_tables_placeholder");
-    document.getElementById("add_target_button").addEventListener("click", addTarget);
+    document.getElementById("submit").disabled = true
 }
 
 async function addTarget() {
@@ -110,5 +111,10 @@ window.addEventListener("load", function () {
     document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
     document.getElementById("aggregates_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
     document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
-    document.getElementById("add_target_button").addEventListener("click", addTarget);
+
+    const formulations = document.getElementById("formulations_dataframe");
+    if (formulations) {
+        document.getElementById("add_target_button").addEventListener("click", addTarget);
+        document.getElementById("submit").disabled = false
+    }
 });
