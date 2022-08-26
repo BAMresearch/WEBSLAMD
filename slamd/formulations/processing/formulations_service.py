@@ -48,7 +48,10 @@ class FormulationsService:
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
         all_dtos = cls._create_all_dtos(dataframe)
-        return dataframe, all_dtos
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
 
     @classmethod
     def add_target_name(cls, target_request):
@@ -61,8 +64,11 @@ class FormulationsService:
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
         FormulationsPersistence.save_batch(temporary_dataset)
 
-        all_dtos = cls._create_all_dtos(dataframe, True)
-        return dataframe, all_dtos
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
 
     @classmethod
     def _to_selection(cls, list_of_models):
@@ -195,15 +201,16 @@ class FormulationsService:
         FormulationsPersistence.save_batch(temporary_dataset)
 
         all_dtos = cls._create_all_dtos(dataframe)
-        return dataframe, all_dtos
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
 
     @classmethod
-    def _create_all_dtos(cls, dataframe, add_target=False):
+    def _create_all_dtos(cls, dataframe):
         if dataframe is None:
             return []
-        target_names = []
-        if add_target:
-            target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
         all_dtos = []
         for i in range(len(dataframe.index)):
             dto = FormulationsDto(index=i, targets=target_names)
