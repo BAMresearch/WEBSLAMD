@@ -58,6 +58,15 @@ def select_dataset(dataset):
     )
 
 
+@discovery.route('/<dataset>', methods=['DELETE'])
+def delete_dataset(dataset):
+    DiscoveryService.delete_dataset(dataset)
+
+    datasets = DiscoveryService.list_datasets()
+    body = {'template': render_template('datasets_table.html', datasets=datasets)}
+    return make_response(jsonify(body), 200)
+
+
 @discovery.route('/create_discovery_configuration_form', methods=['POST'])
 def create_discovery_configuration_form():
     request_body = json.loads(request.data)

@@ -6,7 +6,8 @@ function updateCuriosityValue(curiosity) {
 }
 
 async function deleteDataset(datasetName) {
-  console.log(datasetName);
+  const url = `${DISCOVERY_URL}/${datasetName}`;
+  await deleteDataAndEmbedTemplateInPlaceholder(url, "datasets-table-placeholder");
 }
 
 function filterUnselectedOptionsAndAssignToSelectElement(options, selectorElementID) {

@@ -21,6 +21,10 @@ class DiscoveryService:
         return False, form
 
     @classmethod
+    def delete_dataset(cls, dataset_name):
+        DiscoveryPersistence.delete_dataset_by_name(dataset_name)
+
+    @classmethod
     def list_columns(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
