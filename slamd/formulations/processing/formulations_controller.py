@@ -36,6 +36,7 @@ def add_weights():
     body = {'template': render_template('weights_form.html', weights_form=weights_form)}
     return make_response(jsonify(body), 200)
 
+
 # TODO: implement constrained scenario; extend dataset batch by batch instead of always creating a new one; save final dataframe in session; add unit test
 
 
@@ -45,7 +46,8 @@ def submit_formulations():
     dataframe, all_dtos = FormulationsService.create_materials_formulations(formulations_request_data)
 
     body = {'template': render_template('formulations_tables.html',
-                                        df=dataframe.to_html(table_id='formulations_dataframe'),
+                                        df=dataframe.to_html(table_id='formulations_dataframe',
+                                                             classes='table table-bordered table-striped table-hover'),
                                         all_dtos=all_dtos)}
 
     return make_response(jsonify(body), 200)

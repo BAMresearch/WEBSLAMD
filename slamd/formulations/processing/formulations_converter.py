@@ -33,6 +33,11 @@ class FormulationsConverter:
                 all_rows.append({**weight_dict, **full_dict})
                 full_dict = original_dict.copy()
         dataframe = pd.DataFrame(all_rows)
+        dataframe = cls._postprocess_dataframe(dataframe)
+        return dataframe
+
+    @classmethod
+    def _postprocess_dataframe(cls, dataframe):
         dataframe['total costs'] = dataframe.apply(lambda row: cls._compute_sum(row, 'costs'), axis=1)
         dataframe['total co2_footprint'] = dataframe.apply(lambda row: cls._compute_sum(row, 'co2_footprint'), axis=1)
         dataframe['total delivery_time '] = dataframe.apply(lambda row: cls._compute_max(row), axis=1)
