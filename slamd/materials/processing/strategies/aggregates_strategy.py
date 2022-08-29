@@ -15,8 +15,9 @@ class AggregatesStrategy(MaterialStrategy):
         composition = Composition(
             fine_aggregates=float_if_not_empty(submitted_material['fine_aggregates']),
             coarse_aggregates=float_if_not_empty(submitted_material['coarse_aggregates']),
-            fa_density=float_if_not_empty(submitted_material['fa_density']),
-            ca_density=float_if_not_empty(submitted_material['ca_density'])
+            specific_density=float_if_not_empty(submitted_material['specific_density']),
+            bulk_density=float_if_not_empty(submitted_material['bulk_density']),
+            fineness_modulus=float_if_not_empty(submitted_material['fineness_modulus'])
         )
 
         return Aggregates(
@@ -29,10 +30,11 @@ class AggregatesStrategy(MaterialStrategy):
 
     @classmethod
     def gather_composition_information(cls, aggregates):
-        return [cls.include('Fine Aggregates (kg/m³)', aggregates.composition.fine_aggregates),
-                cls.include('Coarse Aggregates (kg/m³)', aggregates.composition.coarse_aggregates),
-                cls.include('FA Density (kg/m³)', aggregates.composition.fa_density),
-                cls.include('CA Density (kg/m³)', aggregates.composition.ca_density)]
+        return [cls.include('Fine Aggregates (m%)', aggregates.composition.fine_aggregates),
+                cls.include('Coarse Aggregates (m%)', aggregates.composition.coarse_aggregates),
+                cls.include('Specific Density (kg/m³)', aggregates.composition.specific_density),
+                cls.include('Bulk Density (kg/m³)', aggregates.composition.bulk_density),
+                cls.include('Fineness modulus (m³/kg)', aggregates.composition.fineness_modulus)]
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
@@ -48,11 +50,12 @@ class AggregatesStrategy(MaterialStrategy):
 
         fine_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fine_aggregates')
         coarse_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'coarse_aggregates')
-        fa_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fa_density')
-        ca_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'ca_density')
+        specific_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'specific_density')
+        bulk_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'bulk_density')
+        fineness_modulus_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fineness_modulus')
 
-        return fine_aggregates_complete and coarse_aggregates_complete and fa_density_complete and \
-            ca_density_complete
+        return fine_aggregates_complete and coarse_aggregates_complete and specific_density_complete and \
+            bulk_density_complete and fineness_modulus_complete
 
     @classmethod
     def convert_to_multidict(cls, aggregates):
@@ -86,11 +89,16 @@ class AggregatesStrategy(MaterialStrategy):
                                                    'fine_aggregates')
         blended_coarse_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
                                                      'coarse_aggregates')
-        blended_fa_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'fa_density')
-        blended_ca_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'ca_density')
+        blended_specific_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                    'specific_density')
+        blended_bulk_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                'bulk_density')
+        blended_fineness_modulus = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                    'fineness_modulus')
 
         composition = Composition(fine_aggregates=blended_fine_aggregates, coarse_aggregates=blended_coarse_aggregates,
-                                  fa_density=blended_fa_density, ca_density=blended_ca_density)
+                                  specific_density=blended_specific_density, bulk_density=blended_bulk_density,
+                                  fineness_modulus=blended_bulk_density)
 
         return composition
 
