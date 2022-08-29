@@ -10,10 +10,10 @@ class FormulationsConverter:
     """
 
     @classmethod
-    def formulation_to_df(cls, material_combinations, processes, weight_data):
+    def formulation_to_df(cls, material_combinations, weight_data):
         all_rows = []
         for material_combination in material_combinations:
-            full_dict, types, names = MaterialsFacade.materials_formulation_as_dict(material_combination, processes)
+            full_dict, types, names = MaterialsFacade.materials_formulation_as_dict(material_combination)
             material_names = {'Materials': ', '.join(names)}
             full_dict = {**material_names, **full_dict}
             original_dict = full_dict.copy()

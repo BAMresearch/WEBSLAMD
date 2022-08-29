@@ -177,14 +177,16 @@ class FormulationsService:
 
         materials = cls._prepare_materials_for_taking_direct_product(materials_data)
 
-        material_combinations_for_formulations = list(product(*materials))
-
         processes = []
         for process in processes_data:
             processes.append(MaterialsFacade.get_process(process['uuid']))
 
-        dataframe = FormulationsConverter.formulation_to_df(material_combinations_for_formulations, processes,
-                                                            weights_data)
+        if len(processes) > 0:
+            materials.append(processes)
+
+        combinations_for_formulations = list(product(*materials))
+
+        dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
 
         if previous_batch_df:
             dataframe = concat(previous_batch_df.dataframe, dataframe)

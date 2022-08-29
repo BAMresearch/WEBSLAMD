@@ -55,7 +55,7 @@ class MaterialsFacade:
         return cls.get_material('process', process_uuid)
 
     @classmethod
-    def materials_formulation_as_dict(cls, materials, processes):
+    def materials_formulation_as_dict(cls, materials):
         full_dict = {}
         types = []
         names = []
@@ -64,8 +64,6 @@ class MaterialsFacade:
             names.append(material.name)
             strategy = MaterialFactory.create_strategy(material.type.lower())
             full_dict = {**full_dict, **strategy.for_formulation(material)}
-        for process in processes:
-            full_dict = {**full_dict, **ProcessStrategy.for_formulation(process)}
 
         full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
         return full_dict, types, names
