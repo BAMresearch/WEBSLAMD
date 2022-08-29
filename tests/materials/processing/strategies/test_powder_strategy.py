@@ -23,6 +23,7 @@ def test_create_model_reads_all_properties_from_submitted_material():
                                              ('ti_o2', '9.87'),
                                              ('sr_o', '8.76'),
                                              ('mn2_o3', '7.65'),
+                                             ('loi', '7.65'),
                                              ('fine', '123.45'),
                                              ('gravity', '678.90'),
                                              ('submit', 'Save material')])
@@ -44,6 +45,7 @@ def test_create_model_reads_all_properties_from_submitted_material():
     assert model.composition.ti_o2 == 9.87
     assert model.composition.sr_o == 8.76
     assert model.composition.mn2_o3 == 7.65
+    assert model.composition.loi == 7.65
     assert model.structure.fine == 123.45
     assert model.structure.gravity == 678.90
 
@@ -61,7 +63,8 @@ def test_gather_composition_properties_adds_all_properties():
         ti_o2=0.98,
         p2_o5=9.87,
         sr_o=8.76,
-        mn2_o3=7.65
+        mn2_o3=7.65,
+        loi=2
     )
     structure = Structure(
         fine=123.45,
@@ -89,6 +92,7 @@ def test_gather_composition_properties_adds_all_properties():
                       'P₂O₅ (m%): 9.87, ',
                       'SrO (m%): 8.76, ',
                       'Mn₂O₃ (m%): 7.65, ',
+                      'LOI (m%): 2, ',
                       'Fine modules (m²/kg): 123.45, ',
                       'Specific gravity (m%): 678.9, ']
 
@@ -106,7 +110,8 @@ def test_convert_to_multidict_adds_all_properties():
         ti_o2=0.98,
         p2_o5=9.87,
         sr_o=8.76,
-        mn2_o3=7.65
+        mn2_o3=7.65,
+        loi=7.65
     )
     structure = Structure(
         fine=123.45,
@@ -136,6 +141,7 @@ def test_convert_to_multidict_adds_all_properties():
     assert multidict['p2_o5'] == '9.87'
     assert multidict['sr_o'] == '8.76'
     assert multidict['mn2_o3'] == '7.65'
+    assert multidict['loi'] == '7.65'
     assert multidict['fine'] == '123.45'
     assert multidict['gravity'] == '678.9'
 

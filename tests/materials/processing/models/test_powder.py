@@ -51,6 +51,7 @@ def test_powder_composition_constructor_sets_default_values():
     assert composition.p2_o5 is None
     assert composition.sr_o is None
     assert composition.mn2_o3 is None
+    assert composition.loi is None
 
 
 def test_powder_composition_constructor_sets_properties():
@@ -66,7 +67,8 @@ def test_powder_composition_constructor_sets_properties():
         ti_o2=0.98,
         p2_o5=9.87,
         sr_o=8.76,
-        mn2_o3=7.65
+        mn2_o3=7.65,
+        loi=11.65
     )
 
     assert composition.fe3_o2 == 12.3
@@ -81,6 +83,7 @@ def test_powder_composition_constructor_sets_properties():
     assert composition.p2_o5 == 9.87
     assert composition.sr_o == 8.76
     assert composition.mn2_o3 == 7.65
+    assert composition.loi == 11.65
 
 
 def test_powder_structure_constructor_sets_default_values():

@@ -40,6 +40,7 @@ describe("Test creating base materials", () => {
     cy.findByLabelText("TiO₂ (m%)").type("9.87");
     cy.findByLabelText("SrO (m%)").type("8.76");
     cy.findByLabelText("Mn₂O₃ (m%)").type("7.65");
+    cy.findByLabelText("LOI (m%)").type("1.65");
 
     // Fill out structural composition properties
     cy.findByText("Structural composition").should("exist");
