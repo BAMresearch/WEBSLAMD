@@ -21,7 +21,7 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg)").type("12.34");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78");
 
@@ -71,7 +71,7 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg)").type("12.34");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56");
 
     // Fill out process information properties
@@ -94,7 +94,7 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg)").type("12.34");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78");
 
@@ -141,7 +141,7 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg)").type("12.34");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78");
 

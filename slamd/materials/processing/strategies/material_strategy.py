@@ -103,7 +103,7 @@ class MaterialStrategy(ABC):
         if costs is None:
             return
         dto.all_properties += cls.include('Costs (€/kg)', costs.costs)
-        dto.all_properties += cls.include('CO₂ footprint (kg)', costs.co2_footprint)
+        dto.all_properties += cls.include('CO₂ footprint (kg/ton)', costs.co2_footprint)
         dto.all_properties += cls.include('Delivery time (days)', costs.delivery_time)
 
     @classmethod
