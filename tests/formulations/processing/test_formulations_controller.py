@@ -90,10 +90,10 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
         form = WeightsForm()
         entry1 = form.all_weights_entries.append_entry()
         entry1.idx.data = '0'
-        entry1.weights.data = ['15 | 10']
+        entry1.weights.data = ['15/10']
         entry2 = form.all_weights_entries.append_entry()
         entry2.idx.data = '1'
-        entry2.weights.data = ['10 | 15']
+        entry2.weights.data = ['10/15']
         return form
 
     monkeypatch.setattr(FormulationsService, 'create_weights_form', mock_create_weights_form)
@@ -107,5 +107,5 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
     assert 'All weight combinations corresponding to the above configuration.' in template
     assert 'all_weights_entries-0-weights' in template
     assert 'all_weights_entries-1-weights' in template
-    assert '15 | 10' in template
-    assert '10 | 15' in template
+    assert '15/10' in template
+    assert '10/15' in template

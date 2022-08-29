@@ -1,8 +1,10 @@
 import numpy as np
 import pytest
+from werkzeug.datastructures import ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
@@ -172,6 +174,39 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
     FormulationsService.delete_formulation()
 
     assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+
+
+def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch):
+    mock_delete_dataset_by_name_called_with = None
+    mock_query_dataset_by_name_called_with = None
+    mock_save_dataset_called_with = None
+
+    def mock_query_dataset_by_name(input):
+        nonlocal mock_query_dataset_by_name_called_with
+        mock_query_dataset_by_name_called_with = input
+        return Dataset()
+
+    def mock_delete_dataset_by_name(input):
+        nonlocal mock_delete_dataset_by_name_called_with
+        mock_delete_dataset_by_name_called_with = input
+        return None
+
+    def mock_save_dataset(input):
+        nonlocal mock_save_dataset_called_with
+        mock_save_dataset_called_with = input
+        return None
+
+    monkeypatch.setattr(FormulationsPersistence, 'delete_dataset_by_name', mock_delete_dataset_by_name)
+    monkeypatch.setattr(FormulationsPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(FormulationsPersistence, 'save_dataset', mock_save_dataset)
+
+    form = ImmutableMultiDict([('dataset_name', 'dataset_name')])
+
+    FormulationsService.save_dataset(form)
+
+    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_save_dataset_called_with.name == 'dataset_name.csv'
 
 
 def _create_additional_powder():
