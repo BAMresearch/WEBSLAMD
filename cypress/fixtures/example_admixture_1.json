@@ -1,0 +1,8 @@
+{
+  "material_name": "Example Admixture 1",
+  "material_type": "Admixture",
+  "co2_footprint": "3",
+  "costs": "5",
+  "delivery_time": "8",
+  "submit": "6 - Save material"
+}

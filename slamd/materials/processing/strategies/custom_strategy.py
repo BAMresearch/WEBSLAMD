@@ -36,8 +36,7 @@ class CustomStrategy(MaterialStrategy):
 
     @classmethod
     def convert_to_multidict(cls, custom):
-        multidict = super().convert_to_multidict(custom)
-        return multidict
+        return super().convert_to_multidict(custom)
 
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_customs_as_dict):

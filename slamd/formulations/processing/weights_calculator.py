@@ -14,32 +14,15 @@ class WeightsCalculator:
         return cartesian_product_list_of_independent_weights
 
     @classmethod
-    def compute_full_cartesian_product(cls, all_materials_weights, materials_formulation_configuration,
-                                       weight_constraint):
+    def compute_full_cartesian_product(cls, all_materials_weights, weight_constraint):
         cartesian_product_list_of_independent_weights = WeightsCalculator.compute_cartesian_product(
             all_materials_weights)
         full_cartesian_product = []
         for item in cartesian_product_list_of_independent_weights:
-
-            dependent_material = cls._find_dependent_material(materials_formulation_configuration)
-            blending_ratios = dependent_material.blending_ratios
-
             entry_list = list(item)
             dependent_weight = cls._compute_dependent_weight(entry_list, weight_constraint)
 
-            # if statement: dependent material is itself a base material
-            if empty(blending_ratios):
-                entry_list.append(str(dependent_weight))
-
-            # else statement: dependent material is a blended material
-            else:
-                dependent_weight_ratios = ''
-                ratios = blending_ratios.split('/')
-                for ratio in ratios:
-                    dependent_weight_ratios += f'{round(float(ratio) * float(dependent_weight), 2)}/'
-                dependent_weight_ratios = dependent_weight_ratios.strip()[:-1]
-                entry_list.append(dependent_weight_ratios)
-
+            entry_list.append(str(dependent_weight))
             full_cartesian_product.append(entry_list)
 
         return full_cartesian_product

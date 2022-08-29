@@ -189,16 +189,16 @@ function assignDeleteCustomBlendEvent() {
 
 function toggleSubmitButtonBasedOnRatiosAndName() {
   let ratioInputFields = collectRatioFields();
-  let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+  let numberOfBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
   for (let ratioInput of ratioInputFields) {
     ratioInput.addEventListener("keyup", () => {
-      toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields);
+      toggleSubmitButtonBasedOnRatioInput(numberOfBaseMaterials, ratioInputFields);
     });
   }
 }
 
-function toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields) {
-  let regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfIndependentBaseMaterials + "}$");
+function toggleSubmitButtonBasedOnRatioInput(numberOfBaseMaterials, ratioInputFields) {
+  let regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfBaseMaterials + "}$");
   let nonMatchingInputs = ratioInputFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
   allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
   document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);

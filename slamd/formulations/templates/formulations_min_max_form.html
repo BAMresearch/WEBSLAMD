@@ -23,12 +23,12 @@
 </div>
 {% endfor %}
 
-{% for entry in formulations_min_max_form.processes_entries %}
+{% for entry in formulations_min_max_form.non_editable_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
 <div class="col-md-3">
-    {{ entry.process_name(class_="form-control", disabled=True) }}
+    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
 </div>
 {% endfor %}
 <button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button"

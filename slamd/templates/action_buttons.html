@@ -1,13 +1,13 @@
 {% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
-<button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
-    <span data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
+<div data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
+    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
         {{ delete_icon(width, height, "currentColor") }}
-    </span>
-</button>
+    </button>
+</div>
 <div class="modal fade" id="{{'delete_modal_' + id}}" tabindex="-1" aria-labelledby="{{'delete_modal_label_' + id }}"
-    aria-hidden="true">
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,7 +21,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
                 <button type="button" id="{{ id }}" class="btn btn-primary"
-                    onclick="deleteMaterial('{{ id }}', '{{ type }}')" data-bs-dismiss="modal">Confirm
+                        onclick="deleteMaterial('{{ id }}', '{{ type }}')" data-bs-dismiss="modal">Confirm
                 </button>
             </div>
         </div>
@@ -31,15 +31,15 @@
 
 {% macro create_edit_button(id, type, width, height) -%}
 <a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
-    data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
+   data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
     {{ edit_icon(width, height, "currentColor") }}
 </a>
 {% endmacro %}
 
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
-<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}">
+<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}" data-bs-offset="0,15">
     <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change_modal"
-        data-bs-toggle="modal" title="Confirm selection" disabled>4 - Confirm Selection
+            data-bs-toggle="modal" disabled>4 - Confirm Selection
     </button>
 </span>
 <div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="change_modal_label" aria-hidden="true">
@@ -56,7 +56,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
                 <button type="button" id="{{ confirmButtonId }}" class="btn btn-primary" onclick="confirmSelection()"
-                    data-bs-dismiss="modal">Confirm
+                        data-bs-dismiss="modal">Confirm
                 </button>
             </div>
         </div>
@@ -66,8 +66,8 @@
 
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
 <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/columns"
-    id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
-    title="Select dataset">
+   id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+   title="Select dataset">
     {{ check_icon(16, 16, "currentColor") }}
 </a>
 {% endmacro %}

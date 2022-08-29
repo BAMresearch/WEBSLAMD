@@ -61,3 +61,11 @@ Cypress.Commands.add("createExampleCustomMaterials", () => {
     cy.createBaseMaterial("example_custom_3", csrfToken);
   });
 });
+
+Cypress.Commands.add("createExampleAdmixtures", () => {
+  cy.getCsrfToken().then((csrfToken) => {
+    cy.createBaseMaterial("example_admixture_1", csrfToken);
+    cy.createBaseMaterial("example_admixture_2", csrfToken);
+    cy.createBaseMaterial("example_admixture_3", csrfToken);
+  });
+});

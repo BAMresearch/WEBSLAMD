@@ -1,19 +1,25 @@
+from itertools import product
+
 from slamd.common.common_validators import min_max_increment_config_valid
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
-from slamd.common.slamd_utils import not_numeric, not_empty, empty
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
+    MaterialNotFoundException
+from slamd.common.slamd_utils import not_numeric, empty
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
 from slamd.formulations.processing.formulations_dto import FormulationsDto
-from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
+from slamd.formulations.processing.formulations_persistence import FormulationsPersistence, TEMPORARY_FORMULATION
+from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
+from slamd.ml_utils import concat
 
-WEIGHT_FORM_DELIMITER = '  |  '
-MAX_NUMBER_OF_WEIGHTS = 100
+WEIGHT_FORM_DELIMITER = '/'
+MAX_NUMBER_OF_WEIGHTS = 10000
+MAX_DATASET_SIZE = 10000
 
 
 class FormulationsService:
@@ -23,14 +29,43 @@ class FormulationsService:
         all_materials = MaterialsFacade.find_all()
 
         form = MaterialsAndProcessesSelectionForm()
-        form.powder_selection.choices.extend(cls._to_selection(all_materials.powders))
-        form.liquid_selection.choices.extend(cls._to_selection(all_materials.liquids))
-        form.aggregates_selection.choices.extend(cls._to_selection(all_materials.aggregates_list))
-        form.admixture_selection.choices.extend(cls._to_selection(all_materials.admixtures))
+        form.powder_selection.choices = cls._to_selection(all_materials.powders)
+        form.liquid_selection.choices = cls._to_selection(all_materials.liquids)
+        form.aggregates_selection.choices = cls._to_selection(all_materials.aggregates_list)
+        form.admixture_selection.choices = cls._to_selection(all_materials.admixtures)
         form.custom_selection.choices = cls._to_selection(all_materials.customs)
         form.process_selection.choices = cls._to_selection(all_materials.processes)
 
         return form
+
+    @classmethod
+    def get_formulations(cls):
+        dataframe = None
+        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        if temporary_dataset:
+            dataframe = temporary_dataset.dataframe
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
+
+    @classmethod
+    def add_target_name(cls, target_request):
+        dataframe = None
+        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        if temporary_dataset:
+            dataframe = temporary_dataset.dataframe
+        dataframe['Target:' + target_request['target_name']] = None
+
+        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
+        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
+
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
 
     @classmethod
     def _to_selection(cls, list_of_models):
@@ -39,27 +74,64 @@ class FormulationsService:
         return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
 
     @classmethod
-    def create_formulations_min_max_form(cls, count_materials, count_processes):
-        if not_empty(count_materials) and not_numeric(count_materials):
-            raise ValueNotSupportedException('Cannot process selection!')
+    def create_formulations_min_max_form(cls, formulation_selection):
+        powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
+        liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
+        aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_names = [item['name'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_names = [item['name'] for item in formulation_selection if item['type'] == 'Custom']
 
-        if not_empty(count_processes) and not_numeric(count_processes):
-            raise ValueNotSupportedException('Cannot process selection!')
+        powder_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Powder']
+        liquid_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Liquid']
+        aggregates_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
-        if not_empty(count_materials):
-            count_materials = int(count_materials)
-
-        if not_empty(count_processes):
-            count_processes = int(count_processes)
+        if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
+            raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 
         min_max_form = FormulationsMinMaxForm()
-        for i in range(count_materials):
-            min_max_form.materials_min_max_entries.append_entry()
 
-        for i in range(count_processes):
-            min_max_form.processes_entries.append_entry()
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
+                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
+                                       'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+
+        if len(admixture_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
+                                           'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
+
+        if len(custom_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
+                                           'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
+                                       'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
+
+        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
         return min_max_form
+
+    @classmethod
+    def _create_non_editable_entries(cls, formulation_selection, min_max_form, type):
+        selection_for_type = [item for item in formulation_selection if item['type'] == type]
+        for item in selection_for_type:
+            cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['uuid'], item['name'], type)
+
+    @classmethod
+    def _create_min_max_form_entry(cls, entries, uuids, name, type):
+        entry = entries.append_entry()
+        entry.materials_entry_name.data = name
+        entry.uuid_field.data = uuids
+        entry.type_field.data = type
+        if type == 'Powder' or type == 'Liquid' or type == 'Aggregates':
+            entry.increment.name = type
+            entry.min.name = type
+            entry.max.name = type
+        if type == 'Aggregates':
+            entry.increment.render_kw = {'disabled': 'disabled'}
+            entry.min.render_kw = {'disabled': 'disabled'}
+            entry.max.render_kw = {'disabled': 'disabled'}
 
     @classmethod
     def create_weights_form(cls, weights_request_data):
@@ -67,13 +139,12 @@ class FormulationsService:
         weight_constraint = weights_request_data['weight_constraint']
 
         # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # base materials; for example full_cartesian_product =
-        # "[['3.64/14.56', '15.2', '66.6'], ['3.64/14.56', '20.3', '61.5'], ['5.74/22.96', '15.2', '56.1']]"
+        # various materials used for blending; for example full_cartesian_product =
+        # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
         if empty(weight_constraint):
-            full_cartesian_product, all_names = cls._get_unconstrained_base_weights(materials_formulation_config)
+            raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
-            full_cartesian_product, all_names = cls._get_constrained_base_weights(materials_formulation_config,
-                                                                                  weight_constraint)
+            full_cartesian_product = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
         if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
@@ -83,88 +154,104 @@ class FormulationsService:
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
             ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
             ratio_form_entry.idx.data = str(i)
-        base_names = WEIGHT_FORM_DELIMITER.join(all_names)
-        return weights_form, base_names.strip()
+        return weights_form
 
     @classmethod
-    def _get_constrained_base_weights(cls, formulation_config, weight_constraint):
+    def _get_constrained_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
         if not min_max_increment_config_valid(formulation_config, weight_constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
-        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config)
+        all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        full_cartesian_product = WeightsCalculator.compute_full_cartesian_product(all_materials_weights,
-                                                                                  formulation_config,
-                                                                                  weight_constraint)
-        return full_cartesian_product, all_names
+        return WeightsCalculator.compute_full_cartesian_product(all_materials_weights, weight_constraint)
 
-    @classmethod
-    def _get_unconstrained_base_weights(cls, formulation_config):
-        if not cls._unconstrained_min_max_increment_config_valid(formulation_config):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
-
-        all_materials_weights, all_names = WeightInputPreprocessor.collect_base_names_and_weights(formulation_config,
-                                                                                                  False)
-        full_cartesian_product = WeightsCalculator.compute_cartesian_product(all_materials_weights)
-        return full_cartesian_product, all_names
-
-    @classmethod
-    def _unconstrained_min_max_increment_config_valid(cls, materials_formulation_configuration):
-        for i in range(len(materials_formulation_configuration) - 1):
-            min_value = float(materials_formulation_configuration[i]['min'])
-            max_value = float(materials_formulation_configuration[i]['max'])
-            increment = float(materials_formulation_configuration[i]['increment'])
-            if cls._validate_unconstrained_ranges(increment, max_value, min_value):
-                return False
-        return True
-
-    @classmethod
-    def _validate_unconstrained_ranges(cls, increment, max_value, min_value):
-        return min_value < 0 or min_value > max_value or max_value < 0 or increment <= 0 or not_numeric(max_value) \
-               or not_numeric(min_value) or not_numeric(increment)
-
-    # TODO: Implement constraint case / validate pattern of targets / move creation of dto to converter
     @classmethod
     def create_materials_formulations(cls, formulations_data):
+        previous_batch_df = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
-        weight_constraint = formulations_data['materials_request_data']['weight_constraint']
         processes_data = formulations_data['processes_request_data']['processes']
-        targets = formulations_data['targets']
+        weights_data = formulations_data['weights_request_data']['all_weights']
 
-        all_weights = []
-        if empty(weight_constraint):
-            all_weights = WeightInputPreprocessor.collect_weights_for_creation_of_formulation_batch(materials_data)
-        weight_product = WeightsCalculator.compute_cartesian_product(all_weights)
-
-        materials = []
-        for material_data in materials_data:
-            materials.append(MaterialsFacade.get_material(material_data['type'], material_data['uuid']))
+        materials = cls._prepare_materials_for_taking_direct_product(materials_data)
 
         processes = []
         for process in processes_data:
             processes.append(MaterialsFacade.get_process(process['uuid']))
 
-        dataframe = FormulationsConverter.formulation_to_df(materials, processes, weight_product, targets)
-        FormulationsPersistence.save(dataframe)
+        if len(processes) > 0:
+            materials.append(processes)
 
-        as_dict = dataframe.transpose().to_dict()
+        combinations_for_formulations = list(product(*materials))
 
-        all_dtos = []
-        for key, inner_dict in as_dict.items():
-            properties = cls._create_properties(inner_dict, targets)
-            target_list = cls._create_targets(inner_dict, targets)
-            dto = FormulationsDto(properties=properties, targets=target_list)
-            all_dtos.append(dto)
-        return dataframe, all_dtos, targets.split(';')
+        dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
+
+        if previous_batch_df:
+            dataframe = concat(previous_batch_df.dataframe, dataframe)
+
+        if len(dataframe.index) > MAX_DATASET_SIZE:
+            raise SlamdRequestTooLargeException(
+                f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
+
+        dataframe['Idx_Sample'] = range(0, len(dataframe))
+        dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
+
+        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
+        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
+
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
 
     @classmethod
-    def _create_properties(cls, inner_dict, targets):
+    def _create_all_dtos(cls, dataframe):
+        if dataframe is None:
+            return []
+        target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        all_dtos = []
+        for i in range(len(dataframe.index)):
+            dto = FormulationsDto(index=i, targets=target_names)
+            all_dtos.append(dto)
+        return all_dtos
+
+    @classmethod
+    def _prepare_materials_for_taking_direct_product(cls, materials_data):
+        powders = []
+        liquids = []
+        aggregates = []
+        admixtures = []
+        customs = []
+        for materials_for_type_data in materials_data:
+            uuids = materials_for_type_data['uuids'].split(',')
+            for uuid in uuids:
+                material_type = materials_for_type_data['type']
+                if material_type.lower() == MaterialsFacade.POWDER:
+                    powders.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.LIQUID:
+                    liquids.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.AGGREGATES:
+                    aggregates.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.ADMIXTURE:
+                    admixtures.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.CUSTOM:
+                    customs.append(MaterialsFacade.get_material(material_type, uuid))
+                else:
+                    raise MaterialNotFoundException('Cannot process the requested material!')
+        materials = [powders, liquids, aggregates]
+        if len(admixtures) > 0:
+            materials.append(admixtures)
+        if len(customs) > 0:
+            materials.append(customs)
+        return materials
+
+    @classmethod
+    def _create_properties(cls, inner_dict):
         properties = ''
-        target_list = targets.split(';')
-        properties_dict = {k: v for k, v in inner_dict.items() if k not in target_list}
-        for key, value in properties_dict.items():
+        for key, value in inner_dict.items():
             properties += f'{key}: {value}; '
         properties = properties.strip()[:-1]
         return properties
@@ -177,3 +264,18 @@ class FormulationsService:
         for key, value in target_dict.items():
             targets_as_dto.append(value)
         return targets_as_dto
+
+    @classmethod
+    def delete_formulation(cls):
+        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+
+    @classmethod
+    def save_dataset(cls, form):
+        filename = form['dataset_name']
+        if not filename.endswith('.csv'):
+            filename = filename + '.csv'
+        formulation_to_be_saved_as_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        formulation_to_be_saved_as_dataset.name = filename
+        if formulation_to_be_saved_as_dataset:
+            FormulationsPersistence.save_dataset(formulation_to_be_saved_as_dataset)

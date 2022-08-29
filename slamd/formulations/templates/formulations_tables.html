@@ -1,24 +1,33 @@
-{{ df | safe }}
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>Properties</th>
-        {% for item in target_list %}
-        <th>{{ item }}</th>
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for item in all_dtos %}
-    {% set outer_loop = loop %}
-    <tr>
-        <td>{{ item.properties }}</td>
-        {% for target in item.targets %}
-        <td>
-            <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" name="targets_field" type="text" value="">
-        </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% if df is not none %}
+    {{ df | safe }}
+<!--    <label class="control-label" for="target_value">7 - Define Targets</label>-->
+<!--    <input class="form-control" id="target_value" name="targets_field" type="text" value="">-->
+<!--    <button class="btn btn-secondary col-12" type="button" id="add_target_button" data-bs-toggle="tooltip"-->
+<!--            data-bs-placement="top" title="Add targets to your formulation">-->
+<!--        Add target-->
+<!--    </button>-->
+<!--    <table class="table table-bordered table-striped">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Formulation Index</th>-->
+<!--            {% for item in target_list %}-->
+<!--            <th>{{ item }}</th>-->
+<!--            {% endfor %}-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        {% for item in all_dtos %}-->
+<!--        {% set outer_loop = loop %}-->
+<!--        <tr>-->
+<!--            <td>{{ item.index }}</td>-->
+<!--            {% for target in item.targets %}-->
+<!--            <td>-->
+<!--                <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"-->
+<!--                       name="targets_field" type="text" value="">-->
+<!--            </td>-->
+<!--            {% endfor %}-->
+<!--        </tr>-->
+<!--        {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+{% endif %}

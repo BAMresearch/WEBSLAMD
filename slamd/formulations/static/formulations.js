@@ -1,122 +1,120 @@
 const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations`;
-let withConstraint = false;
 let weightConstraint = "";
 
 function toggleBasedOnSelectionAndConstraints() {
-  const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
+    const powderPlaceholder = document.getElementById("powder_selection");
+    const liquidPlaceholder = document.getElementById("liquid_selection");
+    const aggregatesPlaceholder = document.getElementById("aggregates_selection");
 
-  const validConstraintConfiguration = withConstraint && weightConstraint !== undefined && weightConstraint !== "";
-  if (withConstraint) {
-    changeSelectionButton.disabled = !validConstraintConfiguration;
-  }
+    const powderSelected = atLeastOneItemIsSelected(powderPlaceholder)
+    const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder)
+    const aggregatesSelected = atLeastOneItemIsSelected(aggregatesPlaceholder)
+
+    const validSelectionConfiguration = powderSelected && liquidSelected && aggregatesSelected;
+    const validConstraintConfiguration = weightConstraint !== undefined && weightConstraint !== "";
+
+    const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
+    changeSelectionButton.disabled = !(validSelectionConfiguration && validConstraintConfiguration);
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
-  weightConstraint = document.getElementById("weight_constraint").value;
-  toggleBasedOnSelectionAndConstraints();
+    weightConstraint = document.getElementById("weight_constraint").value;
+    toggleBasedOnSelectionAndConstraints();
 }
 
 function autocorrectWeightValue() {
-  const weightConstraintInput = document.getElementById("weight_constraint");
-  correctInputFieldValue(weightConstraintInput, 0);
-}
-
-function toggleWeightConstraintInput() {
-  const with_constraint = document.getElementById("with_constraint");
-  removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
-  removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
-
-  withConstraint = with_constraint.checked;
-  if (withConstraint) {
-    document.getElementById("weight_constraint").disabled = false;
-    document.getElementById("change_materials_and_processes_selection_button").disabled = true;
-  } else {
-    document.getElementById("weight_constraint").disabled = true;
-    document.getElementById("weight_constraint").value = "";
-    document.getElementById("change_materials_and_processes_selection_button").disabled = false;
-  }
+    const weightConstraintInput = document.getElementById("weight_constraint");
+    correctInputFieldValue(weightConstraintInput, 0);
 }
 
 async function confirmSelection() {
-  removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
-  removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
-  document.getElementById("submit").disabled = true;
-  weightConstraint = document.getElementById("weight_constraint").value;
+    removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
+    removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
+    document.getElementById("submit").disabled = true;
+    weightConstraint = document.getElementById("weight_constraint").value;
 
-  const selectedMaterials = collectAllSelectedMaterials();
+    const selectedMaterials = collectFormulationSelection();
 
-  const processesPlaceholder = document.getElementById("process_selection");
-  const selectedProcesses = collectSelection(processesPlaceholder);
+    const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
+    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
 
-  const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries/${selectedMaterials.length}/${selectedProcesses.length}`;
-  await fetchDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder");
-
-  prepareMaterialsMinMaxInputFieldsFromSelection(selectedMaterials);
-  prepareProcessMinMaxInputFieldsFromSelection(selectedProcesses);
-  assignKeyboardEventsToFormulationsMinMaxForm();
-  assignConfirmFormulationsConfigurationEvent();
+    addListenersToIndependentFields();
+    assignConfirmFormulationsConfigurationEvent();
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
-  const button = document.getElementById("confirm_formulations_configuration_button");
-  enableTooltip(button);
+    const button = document.getElementById("confirm_formulations_configuration_button");
+    enableTooltip(button);
 
-  button.addEventListener("click", async () => {
-    const requestData = collectFormulationsMinMaxRequestData();
-    const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
-    assignDeleteWeightEvent();
-    assignCreateFormulationsBatchEvent();
-  });
+    button.addEventListener("click", async () => {
+        const requestData = collectFormulationsMinMaxRequestData();
+        const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
+        assignKeyboardEventsToWeightForm(true);
+        assignDeleteWeightEvent();
+        assignCreateFormulationsBatchEvent();
+    });
 }
 
 function assignCreateFormulationsBatchEvent() {
-  const button = document.getElementById("create_formulations_batch_button");
-  enableTooltip(button);
+    const button = document.getElementById("create_formulations_batch_button");
+    enableTooltip(button);
 
-  button.addEventListener("click", async () => {
-    const materialsRequestData = collectFormulationsMinMaxRequestData();
-    const processesRequestData = collectProcessesRequestData();
-    const targets = document.getElementById("targets_field").value;
+    button.addEventListener("click", async () => {
+        const materialsRequestData = collectMaterialRequestData();
+        const weightsRequestData = collectWeights();
+        const processesRequestData = collectProcessesRequestData();
 
-    const formulationsRequest = {
-      materials_request_data: materialsRequestData,
-      processes_request_data: processesRequestData,
-      targets: targets,
-    };
+        const formulationsRequest = {
+            materials_request_data: materialsRequestData,
+            weights_request_data: weightsRequestData,
+            processes_request_data: processesRequestData,
+        };
 
-    const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest);
-  });
+        const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest);
+        document.getElementById("submit").disabled = false;
+        document.getElementById("add_target_button").addEventListener("click", addTarget);
+    });
 }
 
 function assignDeleteWeightEvent() {
-  let numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
+    let numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
 
-  for (let i = 0; i < numberOfWeightEntries; i++) {
-    let deleteButton = document.getElementById(`delete_weight_button___${i}`);
-    deleteButton.addEventListener("click", () => {
-      document.getElementById(`all_weights_entries-${i}-weights`).remove();
-      deleteButton.remove();
-    });
-  }
+    for (let i = 0; i < numberOfWeightEntries; i++) {
+        let deleteButton = document.getElementById(`delete_weight_button___${i}`);
+        deleteButton.addEventListener("click", () => {
+            document.getElementById(`all_weights_entries-${i}-weights`).remove();
+            deleteButton.remove();
+        });
+    }
 }
 
-function toggleFormulationConfirmationButton() {
-  const targets = document.getElementById("targets_field").value;
-  let regex = new RegExp("^([a-zA-Z\\d ]+;)*[a-zA-Z\\d ]+$");
+async function deleteFormulations() {
+    await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations_tables_placeholder");
+    document.getElementById("submit").disabled = true
+}
 
-  document.getElementById("change_materials_and_processes_selection_button").disabled = !regex.test(targets);
+async function addTarget() {
+    let targetName = document.getElementById("target_value").value;
+
+    const url = `${FORMULATIONS_MATERIALS_URL}/add_target`;
+    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", {target_name: targetName});
+    document.getElementById("add_target_button").addEventListener("click", addTarget);
 }
 
 window.addEventListener("load", function () {
-  document
-    .getElementById("confirm_materials_and_processes_selection_button")
-    .addEventListener("click", confirmSelection);
-  document.getElementById("with_constraint").addEventListener("change", toggleWeightConstraintInput);
-  document
-    .getElementById("weight_constraint")
-    .addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
-  document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
-  document.getElementById("targets_field").addEventListener("keyup", toggleFormulationConfirmationButton);
+    document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
+    document.getElementById("weight_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
+    document.getElementById("powder_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("aggregates_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
+
+    const formulations = document.getElementById("formulations_dataframe");
+    if (formulations) {
+        document.getElementById("add_target_button").addEventListener("click", addTarget);
+        document.getElementById("submit").disabled = false
+    }
 });
