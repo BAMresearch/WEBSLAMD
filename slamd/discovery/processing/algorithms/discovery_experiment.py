@@ -50,13 +50,7 @@ class DiscoveryExperiment():
         # See the original app for other possibilities
         utility_function = self.update_index_MLI()
 
-        features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
-        features_of_known_rows = self.features_df.iloc[self.sample_index]
-        distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
-        min_distances = distance.min(axis=1)
-        max_of_min_distances = min_distances.max()
-
-        novelty_factor = min_distances*(max_of_min_distances**(-1))
+        novelty_factor = self.compute_novelty_factor()
 
         # Normalized dataframe
         df = self.dataframe
@@ -145,6 +139,7 @@ class DiscoveryExperiment():
             # Initialize the model
             rfr = RandomForestRegressor()
 
+            # Train the model
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df.iloc[self.sample_index]
             self.x = training_rows
@@ -153,8 +148,6 @@ class DiscoveryExperiment():
             if self.y.shape[0] < 8:
                 self.x = np.tile(self.x, (4, 1))
                 self.y = np.tile(self.y, (4, 1))
-
-            # Train the model
             rfr.fit(self.x, self.y)
 
             # Predict the label for the remaining rows
@@ -170,6 +163,15 @@ class DiscoveryExperiment():
 
         self.uncertainty = uncertainty_stacked.T
         self.prediction = pred_stacked.T
+
+    def compute_novelty_factor(self):
+        features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
+        features_of_known_rows = self.features_df.iloc[self.sample_index]
+
+        distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
+        min_distances = distance.min(axis=1)
+        max_of_min_distances = min_distances.max()
+        return min_distances*(max_of_min_distances**(-1))
 
     def update_index_MLI(self):
         predicted_rows = self.target_df.iloc[self.sample_index]
