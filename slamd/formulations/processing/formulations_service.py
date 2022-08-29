@@ -193,6 +193,9 @@ class FormulationsService:
             raise SlamdRequestTooLargeException(
                 f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
 
+        dataframe['Idx_Sample'] = range(0, len(dataframe))
+        dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
+
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
         FormulationsPersistence.save_temporary_dataset(temporary_dataset)
 

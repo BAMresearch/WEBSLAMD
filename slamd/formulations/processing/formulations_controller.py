@@ -19,7 +19,8 @@ def base_material_page():
 
     df_table = None
     if df is not None:
-        df_table = df.to_html(table_id='formulations_dataframe',
+        df_table = df.to_html(index=False,
+                              table_id='formulations_dataframe',
                               classes='table table-bordered table-striped table-hover')
 
     return render_template('formulations.html',
@@ -52,7 +53,8 @@ def submit_formulation_batch():
     dataframe, all_dtos, target_list = FormulationsService.create_materials_formulations(formulations_request_data)
 
     body = {'template': render_template('formulations_tables.html',
-                                        df=dataframe.to_html(table_id='formulations_dataframe',
+                                        df=dataframe.to_html(index=False,
+                                                             table_id='formulations_dataframe',
                                                              classes='table table-bordered table-striped table-hover'),
                                         all_dtos=all_dtos,
                                         target_list=target_list)}
@@ -77,7 +79,8 @@ def add_target():
 
     df, all_dtos, target_list = FormulationsService.add_target_name(target_request)
     body = {'template': render_template('formulations_tables.html',
-                                        df=df.to_html(table_id='formulations_dataframe',
+                                        df=df.to_html(index=False,
+                                                      table_id='formulations_dataframe',
                                                       classes='table table-bordered table-striped table-hover'),
                                         all_dtos=all_dtos,
                                         target_list=target_list)}

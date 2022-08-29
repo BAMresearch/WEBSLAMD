@@ -130,19 +130,15 @@ def test_slamd_creates_formulation_batch(client, monkeypatch):
     assert '<th>col_1</th>' in template
     assert '<th>col_2</th>' in template
 
-    assert '<th>0</th>' in template
     assert '<td>3</td>' in template
     assert '<td>a</td>' in template
 
-    assert '<th>0</th>' in template
     assert '<td>2</td>' in template
     assert '<td>b</td>' in template
 
-    assert '<th>0</th>' in template
     assert '<td>1</td>' in template
     assert '<td>c</td>' in template
 
-    assert '<th>0</th>' in template
     assert '<td>0</td>' in template
     assert '<td>d</td>' in template
 

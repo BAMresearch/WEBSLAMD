@@ -21,9 +21,9 @@ class FormulationsConverter:
             for weights in weight_data:
                 weight_dict = {}
                 for i, weight in enumerate(weights.split('/')):
-                    weight_dict[f'{types[i]} (kg)'] = weight
-                    costs_for_type = full_dict.get(f'costs ({types[i]})', None)
+                    weight_dict[f'{types[i]} (kg)'] = float(weight)
 
+                    costs_for_type = full_dict.get(f'costs ({types[i]})', None)
                     if costs_for_type:
                         full_dict[f'costs ({types[i]})'] = full_dict[f'costs ({types[i]})'] * float(weight)
 
