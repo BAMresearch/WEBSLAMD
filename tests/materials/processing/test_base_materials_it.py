@@ -40,4 +40,4 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
     assert 'test powder' in html
     assert 'Fe₂O₃ (m%): 23.3, Specific gravity (m%): 12, test prop: test value' in html
     assert 'test aggregate' in html
-    assert 'Fine Aggregates (kg/m³): 12, aggregate property: aggregate property value' in html
+    assert 'Fine Aggregates (m%): 12, aggregate property: aggregate property value' in html
