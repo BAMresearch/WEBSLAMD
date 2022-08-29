@@ -73,21 +73,6 @@ def delete_formulation():
     return make_response(jsonify(body), 200)
 
 
-@formulations.route('/add_target', methods=['POST'])
-def add_target():
-    target_request = json.loads(request.data)
-
-    df, all_dtos, target_list = FormulationsService.add_target_name(target_request)
-    body = {'template': render_template('formulations_tables.html',
-                                        df=df.to_html(index=False,
-                                                      table_id='formulations_dataframe',
-                                                      classes='table table-bordered table-striped table-hover'),
-                                        all_dtos=all_dtos,
-                                        target_list=target_list)}
-
-    return make_response(jsonify(body), 200)
-
-
 @formulations.route('', methods=['POST'])
 def submit_dataset():
     FormulationsService.save_dataset(request.form)

@@ -51,23 +51,6 @@ class FormulationsService:
         return dataframe, all_dtos, target_list
 
     @classmethod
-    def add_target_name(cls, target_request):
-        dataframe = None
-        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
-        if temporary_dataset:
-            dataframe = temporary_dataset.dataframe
-        dataframe['Target:' + target_request['target_name']] = None
-
-        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
-        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
-
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
-
-    @classmethod
     def _to_selection(cls, list_of_models):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)

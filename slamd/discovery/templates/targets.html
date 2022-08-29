@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<head>
+    <title>SLAMD - Materials Discovery</title>
+    <link rel="stylesheet" href="{{url_for('discovery.static', filename='discovery.css')}}">
+</head>
+
+{% extends 'index.html' %}
+{% block content %}
+<main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
+    <h3 id="dataset_to_add_targets_to">{{ dataset_name }}</h3>
+    {% if df is not none %}
+    {{ df | safe }}
+    <label class="control-label" for="target_value">Define Targets</label>
+    <input class="form-control" id="target_value" name="targets_field" type="text" value="">
+    <button class="btn btn-secondary col-12" type="button" id="add_target_button" data-bs-toggle="tooltip"
+            data-bs-placement="top" title="Add targets to your formulation">
+        Add target
+    </button>
+    {% endif %}
+
+    <div id="targets-placeholder">
+        {% include 'targets_form.html' %}
+    </div>
+
+    <script src="{{url_for('discovery.static', filename='targets.js')}}"></script>
+</main>
+{%endblock%}

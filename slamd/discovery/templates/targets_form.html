@@ -1,0 +1,38 @@
+{{ form.hidden_tag() }}
+
+<form class="row g-3" action="" method="post" novalidate>
+    {{ form.csrf_token }}
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Formulation Index</th>
+            {% for item in target_list %}
+            <th>{{ item }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in all_dtos %}
+        {% set outer_loop = loop %}
+        <tr>
+            <td>{{ item.index }}</td>
+            {% for target in item.targets %}
+            <td>
+                <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                       name="targets_field" type="text" value="">
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-group mb-3">
+        <div class="col-sm-offset-2 col-sm-12">
+            {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+            title="Select at least a name and a type")
+            }}
+        </div>
+    </div>
+</form>

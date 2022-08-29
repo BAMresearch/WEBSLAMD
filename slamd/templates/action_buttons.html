@@ -1,4 +1,4 @@
-{% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
+{% from 'icons.html' import edit_icon, delete_icon, check_icon, bullseye_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
 <div class="me-1" data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
@@ -108,4 +108,12 @@
         </div>
     </div>
 </div>
+{% endmacro %}
+
+{% macro create_add_target_button(dataset_name, width, height) -%}
+<a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/add_targets"
+   id="'{{ 'add-targets-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+   title="Add targets to your dataset dataset">
+    {{ bullseye_icon(width, height, "currentColor") }}
+</a>
 {% endmacro %}
