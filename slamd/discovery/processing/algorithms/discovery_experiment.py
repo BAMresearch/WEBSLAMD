@@ -10,18 +10,16 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 
+# TODO: Uncomment this once integrated to the rest of the code
+# from slamd.common.error_handling import ValueNotSupportedException
+
 class DiscoveryExperiment():
 
     def __init__(
-        self, dataframe, model, strategy, sigma, distance, targets, target_weights, target_max_or_min,
+        self, dataframe, model, sigma, distance, targets, target_weights, target_max_or_min,
             fixed_targets, fixed_target_weights, fixed_target_max_or_min, features):
         self.dataframe = dataframe
         self.model = model
-        self.strategy = strategy
-        self.features_df = dataframe
-        self.target_df = dataframe
-        self.fixed_target_df = dataframe
-
         self.sigma = sigma
         self.distance = distance
         self.targets = targets
@@ -32,12 +30,15 @@ class DiscoveryExperiment():
         self.fixed_target_max_or_min = fixed_target_max_or_min
         self.features = features
 
+        self.features_df = dataframe[features]
+        self.target_df = dataframe[targets]
+        self.fixed_target_df = dataframe[fixed_targets]
+
         first_selected_target = self.targets[0]
         self.PredIdx = pd.isnull(self.dataframe[[first_selected_target]]).to_numpy().nonzero()[0]
         self.SampIdx = self.dataframe.index.difference(self.PredIdx)
 
     def scale_data(self):
-
         dataframe_norm = (self.dataframe-self.dataframe.mean())/self.dataframe.std()
         target_df_norm = (self.target_df-self.target_df.mean())/self.target_df.std()
         features_df_norm = (self.features_df-self.features_df.mean())/self.features_df.std()
@@ -51,7 +52,7 @@ class DiscoveryExperiment():
     # Utility Methods
     def decide_max_or_min(self, columns, max_or_min):
         for (column, value) in zip(columns, max_or_min):
-            if (value == "minimize"):
+            if (value == 'minimize'):
                 self.dataframe[column] = self.dataframe[column]*(-1)
 
     def start_learning(self):
@@ -67,10 +68,11 @@ class DiscoveryExperiment():
         self.features_df = self.dataframe[self.features]
         self.target_df = self.dataframe[self.targets]
 
-        self.decide_model(self.model)
+        self.fit_model()
 
-        self.strategy = 'MLI (explore & exploit)'
-        util = self.update_strategy(self.strategy)
+        # The strategy is always 'MLI (explore & exploit)' for this implementation
+        # See the original app for other possibilities
+        util = self.updateIndexMLI()
 
         distance = distance_matrix(self.features_df.iloc[self.PredIdx], self.features_df.iloc[self.SampIdx])
         min_distances = distance.min(axis=1)
@@ -105,8 +107,8 @@ class DiscoveryExperiment():
         print('')
         print('Pareto plot (predicted property trade-off)')
 
-        g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue="Utility")
-        g.map_diag(sns.histplot, hue=None, color=".3")
+        g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue='Utility')
+        g.map_diag(sns.histplot, hue=None, color='.3')
         g.map_lower(sns.scatterplot)
         g.add_legend()
         plt.show()
@@ -121,6 +123,61 @@ class DiscoveryExperiment():
             fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights] * self.fixed_target_weights[weights]
 
         return fixed_targets_in_prediction.sum(axis=1)
+
+    def fit_GP(self):
+
+        for i in range(len(self.target_selection_idxs)):
+
+            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
+            dtr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
+
+            dtr.fit(self.features_df.iloc[self.SampIdx].to_numpy(),
+                    self.target_df[self.target_selection_idxs[i]].iloc[self.SampIdx].to_numpy())
+            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
+
+            if(i == 0):
+                uncertainty_stacked = uncertainty
+                pred_stacked = pred
+            else:
+                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
+                pred_stacked = np.vstack((pred_stacked, pred))
+
+        self.Uncertainty = uncertainty_stacked.T
+        self.Expected_Pred = pred_stacked.T
+
+    def fit_model(self):
+        if self.model == 'AI-Model (lolo Random Forrest)':
+            self.fit_RF_wJK()
+        elif self.model == 'Statistics based model (Gaussian Process Regression)':
+            self.fit_GP()
+        else:
+            # TODO: Uncomment this once integrated to the rest of the code
+            # raise ValueNotSupportedException(f'Model {self.model} value not supported')
+            raise RuntimeError('Invalid model value')
+
+    def fit_RF_wJK(self):
+
+        for i in range(len(self.target_selection_idxs)):
+
+            dtr = RandomForestRegressor()
+            self.x = self.features_df.iloc[self.SampIdx].to_numpy()
+            self.y = self.target_df.iloc[self.SampIdx].sum(axis=1).to_frame().to_numpy()
+            if self.y.shape[0] < 8:
+                self.x = np.tile(self.x, (4, 1))
+                self.y = np.tile(self.y, (4, 1))
+
+            dtr.fit(self.x, self.y)
+            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
+
+            if(i == 0):
+                uncertainty_stacked = uncertainty
+                pred_stacked = pred
+            else:
+                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
+                pred_stacked = np.vstack((pred_stacked, pred))
+
+        self.Uncertainty = uncertainty_stacked.T
+        self.Expected_Pred = pred_stacked.T
 
     def updateIndexMLI(self):
         Uncertainty_norm = self.Uncertainty/np.array(self.target_df.iloc[self.SampIdx].std())
@@ -150,68 +207,4 @@ class DiscoveryExperiment():
         else:
             util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.squeeze()+(self.sigma*Uncertainty_norm.squeeze())
 
-        return util
-
-    def fit_GP(self):
-
-        for i in range(len(self.target_selection_idxs)):
-
-            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            dtr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
-
-            dtr.fit(self.features_df.iloc[self.SampIdx].to_numpy(),
-                    self.target_df[self.target_selection_idxs[i]].iloc[self.SampIdx].to_numpy())
-            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
-
-            if(i == 0):
-                uncertainty_stacked = uncertainty
-                pred_stacked = pred
-            else:
-                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, pred))
-
-        self.Uncertainty = uncertainty_stacked.T
-        self.Expected_Pred = pred_stacked.T
-
-    def fit_RF_wJK(self):
-
-        for i in range(len(self.target_selection_idxs)):
-
-            dtr = RandomForestRegressor()
-            self.x = self.features_df.iloc[self.SampIdx].to_numpy()
-            self.y = self.target_df.iloc[self.SampIdx].sum(axis=1).to_frame().to_numpy()
-            if self.y.shape[0] < 8:
-                self.x = np.tile(self.x, (4, 1))
-                self.y = np.tile(self.y, (4, 1))
-
-            dtr.fit(self.x, self.y)
-            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
-
-            if(i == 0):
-                uncertainty_stacked = uncertainty
-                pred_stacked = pred
-            else:
-                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, pred))
-
-        self.Uncertainty = uncertainty_stacked.T
-        self.Expected_Pred = pred_stacked.T
-
-    def decide_model(self, model):
-        if model == 'AI-Model (lolo Random Forrest)':
-            self.fit_RF_wJK()
-        elif model == 'Statistics based model (Gaussian Process Regression)':
-            self.fit_GP()
-
-    def update_strategy(self, strategy):
-        if strategy == 'MEI (exploit)':
-            util = self.updateIndexMEI()
-        elif strategy == 'MU (explore)':
-            util = self.updateIndexMU()
-        elif strategy == 'MLI (explore & exploit)':
-            util = self.updateIndexMLI()
-        elif strategy == 'MEID (exploit)':
-            util = self.updateIndexMEID()
-        elif strategy == 'MLID (explore & exploit)':
-            util = self.updateIndexMLID()
         return util

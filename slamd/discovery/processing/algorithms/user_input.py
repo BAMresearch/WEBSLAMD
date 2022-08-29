@@ -7,8 +7,6 @@ class UserInput:
     curiosity: float = 1.0
     # options=['AI-Model (lolo Random Forrest)','Statistics based model (Gaussian Process Regression)'],
     model: str = 'Statistics based model (Gaussian Process Regression)'
-    # options=['MEI (exploit)','MU (explore)','MLI (explore & exploit)','MEID (exploit)','MLID (explore & exploit)'],
-    strategy: str = 'MEI (exploit)'
     # σ Factor (to control the weight of uncertainty):
     sigma_factor: float = 1
     # Prediction quantile for distance-based utility (smaller values recommended for weak predictors):
