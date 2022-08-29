@@ -159,6 +159,21 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
     assert mock_save_temporary_dataset_called_with.name == 'temporary.csv'
 
 
+def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
+    mock_delete_dataset_by_name_called_with = None
+
+    def mock_delete_dataset_by_name(input):
+        nonlocal mock_delete_dataset_by_name_called_with
+        mock_delete_dataset_by_name_called_with = input
+        return None
+
+    monkeypatch.setattr(FormulationsPersistence, 'delete_dataset_by_name', mock_delete_dataset_by_name)
+
+    FormulationsService.delete_formulation()
+
+    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+
+
 def _create_additional_powder():
     powder = Powder(name='powder 1', type='Powder',
                     costs=Costs(co2_footprint=2, costs=2.2, delivery_time=12),
