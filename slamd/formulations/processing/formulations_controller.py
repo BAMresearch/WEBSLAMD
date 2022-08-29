@@ -47,7 +47,7 @@ def add_weights():
 
 
 @formulations.route('/create_formulations_batch', methods=['POST'])
-def submit_formulations():
+def submit_formulation_batch():
     formulations_request_data = json.loads(request.data)
     dataframe, all_dtos, target_list = FormulationsService.create_materials_formulations(formulations_request_data)
 
@@ -86,7 +86,7 @@ def add_target():
 
 
 @formulations.route('', methods=['POST'])
-def submit_base_material():
+def submit_dataset():
     FormulationsService.save_dataset(request.form)
 
     return redirect('/materials/formulations')

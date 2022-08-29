@@ -1,5 +1,8 @@
 import json
 
+import pandas as pd
+from werkzeug.datastructures import ImmutableMultiDict
+
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
@@ -33,7 +36,6 @@ def test_slamd_shows_formulations_page(client, monkeypatch):
 
 
 def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
-
     request = json.dumps(
         [
             {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-1'},
@@ -109,3 +111,53 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
     assert 'all_weights_entries-1-weights' in template
     assert '15/10' in template
     assert '10/15' in template
+
+
+def test_slamd_creates_formulation_batch(client, monkeypatch):
+    def mock_create_materials_formulations(input):
+        data = {'col_1': [3, 2, 1, 0], 'col_2': ['a', 'b', 'c', 'd']}
+        return pd.DataFrame.from_dict(data), [], []
+
+    monkeypatch.setattr(FormulationsService, 'create_materials_formulations', mock_create_materials_formulations)
+
+    response = client.post('/materials/formulations/create_formulations_batch', data=b'{}')
+
+    assert response.status_code == 200
+
+    template = json.loads(response.data.decode('utf-8'))['template']
+    assert '<table ' in template
+
+    assert '<th>col_1</th>' in template
+    assert '<th>col_2</th>' in template
+
+    assert '<th>0</th>' in template
+    assert '<td>3</td>' in template
+    assert '<td>a</td>' in template
+
+    assert '<th>0</th>' in template
+    assert '<td>2</td>' in template
+    assert '<td>b</td>' in template
+
+    assert '<th>0</th>' in template
+    assert '<td>1</td>' in template
+    assert '<td>c</td>' in template
+
+    assert '<th>0</th>' in template
+    assert '<td>0</td>' in template
+    assert '<td>d</td>' in template
+
+
+def test_slamd_submits_dataset_after_creating_a_formulation(client, monkeypatch):
+    mock_save_dataset_called_with = None
+
+    def mock_save_dataset(input):
+        nonlocal mock_save_dataset_called_with
+        mock_save_dataset_called_with = input
+        return None
+
+    monkeypatch.setattr(FormulationsService, 'save_dataset', mock_save_dataset)
+
+    response = client.post('/materials/formulations', data=b'{}')
+
+    assert response.status_code == 302
+    assert mock_save_dataset_called_with == ImmutableMultiDict([])
