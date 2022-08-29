@@ -25,7 +25,7 @@ class UserInput:
     fixed_target_max_or_min: list[str] = field(default_factory=lambda: ['maximize'])
     # Features, columns used for training the algorithm
     features: list[str] = field(default_factory=lambda: [
-        'Idx_Sample', 'SiO2', 'CaO', 'SO3', 'FA (kg/m3)', 'GGBFS (kg/m3)', 'Coarse aggregate (kg/m3)',
+        'SiO2', 'CaO', 'SO3', 'FA (kg/m3)', 'GGBFS (kg/m3)', 'Coarse aggregate (kg/m3)',
         'Fine aggregate (kg/m3)', 'Total aggregates', 'Na2SiO3', 'Na2O (Dry)', 'Sio2 (Dry)', 'Superplasticizer',
         'water -eff'
     ])
