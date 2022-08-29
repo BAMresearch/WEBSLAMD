@@ -1,7 +1,5 @@
 from itertools import product
 
-import pandas as pd
-
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
@@ -17,7 +15,7 @@ from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
-
+from slamd.ml_utils import concat
 
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
@@ -189,7 +187,7 @@ class FormulationsService:
                                                             weights_data)
 
         if previous_batch_df:
-            dataframe = pd.concat([previous_batch_df.dataframe, dataframe], ignore_index=True)
+            dataframe = concat(previous_batch_df.dataframe, dataframe)
 
         if len(dataframe.index) > MAX_DATASET_SIZE:
             raise SlamdRequestTooLargeException(

@@ -1,6 +1,5 @@
-from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.materials_facade import MaterialsFacade
-import pandas as pd
+from slamd.ml_utils import from_list_of_dicts
 
 
 class FormulationsConverter:
@@ -34,7 +33,7 @@ class FormulationsConverter:
 
                 all_rows.append({**weight_dict, **full_dict})
                 full_dict = original_dict.copy()
-        dataframe = pd.DataFrame(all_rows)
+        dataframe = from_list_of_dicts(all_rows)
         dataframe = cls._postprocess_dataframe(dataframe)
         return dataframe
 
