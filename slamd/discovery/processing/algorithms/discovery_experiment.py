@@ -15,9 +15,9 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 class DiscoveryExperiment():
 
-    def __init__(
-        self, dataframe, model, sigma, distance, targets, target_weights, target_max_or_min,
-            fixed_targets, fixed_target_weights, fixed_target_max_or_min, features):
+    def __init__(self, dataframe, model, sigma, distance, features,
+                 targets, target_weights, target_max_or_min,
+                 fixed_targets, fixed_target_weights, fixed_target_max_or_min):
         self.dataframe = dataframe
         self.model = model
         self.sigma = sigma
@@ -30,83 +30,73 @@ class DiscoveryExperiment():
         self.fixed_target_max_or_min = fixed_target_max_or_min
         self.features = features
 
+        # Partition the dataframe in three parts: features, targets and fixed targets
         self.features_df = dataframe[features]
         self.target_df = dataframe[targets]
         self.fixed_target_df = dataframe[fixed_targets]
 
-        first_selected_target = self.targets[0]
-        self.PredIdx = pd.isnull(self.dataframe[[first_selected_target]]).to_numpy().nonzero()[0]
-        self.SampIdx = self.dataframe.index.difference(self.PredIdx)
+        # Select the rows that have a label for the first target
+        # These have a null value in the corresponding column
+        self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
+        # The rows with labels (the training set) are the rest of the rows
+        self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
-    def scale_data(self):
-        dataframe_norm = (self.dataframe-self.dataframe.mean())/self.dataframe.std()
-        target_df_norm = (self.target_df-self.target_df.mean())/self.target_df.std()
-        features_df_norm = (self.features_df-self.features_df.mean())/self.features_df.std()
-        fixed_target_df_norm = (self.fixed_target_df-self.fixed_target_df.mean())/self.fixed_target_df.std()
+    def normalize_data(self):
+        # Subtract the mean and divide by the standard deviation of each column
+        self.dataframe_norm = (self.dataframe - self.dataframe.mean()) / self.dataframe.std()
+        self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
+        self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
+        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
 
-        self.features_df = features_df_norm
-        self.target_df = target_df_norm
-        self.dataframe = dataframe_norm
-        self.fixed_target_df = fixed_target_df_norm
-
-    # Utility Methods
     def decide_max_or_min(self, columns, max_or_min):
+        # Multiply the column by -1 if it needs to be minimized
         for (column, value) in zip(columns, max_or_min):
-            if (value == 'minimize'):
+            if value == 'minimize':
                 self.dataframe[column] = self.dataframe[column]*(-1)
 
     def start_learning(self):
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
-
-        self.fixed_target_selection_idxs = self.fixed_targets
-
-        self.fixed_target_df = self.dataframe[self.fixed_target_selection_idxs]
-
-        self.target_selection_idxs = self.targets
-
-        self.features_df = self.dataframe[self.features]
-        self.target_df = self.dataframe[self.targets]
-
         self.fit_model()
 
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
-        util = self.updateIndexMLI()
+        utility_function = self.update_index_MLI()
 
-        distance = distance_matrix(self.features_df.iloc[self.PredIdx], self.features_df.iloc[self.SampIdx])
+        features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
+        features_of_known_rows = self.features_df.iloc[self.sample_index]
+        distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
 
         novelty_factor = min_distances*(max_of_min_distances**(-1))
 
-        # normierten datafram
-        df = self.dataframe  # .abs
-        df = df.iloc[self.PredIdx].assign(Utility=pd.Series(util).values)
-        df = df.loc[self.PredIdx].assign(Novelty=pd.Series(novelty_factor).values)
+        # Normalized dataframe
+        df = self.dataframe
+        # Add the columns with utility and novelty values
+        df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
+        df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
 
-        if self.Uncertainty.ndim > 1:
-            for i in range(len(self.target_selection_idxs)):
-
-                df[self.target_selection_idxs[i]] = self.Expected_Pred[:, i]
-                uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs[i]+' )'
-                df[uncertainty_name_column] = self.Uncertainty[:, i].tolist()
-
+        # Fill in prediction and uncertainty values
+        if self.uncertainty.ndim > 1:
+            for i in range(len(self.targets)):
+                df[self.targets[i]] = self.prediction[:, i]
+                uncertainty_name_column = 'Uncertainty ('+self.targets[i]+' )'
+                df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
         else:
-            df[self.target_selection_idxs] = self.Expected_Pred.reshape(len(self.Expected_Pred), 1)
-            uncertainty_name_column = 'Uncertainty ('+str(self.target_selection_idxs[0])+' )'
-            df[uncertainty_name_column] = self.Uncertainty.reshape(len(self.Uncertainty), 1)
+            df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
+            uncertainty_name_column = 'Uncertainty ('+str(self.targets[0])+' )'
+            df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
 
+        # Assemble dataframe for plot and output
         show_df = df.sort_values(by='Utility', ascending=False)
-
-        target_list = show_df[self.target_selection_idxs]
-        if len(self.fixed_target_selection_idxs) > 0:
-            target_list = pd.concat((target_list, show_df[self.fixed_target_selection_idxs]), axis=1)
+        target_list = show_df[self.targets]
+        if len(self.fixed_targets) > 0:
+            target_list = pd.concat((target_list, show_df[self.fixed_targets]), axis=1)
         target_list = pd.concat((target_list, show_df['Utility']), axis=1)
 
-        print('')
+        # Pareto plot
         print('Pareto plot (predicted property trade-off)')
-
         g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue='Utility')
         g.map_diag(sns.histplot, hue=None, color='.3')
         g.map_lower(sns.scatterplot)
@@ -115,96 +105,113 @@ class DiscoveryExperiment():
 
         return show_df
 
-    def weight_fixed_tars(self):
+    def apply_weights_to_fixed_targets(self):
+        fixed_targets_for_predicted_rows = self.fixed_target_df.iloc[self.prediction_index].to_numpy()
 
-        fixed_targets_in_prediction = self.fixed_target_df.iloc[self.PredIdx].to_numpy()
+        for w in range(len(self.fixed_target_weights)):
+            fixed_targets_for_predicted_rows[w] *= self.fixed_target_weights[w]
+        # Sum the fixed targets values row-wise for the case that there are several of them
+        # We need to simply add their contributions in that case
+        return fixed_targets_for_predicted_rows.sum(axis=1)
 
-        for weights in range(len(self.fixed_target_weights)):
-            fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights] * self.fixed_target_weights[weights]
-
-        return fixed_targets_in_prediction.sum(axis=1)
-
-    def fit_GP(self):
-
-        for i in range(len(self.target_selection_idxs)):
-
+    def fit_gaussian_process_regression(self):
+        for i in range(len(self.targets)):
+            # Initialize the model with given hyperparameters
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            dtr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
+            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
 
-            dtr.fit(self.features_df.iloc[self.SampIdx].to_numpy(),
-                    self.target_df[self.target_selection_idxs[i]].iloc[self.SampIdx].to_numpy())
-            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
+            # Train the GPR model for every target with the corresponding rows and labels
+            training_rows = self.features_df.iloc[self.sample_index].to_numpy()
+            training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
+            gpr.fit(training_rows, training_labels)
 
-            if(i == 0):
+            # Predict the label for the remaining rows
+            rows_to_predict = self.features_df.iloc[self.prediction_index]
+            prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
+
+            if i == 0:
                 uncertainty_stacked = uncertainty
-                pred_stacked = pred
+                pred_stacked = prediction
             else:
                 uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, pred))
+                pred_stacked = np.vstack((pred_stacked, prediction))
 
-        self.Uncertainty = uncertainty_stacked.T
-        self.Expected_Pred = pred_stacked.T
+        self.uncertainty = uncertainty_stacked.T
+        self.prediction = pred_stacked.T
 
     def fit_model(self):
         if self.model == 'AI-Model (lolo Random Forrest)':
-            self.fit_RF_wJK()
+            self.fit_random_forest_with_jack_knife_variance_estimators()
         elif self.model == 'Statistics based model (Gaussian Process Regression)':
-            self.fit_GP()
+            self.fit_gaussian_process_regression()
         else:
             # TODO: Uncomment this once integrated to the rest of the code
             # raise ValueNotSupportedException(f'Model {self.model} value not supported')
             raise RuntimeError('Invalid model value')
 
-    def fit_RF_wJK(self):
+    def fit_random_forest_with_jack_knife_variance_estimators(self):
+        for i in range(len(self.targets)):
+            # Initialize the model
+            rfr = RandomForestRegressor()
 
-        for i in range(len(self.target_selection_idxs)):
-
-            dtr = RandomForestRegressor()
-            self.x = self.features_df.iloc[self.SampIdx].to_numpy()
-            self.y = self.target_df.iloc[self.SampIdx].sum(axis=1).to_frame().to_numpy()
+            training_rows = self.features_df.iloc[self.sample_index].to_numpy()
+            training_labels = self.target_df.iloc[self.sample_index]
+            self.x = training_rows
+            # Sum the training labels for all targets
+            self.y = training_labels.sum(axis=1).to_frame().to_numpy()
             if self.y.shape[0] < 8:
                 self.x = np.tile(self.x, (4, 1))
                 self.y = np.tile(self.y, (4, 1))
 
-            dtr.fit(self.x, self.y)
-            pred, uncertainty = dtr.predict(self.features_df.iloc[self.PredIdx], return_std=True)
+            # Train the model
+            rfr.fit(self.x, self.y)
 
-            if(i == 0):
+            # Predict the label for the remaining rows
+            rows_to_predict = self.features_df.iloc[self.prediction_index]
+            prediction, uncertainty = rfr.predict(rows_to_predict, return_std=True)
+
+            if i == 0:
                 uncertainty_stacked = uncertainty
-                pred_stacked = pred
+                pred_stacked = prediction
             else:
                 uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, pred))
+                pred_stacked = np.vstack((pred_stacked, prediction))
 
-        self.Uncertainty = uncertainty_stacked.T
-        self.Expected_Pred = pred_stacked.T
+        self.uncertainty = uncertainty_stacked.T
+        self.prediction = pred_stacked.T
 
-    def updateIndexMLI(self):
-        Uncertainty_norm = self.Uncertainty/np.array(self.target_df.iloc[self.SampIdx].std())
-        Expected_Pred_norm = (
-            self.Expected_Pred-np.array(self.target_df.iloc[self.SampIdx].mean()))/np.array(self.target_df.iloc[self.SampIdx].std())
+    def update_index_MLI(self):
+        predicted_rows = self.target_df.iloc[self.sample_index]
+        # Normalize the uncertainty of the predicted labels
+        uncertainty_norm = self.uncertainty / np.array(predicted_rows.std())
+        # Normalize the predicted labels
+        prediction_norm = (self.prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
 
-        if(self.Expected_Pred.ndim >= 2):
-
-            for weights in range(len(self.target_weights)):
-                Expected_Pred_norm[:, weights] = Expected_Pred_norm[:, weights]*self.target_weights[weights]
-                Uncertainty_norm[:, weights] = Uncertainty_norm[:, weights]*self.target_weights[weights]
-
+        if self.prediction.ndim >= 2:
+            # Scale the prediction and the uncertainty by the given weight for that target
+            for w in range(len(self.target_weights)):
+                prediction_norm[:, w] *= self.target_weights[w]
+                uncertainty_norm[:, w] *= self.target_weights[w]
         else:
+            # There is only one target property and weights do not matter
+            # Nevertheless multiply by the single weight available
+            prediction_norm *= self.target_weights[0]
+            uncertainty_norm *= self.target_weights[0]
 
-            Expected_Pred_norm = Expected_Pred_norm*self.target_weights[0]
-            Uncertainty_norm = Uncertainty_norm*self.target_weights[0]
+        self.normalize_data()
 
-        self.scale_data()
-
-        if(len(self.fixed_targets) > 0):
-            fixed_targets_in_prediction = self.weight_fixed_tars()
+        if len(self.fixed_targets) > 0:
+            fixed_targets_for_predicted_rows = self.apply_weights_to_fixed_targets()
         else:
-            fixed_targets_in_prediction = np.zeros(len(self.PredIdx))
+            fixed_targets_for_predicted_rows = np.zeros(len(self.prediction_index))
 
-        if(len(self.target_selection_idxs) > 1):
-            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.sum(axis=1)+(self.sigma*Uncertainty_norm.sum(axis=1))
+        # Compute the value of the utility function
+        # See slide 43 of the PowerPoint presentation
+        if len(self.targets) > 1:
+            utility_function = fixed_targets_for_predicted_rows.squeeze(
+            ) + prediction_norm.sum(axis=1) + self.sigma * uncertainty_norm.sum(axis=1)
         else:
-            util = fixed_targets_in_prediction.squeeze()+Expected_Pred_norm.squeeze()+(self.sigma*Uncertainty_norm.squeeze())
+            utility_function = fixed_targets_for_predicted_rows.squeeze(
+            ) + prediction_norm.squeeze() + self.sigma * uncertainty_norm.squeeze()
 
-        return util
+        return utility_function

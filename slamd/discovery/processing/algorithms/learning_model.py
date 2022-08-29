@@ -15,9 +15,17 @@ class LearningModel:
         dataframe = pd.read_csv('MaterialsDiscoveryExampleData.csv')
         dataframe.apply(pd.to_numeric, errors='ignore')
         experiment = DiscoveryExperiment(
-            dataframe, user_input.model, user_input.sigma_factor,
-            user_input.prediction_quantile_distance, user_input.targets, user_input.target_weights, user_input.target_max_or_min, user_input.fixed_targets,
-            user_input.fixed_target_weights, user_input.fixed_target_max_or_min, user_input.features
+            dataframe=dataframe,
+            model=user_input.model,
+            sigma=user_input.sigma_factor,
+            distance=user_input.prediction_quantile_distance,
+            features=user_input.features,
+            targets=user_input.targets,
+            target_weights=user_input.target_weights,
+            target_max_or_min=user_input.target_max_or_min,
+            fixed_targets=user_input.fixed_targets,
+            fixed_target_weights=user_input.fixed_target_weights,
+            fixed_target_max_or_min=user_input.fixed_target_max_or_min
         )
 
         result = experiment.start_learning()
