@@ -1,4 +1,4 @@
-{% from 'action_buttons.html' import create_select_dataset_button, create_delete_dataset_button -%}
+{% from 'action_buttons.html' import create_select_dataset_button, create_delete_dataset_button, create_add_target_button -%}
 
 <h3>All datasets</h3>
 <table class="table table-bordered table-striped table-hover">
@@ -16,6 +16,7 @@
                 <div class="btn-group" role="group" aria-label="Delete/edit dataset actions">
                     {{ create_delete_dataset_button(dataset.name, 16, 16) }}
                     {{ create_select_dataset_button(dataset.name, 16, 16) }}
+                    {{ create_add_target_button(dataset.name, 16, 16) }}
                 </div>
             </th>
             <td>{{ dataset.name }}</td>

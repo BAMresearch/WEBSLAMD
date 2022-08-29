@@ -15,7 +15,7 @@ formulations = Blueprint('formulations', __name__,
 @formulations.route('', methods=['GET'])
 def base_material_page():
     form = FormulationsService.populate_selection_form()
-    df, all_dtos, target_list = FormulationsService.get_formulations()
+    df = FormulationsService.get_formulations()
 
     df_table = None
     if df is not None:
@@ -26,9 +26,7 @@ def base_material_page():
     return render_template('formulations.html',
                            materials_and_processes_selection_form=form,
                            formulations_min_max_form=FormulationsMinMaxForm(),
-                           df=df_table,
-                           all_dtos=all_dtos,
-                           target_list=target_list)
+                           df=df_table)
 
 
 @formulations.route('/add_min_max_entries', methods=['POST'])
@@ -50,14 +48,13 @@ def add_weights():
 @formulations.route('/create_formulations_batch', methods=['POST'])
 def submit_formulation_batch():
     formulations_request_data = json.loads(request.data)
-    dataframe, all_dtos, target_list = FormulationsService.create_materials_formulations(formulations_request_data)
+    dataframe = FormulationsService.create_materials_formulations(formulations_request_data)
 
     body = {'template': render_template('formulations_tables.html',
                                         df=dataframe.to_html(index=False,
                                                              table_id='formulations_dataframe',
-                                                             classes='table table-bordered table-striped table-hover'),
-                                        all_dtos=all_dtos,
-                                        target_list=target_list)}
+                                                             classes='table table-bordered table-striped table-hover')
+                                        )}
 
     return make_response(jsonify(body), 200)
 
@@ -65,25 +62,7 @@ def submit_formulation_batch():
 @formulations.route('', methods=['DELETE'])
 def delete_formulation():
     FormulationsService.delete_formulation()
-    body = {'template': render_template('formulations_tables.html',
-                                        df=None,
-                                        all_dtos=[],
-                                        target_list=[])}
-
-    return make_response(jsonify(body), 200)
-
-
-@formulations.route('/add_target', methods=['POST'])
-def add_target():
-    target_request = json.loads(request.data)
-
-    df, all_dtos, target_list = FormulationsService.add_target_name(target_request)
-    body = {'template': render_template('formulations_tables.html',
-                                        df=df.to_html(index=False,
-                                                      table_id='formulations_dataframe',
-                                                      classes='table table-bordered table-striped table-hover'),
-                                        all_dtos=all_dtos,
-                                        target_list=target_list)}
+    body = {'template': render_template('formulations_tables.html', df=None)}
 
     return make_response(jsonify(body), 200)
 

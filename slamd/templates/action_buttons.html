@@ -1,14 +1,14 @@
-{% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
+{% from 'icons.html' import edit_icon, delete_icon, check_icon, bullseye_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
 <div class="me-1" data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
     <button class="btn btn-danger" type="button" data-bs-toggle="tooltip" data-bs-placement="right"
-        title="Delete material">
+            title="Delete material">
         {{ delete_icon(width, height, "currentColor") }}
     </button>
 </div>
 <div class="modal fade" id="{{'delete-modal-' + id}}" tabindex="-1" aria-labelledby="{{'delete-modal-label-' + id }}"
-    aria-hidden="true">
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -22,7 +22,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
                 <button type="button" id="{{ id }}" class="btn btn-primary"
-                    onclick="deleteMaterial('{{ id }}', '{{ type }}')" data-bs-dismiss="modal">Confirm
+                        onclick="deleteMaterial('{{ id }}', '{{ type }}')" data-bs-dismiss="modal">Confirm
                 </button>
             </div>
         </div>
@@ -33,7 +33,7 @@
 {% macro create_edit_button(id, type, width, height) -%}
 <div class="me-1">
     <a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
-        data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
+       data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
         {{ edit_icon(width, height, "currentColor") }}
     </a>
 </div>
@@ -42,7 +42,7 @@
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
 <div data-bs-target="#change-modal" data-bs-toggle="modal">
     <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-toggle="tooltip"
-        data-bs-placement="bottom" title="{{ tooltip }}" disabled>
+            data-bs-placement="bottom" title="{{ tooltip }}" disabled>
         4 - Confirm Selection
     </button>
 </div>
@@ -60,7 +60,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
                 <button type="button" id="{{ confirmButtonId }}" class="btn btn-primary" onclick="confirmSelection()"
-                    data-bs-dismiss="modal">Confirm
+                        data-bs-dismiss="modal">Confirm
                 </button>
             </div>
         </div>
@@ -71,8 +71,8 @@
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
 <div class="me-1">
     <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}"
-        id="'{{ 'select-dataset-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
-        title="Select dataset">
+       id="'{{ 'select-dataset-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Select dataset">
         {{ check_icon(width, height, "currentColor") }}
     </a>
 </div>
@@ -80,14 +80,14 @@
 
 {% macro create_delete_dataset_button(dataset_name, width, height) -%}
 <div class="me-1" data-bs-toggle="modal"
-    data-bs-target="{{ '#delete-dataset-modal-' + dataset_name.replace('.', '_') }}">
+     data-bs-target="{{ '#delete-dataset-modal-' + dataset_name.replace('.', '_') }}">
     <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right"
-        title="Delete dataset">
+            title="Delete dataset">
         {{ delete_icon(width, height, "currentColor") }}
     </button>
 </div>
 <div class="modal fade" id="{{ 'delete-dataset-modal-' + dataset_name.replace('.', '_') }}" tabindex="-1"
-    aria-labelledby="{{ 'delete-dataset-modal-label-' + dataset_name.replace('.', '_') }}" aria-hidden="true">
+     aria-labelledby="{{ 'delete-dataset-modal-label-' + dataset_name.replace('.', '_') }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,10 +102,20 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                 </button>
                 <button type="button" id="{{ dataset_name }}" class="btn btn-primary"
-                    onclick="deleteDataset('{{ dataset_name }}')" data-bs-dismiss="modal">Confirm
+                        onclick="deleteDataset('{{ dataset_name }}')" data-bs-dismiss="modal">Confirm
                 </button>
             </div>
         </div>
     </div>
+</div>
+{% endmacro %}
+
+{% macro create_add_target_button(dataset_name, width, height) -%}
+<div class="me-1">
+    <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/add_targets"
+       id="'{{ 'add-targets-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Add targets to your dataset dataset">
+        {{ bullseye_icon(width, height, "currentColor") }}
+    </a>
 </div>
 {% endmacro %}

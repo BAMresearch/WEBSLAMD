@@ -2,9 +2,11 @@ from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty
+from slamd.discovery.processing.add_targets_dto import AddTargetsDto
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.forms.discovery_configuration_form import DiscoveryConfigurationForm
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 
 
@@ -44,3 +46,41 @@ class DiscoveryService:
             # Add an extra property which is not a Field containing the target name
             form.target_configurations.entries[-1].name = name
         return form
+
+    @classmethod
+    def show_dataset_for_adding_targets(cls, dataset):
+        dataframe = DiscoveryPersistence.query_dataset_by_name(dataset).dataframe
+
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
+
+    @classmethod
+    def _create_all_dtos(cls, dataframe):
+        if dataframe is None:
+            return []
+        target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        all_dtos = []
+        for i in range(len(dataframe.index)):
+            dto = AddTargetsDto(index=i, targets=target_names)
+            all_dtos.append(dto)
+        return all_dtos
+
+    @classmethod
+    def add_target_name(cls, dataset, target_name):
+        dataframe = None
+        initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
+        if initial_dataset:
+            dataframe = initial_dataset.dataframe
+        dataframe[f'Target: {target_name}'] = None
+
+        dataset_with_new_target = Dataset(dataset, dataframe)
+        DiscoveryPersistence.save_dataset(dataset_with_new_target)
+
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return all_dtos, target_list

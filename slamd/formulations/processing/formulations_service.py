@@ -44,28 +44,7 @@ class FormulationsService:
         temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
-
-    @classmethod
-    def add_target_name(cls, target_request):
-        dataframe = None
-        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
-        if temporary_dataset:
-            dataframe = temporary_dataset.dataframe
-        dataframe['Target:' + target_request['target_name']] = None
-
-        temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
-        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
-
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
+        return dataframe
 
     @classmethod
     def _to_selection(cls, list_of_models):
@@ -201,22 +180,7 @@ class FormulationsService:
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
         FormulationsPersistence.save_temporary_dataset(temporary_dataset)
 
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
-
-    @classmethod
-    def _create_all_dtos(cls, dataframe):
-        if dataframe is None:
-            return []
-        target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        all_dtos = []
-        for i in range(len(dataframe.index)):
-            dto = FormulationsDto(index=i, targets=target_names)
-            all_dtos.append(dto)
-        return all_dtos
+        return dataframe
 
     @classmethod
     def _prepare_materials_for_taking_direct_product(cls, materials_data):
