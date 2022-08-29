@@ -12,7 +12,9 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 class DiscoveryExperiment():
 
-    def __init__(self, dataframe, model, strategy, sigma, distance, targets, fixed_targets, features):
+    def __init__(
+        self, dataframe, model, strategy, sigma, distance, targets, target_weights, target_max_or_min,
+            fixed_targets, fixed_target_weights, fixed_target_max_or_min, features):
         self.dataframe = dataframe
         self.model = model
         self.strategy = strategy
@@ -23,7 +25,11 @@ class DiscoveryExperiment():
         self.sigma = sigma
         self.distance = distance
         self.targets = targets
+        self.target_weights = target_weights
+        self.target_max_or_min = target_max_or_min
         self.fixed_targets = fixed_targets
+        self.fixed_target_weights = fixed_target_weights
+        self.fixed_target_max_or_min = fixed_target_max_or_min
         self.features = features
 
         first_selected_target = self.targets[0]
@@ -43,18 +49,14 @@ class DiscoveryExperiment():
         self.fixed_target_df = fixed_target_df_norm
 
     # Utility Methods
-    def decide_max_or_min(self, source, columns, dataframe):
-        row_list = [source.children[decide].children[0].value for decide in range(len(columns))]
-
-        for column in range(len(columns)):
-            if (row_list[column] == "minimize"):
-                dataframe[columns[column]] = dataframe[columns[column]]*(-1)
-
-        return dataframe
+    def decide_max_or_min(self, columns, max_or_min):
+        for (column, value) in zip(columns, max_or_min):
+            if (value == "minimize"):
+                self.dataframe[column] = self.dataframe[column]*(-1)
 
     def start_learning(self):
-        self.dataframe = self.decide_max_or_min(box_targets, self.targets, self.dataframe)
-        self.dataframe = self.decide_max_or_min(box_fixed_targets, self.fixed_targets, self.dataframe)
+        self.decide_max_or_min(self.targets, self.target_max_or_min)
+        self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
 
         self.fixed_target_selection_idxs = self.fixed_targets
 
@@ -115,8 +117,9 @@ class DiscoveryExperiment():
 
         fixed_targets_in_prediction = self.fixed_target_df.iloc[self.PredIdx].to_numpy()
 
-        for weights in range(len(ftA.weights)):
-            fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights]*ftA.weights[weights].value
+        for weights in range(len(self.fixed_target_weights)):
+            fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights] * \
+                self.fixed_target_weights[weights].value
 
         return fixed_targets_in_prediction.sum(axis=1)
 
@@ -127,14 +130,14 @@ class DiscoveryExperiment():
 
         if(self.Expected_Pred.ndim >= 2):
 
-            for weights in range(len(tA.weights)):
-                Expected_Pred_norm[:, weights] = Expected_Pred_norm[:, weights]*tA.weights[weights].value
-                Uncertainty_norm[:, weights] = Uncertainty_norm[:, weights]*tA.weights[weights].value
+            for weights in range(len(self.target_weights)):
+                Expected_Pred_norm[:, weights] = Expected_Pred_norm[:, weights]*self.target_weights[weights].value
+                Uncertainty_norm[:, weights] = Uncertainty_norm[:, weights]*self.target_weights[weights].value
 
         else:
 
-            Expected_Pred_norm = Expected_Pred_norm*tA.weights[0].value
-            Uncertainty_norm = Uncertainty_norm*tA.weights[0].value
+            Expected_Pred_norm = Expected_Pred_norm*self.target_weights[0].value
+            Uncertainty_norm = Uncertainty_norm*self.target_weights[0].value
 
         self.scale_data()
 
