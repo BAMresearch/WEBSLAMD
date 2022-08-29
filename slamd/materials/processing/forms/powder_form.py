@@ -89,6 +89,13 @@ class PowderForm(MaterialsForm):
         ]
     )
 
+    loi = DecimalField(
+        label='LOI (m%)',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
     fine = DecimalField(
         label='Fine modules (m²/kg)',
         validators=[

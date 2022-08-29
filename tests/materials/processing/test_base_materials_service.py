@@ -103,6 +103,7 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('ti_o2', ''),
                                    ('sr_o', ''),
                                    ('mn2_o3', ''),
+                                   ('loi', ''),
                                    ('fine', ''),
                                    ('gravity', ''),
                                    ('submit', 'Save material')])
@@ -285,6 +286,7 @@ def test_edit_material_edits_powder(monkeypatch):
                                    ('ti_o2', ''),
                                    ('sr_o', ''),
                                    ('mn2_o3', ''),
+                                   ('loi', ''),
                                    ('fine', ''),
                                    ('gravity', ''),
                                    ('submit', 'Save material')])

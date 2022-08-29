@@ -3,28 +3,29 @@ from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, 
 
 
 class MaterialsAndProcessesSelectionForm(Form):
-    powder_selection = SelectField(
+
+    powder_selection = SelectMultipleField(
         label='1.1 - Powders',
         validators=[validators.DataRequired()],
-        choices=[('', '')]
+        choices=[]
     )
 
-    liquid_selection = SelectField(
+    liquid_selection = SelectMultipleField(
         label='1.2 - Liquids',
         validators=[validators.DataRequired()],
-        choices=[('', '')]
+        choices=[]
     )
 
-    aggregates_selection = SelectField(
+    aggregates_selection = SelectMultipleField(
         label='1.3 - Aggregates',
         validators=[validators.DataRequired()],
-        choices=[('', '')]
+        choices=[]
     )
 
-    admixture_selection = SelectField(
+    admixture_selection = SelectMultipleField(
         label='1.4 - Admixture',
         validators=[validators.DataRequired()],
-        choices=[('', '')]
+        choices=[]
     )
 
     custom_selection = SelectMultipleField(
@@ -39,16 +40,12 @@ class MaterialsAndProcessesSelectionForm(Form):
         choices=[]
     )
 
-    targets_field = StringField(
-        label='3 - Targets (Specify various target values. Follow the pattern "target 1; target 2; target 3".)'
-    )
-
-    with_constraint = BooleanField(
-        label='2 - Do you want to set a weight constraint for formulations?'
-    )
-
     weight_constraint = DecimalField(
-        label='Constraint (Sum of materials used for formulation) (kg)'
+        label='1.7 - Constraint (Sum of materials used for formulation) (kg)'
     )
 
-    submit = SubmitField(label='7 - Create materials formulations')
+    dataset_name = StringField(
+        label='1.8 - Name of the dataset'
+    )
+
+    submit = SubmitField(label='8 - Submit Dataset')

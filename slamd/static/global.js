@@ -97,6 +97,12 @@ function collectSelection(placeholder) {
     });
 }
 
+function atLeastOneItemIsSelected(placeholder) {
+  const selectedItems = Array.from(placeholder.children)
+      .filter((option) => option.selected);
+  return selectedItems.length > 0;
+}
+
 function enableTooltip(elem) {
   return new bootstrap.Tooltip(elem, { trigger: "hover" });
 }

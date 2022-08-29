@@ -16,6 +16,7 @@ class Composition:
     p2_o5: float = None
     sr_o: float = None
     mn2_o3: float = None
+    loi: float = None
 
 
 @dataclass

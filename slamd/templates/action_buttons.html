@@ -37,11 +37,12 @@
 {% endmacro %}
 
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
-<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}">
-    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change-modal"
-        data-bs-toggle="modal" title="Confirm selection" disabled>4 - Confirm Selection
-    </button>
-</span>
+<button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change_modal"
+    data-bs-toggle="modal" disabled>
+    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}" data-bs-offset="0,15">
+        4 - Confirm Selection
+    </span>
+</button>
 <div class="modal fade" id="change-modal" tabindex="-1" aria-labelledby="change-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

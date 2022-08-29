@@ -30,28 +30,22 @@
             {{ materials_and_processes_selection_form.process_selection(class_="form-control form-select") }}
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="formulations_constraint">
-            <div>
-                {{ materials_and_processes_selection_form.with_constraint.label(class_="control-label") }}
-                {{ materials_and_processes_selection_form.with_constraint() }}
-            </div>
-            <div>
-                {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
-                {{ materials_and_processes_selection_form.weight_constraint(class_="form-control", disabled=True) }}
-            </div>
+    <div class="col-md-6 formulations_constraint">
+        <div>
+            {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
+            {{ materials_and_processes_selection_form.weight_constraint(class_="form-control") }}
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="formulations_targets">
-            {{ materials_and_processes_selection_form.targets_field.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.targets_field(class_="form-control") }}
+    <div class="col-md-6 formulations_constraint">
+        <div>
+            {{ materials_and_processes_selection_form.dataset_name.label(class_="control-label") }}
+            {{ materials_and_processes_selection_form.dataset_name(class_="form-control") }}
         </div>
     </div>
     <div>
         {{ create_change_selection_button("change_materials_and_processes_selection_button",
         "confirm_materials_and_processes_selection_button",
-        "Choose at least one material for creating materials formulations") }}
+        "Choose at least one powder, a liquid and an aggregate for creating materials formulations") }}
     </div>
 
     <div class="justify-content-center">
@@ -62,27 +56,24 @@
         <div id="formulations_weights_placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
     </div>
 
+    <button class="btn btn-danger col-12" type="button" id="delete_formulations_batches_button" data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+        Delete Material Formulation
+    </button>
+
     <div class="justify-content-center">
-        <div id="formulations_tables_placeholder"></div>
+        <div id="formulations_tables_placeholder">
+            {% include 'formulations_tables.html' %}
+        </div>
     </div>
 
     <div class="form-group mb-12">
         <div class="col-sm-offset-2 col-sm-12" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
-            title="For enabling submission please choose materials configure all weights and increments.">
+             title="Save your created formulation as a dataset to be used for materials discovery.">
             {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
             data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>
     </div>
 
-    <div class="modal fade" id="submit_blending_modal" tabindex="-1" aria-labelledby="submit_blending_modal_label"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="submit_blending_modal_label">Created materials formulations</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
 </form>
