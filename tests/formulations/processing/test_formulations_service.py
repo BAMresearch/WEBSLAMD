@@ -10,6 +10,12 @@ from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
 
+MATERIALS_CONFIG = [
+    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 0.1},
+    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 0.2},
+    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}
+]
+
 app = create_app('testing', with_session=False)
 
 
@@ -73,14 +79,23 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
     with app.test_request_context('/materials/formulations/add_weights'):
         weight_request_data = \
             {
-                'materials_formulation_configuration': [
-                    {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 0.1},
-                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 0.2},
-                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}],
+                'materials_formulation_configuration': MATERIALS_CONFIG,
                 'weight_constraint': '100'
             }
 
         with pytest.raises(SlamdRequestTooLargeException):
+            FormulationsService.create_weights_form(weight_request_data)
+
+
+def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch):
+    with app.test_request_context('/materials/formulations/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration': MATERIALS_CONFIG,
+                'weight_constraint': ''
+            }
+
+        with pytest.raises(ValueNotSupportedException):
             FormulationsService.create_weights_form(weight_request_data)
 
 

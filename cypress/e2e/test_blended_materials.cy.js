@@ -52,8 +52,8 @@ describe("Test blending powders and blended material deletion", () => {
     cy.findByDisplayValue("100/0").should("exist");
 
     // Delete the last two blends and add them again
-    cy.findByText("Delete blend").click().click();
-    cy.findByText("Add blend").click().click();
+    cy.findByText("Delete blending ratio").click().click();
+    cy.findByText("Add blending ratio").click().click();
     cy.get('input[id="all_ratio_entries-4-ratio"]').type("80/20");
     cy.get('input[id="all_ratio_entries-5-ratio"]').type("100/0");
     cy.findByText("6 - Create blended materials").click();
