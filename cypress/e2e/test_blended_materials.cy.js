@@ -69,12 +69,12 @@ describe("Test blending powders and blended material deletion", () => {
 
     // Delete all blended powders one by one
     for (let i = 6; i > 0; --i) {
-      cy.get("th > div > button").last().click();
+      cy.get("th > button").last().click();
       // Wait for the modal animation to finish
       cy.wait(400);
       cy.findAllByText("Confirm").last().click();
       // Check that the table entry was deleted
-      cy.get("th > div > button").should("have.length", i - 1);
+      cy.get("th > button").should("have.length", i - 1);
     }
   });
 });
@@ -328,7 +328,11 @@ describe("Test blending three admixtures with properties with negative values", 
   it("Create blend from three admixtures", () => {
     cy.findByLabelText("1 - Name").type("Example Blended Admixture");
     cy.findByLabelText("2 - Material type").select("Admixture");
-    cy.findByLabelText("3 - Base materials").select(["Example Admixture 1", "Example Admixture 2", "Example Admixture 3"]);
+    cy.findByLabelText("3 - Base materials").select([
+      "Example Admixture 1",
+      "Example Admixture 2",
+      "Example Admixture 3",
+    ]);
     cy.findByText("4 - Confirm Selection").click();
     // Wait for the modal animation to finish
     cy.wait(400);

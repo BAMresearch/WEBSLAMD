@@ -1,10 +1,10 @@
 {% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
-<button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
-    <span data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
+<button class="btn btn-danger" type="button" data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
+    <div data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
         {{ delete_icon(width, height, "currentColor") }}
-    </span>
+    </div>
 </button>
 <div class="modal fade" id="{{'delete-modal-' + id}}" tabindex="-1" aria-labelledby="{{'delete-modal-label-' + id }}"
     aria-hidden="true">
@@ -37,11 +37,11 @@
 {% endmacro %}
 
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
-<button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change_modal"
-    data-bs-toggle="modal" disabled>
-    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}" data-bs-offset="0,15">
+<button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-toggle="tooltip"
+    data-bs-placement="bottom" title="{{ tooltip }}" disabled>
+    <div data-bs-target="#change-modal" data-bs-toggle="modal">
         4 - Confirm Selection
-    </span>
+    </div>
 </button>
 <div class="modal fade" id="change-modal" tabindex="-1" aria-labelledby="change-modal-label" aria-hidden="true">
     <div class="modal-dialog">
