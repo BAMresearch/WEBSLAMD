@@ -17,7 +17,8 @@ class AggregatesStrategy(MaterialStrategy):
             coarse_aggregates=float_if_not_empty(submitted_material['coarse_aggregates']),
             specific_density=float_if_not_empty(submitted_material['specific_density']),
             bulk_density=float_if_not_empty(submitted_material['bulk_density']),
-            fineness_modulus=float_if_not_empty(submitted_material['fineness_modulus'])
+            fineness_modulus=float_if_not_empty(submitted_material['fineness_modulus']),
+            water_absorption=float_if_not_empty(submitted_material['water_absorption'])
         )
 
         return Aggregates(
@@ -34,7 +35,8 @@ class AggregatesStrategy(MaterialStrategy):
                 cls.include('Coarse Aggregates (m%)', aggregates.composition.coarse_aggregates),
                 cls.include('Specific Density (kg/m³)', aggregates.composition.specific_density),
                 cls.include('Bulk Density (kg/m³)', aggregates.composition.bulk_density),
-                cls.include('Fineness modulus (m³/kg)', aggregates.composition.fineness_modulus)]
+                cls.include('Fineness modulus (m³/kg)', aggregates.composition.fineness_modulus),
+                cls.include('Water absorption (m%)', aggregates.composition.water_absorption)]
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
@@ -53,9 +55,10 @@ class AggregatesStrategy(MaterialStrategy):
         specific_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'specific_density')
         bulk_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'bulk_density')
         fineness_modulus_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fineness_modulus')
+        water_absorption_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'water_absorption')
 
         return fine_aggregates_complete and coarse_aggregates_complete and specific_density_complete and \
-            bulk_density_complete and fineness_modulus_complete
+            bulk_density_complete and fineness_modulus_complete and water_absorption_complete
 
     @classmethod
     def convert_to_multidict(cls, aggregates):
@@ -95,10 +98,12 @@ class AggregatesStrategy(MaterialStrategy):
                                                 'bulk_density')
         blended_fineness_modulus = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
                                                     'fineness_modulus')
+        blended_water_absorption = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
+                                                    'water_absorption')
 
         composition = Composition(fine_aggregates=blended_fine_aggregates, coarse_aggregates=blended_coarse_aggregates,
                                   specific_density=blended_specific_density, bulk_density=blended_bulk_density,
-                                  fineness_modulus=blended_bulk_density)
+                                  fineness_modulus=blended_fineness_modulus, water_absorption=blended_water_absorption)
 
         return composition
 

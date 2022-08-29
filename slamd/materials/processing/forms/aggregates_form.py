@@ -35,3 +35,9 @@ class AggregatesForm(MaterialsForm):
         validators=[
             validators.Optional()
         ])
+
+    water_absorption = DecimalField(
+        label='Water absorption (m%)',
+        validators=[
+            validators.Optional()
+        ])

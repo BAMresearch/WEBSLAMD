@@ -9,7 +9,7 @@ class Composition:
     specific_density: float = None
     bulk_density: float = None
     fineness_modulus: float = None
-
+    water_absorption: float = None
 
 @dataclass
 class Aggregates(Material):
