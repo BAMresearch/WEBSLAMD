@@ -103,63 +103,60 @@ def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set
 
 
 def test_create_materials_formulations_creates_initial_formulation_batch(monkeypatch):
-    with app.test_request_context('/materials/blended'):
+    mock_query_dataset_by_name_called_with = None
+    mock_save_temporary_dataset_called_with = None
 
-        mock_query_dataset_by_name_called_with = None
+    def mock_query_dataset_by_name(input):
+        nonlocal mock_query_dataset_by_name_called_with
+        mock_query_dataset_by_name_called_with = input
+        return None
 
-        def mock_query_dataset_by_name(input):
-            nonlocal mock_query_dataset_by_name_called_with
-            mock_query_dataset_by_name_called_with = input
-            return None
+    def mock_get_process(uuid):
+        return None
 
-        def mock_get_process(uuid):
-            return None
+    def mock_get_material(material_type, uuid):
+        if material_type == 'Powder':
+            if uuid == 'additional':
+                return _create_additional_powder()
+            return prepare_test_base_powders_for_blending(material_type, uuid)
+        elif material_type == 'Liquid':
+            return prepare_test_base_liquids_for_blending(material_type, uuid)
+        elif material_type == 'Aggregates':
+            return prepare_test_base_aggregates_for_blending(material_type, uuid)
+        return None
 
-        mock_get_material_called_with = None
+    def mock_save_temporary_dataset(input):
+        nonlocal mock_save_temporary_dataset_called_with
+        mock_save_temporary_dataset_called_with = input
+        return None
 
-        def mock_get_material(material_type, uuid):
-            if material_type == 'Powder':
-                if uuid == 'additional':
-                    return _create_additional_powder()
-                return prepare_test_base_powders_for_blending(material_type, uuid)
-            elif material_type == 'Liquid':
-                return prepare_test_base_liquids_for_blending(material_type, uuid)
-            elif material_type == 'Aggregates':
-                return prepare_test_base_aggregates_for_blending(material_type, uuid)
-            return None
+    monkeypatch.setattr(FormulationsPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
+    monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
+    monkeypatch.setattr(FormulationsPersistence, 'save_temporary_dataset', mock_save_temporary_dataset)
 
-        mock_save_temporary_dataset_called_with = None
-
-        def mock_save_temporary_dataset(input):
-            nonlocal mock_save_temporary_dataset_called_with
-            mock_save_temporary_dataset_called_with = input
-            return None
-
-        monkeypatch.setattr(FormulationsPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
-        monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
-        monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
-        monkeypatch.setattr(FormulationsPersistence, 'save_temporary_dataset', mock_save_temporary_dataset)
-
-        formulations_data = {
-            'materials_request_data': {
-                'materials_formulation_configuration': [
-                    {'uuids': 'uuid1,additional', 'type': 'Powder'},
-                    {'uuids': 'uuid2', 'type': 'Liquid'},
-                    {'uuids': 'uuid3', 'type': 'Aggregates'}]
-            },
-            'weights_request_data': {
-                'all_weights': ['200.0/20.0/780.0', '200.0/30.0/770.0', '300.0/20.0/680.0', '300.0/30.0/670.0']
-            },
-            'processes_request_data': {
-                'processes': []
-            }
+    formulations_data = {
+        'materials_request_data': {
+            'materials_formulation_configuration': [
+                {'uuids': 'uuid1,additional', 'type': 'Powder'},
+                {'uuids': 'uuid2', 'type': 'Liquid'},
+                {'uuids': 'uuid3', 'type': 'Aggregates'}]
+        },
+        'weights_request_data': {
+            'all_weights': ['200.0/20.0/780.0', '200.0/30.0/770.0', '300.0/20.0/680.0', '300.0/30.0/670.0']
+        },
+        'processes_request_data': {
+            'processes': []
         }
+    }
 
-        expected_df = _create_expected_df_as_dict()
+    expected_df = _create_expected_df_as_dict()
 
-        df, all_dtos, targets = FormulationsService.create_materials_formulations(formulations_data)
+    df, all_dtos, targets = FormulationsService.create_materials_formulations(formulations_data)
 
-        assert df.replace({np.nan: None}).to_dict() == expected_df
+    assert df.replace({np.nan: None}).to_dict() == expected_df
+    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_save_temporary_dataset_called_with.name == 'temporary.csv'
 
 
 def _create_additional_powder():
