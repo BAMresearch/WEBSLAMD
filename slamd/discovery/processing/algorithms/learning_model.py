@@ -28,7 +28,7 @@ class LearningModel:
             fixed_target_max_or_min=user_input.fixed_target_max_or_min
         )
 
-        result = experiment.start_learning()
+        result = experiment.run()
         print(result)
 
 

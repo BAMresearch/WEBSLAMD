@@ -41,20 +41,7 @@ class DiscoveryExperiment():
         # The rows with labels (the training set) are the rest of the rows
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
-    def normalize_data(self):
-        # Subtract the mean and divide by the standard deviation of each column
-        self.dataframe_norm = (self.dataframe - self.dataframe.mean()) / self.dataframe.std()
-        self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
-        self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
-        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
-
-    def decide_max_or_min(self, columns, max_or_min):
-        # Multiply the column by -1 if it needs to be minimized
-        for (column, value) in zip(columns, max_or_min):
-            if value == 'minimize':
-                self.dataframe[column] = self.dataframe[column]*(-1)
-
-    def start_learning(self):
+    def run(self):
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
         self.fit_model()
@@ -105,14 +92,28 @@ class DiscoveryExperiment():
 
         return show_df
 
-    def apply_weights_to_fixed_targets(self):
-        fixed_targets_for_predicted_rows = self.fixed_target_df.iloc[self.prediction_index].to_numpy()
+    def normalize_data(self):
+        # Subtract the mean and divide by the standard deviation of each column
+        self.dataframe_norm = (self.dataframe - self.dataframe.mean()) / self.dataframe.std()
+        self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
+        self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
+        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
 
-        for w in range(len(self.fixed_target_weights)):
-            fixed_targets_for_predicted_rows[w] *= self.fixed_target_weights[w]
-        # Sum the fixed targets values row-wise for the case that there are several of them
-        # We need to simply add their contributions in that case
-        return fixed_targets_for_predicted_rows.sum(axis=1)
+    def decide_max_or_min(self, columns, max_or_min):
+        # Multiply the column by -1 if it needs to be minimized
+        for (column, value) in zip(columns, max_or_min):
+            if value == 'minimize':
+                self.dataframe[column] = self.dataframe[column]*(-1)
+
+    def fit_model(self):
+        if self.model == 'AI-Model (lolo Random Forrest)':
+            self.fit_random_forest_with_jack_knife_variance_estimators()
+        elif self.model == 'Statistics based model (Gaussian Process Regression)':
+            self.fit_gaussian_process_regression()
+        else:
+            # TODO: Uncomment this once integrated to the rest of the code
+            # raise ValueNotSupportedException(f'Model {self.model} value not supported')
+            raise RuntimeError('Invalid model value')
 
     def fit_gaussian_process_regression(self):
         for i in range(len(self.targets)):
@@ -138,16 +139,6 @@ class DiscoveryExperiment():
 
         self.uncertainty = uncertainty_stacked.T
         self.prediction = pred_stacked.T
-
-    def fit_model(self):
-        if self.model == 'AI-Model (lolo Random Forrest)':
-            self.fit_random_forest_with_jack_knife_variance_estimators()
-        elif self.model == 'Statistics based model (Gaussian Process Regression)':
-            self.fit_gaussian_process_regression()
-        else:
-            # TODO: Uncomment this once integrated to the rest of the code
-            # raise ValueNotSupportedException(f'Model {self.model} value not supported')
-            raise RuntimeError('Invalid model value')
 
     def fit_random_forest_with_jack_knife_variance_estimators(self):
         for i in range(len(self.targets)):
@@ -215,3 +206,12 @@ class DiscoveryExperiment():
             ) + prediction_norm.squeeze() + self.sigma * uncertainty_norm.squeeze()
 
         return utility_function
+
+    def apply_weights_to_fixed_targets(self):
+        fixed_targets_for_predicted_rows = self.fixed_target_df.iloc[self.prediction_index].to_numpy()
+
+        for w in range(len(self.fixed_target_weights)):
+            fixed_targets_for_predicted_rows[w] *= self.fixed_target_weights[w]
+        # Sum the fixed targets values row-wise for the case that there are several of them
+        # We need to simply add their contributions in that case
+        return fixed_targets_for_predicted_rows.sum(axis=1)
