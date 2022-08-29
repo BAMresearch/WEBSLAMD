@@ -25,6 +25,7 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
     assert 'Fe₂O₃ (m%)' in html
     assert 'SiO₂ (m%)' in html
     assert 'Mn₂O₃ (m%)' in html
+    assert 'LOI (m%)' in html
     assert 'Specific gravity (m%)' in html
     assert 'Add property' in html
     assert 'Delete last property' in html

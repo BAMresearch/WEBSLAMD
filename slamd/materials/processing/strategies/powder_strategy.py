@@ -24,7 +24,8 @@ class PowderStrategy(MaterialStrategy):
             ti_o2=float_if_not_empty(submitted_material['ti_o2']),
             p2_o5=float_if_not_empty(submitted_material['p2_o5']),
             sr_o=float_if_not_empty(submitted_material['sr_o']),
-            mn2_o3=float_if_not_empty(submitted_material['mn2_o3'])
+            mn2_o3=float_if_not_empty(submitted_material['mn2_o3']),
+            loi=float_if_not_empty(submitted_material['loi'])
         )
 
         structure = Structure(
@@ -55,6 +56,7 @@ class PowderStrategy(MaterialStrategy):
                 cls.include('P₂O₅ (m%)', powder.composition.p2_o5),
                 cls.include('SrO (m%)', powder.composition.sr_o),
                 cls.include('Mn₂O₃ (m%)', powder.composition.mn2_o3),
+                cls.include('LOI (m%)', powder.composition.loi),
                 cls.include('Fine modules (m²/kg)', powder.structure.fine),
                 cls.include('Specific gravity (m%)', powder.structure.gravity)]
 
@@ -111,10 +113,11 @@ class PowderStrategy(MaterialStrategy):
         p2_o5_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'p2_o5')
         sr_o_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'sr_o')
         mn2_o3_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'mn2_o3')
+        loi_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'loi')
 
         return fe2_o3_complete and si_o2_complete and al2_o3_complete and na2_o_complete and ca_o_complete and \
             mg_o_complete and k2_o_complete and s_o3_complete and ti_o2_complete and p2_o5_complete and \
-            sr_o_complete and mn2_o3_complete
+            sr_o_complete and mn2_o3_complete and loi_complete
 
     @classmethod
     def _check_completeness_of_structure(cls, base_materials_as_dict):
@@ -141,11 +144,12 @@ class PowderStrategy(MaterialStrategy):
         blended_p2_o5 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'p2_o5')
         blended_sr_o = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'sr_o')
         blended_mn2_o3 = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'mn2_o3')
+        blended_loi = bpc.compute_mean(normalized_ratios, base_powders_as_dict, 'composition', 'loi')
 
         composition = Composition(fe3_o2=blended_fe2_o3, si_o2=blended_si_o2, al2_o3=blended_al2_o3,
                                   na2_o=blended_na2_o, ca_o=blended_ca_o, mg_o=blended_mg_o,
                                   k2_o=blended_k2_o, s_o3=blended_s_o3, ti_o2=blended_ti_o2,
-                                  p2_o5=blended_p2_o5, sr_o=blended_sr_o, mn2_o3=blended_mn2_o3)
+                                  p2_o5=blended_p2_o5, sr_o=blended_sr_o, mn2_o3=blended_mn2_o3, loi=blended_loi)
 
         return composition
 
