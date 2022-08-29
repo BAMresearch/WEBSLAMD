@@ -92,7 +92,7 @@ class DiscoveryExperiment():
 
         else:
             df[self.target_selection_idxs] = self.Expected_Pred.reshape(len(self.Expected_Pred), 1)
-            uncertainty_name_column = 'Uncertainty ('+self.target_selection_idxs+' )'
+            uncertainty_name_column = 'Uncertainty ('+str(self.target_selection_idxs[0])+' )'
             df[uncertainty_name_column] = self.Uncertainty.reshape(len(self.Uncertainty), 1)
 
         show_df = df.sort_values(by='Utility', ascending=False)
@@ -118,8 +118,7 @@ class DiscoveryExperiment():
         fixed_targets_in_prediction = self.fixed_target_df.iloc[self.PredIdx].to_numpy()
 
         for weights in range(len(self.fixed_target_weights)):
-            fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights] * \
-                self.fixed_target_weights[weights].value
+            fixed_targets_in_prediction[weights] = fixed_targets_in_prediction[weights] * self.fixed_target_weights[weights]
 
         return fixed_targets_in_prediction.sum(axis=1)
 
@@ -131,13 +130,13 @@ class DiscoveryExperiment():
         if(self.Expected_Pred.ndim >= 2):
 
             for weights in range(len(self.target_weights)):
-                Expected_Pred_norm[:, weights] = Expected_Pred_norm[:, weights]*self.target_weights[weights].value
-                Uncertainty_norm[:, weights] = Uncertainty_norm[:, weights]*self.target_weights[weights].value
+                Expected_Pred_norm[:, weights] = Expected_Pred_norm[:, weights]*self.target_weights[weights]
+                Uncertainty_norm[:, weights] = Uncertainty_norm[:, weights]*self.target_weights[weights]
 
         else:
 
-            Expected_Pred_norm = Expected_Pred_norm*self.target_weights[0].value
-            Uncertainty_norm = Uncertainty_norm*self.target_weights[0].value
+            Expected_Pred_norm = Expected_Pred_norm*self.target_weights[0]
+            Uncertainty_norm = Uncertainty_norm*self.target_weights[0]
 
         self.scale_data()
 
