@@ -198,13 +198,13 @@ describe("Test deleting base materials", () => {
   });
 
   it("Can delete two powders", () => {
-    cy.get(".btn-group > button").eq(0).click();
+    cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findAllByText("Confirm").first().click();
     // Check that the table entry was deleted
-    cy.get(".btn-group > button").should("have.length", 1);
-    cy.get(".btn-group > button").eq(0).click();
+    cy.get(".btn-group > div > button").should("have.length", 1);
+    cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findAllByText("Confirm").first().click();
