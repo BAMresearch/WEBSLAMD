@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, SubmitField
+from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, SubmitField, FieldList, FormField
+from slamd.discovery.processing.forms.field_configuration_form import FieldConfigurationForm
 
 
 class DiscoveryForm(Form):
@@ -38,4 +39,10 @@ class DiscoveryForm(Form):
         validators=[validators.NumberRange(min=0, max=10, message='The curiosity value should be between 0 and 10')]
     )
 
-    submit = SubmitField('Run experiment with given configuration')
+    target_configurations = FieldList(FormField(FieldConfigurationForm),
+                                      label='Target configurations',
+                                      min_entries=0)
+
+    a_priori_information_configurations = FieldList(FormField(FieldConfigurationForm),
+                                                    label='A priori information configurations',
+                                                    min_entries=0)
