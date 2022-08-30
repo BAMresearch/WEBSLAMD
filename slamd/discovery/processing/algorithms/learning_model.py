@@ -17,7 +17,7 @@ class LearningModel:
         experiment = DiscoveryExperiment(
             dataframe=dataframe,
             model=user_input.model,
-            sigma=user_input.sigma_factor,
+            curiosity=user_input.curiosity,
             features=user_input.features,
             targets=user_input.targets,
             target_weights=user_input.target_weights,

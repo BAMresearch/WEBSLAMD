@@ -15,12 +15,12 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 class DiscoveryExperiment():
 
-    def __init__(self, dataframe, model, sigma, features,
+    def __init__(self, dataframe, model, curiosity, features,
                  targets, target_weights, target_max_or_min,
                  fixed_targets, fixed_target_weights, fixed_target_max_or_min):
         self.dataframe = dataframe
         self.model = model
-        self.sigma = sigma
+        self.curiosity = curiosity
         self.targets = targets
         self.target_weights = target_weights
         self.target_max_or_min = target_max_or_min
@@ -200,10 +200,10 @@ class DiscoveryExperiment():
         # See slide 43 of the PowerPoint presentation
         if len(self.targets) > 1:
             utility_function = fixed_targets_for_predicted_rows.squeeze(
-            ) + prediction_norm.sum(axis=1) + self.sigma * uncertainty_norm.sum(axis=1)
+            ) + prediction_norm.sum(axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
         else:
             utility_function = fixed_targets_for_predicted_rows.squeeze(
-            ) + prediction_norm.squeeze() + self.sigma * uncertainty_norm.squeeze()
+            ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()
 
         return utility_function
 
