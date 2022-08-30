@@ -238,6 +238,10 @@ class FormulationsService:
         filename = form['dataset_name']
         if not filename.endswith('.csv'):
             filename = filename + '.csv'
+
+        if filename == TEMPORARY_FORMULATION:
+            raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
+
         formulation_to_be_saved_as_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
         FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
         formulation_to_be_saved_as_dataset.name = filename
