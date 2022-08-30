@@ -84,6 +84,14 @@ def create_a_priori_information_configuration_form():
     return make_response(jsonify(body), 200)
 
 
+@discovery.route('/<dataset>', methods=['POST'])
+def run_experiment(dataset):
+    request_body = json.loads(request.data)
+    experiment_result = DiscoveryService.run_experiment(dataset, request_body)
+    body = {'template': render_template('experiment_result.html', result=experiment_result)}
+    return make_response(jsonify(body), 200)
+
+
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
     dataframe, all_dtos, target_list = DiscoveryService.show_dataset_for_adding_targets(dataset)
