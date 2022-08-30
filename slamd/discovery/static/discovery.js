@@ -31,13 +31,13 @@ function updateAPrioriInformationChoices(event) {
 }
 
 function collectSelectedValues(options) {
-  const names = [];
+  const values = [];
   for (const option of options) {
     if (option.selected) {
-      names.push(option.value);
+      values.push(option.value);
     }
   }
-  return names;
+  return values;
 }
 
 async function getTargetConfigurationForm(event, placeholderId) {
