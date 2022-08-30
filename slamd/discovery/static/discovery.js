@@ -134,10 +134,20 @@ async function runExperiment() {
   });
 }
 
+function toggleRunExperimentButton() {
+  const countMaterialDataInput = countSelectedOptionsMultipleSelectField(
+    document.getElementById("materials_data_input")
+  );
+  const countTargetProperties = countSelectedOptionsMultipleSelectField(document.getElementById("target_properties"));
+  document.getElementById("run-experiment-button").disabled = countMaterialDataInput < 1 || countTargetProperties < 1;
+}
+
 window.addEventListener("load", () => {
   document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("materials_data_input").addEventListener("change", onChangeMaterialsDataInput);
   document.getElementById("target_properties").addEventListener("change", onChangeTargetProperties);
   document.getElementById("a_priori_information").addEventListener("change", onChangeAPrioriInformation);
   document.getElementById("run-experiment-button").addEventListener("click", runExperiment);
+  document.getElementById("materials_data_input").addEventListener("change", toggleRunExperimentButton);
+  document.getElementById("target_properties").addEventListener("change", toggleRunExperimentButton);
 });

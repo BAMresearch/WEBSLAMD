@@ -50,8 +50,7 @@ async function assignConfirmBlendingConfigurationEvent() {
 }
 
 function toggleConfirmationButton() {
-  const placeholder = document.getElementById("base_material_selection");
-  const count = countSelectedBaseMaterials(placeholder);
+  const count = countSelectedOptionsMultipleSelectField(document.getElementById("base_material_selection"));
   document.getElementById("change-base-material-selection-button").disabled = count < 2;
 }
 

@@ -31,6 +31,13 @@ function correctInputFieldValue(inputFieldElem, minValue, maxValue) {
   clipMaxInputFieldValue(inputFieldElem, maxValue);
 }
 
+function countSelectedOptionsMultipleSelectField(elem) {
+  if (elem.childElementCount !== 0) {
+    return Array.from(elem.children).filter((option) => option.selected).length;
+  }
+  return 0;
+}
+
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
   const response = await fetch(url);
   if (response.ok) {
@@ -98,8 +105,7 @@ function collectSelection(placeholder) {
 }
 
 function atLeastOneItemIsSelected(placeholder) {
-  const selectedItems = Array.from(placeholder.children)
-      .filter((option) => option.selected);
+  const selectedItems = Array.from(placeholder.children).filter((option) => option.selected);
   return selectedItems.length > 0;
 }
 
