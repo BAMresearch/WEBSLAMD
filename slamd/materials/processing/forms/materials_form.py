@@ -47,4 +47,4 @@ class MaterialsForm(Form):
                                       min_entries=0,
                                       max_entries=10)
 
-    submit = SubmitField('6 - Save material')
+    submit = SubmitField('6 - Save material/process')
