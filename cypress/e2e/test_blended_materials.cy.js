@@ -41,7 +41,7 @@ describe("Test blending powders and blended material deletion", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "100.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("0/100").should("exist");
@@ -107,7 +107,7 @@ describe("Test blending liquids and property interpolation", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
-    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/80").should("exist");
@@ -221,7 +221,7 @@ describe("Test blending aggregates and incomplete data", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
-    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/80").should("exist");
@@ -277,7 +277,7 @@ describe("Test blending three custom materials with properties with negative val
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/20/60").should("exist");
@@ -347,7 +347,7 @@ describe("Test blending three admixtures with properties with negative values", 
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Confirm configuration").click().scrollIntoView();
+    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/20/60").should("exist");

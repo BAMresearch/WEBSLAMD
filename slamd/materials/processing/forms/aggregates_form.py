@@ -5,27 +5,39 @@ from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 class AggregatesForm(MaterialsForm):
     fine_aggregates = DecimalField(
-        label='Fine Aggregates (kg/m³)',
+        label='Fine Aggregates (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
     coarse_aggregates = DecimalField(
-        label='Coarse Aggregates (kg/m³)',
+        label='Coarse Aggregates (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    fa_density = DecimalField(
-        label='FA Density (kg/m³)',
+    gravity = DecimalField(
+        label='Specific gravity (kg/m³)',
         validators=[
             validators.Optional()
         ])
 
-    ca_density = DecimalField(
-        label='CA Density (kg/m³)',
+    bulk_density = DecimalField(
+        label='Bulk density (kg/m³)',
+        validators=[
+            validators.Optional()
+        ])
+
+    fineness_modulus = DecimalField(
+        label='Fineness modulus (m³/kg)',
+        validators=[
+            validators.Optional()
+        ])
+
+    water_absorption = DecimalField(
+        label='Water absorption (m%)',
         validators=[
             validators.Optional()
         ])
