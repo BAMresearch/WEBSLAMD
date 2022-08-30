@@ -67,7 +67,8 @@ class DiscoveryService:
         preview = ''
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
-                preview += f'{column}:{value}'
+                preview += f'{column}:{value}, '
+            preview = preview.strip()[:-1]
             dto = AddTargetsDto(index=i, preview_of_data=preview, targets=target_names)
             preview = ''
             all_dtos.append(dto)
