@@ -9,6 +9,17 @@ async function addTarget() {
     // TODO: event listener für inputs?
 }
 
+function toggleDataframe() {
+    let dataframeTable = document.getElementById("formulations_dataframe");
+    if (dataframeTable.style.visibility === "collapse"){
+        dataframeTable.style.visibility = "visible"
+    }
+    else {
+        dataframeTable.style.visibility = "collapse"
+    }
+}
+
 window.addEventListener("load", function () {
     document.getElementById("add_target_button").addEventListener("click", addTarget);
+    document.getElementById("toggle_dataframe_button").addEventListener("click", toggleDataframe);
 });
