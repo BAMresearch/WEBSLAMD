@@ -59,7 +59,7 @@ class DiscoveryService:
         if dataframe is None:
             return []
         columns = dataframe.columns
-        all_dtos = []
+        all_data_row_dtos = []
         target_dtos = []
         preview = ''
         target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
@@ -74,8 +74,8 @@ class DiscoveryService:
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''
             target_dtos = []
-            all_dtos.append(dto)
-        return all_dtos
+            all_data_row_dtos.append(dto)
+        return all_data_row_dtos
 
     @classmethod
     def add_target_name(cls, dataset, target_name):
@@ -101,8 +101,7 @@ class DiscoveryService:
             if key.startswith('target'):
                 pieces_of_target_key = key.split('-')
                 row_index = int(pieces_of_target_key[1]) - 1
-                target_number_index = int(pieces_of_target_key[2]) % len(targets_column_names) - 1
-                print(target_number_index)
+                target_number_index = int(pieces_of_target_key[2]) - 1
                 dataframe.at[row_index, targets_column_names[target_number_index]] = value
 
         DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
