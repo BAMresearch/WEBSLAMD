@@ -23,7 +23,7 @@ class DiscoveryForm(Form):
         choices=[]
     )
 
-    select_model = SelectField(
+    model = SelectField(
         label='Select Model',
         validators=[validators.DataRequired()],
         choices=[
