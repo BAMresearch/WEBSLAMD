@@ -27,6 +27,8 @@ def test_create_model_reads_all_properties_from_submitted_material():
     assert model.composition.coarse_aggregates == 67.890
     assert model.composition.gravity == 987.6
     assert model.composition.bulk_density == 543.2
+    assert model.composition.fineness_modulus == 500
+    assert model.composition.water_absorption == 400
 
 
 def test_gather_composition_properties_adds_all_properties():
