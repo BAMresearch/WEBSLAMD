@@ -7,9 +7,8 @@ from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
+from slamd.common.error_handling import ValueNotSupportedException
 
-# TODO: Uncomment this once integrated to the rest of the code
-# from slamd.common.error_handling import ValueNotSupportedException
 
 class DiscoveryExperiment():
 
@@ -86,9 +85,7 @@ class DiscoveryExperiment():
         elif self.model == 'Statistics-based model (Gaussian Process Regression)':
             self.fit_gaussian_process_regression()
         else:
-            # TODO: Uncomment this once integrated to the rest of the code
-            # raise ValueNotSupportedException(f'Model {self.model} value not supported')
-            raise RuntimeError('Invalid model value')
+            raise ValueNotSupportedException(f'Model {self.model} value not supported')
 
     def fit_gaussian_process_regression(self):
         for i in range(len(self.targets)):

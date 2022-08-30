@@ -1,5 +1,9 @@
 from dataclasses import dataclass, field
 
+# Example user input configuration for the file MaterialsDiscoveryExampleData.csv
+# This dataset can be found here:
+# https://github.com/BAMresearch/SequentialLearningApp
+
 
 @dataclass
 class UserInput:
