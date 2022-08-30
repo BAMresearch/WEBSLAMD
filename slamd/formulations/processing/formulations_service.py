@@ -9,7 +9,6 @@ from slamd.formulations.processing.forms.materials_and_processes_selection_form 
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
-from slamd.formulations.processing.formulations_dto import FormulationsDto
 from slamd.formulations.processing.formulations_persistence import FormulationsPersistence, TEMPORARY_FORMULATION
 from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
