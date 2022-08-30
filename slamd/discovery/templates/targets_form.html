@@ -7,6 +7,7 @@
         <thead>
         <tr>
             <th>Formulation Index</th>
+            <th>Feature Summary</th>
             {% for item in target_list %}
             <th>{{ item }}</th>
             {% endfor %}
@@ -17,6 +18,7 @@
         {% set outer_loop = loop %}
         <tr>
             <td>{{ item.index }}</td>
+            <td>{{ item.preview_of_data }}</td>
             {% for target in item.targets %}
             <td>
                 <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"

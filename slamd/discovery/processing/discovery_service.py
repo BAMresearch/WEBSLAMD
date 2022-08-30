@@ -61,10 +61,14 @@ class DiscoveryService:
     def _create_all_dtos(cls, dataframe):
         if dataframe is None:
             return []
-        target_names = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        columns = dataframe.columns
+        target_names = list(dataframe.loc[:, columns.str.startswith('Target')])
         all_dtos = []
+        preview = ''
         for i in range(len(dataframe.index)):
-            dto = AddTargetsDto(index=i, targets=target_names)
+            for column, value in zip(columns, dataframe.iloc[i]):
+                preview += f'{column}:{value}'
+            dto = AddTargetsDto(index=i, preview_of_data=preview, targets=target_names)
             all_dtos.append(dto)
         return all_dtos
 
