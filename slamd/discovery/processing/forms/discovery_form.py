@@ -27,8 +27,8 @@ class DiscoveryForm(Form):
         label='Select Model',
         validators=[validators.DataRequired()],
         choices=[
-            'AI Model (lolo Random Forest)',
-            'Statistics-based model (Gaussian Process Regression)'
+            'Statistics-based model (Gaussian Process Regression)',
+            'AI Model (lolo Random Forest)'
         ]
     )
 
