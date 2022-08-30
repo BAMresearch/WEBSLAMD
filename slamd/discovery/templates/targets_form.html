@@ -21,7 +21,7 @@
             {% for target in item.targets %}
             <td>
                 <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                       name="targets_field" type="text" value="">
+                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="text" value="">
             </td>
             {% endfor %}
         </tr>
@@ -32,7 +32,7 @@
     <div class="form-group mb-3">
         <div class="col-sm-offset-2 col-sm-12">
             {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
-            title="Select at least a name and a type")
+            title="Save your targets.")
             }}
         </div>
     </div>

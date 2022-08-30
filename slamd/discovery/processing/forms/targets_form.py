@@ -3,4 +3,4 @@ from wtforms import SubmitField
 
 
 class TargetsForm(Form):
-    submit = SubmitField('6 - Save targets')
+    submit = SubmitField('3 - Save targets')

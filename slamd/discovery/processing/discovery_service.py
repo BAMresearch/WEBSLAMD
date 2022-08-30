@@ -91,3 +91,19 @@ class DiscoveryService:
         if dataframe is not None:
             target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
         return dataframe, all_dtos, target_list
+
+    @classmethod
+    def save_targets(cls, dataset_name, form):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        dataframe = dataset.dataframe
+        all_columns = dataset.columns()
+
+        targets_column_names = list(filter(lambda column_name: column_name.startswith('Target: '), all_columns))
+        for key, value in form.items():
+            if key.startswith('target'):
+                pieces_of_target_key = key.split('-')
+                row_index = pieces_of_target_key[1] - 1
+                target_number_index = pieces_of_target_key[2] - 1
+                dataframe.at(row_index, targets_column_names[target_number_index])
+
+        dataframe.columns.str.startswith('Target')

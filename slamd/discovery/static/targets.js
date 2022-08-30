@@ -6,7 +6,6 @@ async function addTarget() {
     const url = `${TARGET_BASE_URL}/${dataset}/${targetName}/add_target`;
 
     await fetchDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder");
-    // TODO: event listener für inputs?
 }
 
 function toggleDataframe() {
@@ -20,6 +19,7 @@ function toggleDataframe() {
 }
 
 window.addEventListener("load", function () {
+    document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
     document.getElementById("add_target_button").addEventListener("click", addTarget);
     document.getElementById("toggle_dataframe_button").addEventListener("click", toggleDataframe);
 });
