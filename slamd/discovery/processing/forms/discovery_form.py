@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField
+from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, SubmitField
 
 
 class DiscoveryForm(Form):
@@ -37,3 +37,5 @@ class DiscoveryForm(Form):
         places=2,
         validators=[validators.NumberRange(min=0, max=10, message='The curiosity value should be between 0 and 10')]
     )
+
+    submit = SubmitField('Run experiment with given configuration')
