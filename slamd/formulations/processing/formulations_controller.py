@@ -50,12 +50,10 @@ def submit_formulation_batch():
     formulations_request_data = json.loads(request.data)
     dataframe = FormulationsService.create_materials_formulations(formulations_request_data)
 
-    body = {'template': render_template('formulations_tables.html',
-                                        df=dataframe.to_html(index=False,
-                                                             table_id='formulations_dataframe',
-                                                             classes='table table-bordered table-striped table-hover')
-                                        )}
-
+    html_dataframe = dataframe.to_html(index=False,
+                                       table_id='formulations_dataframe',
+                                       classes='table table-bordered table-striped table-hover')
+    body = {'template': render_template('formulations_tables.html', df=html_dataframe)}
     return make_response(jsonify(body), 200)
 
 

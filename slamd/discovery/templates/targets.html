@@ -2,6 +2,7 @@
 
 <head>
     <title>SLAMD - Materials Discovery</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width">
     <link rel="stylesheet" href="{{url_for('discovery.static', filename='discovery.css')}}">
 </head>
 
@@ -14,15 +15,15 @@
             <label class="control-label" for="target_value">1 - Define Target Column</label>
             <input class="form-control" id="target_value" name="targets_field" type="text" value="">
         </div>
-        <div class="pt-4 col-2" data-bs-toggle="tooltip" data-bs-placement="bottom"
-             title="Add a new target column to your material formulation.">
-            <button class="btn btn-primary" type="button" id="add_target_button">
+        <div class="pt-4 col-2">
+            <button class="btn btn-primary" type="button" id="add_target_button" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="Add a new target column to your material formulation.">
                 Add target
             </button>
         </div>
-        <div class="pt-4 col-2" data-bs-toggle="tooltip" data-bs-placement="bottom"
-             title="Hide / Show the dataframe below.">
-            <button class="btn btn-secondary" type="button" id="toggle_dataframe_button">
+        <div class="pt-4 col-2">
+            <button class="btn btn-secondary" type="button" id="toggle_dataframe_button" data-bs-toggle="tooltip"
+                data-bs-placement="bottom" title="Hide / Show the dataframe below.">
                 Show / Hide
             </button>
         </div>

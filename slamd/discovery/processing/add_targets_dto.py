@@ -10,7 +10,6 @@ class DataWithTargetsDto:
 
 @dataclass
 class TargetDto:
-
     index: int = 0
     name: str = ''
     value: float = None

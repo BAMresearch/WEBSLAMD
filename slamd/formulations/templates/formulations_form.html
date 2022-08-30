@@ -57,8 +57,8 @@
     </div>
 
     <button class="btn btn-danger col-12" type="button" id="delete_formulations_batches_button" data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+        data-bs-placement="bottom"
+        title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
         Delete Material Formulation
     </button>
 
@@ -70,8 +70,8 @@
 
     <div class="form-group mb-12">
         <div class="col-sm-offset-2 col-sm-12" id="submit_bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
-             title="Save your created formulation as a dataset to be used for materials discovery. Specify any name but
-             'temporary' for the set.">
+            title="Save your created formulation as a dataset to be used for materials discovery. Specify any name but
+             'temporary' for the dataset.">
             {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
             data_bs_target="#submit_blending_modal", disabled=True) }}
         </div>

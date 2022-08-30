@@ -15,5 +15,5 @@ class TargetConfigurationForm(Form):
 
     weight = DecimalField(
         label='Weight',
-        validators=[validators.Optional()]
+        validators=[validators.DataRequired()]
     )

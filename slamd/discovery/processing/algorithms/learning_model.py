@@ -27,7 +27,6 @@ class LearningModel:
             fixed_target_weights=user_input.fixed_target_weights,
             fixed_target_max_or_min=user_input.fixed_target_max_or_min
         )
-
         result = experiment.run()
         print(result)
 
