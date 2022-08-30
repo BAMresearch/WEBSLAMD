@@ -6,7 +6,7 @@ from slamd.materials.processing.models.material import Material
 class Composition:
     fine_aggregates: float = None
     coarse_aggregates: float = None
-    specific_density: float = None
+    gravity: float = None
     bulk_density: float = None
     fineness_modulus: float = None
     water_absorption: float = None

@@ -12,7 +12,7 @@ def test_create_model_reads_all_properties_from_submitted_material():
                                              ('delivery_time', '77'),
                                              ('fine_aggregates', '123.45'),
                                              ('coarse_aggregates', '67.890'),
-                                             ('specific_density', '987.6'),
+                                             ('gravity', '987.6'),
                                              ('bulk_density', '543.2'),
                                              ('fineness_modulus', '500'),
                                              ('water_absorption', '400'),
@@ -25,7 +25,7 @@ def test_create_model_reads_all_properties_from_submitted_material():
     assert model.costs.delivery_time == 77
     assert model.composition.fine_aggregates == 123.45
     assert model.composition.coarse_aggregates == 67.890
-    assert model.composition.specific_density == 987.6
+    assert model.composition.gravity == 987.6
     assert model.composition.bulk_density == 543.2
 
 
@@ -33,7 +33,7 @@ def test_gather_composition_properties_adds_all_properties():
     composition = Composition(
         fine_aggregates=123.45,
         coarse_aggregates=67.890,
-        specific_density=987.6,
+        gravity=987.6,
         bulk_density=543.2,
         fineness_modulus=123.45,
         water_absorption=543.21
@@ -49,7 +49,7 @@ def test_gather_composition_properties_adds_all_properties():
     result = AggregatesStrategy.gather_composition_information(aggregates)
     assert result == ['Fine Aggregates (m%): 123.45, ',
                       'Coarse Aggregates (m%): 67.89, ',
-                      'Specific Density (kg/m³): 987.6, ',
+                      'Specific Gravity (kg/m³): 987.6, ',
                       'Bulk Density (kg/m³): 543.2, ',
                       'Fineness modulus (m³/kg): 123.45, ',
                       'Water absorption (m%): 543.21, ']
@@ -59,7 +59,7 @@ def test_convert_to_multidict_adds_all_properties():
     composition = Composition(
         fine_aggregates=123.45,
         coarse_aggregates=67.890,
-        specific_density=987.6,
+        gravity=987.6,
         bulk_density=543.2
     )
     aggregates = Aggregates(
@@ -75,5 +75,5 @@ def test_convert_to_multidict_adds_all_properties():
     assert multidict['material_type'] == 'Aggregates'
     assert multidict['fine_aggregates'] == '123.45'
     assert multidict['coarse_aggregates'] == '67.89'
-    assert multidict['specific_density'] == '987.6'
+    assert multidict['gravity'] == '987.6'
     assert multidict['bulk_density'] == '543.2'

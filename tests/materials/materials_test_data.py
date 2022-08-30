@@ -90,7 +90,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
         aggregates1 = Aggregates(name='aggregate 1', type='Aggregates',
                                  costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
-                                     fine_aggregates=10.0, coarse_aggregates=4.4, specific_density=7,
+                                     fine_aggregates=10.0, coarse_aggregates=4.4, gravity=7,
                                      bulk_density=11, fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                         AdditionalProperty(name='Prop2', value='Category'),
@@ -101,7 +101,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
         aggregates2 = Aggregates(name='aggregate 2', type='Aggregates',
                                  costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
-                                     fine_aggregates=20.0, coarse_aggregates=4.1, specific_density=4,
+                                     fine_aggregates=20.0, coarse_aggregates=4.1, gravity=4,
                                      bulk_density=11, fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                         AdditionalProperty(name='Prop2', value='Category'),
@@ -112,7 +112,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
         aggregates3 = Aggregates(name='aggregate 3', type='Aggregates',
                                  costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
-                                     fine_aggregates=27.0, coarse_aggregates=9.0, specific_density=6,
+                                     fine_aggregates=27.0, coarse_aggregates=9.0, gravity=6,
                                      bulk_density=16, fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                         AdditionalProperty(name='Prop2', value='Other Category'),

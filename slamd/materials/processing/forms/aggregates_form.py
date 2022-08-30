@@ -18,7 +18,7 @@ class AggregatesForm(MaterialsForm):
         ]
     )
 
-    specific_density = DecimalField(
+    gravity = DecimalField(
         label='Specific gravity (kg/m³)',
         validators=[
             validators.Optional()

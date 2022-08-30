@@ -6,7 +6,7 @@
   "delivery_time": "10",
   "fine_aggregates": "10",
   "coarse_aggregates": "",
-  "specific_density": "10",
+  "gravity": "10",
   "bulk_density": "",
   "fineness_modulus": "",
   "water_absorption": "",
