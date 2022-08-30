@@ -19,10 +19,12 @@
             <td>{{ item.index }}</td>
             <td>{{ item.preview_of_data }}</td>
             {% for target in item.targets %}
+            {% if target.index == item.index %}
             <td>
                 <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="text" value="">
+                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number" value="{{ target.value }}">
             </td>
+            {% endif %}
             {% endfor %}
         </tr>
         {% endfor %}

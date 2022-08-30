@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from werkzeug.datastructures import MultiDict
 
+from slamd.common.error_handling import ValueNotSupportedException
 from slamd.common.slamd_utils import empty, not_empty, numeric
 from slamd.common.slamd_utils import join_all, float_if_not_empty, str_if_not_none
 from slamd.materials.processing.material_dto import MaterialDto
@@ -10,6 +11,8 @@ from slamd.materials.processing.models.additional_property import AdditionalProp
 from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+
+INVALID_START_OF_FEATURE_NAME = 'Target'
 
 
 class MaterialStrategy(ABC):
@@ -75,6 +78,8 @@ class MaterialStrategy(ABC):
         submitted_values = cls._extract_additional_property_by_label(submitted_material, 'value')
 
         for name, value in zip(submitted_names, submitted_values):
+            if name.startswith(INVALID_START_OF_FEATURE_NAME) or value.startswith(INVALID_START_OF_FEATURE_NAME):
+                raise ValueNotSupportedException('You cannot use Target as a feature!')
             if not_empty(name):
                 additional_property = AdditionalProperty(name, value)
                 additional_properties.append(additional_property)

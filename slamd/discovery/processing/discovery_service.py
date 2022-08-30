@@ -1,11 +1,11 @@
 from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
-from slamd.common.slamd_utils import empty
-from slamd.discovery.processing.add_targets_dto import AddTargetsDto
+from slamd.common.slamd_utils import empty, float_if_not_empty
+from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
-from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.forms.discovery_configuration_form import DiscoveryConfigurationForm
+from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 
@@ -59,14 +59,19 @@ class DiscoveryService:
         if dataframe is None:
             return []
         columns = dataframe.columns
-        target_names = list(dataframe.loc[:, columns.str.startswith('Target')])
         all_dtos = []
+        target_dtos = []
         preview = ''
+        target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}:{value}, '
             preview = preview.strip()[:-1]
-            dto = AddTargetsDto(index=i, preview_of_data=preview, targets=target_names)
+            for target_name in target_list:
+                target_value = dataframe.at[i, target_name]
+                target_dto = TargetDto(i, target_name, float_if_not_empty(target_value))
+                target_dtos.append(target_dto)
+            dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''
             all_dtos.append(dto)
         return all_dtos
@@ -95,7 +100,8 @@ class DiscoveryService:
             if key.startswith('target'):
                 pieces_of_target_key = key.split('-')
                 row_index = int(pieces_of_target_key[1]) - 1
-                target_number_index = int(pieces_of_target_key[2]) - 1
+                target_number_index = int(pieces_of_target_key[2]) % len(targets_column_names) - 1
+                print(target_number_index)
                 dataframe.at[row_index, targets_column_names[target_number_index]] = value
 
         DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
@@ -105,7 +111,7 @@ class DiscoveryService:
     @classmethod
     def _create_data_tables(cls, dataframe):
         all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
+        target_name_list = []
         if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
+            target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_name_list

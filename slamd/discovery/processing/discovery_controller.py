@@ -85,7 +85,7 @@ def add_targets(dataset):
                            form=TargetsForm(),
                            df=dataframe.to_html(index=False,
                                                 table_id='formulations_dataframe',
-                                                classes='table table-bordered table-striped table-hover'),
+                                                classes='table table-bordered table-striped table-hover df-collapsed'),
                            all_dtos=all_dtos,
                            target_list=target_list)
 
@@ -98,7 +98,7 @@ def add_target(dataset, target_name):
                                         form=TargetsForm(),
                                         df=dataframe.to_html(index=False,
                                                              table_id='formulations_dataframe',
-                                                             classes='table table-bordered table-striped table-hover'),
+                                                             classes='table table-bordered table-striped table-hover df-collapsed'),
                                         all_dtos=all_dtos,
                                         target_list=target_list)}
     return make_response(jsonify(body), 200)
@@ -106,6 +106,6 @@ def add_target(dataset, target_name):
 
 @discovery.route('/<dataset>/add_targets', methods=['POST'])
 def submit_target_values(dataset):
-    dataframe, all_dtos, target_list = DiscoveryService.save_targets(dataset, request.form)
+    DiscoveryService.save_targets(dataset, request.form)
 
     return redirect('/materials/discovery')

@@ -10,11 +10,10 @@ async function addTarget() {
 
 function toggleDataframe() {
     let dataframeTable = document.getElementById("formulations_dataframe");
-    if (dataframeTable.style.visibility === "collapse"){
-        dataframeTable.style.visibility = "visible"
-    }
-    else {
-        dataframeTable.style.visibility = "collapse"
+    if (dataframeTable.className.includes("df-collapsed")) {
+        dataframeTable.className = "table table-bordered table-striped table-hover"
+    } else {
+        dataframeTable.className = "table table-bordered table-striped table-hover df-collapsed"
     }
 }
 
