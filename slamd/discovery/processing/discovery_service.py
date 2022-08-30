@@ -73,6 +73,7 @@ class DiscoveryService:
                 target_dtos.append(target_dto)
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''
+            target_dtos = []
             all_dtos.append(dto)
         return all_dtos
 
