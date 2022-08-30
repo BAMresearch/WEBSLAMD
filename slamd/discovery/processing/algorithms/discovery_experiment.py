@@ -52,7 +52,7 @@ class DiscoveryExperiment():
 
         novelty_factor = self.compute_novelty_factor()
 
-        # Normalized dataframe
+        # Original dataframe
         df = self.dataframe
         # Add the columns with utility and novelty values
         df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
@@ -88,7 +88,6 @@ class DiscoveryExperiment():
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
-        self.dataframe_norm = (self.dataframe - self.dataframe.mean()) / self.dataframe.std()
         self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
         self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
         self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
@@ -97,7 +96,7 @@ class DiscoveryExperiment():
         # Multiply the column by -1 if it needs to be minimized
         for (column, value) in zip(columns, max_or_min):
             if value == 'minimize':
-                self.dataframe[column] = self.dataframe[column]*(-1)
+                self.fixed_target_df[column] *= (-1)
 
     def fit_model(self):
         if self.model == 'AI-Model (lolo Random Forrest)':
