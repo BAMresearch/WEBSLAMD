@@ -1,17 +1,18 @@
-{% from 'icons.html' import edit_icon, delete_icon, check_icon -%}
+{% from 'icons.html' import edit_icon, delete_icon, check_icon, bullseye_icon -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
-<div data-bs-toggle="tooltip" data-bs-placement="right" title="Delete material">
-    <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="{{'#delete_modal_' + id}}">
+<div class="me-1" data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
+    <button class="btn btn-danger" type="button" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="Delete material">
         {{ delete_icon(width, height, "currentColor") }}
     </button>
 </div>
-<div class="modal fade" id="{{'delete_modal_' + id}}" tabindex="-1" aria-labelledby="{{'delete_modal_label_' + id }}"
+<div class="modal fade" id="{{'delete-modal-' + id}}" tabindex="-1" aria-labelledby="{{'delete-modal-label-' + id }}"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="{{'delete_modal_label_' + id }}">Delete Material</h5>
+                <h5 class="modal-title" id="{{'delete-modal-label-' + id }}">Delete Material</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -30,23 +31,26 @@
 {% endmacro %}
 
 {% macro create_edit_button(id, type, width, height) -%}
-<a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
-   data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
-    {{ edit_icon(width, height, "currentColor") }}
-</a>
+<div class="me-1">
+    <a class="btn btn-secondary" id="'{{ id }}'" href="/materials/base/{{ type.lower() }}/{{ id.split('___', 1)[-1] }}"
+       data-bs-toggle="tooltip" data-bs-placement="right" title="Edit material">
+        {{ edit_icon(width, height, "currentColor") }}
+    </a>
+</div>
 {% endmacro %}
 
 {% macro create_change_selection_button(changeButtonId, confirmButtonId, tooltip) -%}
-<span data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}" data-bs-offset="0,15">
-    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-target="#change_modal"
-            data-bs-toggle="modal" disabled>4 - Confirm Selection
+<div data-bs-target="#change-modal" data-bs-toggle="modal">
+    <button id="{{ changeButtonId }}" class="btn btn-success col-12" type="button" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="{{ tooltip }}" disabled>
+        4 - Confirm Selection
     </button>
-</span>
-<div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="change_modal_label" aria-hidden="true">
+</div>
+<div class="modal fade" id="change-modal" tabindex="-1" aria-labelledby="change-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="change_modal_label">Change Selection</h5>
+                <h5 class="modal-title" id="change-modal-label">Change Selection</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -65,9 +69,53 @@
 {% endmacro %}
 
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
-<a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/columns"
-   id="'{{ 'select_dataset_button_'+dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
-   title="Select dataset">
-    {{ check_icon(16, 16, "currentColor") }}
-</a>
+<div class="me-1">
+    <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}"
+       id="'{{ 'select-dataset-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Select dataset">
+        {{ check_icon(width, height, "currentColor") }}
+    </a>
+</div>
+{% endmacro %}
+
+{% macro create_delete_dataset_button(dataset_name, width, height) -%}
+<div class="me-1" data-bs-toggle="modal"
+     data-bs-target="{{ '#delete-dataset-modal-' + dataset_name.replace('.', '_') }}">
+    <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right"
+            title="Delete dataset">
+        {{ delete_icon(width, height, "currentColor") }}
+    </button>
+</div>
+<div class="modal fade" id="{{ 'delete-dataset-modal-' + dataset_name.replace('.', '_') }}" tabindex="-1"
+     aria-labelledby="{{ 'delete-dataset-modal-label-' + dataset_name.replace('.', '_') }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{ 'delete-dataset-modal-label-' + dataset_name.replace('.', '_') }}">
+                    Delete Dataset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete the chosen dataset?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                </button>
+                <button type="button" id="{{ dataset_name }}" class="btn btn-primary"
+                        onclick="deleteDataset('{{ dataset_name }}')" data-bs-dismiss="modal">Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro create_add_target_button(dataset_name, width, height) -%}
+<div class="me-1">
+    <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/add_targets"
+       id="'{{ 'add-targets-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Add targets to your dataset dataset">
+        {{ bullseye_icon(width, height, "currentColor") }}
+    </a>
+</div>
 {% endmacro %}

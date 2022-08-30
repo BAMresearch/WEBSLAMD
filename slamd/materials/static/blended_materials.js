@@ -6,8 +6,8 @@ let nameIsEmpty = true;
  */
 async function selectBaseMaterialType() {
   removeInnerHtmlFromPlaceholder("min-max-placeholder");
-  removeInnerHtmlFromPlaceholder("blending_ratio_placeholder");
-  document.getElementById("change_base_material_selection_button").disabled = true;
+  removeInnerHtmlFromPlaceholder("blending-ratio-placeholder");
+  document.getElementById("change-base-material-selection-button").disabled = true;
 
   const elem = document.getElementById("base_type");
   const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
@@ -18,7 +18,7 @@ async function selectBaseMaterialType() {
 
 async function confirmSelection() {
   removeInnerHtmlFromPlaceholder("min-max-placeholder");
-  removeInnerHtmlFromPlaceholder("blending_ratio_placeholder");
+  removeInnerHtmlFromPlaceholder("blending-ratio-placeholder");
 
   const placeholder = document.getElementById("base_material_selection");
 
@@ -36,13 +36,13 @@ async function confirmSelection() {
 }
 
 async function assignConfirmBlendingConfigurationEvent() {
-  const elem = document.getElementById("confirm_blending_configuration_button");
+  const elem = document.getElementById("confirm-blending-configuration-button");
   enableTooltip(elem);
 
   elem.addEventListener("click", async () => {
     const minMaxValuesWithIncrements = collectMinMaxValuesWithIncrements();
     const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
-    await postDataAndEmbedTemplateInPlaceholder(url, "blending_ratio_placeholder", minMaxValuesWithIncrements);
+    await postDataAndEmbedTemplateInPlaceholder(url, "blending-ratio-placeholder", minMaxValuesWithIncrements);
     assignKeyboardEventsToRatiosForm(true);
     assignAddCustomBlendEvent();
     assignDeleteCustomBlendEvent();
@@ -52,7 +52,7 @@ async function assignConfirmBlendingConfigurationEvent() {
 function toggleConfirmationButton() {
   const placeholder = document.getElementById("base_material_selection");
   const count = countSelectedBaseMaterials(placeholder);
-  document.getElementById("change_base_material_selection_button").disabled = count < 2;
+  document.getElementById("change-base-material-selection-button").disabled = count < 2;
 }
 
 function checkNameIsNotEmpty() {
@@ -66,6 +66,7 @@ async function deleteMaterial(id, material_type) {
 }
 
 window.addEventListener("load", function () {
+  document.getElementById("nav-bar-blended").setAttribute("class", "nav-link active");
   document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
   document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
   document.getElementById("blended_material_name").addEventListener("change", checkNameIsNotEmpty);

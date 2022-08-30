@@ -116,7 +116,7 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
 def test_slamd_creates_formulation_batch(client, monkeypatch):
     def mock_create_materials_formulations(input):
         data = {'col_1': [3, 2, 1, 0], 'col_2': ['a', 'b', 'c', 'd']}
-        return pd.DataFrame.from_dict(data), [], []
+        return pd.DataFrame.from_dict(data)
 
     monkeypatch.setattr(FormulationsService, 'create_materials_formulations', mock_create_materials_formulations)
 

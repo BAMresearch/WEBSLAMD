@@ -115,3 +115,13 @@ const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-tog
 tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl, { trigger: "hover" });
 });
+
+function setNavBarHomeToActive() {
+  if (window.location.pathname === "/") {
+    document.getElementById("nav-bar-home").setAttribute("class", "nav-link active");
+  }
+}
+
+window.addEventListener("load", function () {
+  setNavBarHomeToActive();
+});

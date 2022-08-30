@@ -6,9 +6,9 @@ function toggleBasedOnSelectionAndConstraints() {
     const liquidPlaceholder = document.getElementById("liquid_selection");
     const aggregatesPlaceholder = document.getElementById("aggregates_selection");
 
-    const powderSelected = atLeastOneItemIsSelected(powderPlaceholder)
-    const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder)
-    const aggregatesSelected = atLeastOneItemIsSelected(aggregatesPlaceholder)
+    const powderSelected = atLeastOneItemIsSelected(powderPlaceholder);
+    const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder);
+    const aggregatesSelected = atLeastOneItemIsSelected(aggregatesPlaceholder);
 
     const validSelectionConfiguration = powderSelected && liquidSelected && aggregatesSelected;
     const validConstraintConfiguration = weightConstraint !== undefined && weightConstraint !== "";
@@ -74,7 +74,6 @@ function assignCreateFormulationsBatchEvent() {
         const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest);
         document.getElementById("submit").disabled = false;
-        document.getElementById("add_target_button").addEventListener("click", addTarget);
     });
 }
 
@@ -92,20 +91,17 @@ function assignDeleteWeightEvent() {
 
 async function deleteFormulations() {
     await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations_tables_placeholder");
-    document.getElementById("submit").disabled = true
-}
-
-async function addTarget() {
-    let targetName = document.getElementById("target_value").value;
-
-    const url = `${FORMULATIONS_MATERIALS_URL}/add_target`;
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", {target_name: targetName});
-    document.getElementById("add_target_button").addEventListener("click", addTarget);
+    document.getElementById("submit").disabled = true;
 }
 
 window.addEventListener("load", function () {
-    document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("weight_constraint").addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("nav-bar-formulations").setAttribute("class", "nav-link active");
+    document
+        .getElementById("confirm_materials_and_processes_selection_button")
+        .addEventListener("click", confirmSelection);
+    document
+        .getElementById("weight_constraint")
+        .addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
     document.getElementById("powder_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
     document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
@@ -114,7 +110,6 @@ window.addEventListener("load", function () {
 
     const formulations = document.getElementById("formulations_dataframe");
     if (formulations) {
-        document.getElementById("add_target_button").addEventListener("click", addTarget);
-        document.getElementById("submit").disabled = false
+        document.getElementById("submit").disabled = false;
     }
 });

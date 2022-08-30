@@ -1,19 +1,8 @@
-from dataclasses import dataclass
 import pandas as pd
 
 
-@dataclass
-class UserInput:
-    curiosity: float = 1.0
-    model: str = 'lolo Random Forest'
-
-
-class ModelData:
-
-    def __init__(self, user_input, curiosity=1.2000):
-        self.curiosity = curiosity
-        self.dataframe = None  # pd.read
-        self.user_input = user_input
+from user_input import UserInput
+from discovery_experiment import DiscoveryExperiment
 
 
 class LearningModel:
@@ -22,9 +11,24 @@ class LearningModel:
     def run(cls):
         # Run the model on the given dataset
         print('Running....')
-        user_input = UserInput(curiosity=2.0)
-        data = ModelData(user_input=user_input)
-        return []
+        user_input = UserInput()
+        dataframe = pd.read_csv('MaterialsDiscoveryExampleData.csv')
+        dataframe.apply(pd.to_numeric, errors='ignore')
+        experiment = DiscoveryExperiment(
+            dataframe=dataframe,
+            model=user_input.model,
+            sigma=user_input.sigma_factor,
+            distance=user_input.prediction_quantile_distance,
+            features=user_input.features,
+            targets=user_input.targets,
+            target_weights=user_input.target_weights,
+            target_max_or_min=user_input.target_max_or_min,
+            fixed_targets=user_input.fixed_targets,
+            fixed_target_weights=user_input.fixed_target_weights,
+            fixed_target_max_or_min=user_input.fixed_target_max_or_min
+        )
+        result = experiment.run()
+        print(result)
 
 
 if __name__ == '__main__':

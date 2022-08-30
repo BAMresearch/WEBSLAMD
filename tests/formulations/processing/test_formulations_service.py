@@ -154,7 +154,7 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
 
     expected_df = _create_expected_df_as_dict()
 
-    df, all_dtos, targets = FormulationsService.create_materials_formulations(formulations_data)
+    df = FormulationsService.create_materials_formulations(formulations_data)
 
     assert df.replace({np.nan: None}).to_dict() == expected_df
     assert mock_query_dataset_by_name_called_with == 'temporary.csv'

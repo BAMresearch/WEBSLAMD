@@ -1,0 +1,42 @@
+{{ form.hidden_tag() }}
+{{ df | safe }}
+<form class="row g-3" action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <p class="mb-0">2 - Specify target values</p>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Formulation Index</th>
+            <th>Feature Summary</th>
+            {% for item in target_list %}
+            <th>{{ item }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in all_dtos %}
+        {% set outer_loop = loop %}
+        <tr>
+            <td>{{ item.index }}</td>
+            <td>{{ item.preview_of_data }}</td>
+            {% for target in item.targets %}
+            {% if target.index == item.index %}
+            <td>
+                <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number" value="{{ target.value if target.value is not none }}">
+            </td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-group mb-3">
+        <div class="col-sm-offset-2 col-sm-12">
+            {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+            title="Save your targets.")
+            }}
+        </div>
+    </div>
+</form>

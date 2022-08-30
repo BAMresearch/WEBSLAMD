@@ -328,7 +328,11 @@ describe("Test blending three admixtures with properties with negative values", 
   it("Create blend from three admixtures", () => {
     cy.findByLabelText("1 - Name").type("Example Blended Admixture");
     cy.findByLabelText("2 - Material type").select("Admixture");
-    cy.findByLabelText("3 - Base materials").select(["Example Admixture 1", "Example Admixture 2", "Example Admixture 3"]);
+    cy.findByLabelText("3 - Base materials").select([
+      "Example Admixture 1",
+      "Example Admixture 2",
+      "Example Admixture 3",
+    ]);
     cy.findByText("4 - Confirm Selection").click();
     // Wait for the modal animation to finish
     cy.wait(400);
