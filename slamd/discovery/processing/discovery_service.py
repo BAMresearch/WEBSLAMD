@@ -3,9 +3,11 @@ from werkzeug.datastructures import CombinedMultiDict
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
 from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
+from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
-from slamd.discovery.processing.forms.target_configuration_form import TargetConfigurationForm
 from slamd.discovery.processing.forms.a_priori_information_configuration_form import APrioriInformationConfigurationForm
+from slamd.discovery.processing.forms.target_configuration_form import TargetConfigurationForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
@@ -56,6 +58,50 @@ class DiscoveryService:
             # Add an extra property which is not a Field containing the target name
             form.a_priori_information_configurations.entries[-1].name = name
         return form
+
+    @classmethod
+    def run_experiment(cls, dataset_name, request_body):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+
+        user_input = cls._parse_user_input(request_body)
+        experiment = cls._initialize_experiment(dataset.dataframe, user_input)
+        return experiment.run()
+
+    @classmethod
+    def _parse_user_input(cls, discovery_form):
+        target_weights = [float(conf['weight']) for conf in discovery_form['target_configurations']]
+        target_max_or_min = [conf['max_or_min'] for conf in discovery_form['target_configurations']]
+        fixed_target_weights = [float(conf['weight']) for conf in discovery_form['a_priori_information_configurations']]
+        fixed_target_max_or_min = [conf['max_or_min'] for conf in discovery_form['a_priori_information_configurations']]
+
+        return UserInput(
+            model=discovery_form['model'],
+            curiosity=float(discovery_form['curiosity']),
+            features=discovery_form['materials_data_input'],
+            targets=discovery_form['target_properties'],
+            target_weights=target_weights,
+            target_max_or_min=target_max_or_min,
+            fixed_targets=discovery_form['a_priori_information'],
+            fixed_target_weights=fixed_target_weights,
+            fixed_target_max_or_min=fixed_target_max_or_min,
+        )
+
+    @classmethod
+    def _initialize_experiment(cls, dataframe, user_input):
+        return DiscoveryExperiment(
+            dataframe=dataframe,
+            model=user_input.model,
+            curiosity=user_input.curiosity,
+            features=user_input.features,
+            targets=user_input.targets,
+            target_weights=user_input.target_weights,
+            target_max_or_min=user_input.target_max_or_min,
+            fixed_targets=user_input.fixed_targets,
+            fixed_target_weights=user_input.fixed_target_weights,
+            fixed_target_max_or_min=user_input.fixed_target_max_or_min
+        )
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):

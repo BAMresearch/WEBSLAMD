@@ -87,8 +87,12 @@ def create_a_priori_information_configuration_form():
 @discovery.route('/<dataset>', methods=['POST'])
 def run_experiment(dataset):
     request_body = json.loads(request.data)
-    experiment_result = DiscoveryService.run_experiment(dataset, request_body)
-    body = {'template': render_template('experiment_result.html', result=experiment_result)}
+    dataframe = DiscoveryService.run_experiment(dataset, request_body)
+    html_dataframe = dataframe.to_html(index=False,
+                                       table_id='formulations_dataframe',
+                                       classes='table table-bordered table-striped table-hover')
+
+    body = {'template': render_template('experiment_result.html', df=html_dataframe)}
     return make_response(jsonify(body), 200)
 
 
