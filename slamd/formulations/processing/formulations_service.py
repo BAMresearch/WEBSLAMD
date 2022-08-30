@@ -1,4 +1,5 @@
 from itertools import product
+from werkzeug.utils import secure_filename
 
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
@@ -238,6 +239,7 @@ class FormulationsService:
         if not filename.endswith('.csv'):
             filename = filename + '.csv'
 
+        filename = secure_filename(filename)
         if filename == TEMPORARY_FORMULATION:
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
