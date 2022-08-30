@@ -52,11 +52,7 @@ class DiscoveryService:
     def show_dataset_for_adding_targets(cls, dataset):
         dataframe = DiscoveryPersistence.query_dataset_by_name(dataset).dataframe
 
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
+        return cls._create_data_tables(dataframe)
 
     @classmethod
     def _create_all_dtos(cls, dataframe):
@@ -86,24 +82,30 @@ class DiscoveryService:
         dataset_with_new_target = Dataset(dataset, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_list = []
-        if dataframe is not None:
-            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_list
+        return cls._create_data_tables(dataframe)
 
     @classmethod
     def save_targets(cls, dataset_name, form):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         dataframe = dataset.dataframe
-        all_columns = dataset.columns()
+        all_columns = dataset.columns
 
         targets_column_names = list(filter(lambda column_name: column_name.startswith('Target: '), all_columns))
         for key, value in form.items():
             if key.startswith('target'):
                 pieces_of_target_key = key.split('-')
-                row_index = pieces_of_target_key[1] - 1
-                target_number_index = pieces_of_target_key[2] - 1
-                dataframe.at(row_index, targets_column_names[target_number_index])
+                row_index = int(pieces_of_target_key[1]) - 1
+                target_number_index = int(pieces_of_target_key[2]) - 1
+                dataframe.at[row_index, targets_column_names[target_number_index]] = value
 
-        dataframe.columns.str.startswith('Target')
+        DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
+
+        return cls._create_data_tables(dataframe)
+
+    @classmethod
+    def _create_data_tables(cls, dataframe):
+        all_dtos = cls._create_all_dtos(dataframe)
+        target_list = []
+        if dataframe is not None:
+            target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        return dataframe, all_dtos, target_list
