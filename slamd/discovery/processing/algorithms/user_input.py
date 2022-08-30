@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class UserInput:
-    # options=['AI-Model (lolo Random Forrest)','Statistics based model (Gaussian Process Regression)'],
+    # options=['AI Model (lolo Random Forest)','Statistics-based model (Gaussian Process Regression)'],
     model: str = 'Statistics based model (Gaussian Process Regression)'
     # curiosity (to control the weight of uncertainty):
     curiosity: float = 1.0

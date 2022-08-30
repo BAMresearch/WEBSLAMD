@@ -98,9 +98,9 @@ class DiscoveryExperiment():
                 self.fixed_target_df[column] *= (-1)
 
     def fit_model(self):
-        if self.model == 'AI-Model (lolo Random Forrest)':
+        if self.model == 'AI Model (lolo Random Forest)':
             self.fit_random_forest_with_jack_knife_variance_estimators()
-        elif self.model == 'Statistics based model (Gaussian Process Regression)':
+        elif self.model == 'Statistics-based model (Gaussian Process Regression)':
             self.fit_gaussian_process_regression()
         else:
             # TODO: Uncomment this once integrated to the rest of the code
