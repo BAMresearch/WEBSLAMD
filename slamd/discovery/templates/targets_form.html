@@ -22,7 +22,7 @@
             {% if target.index == item.index %}
             <td>
                 <input class="form-control" id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number" value="{{ target.value }}">
+                       name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number" value="{{ target.value if target.value is not none }}">
             </td>
             {% endif %}
             {% endfor %}
