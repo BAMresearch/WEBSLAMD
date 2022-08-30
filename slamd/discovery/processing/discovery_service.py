@@ -31,7 +31,7 @@ class DiscoveryService:
     def list_columns(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
-            raise DatasetNotFoundException('Material with given UUID not found')
+            raise DatasetNotFoundException('Dataset with given name not found')
         return dataset.columns
 
     @classmethod
@@ -58,10 +58,12 @@ class DiscoveryService:
         return form
 
     @classmethod
-    def show_dataset_for_adding_targets(cls, dataset):
-        dataframe = DiscoveryPersistence.query_dataset_by_name(dataset).dataframe
+    def show_dataset_for_adding_targets(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
 
-        return cls._create_data_tables(dataframe)
+        return cls._create_data_tables(dataset.dataframe)
 
     @classmethod
     def _create_all_dtos(cls, dataframe):
@@ -90,6 +92,8 @@ class DiscoveryService:
     def add_target_name(cls, dataset, target_name):
         dataframe = None
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
+        if empty(initial_dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
         if initial_dataset:
             dataframe = initial_dataset.dataframe
         dataframe[f'Target: {target_name}'] = None
@@ -102,6 +106,8 @@ class DiscoveryService:
     @classmethod
     def save_targets(cls, dataset_name, form):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
         dataframe = dataset.dataframe
         all_columns = dataset.columns
 
