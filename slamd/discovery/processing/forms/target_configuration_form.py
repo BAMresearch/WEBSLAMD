@@ -1,19 +1,9 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import DecimalField, RadioField, validators
+from wtforms import FieldList, FormField
+from slamd.discovery.processing.forms.field_configuration_form import FieldConfigurationForm
 
 
 class TargetConfigurationForm(Form):
-
-    max_or_min = RadioField(
-        label='Maximize or minimize target',
-        validators=[validators.DataRequired()],
-        choices=[
-            ('min', 'Minimize'),
-            ('max', 'Maximize')
-        ]
-    )
-
-    weight = DecimalField(
-        label='Weight',
-        validators=[validators.DataRequired()]
-    )
+    target_configurations = FieldList(FormField(FieldConfigurationForm),
+                                      label='Target configurations',
+                                      min_entries=0)

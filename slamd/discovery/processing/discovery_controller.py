@@ -68,11 +68,19 @@ def delete_dataset(dataset):
     return make_response(jsonify(body), 200)
 
 
-@discovery.route('/create_discovery_configuration_form', methods=['POST'])
-def create_discovery_configuration_form():
+@discovery.route('/create_target_configuration_form', methods=['POST'])
+def create_target_configuration_form():
     request_body = json.loads(request.data)
-    form = DiscoveryService.create_discovery_configuration_form(request_body['names'])
-    body = {'template': render_template('discovery_configuration_form.html', form=form)}
+    form = DiscoveryService.create_target_configuration_form(request_body['names'])
+    body = {'template': render_template('target_configuration_form.html', form=form)}
+    return make_response(jsonify(body), 200)
+
+
+@discovery.route('/create_a_priori_information_configuration_form', methods=['POST'])
+def create_a_priori_information_configuration_form():
+    request_body = json.loads(request.data)
+    form = DiscoveryService.create_a_priori_information_configuration_form(request_body['names'])
+    body = {'template': render_template('a_priori_information_configuration_form.html', form=form)}
     return make_response(jsonify(body), 200)
 
 

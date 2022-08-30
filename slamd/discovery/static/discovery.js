@@ -30,15 +30,27 @@ function updateAPrioriInformationChoices(event) {
   filterUnselectedOptionsAndAssignToSelectElement(event.target.options, "a_priori_information");
 }
 
-async function getDiscoveryConfigurationForm(event, placeholderId) {
+function collectSelectedValues(options) {
   const names = [];
-  for (const option of event.target.options) {
+  for (const option of options) {
     if (option.selected) {
       names.push(option.value);
     }
   }
+  return names;
+}
 
-  const url = `${DISCOVERY_URL}/create_discovery_configuration_form`;
+async function getTargetConfigurationForm(event, placeholderId) {
+  const names = collectSelectedValues(event.target.options);
+  const url = `${DISCOVERY_URL}/create_target_configuration_form`;
+  await postDataAndEmbedTemplateInPlaceholder(url, placeholderId, {
+    names,
+  });
+}
+
+async function getAPrioriInformationConfigurationForm(event, placeholderId) {
+  const names = collectSelectedValues(event.target.options);
+  const url = `${DISCOVERY_URL}/create_a_priori_information_configuration_form`;
   await postDataAndEmbedTemplateInPlaceholder(url, placeholderId, {
     names,
   });
@@ -55,13 +67,13 @@ function onChangeMaterialsDataInput(event) {
 
 function onChangeTargetProperties(event) {
   updateAPrioriInformationChoices(event);
-  getDiscoveryConfigurationForm(event, "target-configuration-form-placeholder");
+  getTargetConfigurationForm(event, "target-configuration-form-placeholder");
   // Remove all forms corresponding to the next multi-select field
   removeInnerHtmlFromPlaceholder("a-priori-information-configuration-form-placeholder");
 }
 
 function onChangeAPrioriInformation(event) {
-  getDiscoveryConfigurationForm(event, "a-priori-information-configuration-form-placeholder");
+  getAPrioriInformationConfigurationForm(event, "a-priori-information-configuration-form-placeholder");
 }
 
 window.addEventListener("load", () => {

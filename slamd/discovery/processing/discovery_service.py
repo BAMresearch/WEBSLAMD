@@ -4,7 +4,8 @@ from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
 from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
-from slamd.discovery.processing.forms.discovery_configuration_form import DiscoveryConfigurationForm
+from slamd.discovery.processing.forms.target_configuration_form import TargetConfigurationForm
+from slamd.discovery.processing.forms.a_priori_information_configuration_form import APrioriInformationConfigurationForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
@@ -39,13 +40,21 @@ class DiscoveryService:
         return list(filter(lambda dataset: dataset.name != 'temporary.csv', all_datasets))
 
     @classmethod
-    def create_discovery_configuration_form(cls, target_names):
-        form = DiscoveryConfigurationForm()
+    def create_target_configuration_form(cls, target_names):
+        form = TargetConfigurationForm()
         for name in target_names:
-            # Default target weight is always 1.0
-            form.target_configurations.append_entry(data={'weight': 1.0})
+            form.target_configurations.append_entry()
             # Add an extra property which is not a Field containing the target name
             form.target_configurations.entries[-1].name = name
+        return form
+
+    @classmethod
+    def create_a_priori_information_configuration_form(cls, a_priori_information_names):
+        form = APrioriInformationConfigurationForm()
+        for name in a_priori_information_names:
+            form.a_priori_information_configurations.append_entry()
+            # Add an extra property which is not a Field containing the target name
+            form.a_priori_information_configurations.entries[-1].name = name
         return form
 
     @classmethod
