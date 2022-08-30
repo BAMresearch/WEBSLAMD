@@ -1,8 +1,7 @@
 {{ form.hidden_tag() }}
-
+{{ df | safe }}
 <form class="row g-3" action="" method="post" novalidate>
     {{ form.csrf_token }}
-
     <table class="table table-bordered table-striped">
         <thead>
         <tr>

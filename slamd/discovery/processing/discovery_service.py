@@ -90,4 +90,4 @@ class DiscoveryService:
         target_list = []
         if dataframe is not None:
             target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return all_dtos, target_list
+        return dataframe, all_dtos, target_list

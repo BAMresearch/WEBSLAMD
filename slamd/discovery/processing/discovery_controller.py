@@ -92,11 +92,27 @@ def add_targets(dataset):
 
 @discovery.route('/<dataset>/<target_name>/add_target', methods=['GET'])
 def add_target(dataset, target_name):
-    all_dtos, target_list = DiscoveryService.add_target_name(dataset, target_name)
+    dataframe, all_dtos, target_list = DiscoveryService.add_target_name(dataset, target_name)
 
     body = {'template': render_template('targets_form.html',
                                         form=TargetsForm(),
+                                        df=dataframe.to_html(index=False,
+                                                             table_id='formulations_dataframe',
+                                                             classes='table table-bordered table-striped table-hover'),
                                         all_dtos=all_dtos,
                                         target_list=target_list)}
-
     return make_response(jsonify(body), 200)
+
+
+@discovery.route('/<dataset>/add_targets', methods=['GET'])
+def submit_target_values(dataset):
+    dataframe, all_dtos, target_list = DiscoveryService.show_dataset_for_adding_targets(dataset)
+
+    return render_template('targets.html',
+                           dataset_name=dataset,
+                           form=TargetsForm(),
+                           df=dataframe.to_html(index=False,
+                                                table_id='formulations_dataframe',
+                                                classes='table table-bordered table-striped table-hover'),
+                           all_dtos=all_dtos,
+                           target_list=target_list)
