@@ -15,13 +15,12 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 class DiscoveryExperiment():
 
-    def __init__(self, dataframe, model, sigma, distance, features,
+    def __init__(self, dataframe, model, sigma, features,
                  targets, target_weights, target_max_or_min,
                  fixed_targets, fixed_target_weights, fixed_target_max_or_min):
         self.dataframe = dataframe
         self.model = model
         self.sigma = sigma
-        self.distance = distance
         self.targets = targets
         self.target_weights = target_weights
         self.target_max_or_min = target_max_or_min

@@ -9,8 +9,6 @@ class UserInput:
     model: str = 'Statistics based model (Gaussian Process Regression)'
     # σ Factor (to control the weight of uncertainty):
     sigma_factor: float = 1
-    # Prediction quantile for distance-based utility (smaller values recommended for weak predictors):
-    prediction_quantile_distance: float = 1
     # Target properties
     targets: list[str] = field(default_factory=lambda: ['fc 28-d - Target (MPa)'])
     # Weights for every target property
