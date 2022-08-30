@@ -35,7 +35,8 @@ class DiscoveryService:
 
     @classmethod
     def list_datasets(cls):
-        return DiscoveryPersistence.find_all_datasets()
+        all_datasets = DiscoveryPersistence.find_all_datasets()
+        return list(filter(lambda dataset: dataset.name != 'temporary.csv', all_datasets))
 
     @classmethod
     def create_discovery_configuration_form(cls, target_names):
