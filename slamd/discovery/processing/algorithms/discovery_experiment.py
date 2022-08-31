@@ -1,7 +1,7 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
-import pandas as pd
 import numpy as np
+import pandas as pd
 from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -10,7 +10,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from slamd.common.error_handling import ValueNotSupportedException
 
 
-class DiscoveryExperiment():
+class DiscoveryExperiment:
 
     def __init__(self, dataframe, model, curiosity, features,
                  targets, target_weights, target_max_or_min,
