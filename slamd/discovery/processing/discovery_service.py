@@ -90,6 +90,10 @@ class DiscoveryService:
 
     @classmethod
     def _initialize_experiment(cls, dataframe, user_input):
+        if 'Materials' in dataframe.columns:
+            dataframe["Materials"] = dataframe["Materials"].astype('category')
+            dataframe["Materials"] = dataframe["Materials"].cat.codes
+
         return DiscoveryExperiment(
             dataframe=dataframe,
             model=user_input.model,
