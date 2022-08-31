@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This Software uses the Lolo Random forrest algorithm (https://github.com/CitrineInformatics/lolo) 
+This Software uses the "Lolo" Random Forest algorithm (https://github.com/CitrineInformatics/lolo) 
 which is under Copyright [2022] [Citrine Informatics] and licensed under the 
 Apache License, Version 2.0 (the "License");
 
