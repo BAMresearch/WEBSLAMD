@@ -107,16 +107,16 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
     cy.wait("@add_property");
-    cy.findAllByLabelText("Name").last().type("Prop 0");
-    cy.findAllByLabelText("Value").last().type("Value 0");
+    cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
+    cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
     cy.findByText("Add property").click();
     cy.wait("@add_property");
-    cy.findAllByLabelText("Name").last().type("Prop 1");
-    cy.findAllByLabelText("Value").last().type("Value 1");
+    cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
+    cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
     cy.findByText("Add property").click();
     cy.wait("@add_property");
-    cy.findAllByLabelText("Name").last().type("Prop 2");
-    cy.findAllByLabelText("Value").last().type("Value 2");
+    cy.findAllByLabelText("Name").last().type("Prop 2").should("have.value", "Prop 2");
+    cy.findAllByLabelText("Value").last().type("Value 2").should("have.value", "Value 2");
 
     // Delete additional properties one by one
     cy.findByText("Delete last property").click();
@@ -150,16 +150,20 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Composition").should("not.exist");
 
     // Fill out additional properties
+    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
-    cy.findAllByLabelText("Name").last().type("Prop 0");
-    cy.findAllByLabelText("Value").last().type("Value 0");
+    cy.wait("@add_property");
+    cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
+    cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
     cy.findByText("Add property").click();
-    cy.findAllByLabelText("Name").last().type("Prop 1");
-    cy.findAllByLabelText("Value").last().type("Value 1");
+    cy.wait("@add_property");
+    cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
+    cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
     cy.findByText("Add property").click();
-    cy.findAllByLabelText("Name").last().type("Prop 2");
-    cy.findAllByLabelText("Value").last().type("Value 2");
+    cy.wait("@add_property");
+    cy.findAllByLabelText("Name").last().type("Prop 2").should("have.value", "Prop 2");
+    cy.findAllByLabelText("Value").last().type("Value 2").should("have.value", "Value 2");
 
     // Delete additional properties one by one
     cy.findByText("Delete last property").click();
