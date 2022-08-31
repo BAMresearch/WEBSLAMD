@@ -58,11 +58,11 @@ class DiscoveryExperiment:
         if self.uncertainty.ndim > 1:
             for i in range(len(self.targets)):
                 df[self.targets[i]] = self.prediction[:, i]
-                uncertainty_name_column = 'Uncertainty ('+self.targets[i]+' )'
+                uncertainty_name_column = 'Uncertainty (' + self.targets[i] + ' )'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
-            uncertainty_name_column = 'Uncertainty ('+str(self.targets[0])+' )'
+            uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
 
         return df.sort_values(by='Utility', ascending=False)
@@ -70,13 +70,13 @@ class DiscoveryExperiment:
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
         std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
-        self.features_df = (self.features_df-self.features_df.mean()) / std
+        self.features_df = (self.features_df - self.features_df.mean()) / std
 
         std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
-        self.target_df = (self.target_df-self.target_df.mean()) / std
+        self.target_df = (self.target_df - self.target_df.mean()) / std
 
         std = self.fixed_target_df.std().apply(lambda x: x if x != 0 else 1)
-        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / std
+        self.fixed_target_df = (self.fixed_target_df - self.fixed_target_df.mean()) / std
 
     def decide_max_or_min(self, columns, max_or_min):
         # Multiply the column by -1 if it needs to be minimized
@@ -102,9 +102,9 @@ class DiscoveryExperiment:
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
 
-            all_data_is_labelled = training_rows.shape[0] == training_labels.shape[0]
-            # if all_data_is_labelled:
-            #     raise SequentialLearningException('All data is already labelled.')
+            all_data_is_labelled = self.dataframe.shape[0] == training_labels.shape[0]
+            if all_data_is_labelled:
+                raise SequentialLearningException('All data is already labelled.')
 
             gpr.fit(training_rows, training_labels)
 
@@ -159,7 +159,7 @@ class DiscoveryExperiment:
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
-        return min_distances*(max_of_min_distances**(-1))
+        return min_distances * (max_of_min_distances ** (-1))
 
     def update_index_MLI(self):
         predicted_rows = self.target_df.iloc[self.sample_index]
