@@ -69,9 +69,14 @@ class DiscoveryExperiment:
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
-        self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
-        self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
-        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
+        std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
+        self.features_df = (self.features_df-self.features_df.mean()) / std
+
+        std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
+        self.target_df = (self.target_df-self.target_df.mean()) / std
+
+        std = self.fixed_target_df.std().apply(lambda x: x if x != 0 else 1)
+        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / std
 
     def decide_max_or_min(self, columns, max_or_min):
         # Multiply the column by -1 if it needs to be minimized
