@@ -7,7 +7,7 @@ from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 
 
 class DiscoveryExperiment:
@@ -101,6 +101,11 @@ class DiscoveryExperiment:
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
+
+            all_data_is_labelled = training_rows.shape[0] == training_labels.shape[0]
+            # if all_data_is_labelled:
+            #     raise SequentialLearningException('All data is already labelled.')
+
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows

@@ -4,7 +4,7 @@ from flask_session import Session
 from flask_wtf import CSRFProtect
 
 import config
-from slamd.common.error_handling import handle_404, handle_400, handle_413
+from slamd.common.error_handling import handle_404, handle_400, handle_413, handle_422
 from slamd.common.landing_controller import landing
 from slamd.formulations.processing.formulations_controller import formulations
 from slamd.discovery.processing.discovery_controller import discovery
@@ -31,4 +31,5 @@ def create_app(env=None, with_session=True):
     app.register_error_handler(404, lambda err: handle_404(err))
     app.register_error_handler(400, lambda err: handle_400(err))
     app.register_error_handler(413, lambda err: handle_413(err))
+    app.register_error_handler(422, lambda err: handle_422(err))
     return app
