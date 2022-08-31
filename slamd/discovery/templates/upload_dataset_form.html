@@ -4,13 +4,13 @@
     {{ upload_dataset_form.hidden_tag() }}
     {{ upload_dataset_form.csrf_token }}
     <div class="row g-3 mb-3 align-items-end">
-        <div class="col-md-11">
+        <div class="col-lg-10 col-md-9 col-sm-12">
             {{ upload_dataset_form.dataset.label(class_="control-label") }}
             {{ upload_dataset_form.dataset(class_="form-control form-select dataset-input") }}
             {{ with_errors(upload_dataset_form.dataset) }}
         </div>
-        <div class="col-md-1">
-            {{ upload_dataset_form.upload_button(class_="btn btn-primary") }}
+        <div class="col-lg-2 col-md-3 col-12">
+            {{ upload_dataset_form.upload_button(class_="btn btn-success col-12") }}
         </div>
     </div>
 </form>
