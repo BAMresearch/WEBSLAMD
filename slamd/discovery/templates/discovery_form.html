@@ -1,33 +1,33 @@
-<form class="row" action="" method="post" novalidate>
-    <div class="row g-3">
-        <div class="col-md-4">
+<form action="" method="post" novalidate>
+    <div class="row g-3 mb-3">
+        <div class="col-12 col-md-4">
             {{ discovery_form.materials_data_input.label(class_="control-label") }}
             {{ discovery_form.materials_data_input(class_="form-control form-select") }}
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             {{ discovery_form.target_properties.label(class_="control-label") }}
             {{ discovery_form.target_properties(class_="form-control form-select") }}
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             {{ discovery_form.a_priori_information.label(class_="control-label") }}
             {{ discovery_form.a_priori_information(class_="form-control form-select") }}
         </div>
     </div>
     <div id="target-configuration-form-placeholder"></div>
     <div id="a-priori-information-configuration-form-placeholder"></div>
-    <div class="row g-3">
-        <div class="col-md-3">
+    <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6">
             {{ discovery_form.model.label(class_="control-label") }}
             {{ discovery_form.model(class_="form-control form-select") }}
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-6">
             {{ discovery_form.curiosity.label(class_="control-label") }}
             {{ discovery_form.curiosity(class_="form-range", min=0, max=10, oninput="updateCuriosityValue(value)") }}
             <output for="curiosity" id="selected-range">{{ discovery_form.curiosity.data }}</output>
         </div>
     </div>
-    <div class="row g-3">
-        <button id="run-experiment-button" class="btn btn-success col-12" type="button" data-bs-toggle="tooltip"
+    <div class="row g-3 mb-3">
+        <button id="run-experiment-button" class="btn btn-success col-12 mb-3" type="button" data-bs-toggle="tooltip"
             data_bs_placement="bottom" title="Select at least a target and whether it should be maximized or minimized"
             disabled>
             Run experiment with given configuration

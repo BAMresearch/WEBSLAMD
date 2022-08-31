@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, SubmitField, FieldList, FormField
+from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, FieldList, FormField
 from slamd.discovery.processing.forms.field_configuration_form import FieldConfigurationForm
 
 

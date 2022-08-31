@@ -7,8 +7,7 @@ from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, Targe
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
-from slamd.discovery.processing.forms.a_priori_information_configuration_form import APrioriInformationConfigurationForm
-from slamd.discovery.processing.forms.target_configuration_form import TargetConfigurationForm
+from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
@@ -44,7 +43,7 @@ class DiscoveryService:
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
-        form = TargetConfigurationForm()
+        form = DiscoveryForm()
         for name in target_names:
             form.target_configurations.append_entry()
             # Add an extra property which is not a Field containing the target name
@@ -53,7 +52,7 @@ class DiscoveryService:
 
     @classmethod
     def create_a_priori_information_configuration_form(cls, a_priori_information_names):
-        form = APrioriInformationConfigurationForm()
+        form = DiscoveryForm()
         for name in a_priori_information_names:
             form.a_priori_information_configurations.append_entry()
             # Add an extra property which is not a Field containing the target name
