@@ -9,14 +9,17 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
-    <div class="row g-3 mb-3">
-        <div class="col-md-8 col-sd-8">
-            <h3>SLAMD - Sequential Learning App for Materials Discovery</h3>
-            <p>
-                Navigate to the different sections using the menu at the top or in the upper left corner.
-            </p>
-
-            <h6>Step 1: Define base materials and processes</h6>
+    <h3>
+        SLAMD - Sequential Learning App for Materials Discovery
+    </h3>
+    <p>
+        Navigate to the different sections using the menu at the top or in the upper left corner.
+    </p>
+    <div class="row g-3">
+        <div class="col-md-6 col-sd-12">
+            <h6>
+                Step 1: Define base materials and processes
+            </h6>
             <p>
                 On the page <a class="link-primary" href="/materials/base">Base materials and processes</a> you can
                 create your own materials or processes with a given type (Powder, Liquid, Aggregates, Admixture,
@@ -42,35 +45,52 @@
                 Once you are satisfied with the blends to be generated, you just have to click a button and they will
                 appear in the table.
             </p>
-            <h6>Step 3: Create specific entries for a dataset by combining materials (base or blended) and processes
+        </div>
+        <div class="col-md-6 col-sd-12">
+            <img src="/static/landing_page_steps.png"
+                alt="Specify base materials, processing steps and their properties, then specify ratios of blended materials, lastly combine base materials, blended materials into materials formulations"
+                class="img-fluid rounded">
+        </div>
+    </div>
+    <div class="row g-3 mb-3">
+        <div class="col-md-12 col-sd-12">
+            <h6>
+                Step 3: Create specific entries for a dataset by combining materials (base or blended) and
+                processes
             </h6>
             <p>
-                On the page <a class="link-primary" href="/materials/formulations">Materials Formulations</a> you can choose
-                various of your previously defined materials and processes to define material formulations. Currently, it is
-                required to specify at least one powder, one liquid and one aggregate. In addition, you need to specify a constraint
-                on the total weight. Once configured, you can specify ranges for material weights with an autocompletion feature analogous
-                to the one in Step 2 (the dependent material is always the aggregate).
+                On the page <a class="link-primary" href="/materials/formulations">Materials Formulations</a>
+                you can choose various of your previously defined materials and processes to define material
+                formulations.
+                Currently, it is required to specify at least one powder, one liquid and one aggregate.
+                In addition, you need to specify a constraint on the total weight.
+                Once configured, you can specify ranges for material weights with an autocompletion feature
+                analogous to the one in Step 2 (the dependent material is always the aggregate).
             </p>
             <p>
-                Next, you can edit or delete the generated weight configurations. Once finished, you can create the formulation as a
-                dataframe. You can do similar steps to add another batch of data. Having created all formulation batches, the
-                data can be saved as a dataset to be used in the next step.
+                Next, you can edit or delete the generated weight configurations.
+                Once finished, you can create the formulation as a dataframe.
+                You can do similar steps to add another batch of data.
+                Having created all formulation batches, the data can be saved as a dataset to be used in the
+                next step.
             </p>
-            <h6>Step 4: Apply Sequential Learning and other algorithms to a dataset</h6>
+            <h6>
+                Step 4: Apply Sequential Learning and other algorithms to a dataset
+            </h6>
             <p>
-                On the page <a class="link-primary" href="/materials/discovery">Material Discovery</a> all your datasets are listed.
-                Here it is possible to also add new datasets in terms of a csv upload. For each dataset you can specify various target values.
+                On the page <a class="link-primary" href="/materials/discovery">Material Discovery</a>
+                all your datasets are listed.
+                Here it is possible to also add new datasets in terms of a csv upload.
+                For each dataset you can specify various target values.
             </p>
             <p>
-                The dataset can now be used for prediction of a new candidate material. For that purpose, you need to specify various
-                pieces of information such as features, targets, a-priori information etc. With the resulting configuration, the experiment
-                can be started. As a result you are shown the data rows sorted with respect to their utility. The first row is predicted
-                to be most promising.
+                The dataset can now be used for prediction of a new candidate material.
+                For that purpose, you need to specify various pieces of information such as
+                features, targets, a-priori information etc.
+                With the resulting configuration, the experiment can be started.
+                As a result you are shown the data rows sorted with respect to their utility.
+                The first row is predicted to be most promising.
             </p>
-        </div>
-        <div class="col-md-4 col-sd-4">
-            <img src="https://via.placeholder.com/600x600.png?text=600x600+Placeholder+for+image+Epics+document" alt=""
-                width="600" height="600" class="rounded">
         </div>
     </div>
 
