@@ -92,8 +92,8 @@ function getMaxMinValue(maxCheckboxId, minCheckboxId) {
 function parseTargetConfigurations(numberTargetProperties) {
   const result = [];
   for (let i = 0; i < numberTargetProperties; ++i) {
-    max_or_min = getMaxMinValue(`target_configurations-${i}-max_or_min-0`, `target_configurations-${i}-max_or_min-1`);
-    weight = document.getElementById(`target_configurations-${i}-weight`).value;
+    const max_or_min = getMaxMinValue(`target_configurations-${i}-max_or_min-0`, `target_configurations-${i}-max_or_min-1`);
+    const weight = document.getElementById(`target_configurations-${i}-weight`).value;
     result.push({ max_or_min, weight });
   }
   return result;
@@ -102,11 +102,11 @@ function parseTargetConfigurations(numberTargetProperties) {
 function parseAPrioriInformationConfigurations(numberAPrioriInformationProperties) {
   const result = [];
   for (let i = 0; i < numberAPrioriInformationProperties; ++i) {
-    max_or_min = getMaxMinValue(
+    const max_or_min = getMaxMinValue(
       `a_priori_information_configurations-${i}-max_or_min-0`,
       `a_priori_information_configurations-${i}-max_or_min-1`
     );
-    weight = document.getElementById(`a_priori_information_configurations-${i}-weight`).value;
+    const weight = document.getElementById(`a_priori_information_configurations-${i}-weight`).value;
     result.push({ max_or_min, weight });
   }
   return result;

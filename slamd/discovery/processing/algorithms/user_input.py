@@ -20,12 +20,12 @@ class UserInput:
     # Target properties
     targets: list[str] = field(default_factory=lambda: ['fc 28-d - Target (MPa)'])
     # Weights for every target property
-    target_weights: list[int] = field(default_factory=lambda: [1])
+    target_weights: list[float] = field(default_factory=lambda: [1])
     # Select for each target property if it should be maximized or minimized
     target_max_or_min: list[str] = field(default_factory=lambda: ['maximize'])
     # A Priori Information
     fixed_targets: list[str] = field(default_factory=lambda: ['CO2 (kg/t) - A-priori Information'])
     # Weights for every fixed target property
-    fixed_target_weights: list[int] = field(default_factory=lambda: [1])
+    fixed_target_weights: list[float] = field(default_factory=lambda: [1])
     # Select for each fixed target property if it should be maximized or minimized
     fixed_target_max_or_min: list[str] = field(default_factory=lambda: ['minimize'])
