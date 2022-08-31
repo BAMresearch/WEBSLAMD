@@ -5,59 +5,59 @@ describe("Test creating base materials", () => {
 
   it("Material types are listed correctly", () => {
     cy.findByText("Powder").should("exist");
-    cy.findByLabelText("2 - Material type / Process").select("Powder");
-    cy.findByLabelText("2 - Material type / Process").select("Liquid");
-    cy.findByLabelText("2 - Material type / Process").select("Aggregates");
-    cy.findByLabelText("2 - Material type / Process").select("Admixture");
-    cy.findByLabelText("2 - Material type / Process").select("Process");
-    cy.findByLabelText("2 - Material type / Process").select("Custom");
-    cy.findByLabelText("2 - Material type / Process").select("Powder");
+    cy.findByLabelText("2 - Material type / Process").select("Powder").should("have.value", "Powder");
+    cy.findByLabelText("2 - Material type / Process").select("Liquid").should("have.value", "Liquid");
+    cy.findByLabelText("2 - Material type / Process").select("Aggregates").should("have.value", "Aggregates");
+    cy.findByLabelText("2 - Material type / Process").select("Admixture").should("have.value", "Admixture");
+    cy.findByLabelText("2 - Material type / Process").select("Process").should("have.value", "Process");
+    cy.findByLabelText("2 - Material type / Process").select("Custom").should("have.value", "Custom");
+    cy.findByLabelText("2 - Material type / Process").select("Powder").should("have.value", "Powder");
   });
 
   it("Create powder", () => {
     // Fill out name and material type
-    cy.findByLabelText("1 - Name").type("My Powder");
-    cy.findByLabelText("2 - Material type / Process").select("Powder");
+    cy.findByLabelText("1 - Name").type("My Powder").should("have.value", "My Powder");
+    cy.findByLabelText("2 - Material type / Process").select("Powder").should("have.value", "Powder");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56");
-    cy.findByLabelText("Delivery time (days)").type("56.78");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // Fill out composition properties
     cy.findByText("4 - Composition").click();
     cy.findByText("Molecular composition").scrollIntoView();
-    cy.findByLabelText("Fe₂O₃ (m%)").type("12.3");
-    cy.findByLabelText("SiO₂ (m%)").type("23.4");
-    cy.findByLabelText("Al₂O₃ (m%)").type("34.5");
-    cy.findByLabelText("CaO (m%)").type("45.6");
-    cy.findByLabelText("MgO (m%)").type("56.7");
-    cy.findByLabelText("Na₂O (m%)").type("67.8");
-    cy.findByLabelText("K₂O (m%)").type("78.9");
-    cy.findByLabelText("SO₃ (m%)").type("89.0");
-    cy.findByLabelText("P₂O₅ (m%)").type("0.98");
-    cy.findByLabelText("TiO₂ (m%)").type("9.87");
-    cy.findByLabelText("SrO (m%)").type("8.76");
-    cy.findByLabelText("Mn₂O₃ (m%)").type("7.65");
-    cy.findByLabelText("LOI (m%)").type("1.65");
+    cy.findByLabelText("Fe₂O₃ (m%)").type("12.3").should("have.value", "12.3");
+    cy.findByLabelText("SiO₂ (m%)").type("23.4").should("have.value", "23.4");
+    cy.findByLabelText("Al₂O₃ (m%)").type("34.5").should("have.value", "34.5");
+    cy.findByLabelText("CaO (m%)").type("45.6").should("have.value", "45.6");
+    cy.findByLabelText("MgO (m%)").type("56.7").should("have.value", "56.7");
+    cy.findByLabelText("Na₂O (m%)").type("67.8").should("have.value", "67.8");
+    cy.findByLabelText("K₂O (m%)").type("78.9").should("have.value", "78.9");
+    cy.findByLabelText("SO₃ (m%)").type("89.0").should("have.value", "89.0");
+    cy.findByLabelText("P₂O₅ (m%)").type("0.98").should("have.value", "0.98");
+    cy.findByLabelText("TiO₂ (m%)").type("9.87").should("have.value", "9.87");
+    cy.findByLabelText("SrO (m%)").type("8.76").should("have.value", "8.76");
+    cy.findByLabelText("Mn₂O₃ (m%)").type("7.65").should("have.value", "7.65");
+    cy.findByLabelText("LOI (m%)").type("1.65").should("have.value", "1.65");
 
     // Fill out structural composition properties
     cy.findByText("Structural composition").should("exist");
-    cy.findByLabelText("Fine modules (m²/kg)").type("123.45");
-    cy.findByLabelText("Specific gravity (m%)").type("67.890");
+    cy.findByLabelText("Fine modules (m²/kg)").type("123.45").should("have.value", "123.45");
+    cy.findByLabelText("Specific gravity (m%)").type("67.890").should("have.value", "67.890");
 
     // Fill out additional properties
     cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.findByText("Add property").click();
     cy.wait("@add_property");
-    cy.findAllByLabelText("Name").last().type("Prop 0");
-    cy.findAllByLabelText("Value").last().type("Value 0");
+    cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
+    cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
     cy.findByText("Add property").click();
     cy.wait("@add_property");
-    cy.findAllByLabelText("Name").last().type("Prop 1");
-    cy.findAllByLabelText("Value").last().type("Value 1");
+    cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
+    cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
 
     // Save material and check that it is listed
     cy.findByText("6 - Save material/process").click();
@@ -67,20 +67,20 @@ describe("Test creating base materials", () => {
 
   it("Create process", () => {
     // Fill out name and material type
-    cy.findByLabelText("1 - Name").type("My Process");
-    cy.findByLabelText("2 - Material type / Process").select("Process");
+    cy.findByLabelText("1 - Name").type("My Process").should("have.value", "My Process");
+    cy.findByLabelText("2 - Material type / Process").select("Process").should("have.value", "Process");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
 
     // Fill out process information properties
     cy.findByText("4 - Composition").should("not.exist");
     cy.findByText("4 - Process Information").click();
-    cy.findByLabelText("Duration (days)").type("12.3");
-    cy.findByLabelText("Temperature (°C)").type("23.4");
-    cy.findByLabelText("Relative Humidity (%)").type("34.5");
+    cy.findByLabelText("Duration (days)").type("12.3").should("have.value", "12.3");
+    cy.findByLabelText("Temperature (°C)").type("23.4").should("have.value", "23.4");
+    cy.findByLabelText("Relative Humidity (%)").type("34.5").should("have.value", "34.5");
 
     // Save material and check that it is listed
     cy.findByText("6 - Save material/process").click();
@@ -90,14 +90,14 @@ describe("Test creating base materials", () => {
 
   it("Create custom", () => {
     // Fill out name and material type
-    cy.findByLabelText("1 - Name").type("My Custom Material");
-    cy.findByLabelText("2 - Material type / Process").select("Custom");
+    cy.findByLabelText("1 - Name").type("My Custom Material").should("have.value", "My Custom Material");
+    cy.findByLabelText("2 - Material type / Process").select("Custom").should("have.value", "Custom");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56");
-    cy.findByLabelText("Delivery time (days)").type("56.78");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // No properties for Custom
     cy.findByText("4 - Composition").should("not.exist");
@@ -137,14 +137,14 @@ describe("Test creating base materials", () => {
 
   it("Create admixture", () => {
     // Fill out name and material type
-    cy.findByLabelText("1 - Name").type("My Admixture");
-    cy.findByLabelText("2 - Material type / Process").select("Admixture");
+    cy.findByLabelText("1 - Name").type("My Admixture").should("have.value", "My Admixture");
+    cy.findByLabelText("2 - Material type / Process").select("Admixture").should("have.value", "Admixture");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56");
-    cy.findByLabelText("Delivery time (days)").type("56.78");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // No properties for Admixture
     cy.findByText("4 - Composition").should("not.exist");
@@ -185,7 +185,7 @@ describe("Test creating base materials", () => {
   it("Delivery time is corrected automatically", () => {
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("Delivery time (days)").type("123");
+    cy.findByLabelText("Delivery time (days)").type("123").should("have.value", "123");
     cy.findByLabelText("Delivery time (days)").type("{moveToStart}-");
     cy.findByLabelText("Delivery time (days)").should("have.value", 0);
     cy.findByLabelText("Delivery time (days)").clear().type("-0.2");
