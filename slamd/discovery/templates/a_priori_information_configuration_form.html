@@ -1,0 +1,19 @@
+{% for a_priori_information in form.a_priori_information_configurations %}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-md-4 align-self-center text-center fw-bold">
+        {{ a_priori_information.name }}
+    </div>
+    <div class="col-md-4">
+        {% for radio_option in a_priori_information.max_or_min %}
+        <div class="form-check">
+            {{ radio_option(class_="form-check-input") }}
+            {{ radio_option.label(class_="form-check-label") }}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-4">
+        {{ a_priori_information.weight.label(class_="control-label") }}
+        {{ a_priori_information.weight(class_="form-control") }}
+    </div>
+</div>
+{% endfor %}

@@ -1,0 +1,21 @@
+from flask_wtf import FlaskForm as Form
+from wtforms import DecimalField, RadioField, validators
+
+
+class FieldConfigurationForm(Form):
+
+    max_or_min = RadioField(
+        label='Maximize or minimize target',
+        validators=[validators.DataRequired()],
+        default='max',
+        choices=[
+            ('max', 'Maximize'),
+            ('min', 'Minimize')
+        ]
+    )
+
+    weight = DecimalField(
+        label='Weight',
+        default=1.0,
+        validators=[validators.DataRequired()]
+    )

@@ -1,27 +1,23 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
-import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
+import pandas as pd
 from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
+from slamd.common.error_handling import ValueNotSupportedException
 
-# TODO: Uncomment this once integrated to the rest of the code
-# from slamd.common.error_handling import ValueNotSupportedException
 
-class DiscoveryExperiment():
+class DiscoveryExperiment:
 
-    def __init__(self, dataframe, model, sigma, distance, features,
+    def __init__(self, dataframe, model, curiosity, features,
                  targets, target_weights, target_max_or_min,
                  fixed_targets, fixed_target_weights, fixed_target_max_or_min):
         self.dataframe = dataframe
         self.model = model
-        self.sigma = sigma
-        self.distance = distance
+        self.curiosity = curiosity
         self.targets = targets
         self.target_weights = target_weights
         self.target_max_or_min = target_max_or_min
@@ -69,22 +65,7 @@ class DiscoveryExperiment():
             uncertainty_name_column = 'Uncertainty ('+str(self.targets[0])+' )'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
 
-        # Assemble dataframe for plot and output
-        show_df = df.sort_values(by='Utility', ascending=False)
-        target_list = show_df[self.targets]
-        if len(self.fixed_targets) > 0:
-            target_list = pd.concat((target_list, show_df[self.fixed_targets]), axis=1)
-        target_list = pd.concat((target_list, show_df['Utility']), axis=1)
-
-        # Pareto plot
-        print('Pareto plot (predicted property trade-off)')
-        g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue='Utility')
-        g.map_diag(sns.histplot, hue=None, color='.3')
-        g.map_lower(sns.scatterplot)
-        g.add_legend()
-        plt.show()
-
-        return show_df
+        return df.sort_values(by='Utility', ascending=False)
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
@@ -99,14 +80,12 @@ class DiscoveryExperiment():
                 self.fixed_target_df[column] *= (-1)
 
     def fit_model(self):
-        if self.model == 'AI-Model (lolo Random Forrest)':
+        if self.model == 'AI Model (lolo Random Forest)':
             self.fit_random_forest_with_jack_knife_variance_estimators()
-        elif self.model == 'Statistics based model (Gaussian Process Regression)':
+        elif self.model == 'Statistics-based model (Gaussian Process Regression)':
             self.fit_gaussian_process_regression()
         else:
-            # TODO: Uncomment this once integrated to the rest of the code
-            # raise ValueNotSupportedException(f'Model {self.model} value not supported')
-            raise RuntimeError('Invalid model value')
+            raise ValueNotSupportedException(f'Model {self.model} value not supported')
 
     def fit_gaussian_process_regression(self):
         for i in range(len(self.targets)):
@@ -201,10 +180,10 @@ class DiscoveryExperiment():
         # See slide 43 of the PowerPoint presentation
         if len(self.targets) > 1:
             utility_function = fixed_targets_for_predicted_rows.squeeze(
-            ) + prediction_norm.sum(axis=1) + self.sigma * uncertainty_norm.sum(axis=1)
+            ) + prediction_norm.sum(axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
         else:
             utility_function = fixed_targets_for_predicted_rows.squeeze(
-            ) + prediction_norm.squeeze() + self.sigma * uncertainty_norm.squeeze()
+            ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()
 
         return utility_function
 

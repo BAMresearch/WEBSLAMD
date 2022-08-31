@@ -1,10 +1,14 @@
+import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
-from slamd.common.error_handling import DatasetNotFoundException
-from slamd.common.slamd_utils import empty, float_if_not_empty
+from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
+from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, not_numeric
 from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
+from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
-from slamd.discovery.processing.forms.discovery_configuration_form import DiscoveryConfigurationForm
+from slamd.discovery.processing.forms.a_priori_information_configuration_form import APrioriInformationConfigurationForm
+from slamd.discovery.processing.forms.target_configuration_form import TargetConfigurationForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
@@ -30,7 +34,7 @@ class DiscoveryService:
     def list_columns(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
-            raise DatasetNotFoundException('Material with given UUID not found')
+            raise DatasetNotFoundException('Dataset with given name not found')
         return dataset.columns
 
     @classmethod
@@ -39,20 +43,74 @@ class DiscoveryService:
         return list(filter(lambda dataset: dataset.name != 'temporary.csv', all_datasets))
 
     @classmethod
-    def create_discovery_configuration_form(cls, target_names):
-        form = DiscoveryConfigurationForm()
+    def create_target_configuration_form(cls, target_names):
+        form = TargetConfigurationForm()
         for name in target_names:
-            # Default target weight is always 1.0
-            form.target_configurations.append_entry(data={'weight': 1.0})
+            form.target_configurations.append_entry()
             # Add an extra property which is not a Field containing the target name
             form.target_configurations.entries[-1].name = name
         return form
 
     @classmethod
-    def show_dataset_for_adding_targets(cls, dataset):
-        dataframe = DiscoveryPersistence.query_dataset_by_name(dataset).dataframe
+    def create_a_priori_information_configuration_form(cls, a_priori_information_names):
+        form = APrioriInformationConfigurationForm()
+        for name in a_priori_information_names:
+            form.a_priori_information_configurations.append_entry()
+            # Add an extra property which is not a Field containing the target name
+            form.a_priori_information_configurations.entries[-1].name = name
+        return form
 
-        return cls._create_data_tables(dataframe)
+    @classmethod
+    def run_experiment(cls, dataset_name, request_body):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+
+        user_input = cls._parse_user_input(request_body)
+        experiment = cls._initialize_experiment(dataset.dataframe, user_input)
+        return experiment.run()
+
+    @classmethod
+    def _parse_user_input(cls, discovery_form):
+        target_weights = [float(conf['weight']) for conf in discovery_form['target_configurations']]
+        target_max_or_min = [conf['max_or_min'] for conf in discovery_form['target_configurations']]
+        fixed_target_weights = [float(conf['weight']) for conf in discovery_form['a_priori_information_configurations']]
+        fixed_target_max_or_min = [conf['max_or_min'] for conf in discovery_form['a_priori_information_configurations']]
+
+        return UserInput(
+            model=discovery_form['model'],
+            curiosity=float(discovery_form['curiosity']),
+            features=discovery_form['materials_data_input'],
+            targets=discovery_form['target_properties'],
+            target_weights=target_weights,
+            target_max_or_min=target_max_or_min,
+            fixed_targets=discovery_form['a_priori_information'],
+            fixed_target_weights=fixed_target_weights,
+            fixed_target_max_or_min=fixed_target_max_or_min,
+        )
+
+    @classmethod
+    def _initialize_experiment(cls, dataframe, user_input):
+        return DiscoveryExperiment(
+            dataframe=dataframe,
+            model=user_input.model,
+            curiosity=user_input.curiosity,
+            features=user_input.features,
+            targets=user_input.targets,
+            target_weights=user_input.target_weights,
+            target_max_or_min=user_input.target_max_or_min,
+            fixed_targets=user_input.fixed_targets,
+            fixed_target_weights=user_input.fixed_target_weights,
+            fixed_target_max_or_min=user_input.fixed_target_max_or_min
+        )
+
+    @classmethod
+    def show_dataset_for_adding_targets(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+
+        return cls._create_data_tables(dataset.dataframe)
 
     @classmethod
     def _create_all_dtos(cls, dataframe):
@@ -81,9 +139,11 @@ class DiscoveryService:
     def add_target_name(cls, dataset, target_name):
         dataframe = None
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
+        if empty(initial_dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
         if initial_dataset:
             dataframe = initial_dataset.dataframe
-        dataframe[f'Target: {target_name}'] = None
+        dataframe[f'Target: {target_name}'] = np.nan
 
         dataset_with_new_target = Dataset(dataset, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
@@ -93,16 +153,20 @@ class DiscoveryService:
     @classmethod
     def save_targets(cls, dataset_name, form):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
         dataframe = dataset.dataframe
         all_columns = dataset.columns
 
         targets_column_names = list(filter(lambda column_name: column_name.startswith('Target: '), all_columns))
         for key, value in form.items():
             if key.startswith('target'):
+                if not_empty(value) and not_numeric(value):
+                    raise ValueNotSupportedException('Targets must be numeric')
                 pieces_of_target_key = key.split('-')
                 row_index = int(pieces_of_target_key[1]) - 1
                 target_number_index = int(pieces_of_target_key[2]) - 1
-                dataframe.at[row_index, targets_column_names[target_number_index]] = value
+                dataframe.at[row_index, targets_column_names[target_number_index]] = float_if_not_empty(value)
 
         DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
 
