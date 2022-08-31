@@ -1,7 +1,8 @@
+import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
-from slamd.common.error_handling import DatasetNotFoundException
-from slamd.common.slamd_utils import empty, float_if_not_empty
+from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
+from slamd.common.slamd_utils import empty, float_if_not_empty, not_empty, not_numeric
 from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
 from slamd.discovery.processing.algorithms.user_input import UserInput
@@ -142,7 +143,7 @@ class DiscoveryService:
             raise DatasetNotFoundException('Dataset with given name not found')
         if initial_dataset:
             dataframe = initial_dataset.dataframe
-        dataframe[f'Target: {target_name}'] = None
+        dataframe[f'Target: {target_name}'] = np.nan
 
         dataset_with_new_target = Dataset(dataset, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
@@ -160,10 +161,12 @@ class DiscoveryService:
         targets_column_names = list(filter(lambda column_name: column_name.startswith('Target: '), all_columns))
         for key, value in form.items():
             if key.startswith('target'):
+                if not_empty(value) and not_numeric(value):
+                    raise ValueNotSupportedException('Targets must be numeric')
                 pieces_of_target_key = key.split('-')
                 row_index = int(pieces_of_target_key[1]) - 1
                 target_number_index = int(pieces_of_target_key[2]) - 1
-                dataframe.at[row_index, targets_column_names[target_number_index]] = value
+                dataframe.at[row_index, targets_column_names[target_number_index]] = float_if_not_empty(value)
 
         DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
 

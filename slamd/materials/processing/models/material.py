@@ -1,6 +1,6 @@
-from typing import List
-from uuid import UUID, uuid1
 from dataclasses import dataclass, field
+from uuid import UUID, uuid1
+
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 
 
