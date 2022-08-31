@@ -3,7 +3,7 @@ from wtforms import StringField, DecimalField, SelectField, SubmitField
 from wtforms import FieldList, FormField
 from wtforms import validators
 
-from slamd.materials.processing.forms.add_property_form import AddPropertyForm
+from slamd.materials.processing.forms.additional_property_form import AdditionalPropertyForm
 
 
 class MaterialsForm(Form):
@@ -42,7 +42,7 @@ class MaterialsForm(Form):
         ]
     )
 
-    additional_properties = FieldList(FormField(AddPropertyForm),
+    additional_properties = FieldList(FormField(AdditionalPropertyForm),
                                       label='Custom Properties',
                                       min_entries=0,
                                       max_entries=10)

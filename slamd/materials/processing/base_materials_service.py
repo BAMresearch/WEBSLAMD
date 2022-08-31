@@ -1,6 +1,6 @@
 from slamd.common.error_handling import MaterialNotFoundException
 from slamd.common.slamd_utils import empty, not_empty
-from slamd.materials.processing.forms.additional_properties_form import AdditionalPropertiesForm
+from slamd.materials.processing.forms.materials_form import MaterialsForm
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.materials_service import MaterialsService, MaterialsResponse
@@ -18,15 +18,15 @@ class BaseMaterialService(MaterialsService):
 
     @classmethod
     def create_additional_property_form(cls, additional_property_entries):
-        new_form = AdditionalPropertiesForm()
+        form = MaterialsForm()
         if not_empty(additional_property_entries):
             for entry in additional_property_entries:
-                additional_property_entry = new_form.additional_properties.append_entry()
+                additional_property_entry = form.additional_properties.append_entry()
                 additional_property_entry.property_name.data = entry['property_name']
                 additional_property_entry.property_value.data = entry['property_value']
 
-        new_form.additional_properties.append_entry()
-        return new_form
+        form.additional_properties.append_entry()
+        return form
 
     @classmethod
     def populate_form(cls, material_type, uuid):

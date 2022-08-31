@@ -10,9 +10,11 @@
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
     <h3>Material Discovery</h3>
     {% include 'upload_dataset_form.html' %}
-    {% include 'datasets_table_container.html' %}
+    <div id="datasets-table-placeholder">
+        {% include 'datasets_table.html' %}
+    </div>
     {% include 'discovery_form.html' %}
-    <div id="experiment-result-placeholder" class="col-12 mt-3"></div>
+    <div id="experiment-result-placeholder" class="table-responsive"></div>
 </main>
 <script src="{{url_for('discovery.static', filename='discovery.js')}}"></script>
 {%endblock%}

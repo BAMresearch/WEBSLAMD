@@ -1,19 +1,19 @@
 {% for target in form.target_configurations %}
-<div class="row g-3 mb-3 align-items-end">
-    <div class="col-md-4 align-self-center text-center fw-bold">
+<div class="row g-3 mb-2 form-group justify-content-center align-items-center">
+    <div class="col-12 col-md-2 text-center fw-bold">
         {{ target.name }}
     </div>
-    <div class="col-md-4">
+    <div class="col-12 col-md-3 d-flex align-items-center justify-content-center">
         {% for radio_option in target.max_or_min %}
-        <div class="form-check">
+        <div class="form-check mx-3">
             {{ radio_option(class_="form-check-input") }}
             {{ radio_option.label(class_="form-check-label") }}
         </div>
         {% endfor %}
     </div>
-    <div class="col-md-4">
-        {{ target.weight.label(class_="control-label") }}
-        {{ target.weight(class_="form-control") }}
+    <div class="col-12 col-md-3 d-flex align-items-center">
+        {{ target.weight.label(class_="control-label mx-2") }}
+        {{ target.weight(class_="form-control mx-2") }}
     </div>
 </div>
 {% endfor %}
