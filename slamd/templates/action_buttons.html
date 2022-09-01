@@ -70,7 +70,7 @@
 
 {% macro create_select_dataset_button(dataset_name, width, height) -%}
 <div class="me-1">
-    <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}"
+    <a class="btn btn-primary" href="/materials/discovery/{{ dataset_name }}"
         id="'{{ 'select-dataset-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
         title="Select dataset">
         {{ check_icon(width, height, "currentColor") }}
