@@ -132,6 +132,7 @@ async function runExperiment() {
     target_configurations,
     a_priori_information_configurations,
   });
+  document.getElementById("download-experiment-button").disabled = false;
 }
 
 function toggleRunExperimentButton() {
