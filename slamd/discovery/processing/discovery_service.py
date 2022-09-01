@@ -104,6 +104,14 @@ class DiscoveryService:
         )
 
     @classmethod
+    def download_dataset(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+        # Return the CSV as a string. Represent NaNs in the dataframe as a string.
+        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+
+    @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
