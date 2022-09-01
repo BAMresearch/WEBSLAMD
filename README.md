@@ -8,13 +8,17 @@
 - Tailor materials to the purpose to achieve the best solution.
 
 #### Workflow
-1.	Specify resources
+
+##### Digital Lab
+1.	Specify resources:
 From base materials to manufacturing processes – “Base” enables a detailed and consistent description of existing resources
 2.	Combine resources 
 The combination of base materials and processes offers an almost infinite optimization potential. "Blend" makes it easier to design complex configurations.
-3.	Digital recipes 
+3.	Digital Formulations: 
 With "Formulations" you can effortlessly convert your resources into the entire spectrum of possible concrete formulations. This automatically generates a detailed set of data for AI optimization.
-4.	Materials Discovery
+
+##### AI-Optimization
+4.	Materials Discovery:
 Integrate data from the “Digital Lab” or upload your own material data. Enrich the data with lab results and adopt the knowledge to new recipes via artificial intelligence. Leverage socio-economic metrics to identify recipes tailored to your requirements.
 
 ### Installation
