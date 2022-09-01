@@ -1,7 +1,7 @@
 # WEBSLAMD
 
 ### Summary
-##### Leverage the Digital Lab and AI optimization to discover exciting new materials recipes.
+##### Leverage the Digital Lab and AI optimization to discover exciting new materials
 - Represent resources and processes and their socio-economic impact.
 - Calculate complex compositions and enrich them with detailed material knowledge.
 - Integrate laboratory data and apply it to novel formulations.
