@@ -38,11 +38,13 @@ class DiscoveryExperiment:
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
     def run(self):
-        if 'Materials' in self.dataframe.columns:
+        if 'Materials' in self.features_df.columns:
             self.features_df["Materials"] = self.features_df["Materials"].astype('category')
             self.features_df["Materials"] = self.features_df["Materials"].cat.codes
 
-        print(self.features_df.dtypes)
+        # non_numeric_features = [col for col, dt in self.features_df.dtypes.items() if not np.issubdtype(dt, np.number)]
+        # if len(non_numeric_features) > 0:
+        #     raise SequentialLearningException('Some input features contain non-numeric features')
 
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
