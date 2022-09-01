@@ -1,0 +1,309 @@
+Date: Thu, 1 Sep 2022 10:50:43 +0200 (CEST)
+Message-ID: <1208286525.12973.1662022243182@296d5edede7b>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_12972_1430074829.1662022243182"
+
+------=_Part_12972_1430074829.1662022243182
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>3-Layer Architecure</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: #fff !important;
+        color: #000 !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: #000;
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>3-Layer Architecure</h1>
+    <div class=3D"Section1">
+        <p>Slamd uses a basic 3-layer architecture in the backend. For any =
+domain (such as e.g. base materials) there are dedicated data structures in=
+ the given layers. The layers have the responsibilities described in the fo=
+llowing table:<br><br></p>
+<div class=3D"table-wrap">
+<table class=3D"wrapped confluenceTable">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<th class=3D"confluenceTh">Layer</th>
+<th class=3D"confluenceTh">Description</th>
+<th class=3D"confluenceTh">Advantage</th>
+</tr>
+<tr>
+<td class=3D"confluenceTd">Controller</td>
+<td class=3D"confluenceTd">This layer is responsible for orchestrating the =
+communication between frontend and backend. It takes a request and returns =
+a response. It does not know about any details of the domain logic, but rat=
+her delegates it to a service. The response of that service is then returne=
+d to the frontend. In general, it defines an API layer providing core funct=
+ionality to any client using the backend. Note however, that we are using s=
+erver-side rendering with Jinja2 and WTForms. Thus, in our case we are rest=
+ricted to creating responses in accordance with these technologies.&nbsp;</=
+td>
+<td class=3D"confluenceTd">Single Responsibility of managing requests and r=
+esponses decouples controllers from any internal logic. As a result, we hav=
+e simple controllers without any cognitive complexity. If one wants to exch=
+ange the underlying webframe work at some point in the future (e.g. Django =
+instead of Flask), we can focus on this layer mainly.</td>
+</tr>
+<tr>
+<td class=3D"confluenceTd">Business</td>
+<td class=3D"confluenceTd">Business logic is implemented using Services. Th=
+ese are called by controllers. For example, a materials_controller would ca=
+ll a MaterialsService. The latter knows about the business domain, e.g. wha=
+t materials can be saved or how saved material are to be processed before b=
+eing returned to the controller. Internally, it uses helper classes such as=
+ factories and strategies to ensure easy extendability and weak coupling of=
+ the code. Note that these helper classes are also part of the business lay=
+er. Further, no persistence logic is done by any of the objects/data struct=
+ure described here. Rather, this is handled by a dedicated persistence laye=
+r which is simply called by the business layer.</td>
+<td class=3D"confluenceTd">We can completely focus on the business domain. =
+This leads to decoupling of the implementation from e.g. choices of the web=
+- or persistence framework (as much as possible). As we are using server-si=
+de rendering with WTForms we are, however, restricted in the sense that we =
+must follow the corresponding APIs.</td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Persistence</td>
+<td colspan=3D"1" class=3D"confluenceTd">Saving data persistently and retri=
+eving it is achieved in a dedicated persistence layer. The services use dat=
+a structures dedicated for handling persistence operations. For example, a =
+MaterialsService would use a MaterialsPersistence data structure. Note that=
+ currently the chosen persistence implementation relies on using server-sid=
+e sessions.</td>
+<td colspan=3D"1" class=3D"confluenceTd">We hide any technical detail relat=
+ed to persistence from the actual business domain. If at some point one wan=
+ts to change the underlying persistence framework (e.g. using SQLAlchemy or=
+ S3 buckets instead of server-side session), no adaptions in the business a=
+nd controller layers are needed and we can focus on adjusting only the impl=
+ementation in the persistence layer.&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>&nbsp;&nbsp;</p>
+    </div>
+</body>
+</html>
+------=_Part_12972_1430074829.1662022243182--

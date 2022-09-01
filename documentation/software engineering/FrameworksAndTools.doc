@@ -1,0 +1,356 @@
+Date: Thu, 1 Sep 2022 10:53:43 +0200 (CEST)
+Message-ID: <1024796648.12977.1662022423925@296d5edede7b>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_12976_1082930384.1662022423924"
+
+------=_Part_12976_1082930384.1662022423924
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>Frameworks and Tools</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: #fff !important;
+        color: #000 !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: #000;
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>Frameworks and Tools</h1>
+    <div class=3D"Section1">
+        <p>This page describes the major technologies which are used for th=
+e development of SLAMD. Furthermore, reasons for the concrete choices are d=
+escribed.<br>It is important that the choices made take into account the fa=
+ct that we are building an MVP. Going far beyond that MVP would require ret=
+hinking aspects such as hosting, non-functional as well as functional requi=
+rements, resources, team size etc.<br>However, we still build our MVP in su=
+ch a way, that adaptions can be made in the future easily by using clean de=
+sign and architecture. For example, if in the future a generic REST API ins=
+tead of an HTML-based web app is wanted, it would amount to basically only =
+changing the controller layer.</p>
+<div class=3D"table-wrap">
+<table class=3D"wrapped confluenceTable">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<th class=3D"confluenceTh">Technology</th>
+<th class=3D"confluenceTh">Motivation</th>
+</tr>
+<tr>
+<td class=3D"confluenceTd">Flask</td>
+<td class=3D"confluenceTd"><p>Flask is a lightweight Python web framework w=
+ith a huge community. The setup is simple and can be customized easily. Dja=
+ngo, which is another popular web framework, is rather heavyweight and more=
+ suited for enterprise applications.<br>For the sake of simplicity and as w=
+e are developing an open source web app for a restricted community, Flask s=
+eems to be an appropriate choice. Further, for the MVP of SLAMD we do not c=
+onstruct a generic REST API which is consumed e.g. by some frontend framewo=
+rk on the client-side, but we create HTML templates in terms of Jinja2 and =
+return them in our controllers (which are modularized using Flask Blueprint=
+).</p><p><a href=3D"https://flask.palletsprojects.com/en/2.1.x/" class=3D"e=
+xternal-link" rel=3D"nofollow">Welcome to Flask =E2=80=94 Flask Documentati=
+on (2.1.x) (palletsprojects.com)</a></p></td>
+</tr>
+<tr>
+<td class=3D"confluenceTd">Jinja2</td>
+<td class=3D"confluenceTd"><p>Jinja2 is the most popular templating engine =
+with perfect Flask integration. It provides features such as macros and tem=
+plate inheritance allowing for a modularization of the frontend. As there i=
+s a large community using Jinja2 there exists a lot of documentation.</p><p=
+><a href=3D"https://palletsprojects.com/p/jinja/" class=3D"external-link" r=
+el=3D"nofollow">Jinja | The Pallets Projects</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">WTForms</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p>WTForms allow for a programmati=
+c specification of forms in terms of Python classes. This improves structur=
+ing and readability of our code base. Furthermore, the framework provides a=
+n easy interface for creating server-side validation of the form's inputs. =
+Finally, as there is a large community using WTForms, we can rely on exhaus=
+tive documentation.</p><p><a href=3D"https://wtforms.readthedocs.io/en/3.0.=
+x/" class=3D"external-link" rel=3D"nofollow">WTForms =E2=80=94 WTForms Docu=
+mentation (3.0.x)</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Scikit-learn</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p>scikit-learn is largely used in=
+ data analysis and machine learning. There is a large community and extensi=
+ve documentation. It uses a simple generic interface which is easy to learn=
+ and use and provides classes for basically any relevant Machine Learning a=
+nd Data Analysis Tool.</p><p><a href=3D"https://scikit-learn.org/stable/ind=
+ex.html" class=3D"external-link" rel=3D"nofollow">scikit-learn: machine lea=
+rning in Python =E2=80=94 scikit-learn 1.1.1 documentation</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Vanilla JS</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p>We rely on using Vanilla Javasc=
+ript. The manipulation of UI Elements required in SLAMD can be managed prop=
+erly with pure Javascript. We further rely on using the Fetch-API when call=
+ing the backend as in our opinion it is more user-friendly and easier to re=
+ad and write than ajax/jQuery.</p><p><a href=3D"https://developer.mozilla.o=
+rg/en-US/docs/Web/javascript" class=3D"external-link" rel=3D"nofollow">Java=
+Script | MDN (mozilla.org)</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Pytest</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p>Pytest is a frequently used tes=
+ting framework which has all relevant features for a plethora of testing us=
+e cases. From simple assertion and mocking up to creating test clients it c=
+an cover unit as well as integration testing.</p><p><a href=3D"https://docs=
+.pytest.org/en/7.1.x/" class=3D"external-link" rel=3D"nofollow">pytest: hel=
+ps you write better programs =E2=80=94 pytest documentation</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Bootstrap</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p>Bootstrap is a well known CSS f=
+ramework which provides a grid framework for responsive layout as well as v=
+arious UI Elements such as modals etc. There is extensive documentation. It=
+ is simple to integrate it into an app simply by including it in the html h=
+ead element.</p><p><a href=3D"https://getbootstrap.com/" class=3D"external-=
+link" rel=3D"nofollow">Bootstrap =C2=B7 The most popular HTML, CSS, and JS =
+library in the world. (getbootstrap.com)</a></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Bootstrap Icons</td>
+<td colspan=3D"1" class=3D"confluenceTd"><p><span style=3D"color: rgb(33,37=
+,41);">Free, high quality, open source icon library with over 1,600 icons. =
+We decided to use this website since we can easily copy the icons as &lt;sv=
+g&gt; tags into our code. We do not require installing an additional librar=
+y for using the icons as with other offers.</span></p><p><span style=3D"col=
+or: rgb(33,37,41);"><a href=3D"https://icons.getbootstrap.com/" class=3D"ex=
+ternal-link" rel=3D"nofollow">Bootstrap Icons =C2=B7 Official open source S=
+VG icon library for Bootstrap (getbootstrap.com)</a></span></p></td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Cypress</td>
+<td colspan=3D"1" class=3D"confluenceTd">Nice Javascript library for writin=
+g acceptance test at the level of the UI. It allows to simulate behaviour b=
+y automating the interaction with the browser. It makes sure our UI behaves=
+ as expected. Further, it can be easily integrated within github: For more =
+details, check the documentation: <a href=3D"https://www.cypress.io/" class=
+=3D"external-link" rel=3D"nofollow">Cypress</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+</body>
+</html>
+------=_Part_12976_1082930384.1662022423924--

@@ -1,0 +1,321 @@
+Date: Thu, 1 Sep 2022 10:53:53 +0200 (CEST)
+Message-ID: <239307381.12979.1662022433537@296d5edede7b>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_12978_899771788.1662022433537"
+
+------=_Part_12978_899771788.1662022433537
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>Patterns used in SLAMD</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: #fff !important;
+        color: #000 !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: #000;
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>Patterns used in SLAMD</h1>
+    <div class=3D"Section1">
+        <p>We use some&nbsp;<a href=3D"https://en.wikipedia.org/wiki/Design=
+_Patterns" class=3D"external-link" rel=3D"nofollow">design patterns</a> whi=
+ch guarantee easy extendability and decoupling of the code. This is achieve=
+d by identifying proper abstraction levels and defining appropriate data st=
+ructures. Note, however, that we do not recommend to use design patterns to=
+o heavily as this can lead to more complexity instead of reducing it.&nbsp;=
+<br>Some of the pattern we are using are desribed in the following table. M=
+ore details on various patterns can e.g. be found in the wikipedia link abo=
+ve.<br><br></p>
+<div class=3D"table-wrap">
+<table class=3D"relative-table wrapped confluenceTable" style=3D"width: 100=
+.0%;">
+<colgroup>
+<col style=3D"width: 5.43689%;">
+<col style=3D"width: 56.2475%;">
+<col style=3D"width: 38.3157%;">
+</colgroup>
+<tbody>
+<tr>
+<th class=3D"confluenceTh">Pattern</th>
+<th class=3D"confluenceTh">Short Description</th>
+<th class=3D"confluenceTh">Advantage</th>
+</tr>
+<tr>
+<td class=3D"confluenceTd">Factory</td>
+<td class=3D"confluenceTd">The factory pattern is a creational pattern. Fac=
+tories are data structures (we uses classes) which provide classmethods for=
+ the creation of other objects. Using some input, the factory returns an ob=
+ject appropriate for the problem at hand. For example, if one wants to crea=
+te a liquid, the factory infers from the path variable that a LiquidStrateg=
+y object must be invoked for further processing of the request.</td>
+<td class=3D"confluenceTd">Decouples creation of data structures from the a=
+ctual processing. This leads to reduced cognitive complexity. In addition, =
+adding e.g. a new material type is as easy as providing a new object implem=
+entation which can be hooked into the factory logic.</td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Strategy&nbsp;</td>
+<td colspan=3D"1" class=3D"confluenceTd">The Strategy Pattern is based on i=
+mplementing a common interface for different usecases. As there are no inte=
+rfaces within python, we stick to the convention of implementing a method w=
+ith the proper name. For example, all our strategies for creating base mate=
+rials implement a method call create_model. As a consequence, the service c=
+an simply ask the factory to return a proper strategy and call its create_m=
+odel method without having to know what the actual strategy is.</td>
+<td colspan=3D"1" class=3D"confluenceTd">Seperation of concerns is improved=
+, as for any business usecase there is a dedicated strategy providing the a=
+ppropriate logic. Furthermore, due to having a consistent API, we achieve a=
+ high level of extendability of our code base.</td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Adapter&nbsp;</td>
+<td colspan=3D"1" class=3D"confluenceTd">Adapters translate between the mod=
+el language, i.e. the structures saved and retrieved in the persistence lay=
+er, and the information shown in the frontend. For that purpose a mapping o=
+r conversion is implemented. Note that our strategies can also take the rol=
+e of the converter as is e.g. the case for PowderStrategy etc.</td>
+<td colspan=3D"1" class=3D"confluenceTd">We make sure that all logic is imp=
+lemented in the backend. We can thus focus in the frontend simply on showin=
+g data and acting on user events instead of having to worry about complex l=
+ogic there. This is reminiscent of some ideas of MVC where the frontend's j=
+ob solely is to show data and not to process it.</td>
+</tr>
+<tr>
+<td colspan=3D"1" class=3D"confluenceTd">Template</td>
+<td colspan=3D"1" class=3D"confluenceTd">The template pattern can be used w=
+hen some basic pattern is common to various classes, but details of the log=
+ic might be different. In this case one defines a parent class defining a p=
+art of the logic that all the children share and some abstract methods whic=
+h must be implemented by the children.</td>
+<td colspan=3D"1" class=3D"confluenceTd">Abstraction provides a common inte=
+rface to the callers of all the children. We can therefore combine it with =
+the factory pattern and abstract away all details of the implementation fro=
+m our services which merely act as orchestrators. Note that this construct =
+is consistent with the idea of dependency inversion stating that in appropr=
+iate situations you should code against an abstraction and not against conc=
+rete implementations to be more flexible.&nbsp; An example where the factor=
+y pattern is used in SLAMD are our strategies (all of them, e.g. PowderStra=
+tegy inherit from the common base class MaterialStrategy).</td>
+</tr>
+</tbody>
+</table>
+</div>
+    </div>
+</body>
+</html>
+------=_Part_12978_899771788.1662022433537--
