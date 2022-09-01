@@ -98,9 +98,8 @@ def run_experiment(dataset):
 
 @discovery.route('/<dataset>/download', methods=['GET'])
 def download_dataset(dataset):
-    bytes_stream = DiscoveryService.download_dataset(dataset)
-    # Forming a Response object with headers to return from flask
-    response = make_response(bytes_stream.getvalue())
+    dataset_content = DiscoveryService.download_dataset(dataset)
+    response = make_response(dataset_content.encode())
     response.headers['Content-Disposition'] = f'attachment; filename={dataset}'
     response.mimetype = 'text/csv'
     return response

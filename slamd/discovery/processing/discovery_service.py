@@ -1,4 +1,3 @@
-import io
 import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
@@ -109,10 +108,8 @@ class DiscoveryService:
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
-
-        stream = io.BytesIO()
-        stream.write(dataset.dataframe.to_csv(index=False, na_rep='NaN').encode())
-        return stream
+        # Return the CSV as a string. Represent NaNs in the dataframe as a string.
+        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):
