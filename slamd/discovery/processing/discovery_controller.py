@@ -96,6 +96,16 @@ def run_experiment(dataset):
     return make_response(jsonify(body), 200)
 
 
+@discovery.route('/<dataset>/download', methods=['GET'])
+def download_dataset(dataset):
+    bytes_stream = DiscoveryService.download_dataset(dataset)
+    # Forming a Response object with headers to return from flask
+    response = make_response(bytes_stream.getvalue())
+    response.headers['Content-Disposition'] = f'attachment; filename={dataset}'
+    response.mimetype = 'text/csv'
+    return response
+
+
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
     dataframe, all_dtos, target_list = DiscoveryService.show_dataset_for_adding_targets(dataset)

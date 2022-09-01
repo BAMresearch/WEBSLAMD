@@ -1,3 +1,4 @@
+import io
 import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
@@ -102,6 +103,16 @@ class DiscoveryService:
             fixed_target_weights=user_input.fixed_target_weights,
             fixed_target_max_or_min=user_input.fixed_target_max_or_min
         )
+
+    @classmethod
+    def download_dataset(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+
+        stream = io.BytesIO()
+        stream.write(dataset.dataframe.to_csv(index=False, na_rep='NaN').encode())
+        return stream
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):
