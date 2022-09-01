@@ -38,6 +38,12 @@ class DiscoveryExperiment:
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
     def run(self):
+        if 'Materials' in self.dataframe.columns:
+            self.features_df["Materials"] = self.features_df["Materials"].astype('category')
+            self.features_df["Materials"] = self.features_df["Materials"].cat.codes
+
+        print(self.features_df.dtypes)
+
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
         self.fit_model()
@@ -102,9 +108,7 @@ class DiscoveryExperiment:
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
 
-            all_data_is_labelled = self.dataframe.shape[0] == training_labels.shape[0]
-            if all_data_is_labelled:
-                raise SequentialLearningException('All data is already labelled.')
+            self._check_not_all_targets_labelled(training_labels)
 
             gpr.fit(training_rows, training_labels)
 
@@ -130,6 +134,9 @@ class DiscoveryExperiment:
             # Train the model
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df.iloc[self.sample_index]
+
+            self._check_not_all_targets_labelled(training_labels)
+
             self.x = training_rows
             # Sum the training labels for all targets
             self.y = training_labels.sum(axis=1).to_frame().to_numpy()
@@ -205,3 +212,8 @@ class DiscoveryExperiment:
         # Sum the fixed targets values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return fixed_targets_for_predicted_rows.sum(axis=1)
+
+    def _check_not_all_targets_labelled(self, training_labels):
+        all_data_is_labelled = self.dataframe.shape[0] == training_labels.shape[0]
+        if all_data_is_labelled:
+            raise SequentialLearningException('All data is already labelled.')
