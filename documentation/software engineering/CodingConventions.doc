@@ -1,0 +1,375 @@
+Date: Thu, 1 Sep 2022 10:38:52 +0200 (CEST)
+Message-ID: <1295130969.12945.1662021532484@296d5edede7b>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_12944_1079402291.1662021532483"
+
+------=_Part_12944_1079402291.1662021532483
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>Coding Conventions</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: #fff !important;
+        color: #000 !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: #000;
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>Coding Conventions</h1>
+    <div class=3D"Section1">
+        <p>This page summarizes the coding conventions to be used in the de=
+velopment of the Flask web app. As the project progresses additional conven=
+tions might be added or existing ones<br>could be changed in case that thes=
+e are no longer considered appropriate.</p>
+<p><br><style type=3D"text/css">/*<![CDATA[*/
+div.rbtoc1662021532427 {padding: 0px;}
+div.rbtoc1662021532427 ul {list-style: disc;margin-left: 0px;}
+div.rbtoc1662021532427 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style></p>
+<div class=3D"toc-macro rbtoc1662021532427">=20
+<ul class=3D"toc-indentation">=20
+<li><a href=3D"#CodingConventions-PackageStructure">Package Structure</a></=
+li>=20
+<li><a href=3D"#CodingConventions-CleanCodevs.Comments">Clean Code vs. Comm=
+ents</a></li>=20
+<li><a href=3D"#CodingConventions-PythonConventions">Python Conventions</a>=
+</li>=20
+<li><a href=3D"#CodingConventions-Html,CssandJavascriptConventions">Html, C=
+ss and Javascript Conventions</a></li>=20
+<li><a href=3D"#CodingConventions-Flask">Flask</a></li>=20
+<li><a href=3D"#CodingConventions-Dependencies">Dependencies</a></li>=20
+</ul>=20
+</div>
+<p></p>
+<h3 id=3D"CodingConventions-PackageStructure"><strong>Package Structure</st=
+rong></h3>
+<ul style=3D"list-style-type: square;">
+<li>Inside our root directory we have an app.py which only starts the Flask=
+ app and a config.py defining our configuration. Alongside it lies our main=
+ python module called slamd. All other python packages are located inside i=
+t.</li>
+</ul>
+<ul style=3D"list-style-type: square;">
+<li>We reflect the core domain of our app in terms of use cases as dedicate=
+d packages in our app. The names are chosen in accordance to the business d=
+omain. These follow the convention of being all lowercase which might be se=
+parated by an underscore.<br>Examples: materials_customiser, discovery...</=
+li>
+<li>A given package contains its dedicated HTML template folder, CSS styles=
+ and Javascript files in a static folder and .py files specific to the give=
+n use case. Depending on the complexity of the use case we might create sub=
+packages for the .py files</li>
+<li>There is a global template and static folder for HTML, CSS and Javascri=
+pt located inside the slamd dir. The corresponding files define structures =
+which are relevant globally such as navigation, common button styles, commo=
+n background etc.&nbsp;</li>
+<li>There is a common package for generic and re-occuring Python code. This=
+ could include, string manipulations, wrappers for ML-specific logic, decor=
+ators, exception handling etc.</li>
+</ul>
+<h3 id=3D"CodingConventions-CleanCodevs.Comments"><strong><br>Clean Code vs=
+. Comments</strong></h3>
+<ul style=3D"list-style-type: square;">
+<li>We use clean code including self-explanatory names for variables, class=
+es, methods, html files, css classes, packages etc. instead of making heavy=
+ use of documentation inside the code</li>
+<li>We structure our code according to best practices such as&nbsp;<a href=
+=3D"https://en.wikipedia.org/wiki/Don%27t_repeat_yourself" class=3D"externa=
+l-link" rel=3D"nofollow">DRY</a> and&nbsp;<a href=3D"https://en.wikipedia.o=
+rg/wiki/SOLID" class=3D"external-link" rel=3D"nofollow">SOLID</a></li>
+<li>Comments are included only when the purpose of a given piece of code ca=
+n not be easily expressed in terms of proper names as in the bullet point a=
+bove. This could for example be a technical detail of a library implementat=
+ion which is not self-explaining, but which we need to understand and use i=
+n our code</li>
+</ul>
+<h3 id=3D"CodingConventions-PythonConventions"><strong><br>Python Conventio=
+ns</strong></h3>
+<ul style=3D"list-style-type: square;">
+<li>Variables, global variables and methods use "all lowercase, separated b=
+y underscore" convention (Snake case: <a href=3D"https://en.wikipedia.org/w=
+iki/Snake_case" class=3D"external-link" rel=3D"nofollow">Snake case - Wikip=
+edia</a>)</li>
+<li>Constants are all upper case seperated by underscore&nbsp;</li>
+<li>Private members and methods follow the convention of leading underscore=
+. We never use them outside of the class except in test files.</li>
+<li>We do not use type annotations, except in dataclasses where they are re=
+quired. More info: <a href=3D"https://docs.python.org/3/library/dataclasses=
+.html" class=3D"external-link" rel=3D"nofollow">dataclasses =E2=80=94 Data =
+Classes =E2=80=94 Python 3.10.5 documentation</a></li>
+<li>Classes follow upper Camel case (also known as Pascal case) convention.=
+ (<a href=3D"https://en.wikipedia.org/wiki/Camel_case" class=3D"external-li=
+nk" rel=3D"nofollow">Camel case - Wikipedia</a>)</li>
+<li>We use single quotes for strings</li>
+</ul>
+<h3 id=3D"CodingConventions-Html,CssandJavascriptConventions"><strong><br>H=
+tml, Css and Javascript Conventions</strong></h3>
+<ul style=3D"list-style-type: square;">
+<li>Filenames of html, css and js files follow "all lowercase, separated by=
+ underscore" convention (Snake case: <a href=3D"https://en.wikipedia.org/wi=
+ki/Snake_case" class=3D"external-link" rel=3D"nofollow">Snake case - Wikipe=
+dia</a>)</li>
+<li>Css classes and ids follow "all lowercase, separated by minus" conventi=
+on</li>
+<li>We do not use html style attributes but create dedicated css classes</l=
+i>
+<li>Forms are created in terms of Python's WTForms and included in terms of=
+ Jinja2 templating syntax</li>
+<li>Javascript variables and methods use "always start with a lowercase let=
+ter and then capitalize the first letter of every subsequent word" conventi=
+on (<a style=3D"letter-spacing: 0.0px;" href=3D"https://en.wikipedia.org/wi=
+ki/Camel_case" class=3D"external-link" rel=3D"nofollow">Camel case - Wikipe=
+dia</a><span style=3D"letter-spacing: 0.0px;">)</span></li>
+<li>Javascript constants are all upper case seperated by underscore</li>
+<li>Javascript Classes follow upper Camel case (also known as Pascal case) =
+convention, e.g. UploadService. (<a href=3D"https://en.wikipedia.org/wiki/C=
+amel_case" style=3D"letter-spacing: 0.0px;" class=3D"external-link" rel=3D"=
+nofollow">Camel case - Wikipedia</a><span style=3D"letter-spacing: 0.0px;">=
+)</span></li>
+<li>We use single quotes for strings</li>
+</ul>
+<h3 id=3D"CodingConventions-Flask"><strong><br>Flask</strong></h3>
+<ul style=3D"list-style-type: square;">
+<li>Blueprint is used to define controllers according to a given use case. =
+The corresponding file is placed inside the proper directory (see Package S=
+tructure above).</li>
+<li>All controllers are registered in a common place, __init__.py inside th=
+e slamd package</li>
+<li>Configurations for different stages are all defined as dedicated Config=
+ classes inside config.py. A given config is passed at server startup in te=
+rms of an environment variable.</li>
+<li>We use flasks error_handler decorators and custom HTML error pages =E2=
+=86=92 we can combine it with Flask's abort functionality</li>
+</ul>
+<h3 id=3D"CodingConventions-Dependencies"><strong><br>Dependencies</strong>=
+</h3>
+<ul style=3D"list-style-type: square;">
+<li>Dependencies are defined in requirements.txt</li>
+<li>We aim at using the latest dependencies; only in case of incompatibilit=
+ies we might use another appropriate version.</li>
+<li>We use dependencies that are maintained actively and developed seriousl=
+y (large community, no severe security issues etc.).</li>
+<li>We do not list or import dependencies which are not used in out project=
+.</li>
+</ul>
+<p><br></p>
+    </div>
+</body>
+</html>
+------=_Part_12944_1079402291.1662021532483--
