@@ -26,6 +26,17 @@ class DiscoveryService:
         return False, form
 
     @classmethod
+    def save_dataset_file(cls, dataset_name, submitted_form, submitted_file):
+        form = UploadDatasetForm(CombinedMultiDict((submitted_file, submitted_form)))
+        filename = 'dataset-' + dataset_name + '.csv'
+
+        if form.validate():
+            dataset = CsvStrategy.create_dataset(form.dataset.data)
+            dataset.to_csv(filename)
+            return True
+        return False
+
+    @classmethod
     def delete_dataset(cls, dataset_name):
         DiscoveryPersistence.delete_dataset_by_name(dataset_name)
 
