@@ -1,16 +1,17 @@
 from itertools import product
+
 from werkzeug.utils import secure_filename
 
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
 from slamd.common.slamd_utils import not_numeric, empty
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
-from slamd.formulations.processing.formulations_persistence import FormulationsPersistence, TEMPORARY_FORMULATION
 from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
@@ -41,7 +42,7 @@ class FormulationsService:
     @classmethod
     def get_formulations(cls):
         dataframe = None
-        temporary_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
         return dataframe
@@ -148,7 +149,7 @@ class FormulationsService:
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):
-        previous_batch_df = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
+        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
 
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
@@ -178,7 +179,7 @@ class FormulationsService:
         dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
 
         temporary_dataset = Dataset(TEMPORARY_FORMULATION, dataframe)
-        FormulationsPersistence.save_temporary_dataset(temporary_dataset)
+        DiscoveryFacade.save_temporary_dataset(temporary_dataset)
 
         return dataframe
 
@@ -231,7 +232,7 @@ class FormulationsService:
 
     @classmethod
     def delete_formulation(cls):
-        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
 
     @classmethod
     def save_dataset(cls, form):
@@ -243,8 +244,8 @@ class FormulationsService:
         if filename == TEMPORARY_FORMULATION:
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
-        formulation_to_be_saved_as_dataset = FormulationsPersistence.query_dataset_by_name(TEMPORARY_FORMULATION)
-        FormulationsPersistence.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
+        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
         formulation_to_be_saved_as_dataset.name = filename
         if formulation_to_be_saved_as_dataset:
-            FormulationsPersistence.save_dataset(formulation_to_be_saved_as_dataset)
+            DiscoveryFacade.save_dataset(formulation_to_be_saved_as_dataset)

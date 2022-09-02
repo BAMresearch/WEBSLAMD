@@ -4,8 +4,8 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
-from slamd.formulations.processing.formulations_persistence import FormulationsPersistence
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -132,10 +132,10 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
         mock_save_temporary_dataset_called_with = input
         return None
 
-    monkeypatch.setattr(FormulationsPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
     monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
-    monkeypatch.setattr(FormulationsPersistence, 'save_temporary_dataset', mock_save_temporary_dataset)
+    monkeypatch.setattr(DiscoveryFacade, 'save_temporary_dataset', mock_save_temporary_dataset)
 
     formulations_data = {
         'materials_request_data': {
@@ -169,7 +169,7 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
         mock_delete_dataset_by_name_called_with = input
         return None
 
-    monkeypatch.setattr(FormulationsPersistence, 'delete_dataset_by_name', mock_delete_dataset_by_name)
+    monkeypatch.setattr(DiscoveryFacade, 'delete_dataset_by_name', mock_delete_dataset_by_name)
 
     FormulationsService.delete_formulation()
 
@@ -196,9 +196,9 @@ def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(mon
         mock_save_dataset_called_with = input
         return None
 
-    monkeypatch.setattr(FormulationsPersistence, 'delete_dataset_by_name', mock_delete_dataset_by_name)
-    monkeypatch.setattr(FormulationsPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
-    monkeypatch.setattr(FormulationsPersistence, 'save_dataset', mock_save_dataset)
+    monkeypatch.setattr(DiscoveryFacade, 'delete_dataset_by_name', mock_delete_dataset_by_name)
+    monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(DiscoveryFacade, 'save_dataset', mock_save_dataset)
 
     form = ImmutableMultiDict([('dataset_name', 'dataset_name')])
 
