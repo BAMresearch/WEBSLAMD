@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import pytest
 from io import BytesIO
 from pandas import DataFrame
@@ -10,7 +12,7 @@ from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-
+from tests.discovery.processing.test_dataframe_dicts import TEST_DF_DICT, TEST_PRED_DF_DICT
 
 app = create_app('testing', with_session=False)
 
@@ -101,3 +103,25 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
     assert datasets[0] == Dataset('Dataset 1')
     assert datasets[1] == Dataset('Dataset 2')
     assert datasets[2] == Dataset('Dataset 3')
+
+
+def test_run_experiment(monkeypatch):
+    def mock_query_dataset_by_name(dataset_name):
+        test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
+        return Dataset('test_data', test_df)
+
+    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+
+    test_experiment_config = {
+        'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
+                                 'X', 'Y', 'fe3_o2', 'al2_o3', 'ca_o', 'mg_o', 'k2_o', 's_o3', 'ti_o2', 'p2_o5', 'sr_o',
+                                 'mn2_o3', 'fine', 'fine_aggregates', 'coarse_aggregates', 'water_absorption',
+                                 'duration', 'temperature', 'relative humidity', 'total costs / ton',
+                                 'total delivery_time '], 'target_properties': ['Target: X'],
+        'a_priori_information': ['total co2_footprint / ton'],
+        'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.48450244698206',
+        'target_configurations': [{'max_or_min': 'max', 'weight': '1.00'}],
+        'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00'}]}
+
+    df_with_prediction = DiscoveryService.run_experiment('test_data', test_experiment_config)
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_PRED_DF_DICT
