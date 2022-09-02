@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
@@ -134,7 +136,10 @@ class DiscoveryService:
             preview = preview.strip()[:-1]
             for target_name in target_list:
                 target_value = dataframe.at[i, target_name]
-                target_dto = TargetDto(i, target_name, float_if_not_empty(target_value))
+                target_value = float_if_not_empty(target_value)
+                if math.isnan(target_value):
+                    target_value = None
+                target_dto = TargetDto(i, target_name, target_value)
                 target_dtos.append(target_dto)
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''
