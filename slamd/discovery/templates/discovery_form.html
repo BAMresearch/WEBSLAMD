@@ -29,7 +29,8 @@
     <div class="row ps-3 mb-3">
         Find new material properties based on the given configuration. The utility of all data items with unknown target values
         is predicted. The resulting table is sorted so that the first entry is predicted to be the most promising candidate.
-        Note that feature columns with missing values are dropped by the algorithm.
+        Note that feature columns with missing values are dropped by the algorithm. In case you choose targets which are already
+        fully labelled, an error is shown.
     </div>
     <div class="row g-3 mb-3">
         <button id="run-experiment-button" class="btn btn-success col-12 mb-3 p" type="button" data-bs-toggle="tooltip"
