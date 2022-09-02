@@ -12,7 +12,7 @@ from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-from tests.discovery.processing.test_dataframe_dicts import TEST_DF_DICT, TEST_PRED_DF_DICT
+from tests.discovery.processing.test_dataframe_dicts import TEST_DF_DICT, TEST_GAUSS_PRED
 
 app = create_app('testing', with_session=False)
 
@@ -105,7 +105,7 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
     assert datasets[2] == Dataset('Dataset 3')
 
 
-def test_run_experiment(monkeypatch):
+def test_run_experiment_with_gauss(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
         return Dataset('test_data', test_df)
@@ -124,4 +124,4 @@ def test_run_experiment(monkeypatch):
         'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00'}]}
 
     df_with_prediction = DiscoveryService.run_experiment('test_data', test_experiment_config)
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_PRED_DF_DICT
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED

@@ -73,7 +73,7 @@ class DiscoveryExperiment:
             uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
 
-        df[self.targets] = df[self.targets].apply(lambda row: round(row, 2))
+        df[self.targets] = df[self.targets].apply(lambda row: round(row, 5))
 
         return df.sort_values(by='Utility', ascending=False)
 
