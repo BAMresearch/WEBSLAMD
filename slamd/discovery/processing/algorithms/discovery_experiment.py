@@ -31,6 +31,9 @@ class DiscoveryExperiment:
         self.target_df = dataframe[targets]
         self.fixed_target_df = dataframe[fixed_targets]
 
+        if len(targets) == 0:
+            raise SequentialLearningException('No targets were specified!')
+
         # Select the rows that have a label for the first target
         # These have a null value in the corresponding column
         self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]

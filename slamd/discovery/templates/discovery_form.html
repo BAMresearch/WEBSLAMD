@@ -1,3 +1,9 @@
+<div class="row ps-3 mb-3">
+    Find new material properties based on the configuration to be specified below. The utility of all data items with unknown target values
+    is predicted. The resulting table is sorted so that the first entry is predicted to be the most promising candidate.
+    Note that feature columns with missing values are dropped by the algorithm. In case you choose targets which are already
+    fully labelled, an error is shown.
+</div>
 <form action="" method="post" novalidate>
     <div class="row g-3 mb-3">
         <div class="col-12 col-md-4">
@@ -25,12 +31,6 @@
             {{ discovery_form.curiosity(class_="form-range", min=0, max=10, oninput="updateCuriosityValue(value)") }}
             <output for="curiosity" id="selected-range">{{ discovery_form.curiosity.data }}</output>
         </div>
-    </div>
-    <div class="row ps-3 mb-3">
-        Find new material properties based on the given configuration. The utility of all data items with unknown target values
-        is predicted. The resulting table is sorted so that the first entry is predicted to be the most promising candidate.
-        Note that feature columns with missing values are dropped by the algorithm. In case you choose targets which are already
-        fully labelled, an error is shown.
     </div>
     <div class="row g-3 mb-3">
         <button id="run-experiment-button" class="btn btn-success col-12 mb-3 p" type="button" data-bs-toggle="tooltip"
