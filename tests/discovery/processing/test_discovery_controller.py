@@ -78,7 +78,7 @@ def test_slamd_directs_to_add_targets_page(client, monkeypatch):
 
     monkeypatch.setattr(DiscoveryService, 'show_dataset_for_adding_targets', mock_show_dataset_for_adding_targets)
 
-    response = client.get('/materials/discovery/test_dataset/add_targets', data=b'{}')
+    response = client.get('/materials/discovery/test_dataset/add_targets')
 
     assert response.status_code == 200
 
@@ -86,8 +86,7 @@ def test_slamd_directs_to_add_targets_page(client, monkeypatch):
     assert '<table ' in template
     assert 'id="formulations_dataframe"' in template
 
-    assert '<th>feature1</th>' in template
-    assert '<th>feature2</th>' in template
+    _assert_target_page_table_headers(template)
 
     assert '<td>1</td>' in template
     assert '<td>2</td>' in template
@@ -97,3 +96,54 @@ def test_slamd_directs_to_add_targets_page(client, monkeypatch):
     assert '<input' in template
     assert 'target-1-1' in template
     assert '11' in template
+
+
+def test_slamd_adds_target_column(client, monkeypatch):
+    def mock_add_target_name(dataset_name, target_name):
+        df_data = {'feature1': [1], 'feature2': [2]}
+        all_dtos = [DataWithTargetsDto(0, 'feature1: 1, feature2: 2', [TargetDto(0, target_name, None)])]
+        return pd.DataFrame.from_dict(df_data), all_dtos, [target_name]
+
+    monkeypatch.setattr(DiscoveryService, 'add_target_name', mock_add_target_name)
+
+    response = client.get('/materials/discovery/test_dataset/new_target/add_target')
+
+    assert response.status_code == 200
+
+    template = json.loads(response.data.decode('utf-8'))['template']
+
+    assert '<table ' in template
+    assert 'id="formulations_dataframe"' in template
+
+    _assert_target_page_table_headers(template)
+
+    assert '<td>1</td>' in template
+    assert '<td>2</td>' in template
+
+    assert 'feature1: 1, feature2: 2' in template
+
+    assert 'new_target' in template
+    assert '<input' in template
+    assert 'target-1-1' in template
+
+
+def test_slamd_submits_targets_by_delegating_to_service(client, monkeypatch):
+    mock_save_targets_called_with = None
+
+    def mock_save_targets(dataset_name, request_form):
+        nonlocal mock_save_targets_called_with
+        mock_save_targets_called_with = {'target-1-1': 1}
+        return None, None, None
+
+    monkeypatch.setattr(DiscoveryService, 'save_targets', mock_save_targets)
+    response = client.post('/materials/discovery/test_dataset/add_targets', data=b'{}')
+
+    assert response.status_code == 302
+    assert mock_save_targets_called_with == {'target-1-1': 1}
+
+
+def _assert_target_page_table_headers(template):
+    assert '<th>feature1</th>' in template
+    assert '<th>feature2</th>' in template
+    assert '<th>Formulation Index</th>' in template
+    assert '<th>Feature Summary</th>' in template
