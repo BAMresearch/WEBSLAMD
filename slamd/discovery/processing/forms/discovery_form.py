@@ -8,21 +8,21 @@ class DiscoveryForm(Form):
         label='Materials Data (Input)',
         validators=[validators.DataRequired()],
         choices=[],
-        render_kw={'style': 'height:180px'}
+        render_kw={'style': 'height:120px'}
     )
 
     target_properties = SelectMultipleField(
         label='Target Properties',
         validators=[validators.DataRequired()],
         choices=[],
-        render_kw={'style': 'height:180px'}
+        render_kw={'style': 'height:120px'}
     )
 
     a_priori_information = SelectMultipleField(
         label='A priori Information',
         validators=[validators.DataRequired()],
         choices=[],
-        render_kw={'style': 'height:180px'}
+        render_kw={'style': 'height:120px'}
     )
 
     model = SelectField(

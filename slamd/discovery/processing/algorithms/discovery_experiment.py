@@ -41,14 +41,7 @@ class DiscoveryExperiment:
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
     def run(self):
-        non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
-                                not np.issubdtype(datatype, np.number)]
-        if len(non_numeric_features) > 0:
-            for feature in non_numeric_features:
-                self.features_df[feature] = self.features_df[feature].astype('category')
-                self.features_df[feature] = self.features_df[feature].cat.codes
-        self.features_df = self.features_df.dropna(axis=1)
-
+        self._preprocess_features()
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
         self.fit_model()
@@ -79,6 +72,15 @@ class DiscoveryExperiment:
         df[self.targets] = df[self.targets].apply(lambda row: round(row, 5))
 
         return df.sort_values(by='Utility', ascending=False)
+
+    def _preprocess_features(self):
+        non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
+                                not np.issubdtype(datatype, np.number)]
+        if len(non_numeric_features) > 0:
+            for feature in non_numeric_features:
+                self.features_df[feature] = self.features_df[feature].astype('category')
+                self.features_df[feature] = self.features_df[feature].cat.codes
+        self.features_df = self.features_df.dropna(axis=1)
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
