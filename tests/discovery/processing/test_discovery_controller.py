@@ -136,9 +136,11 @@ def test_slamd_submits_targets_by_delegating_to_service(client, monkeypatch):
         return None, None, None
 
     monkeypatch.setattr(DiscoveryService, 'save_targets', mock_save_targets)
-    response = client.post('/materials/discovery/test_dataset/add_targets', data=b'{}')
+    response = client.post('/materials/discovery/test_dataset/add_targets', data=b'{}', follow_redirects=True)
 
-    assert response.status_code == 302
+    assert response.request.path == '/materials/discovery'
+    assert response.history[0].status_code == 302
+    assert response.status_code == 200
     assert mock_save_targets_called_with == {'target-1-1': 1}
 
 
