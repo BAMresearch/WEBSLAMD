@@ -131,16 +131,14 @@ def test_save_material_creates_liquid(monkeypatch):
                                    ('material_type', 'Liquid'),
                                    ('na2_si_o3', ''),
                                    ('na_o_h', ''),
-                                   ('na2_si_o3_specific', ''),
-                                   ('na_o_h_specific', ''),
-                                   ('total', ''),
+                                   ('na2_si_o3_mol', ''),
+                                   ('na_o_h_mol', ''),
                                    ('na2_o', ''),
                                    ('si_o2', ''),
                                    ('h2_o', ''),
-                                   ('na2_o_dry', ''),
-                                   ('si_o2_dry', ''),
-                                   ('water', ''),
-                                   ('na_o_h_total', ''),
+                                   ('na2_o_mol', ''),
+                                   ('si_o2_mol', ''),
+                                   ('h2_o_mol', ''),
                                    ('submit', 'Save material')])
         BaseMaterialService.save_material(form)
 
@@ -318,16 +316,14 @@ def test_edit_material_edits_liquid(monkeypatch):
                                    ('material_type', 'Liquid'),
                                    ('na2_si_o3', ''),
                                    ('na_o_h', ''),
-                                   ('na2_si_o3_specific', ''),
-                                   ('na_o_h_specific', ''),
-                                   ('total', ''),
+                                   ('na2_si_o3_mol', ''),
+                                   ('na_o_h_mol', ''),
                                    ('na2_o', ''),
                                    ('si_o2', ''),
                                    ('h2_o', ''),
-                                   ('na2_o_dry', ''),
-                                   ('si_o2_dry', ''),
-                                   ('water', ''),
-                                   ('na_o_h_total', ''),
+                                   ('na2_o_mol', ''),
+                                   ('si_o2_mol', ''),
+                                   ('h2_o_mol', ''),
                                    ('submit', 'Save material')])
         BaseMaterialService.edit_material('Liquid', 'to_be_edited', form)
 

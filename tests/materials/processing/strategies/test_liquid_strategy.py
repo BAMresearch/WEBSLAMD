@@ -12,16 +12,14 @@ def test_create_model_reads_all_properties_from_submitted_material():
                                              ('delivery_time', '77'),
                                              ('na2_si_o3', '12.3'),
                                              ('na_o_h', '23.4'),
-                                             ('na2_si_o3_specific', '34.5'),
-                                             ('na_o_h_specific', '45.6'),
-                                             ('total', '56.7'),
+                                             ('na2_si_o3_mol', '34.5'),
+                                             ('na_o_h_mol', '45.6'),
                                              ('na2_o', '67.8'),
                                              ('si_o2', '78.9'),
                                              ('h2_o', '89.0'),
-                                             ('na2_o_dry', '0.98'),
-                                             ('si_o2_dry', '9.87'),
-                                             ('water', '8.76'),
-                                             ('na_o_h_total', '7.65'),
+                                             ('na2_o_mol', '0.98'),
+                                             ('si_o2_mol', '9.87'),
+                                             ('h2_o_mol', '8.76'),
                                              ('submit', 'Save material')])
     model = LiquidStrategy.create_model(submitted_material)
     assert model.name == 'test liquid'
@@ -31,32 +29,28 @@ def test_create_model_reads_all_properties_from_submitted_material():
     assert model.costs.delivery_time == 77
     assert model.composition.na2_si_o3 == 12.3
     assert model.composition.na_o_h == 23.4
-    assert model.composition.na2_si_o3_specific == 34.5
-    assert model.composition.na_o_h_specific == 45.6
-    assert model.composition.total == 56.7
+    assert model.composition.na2_si_o3_mol == 34.5
+    assert model.composition.na_o_h_mol == 45.6
     assert model.composition.na2_o == 67.8
     assert model.composition.si_o2 == 78.9
     assert model.composition.h2_o == 89.0
-    assert model.composition.na2_o_dry == 0.98
-    assert model.composition.si_o2_dry == 9.87
-    assert model.composition.water == 8.76
-    assert model.composition.na_o_h_total == 7.65
+    assert model.composition.na2_o_mol == 0.98
+    assert model.composition.si_o2_mol == 9.87
+    assert model.composition.h2_o_mol == 8.76
 
 
 def test_gather_composition_properties_adds_all_properties():
     composition = Composition(
         na2_si_o3=12.3,
+        na2_si_o3_mol=34.5,
         na_o_h=23.4,
-        na2_si_o3_specific=34.5,
-        na_o_h_specific=45.6,
-        total=56.7,
+        na_o_h_mol=45.6,
         na2_o=67.8,
+        na2_o_mol=0.98,
         si_o2=78.9,
+        si_o2_mol=9.87,
         h2_o=89.0,
-        na2_o_dry=0.98,
-        si_o2_dry=9.87,
-        water=8.76,
-        na_o_h_total=7.65
+        h2_o_mol=8.76,
     )
     liquid = Liquid(
         name='test liquid',
@@ -68,33 +62,29 @@ def test_gather_composition_properties_adds_all_properties():
 
     result = LiquidStrategy.gather_composition_information(liquid)
     assert result == ['Na₂SiO₃ (m%): 12.3, ',
+                      'Na₂SiO₃ (mol%): 34.5, ',
                       'NaOH (m%): 23.4, ',
-                      'Na₂SiO₃ specific (m%): 34.5, ',
-                      'NaOH specific (m%): 45.6, ',
-                      'Total solution (m%): 56.7, ',
-                      'Na₂O (I) (%): 67.8, ',
-                      'SiO₂ (I) (%): 78.9, ',
-                      'H₂O (%): 89.0, ',
-                      'Na₂O (dry) (m%): 0.98, ',
-                      'SiO₂ (dry) (m%): 9.87, ',
-                      'Water (m%): 8.76, ',
-                      'Total NaOH (m%): 7.65, ']
+                      'NaOH (mol%): 45.6, ',
+                      'Na₂O (m%): 67.8, ',
+                      'Na₂O (mol%): 0.98, ',
+                      'SiO₂ (m%): 78.9, ',
+                      'SiO₂ (mol%): 9.87, ',
+                      'H₂O (m%): 89.0, ',
+                      'H₂O (mol%): 8.76, ']
 
 
 def test_convert_to_multidict_adds_all_properties():
     composition = Composition(
         na2_si_o3=12.3,
         na_o_h=23.4,
-        na2_si_o3_specific=34.5,
-        na_o_h_specific=45.6,
-        total=56.7,
+        na2_si_o3_mol=34.5,
+        na_o_h_mol=45.6,
         na2_o=67.8,
         si_o2=78.9,
         h2_o=89.0,
-        na2_o_dry=0.98,
-        si_o2_dry=9.87,
-        water=8.76,
-        na_o_h_total=7.65
+        na2_o_mol=0.98,
+        si_o2_mol=9.87,
+        h2_o_mol=8.76,
     )
     liquid = Liquid(
         name='test liquid',
@@ -109,13 +99,11 @@ def test_convert_to_multidict_adds_all_properties():
     assert multidict['material_type'] == 'Liquid'
     assert multidict['na2_si_o3'] == '12.3'
     assert multidict['na_o_h'] == '23.4'
-    assert multidict['na2_si_o3_specific'] == '34.5'
-    assert multidict['na_o_h_specific'] == '45.6'
-    assert multidict['total'] == '56.7'
+    assert multidict['na2_si_o3_mol'] == '34.5'
+    assert multidict['na_o_h_mol'] == '45.6'
     assert multidict['na2_o'] == '67.8'
     assert multidict['si_o2'] == '78.9'
     assert multidict['h2_o'] == '89.0'
-    assert multidict['na2_o_dry'] == '0.98'
-    assert multidict['si_o2_dry'] == '9.87'
-    assert multidict['water'] == '8.76'
-    assert multidict['na_o_h_total'] == '7.65'
+    assert multidict['na2_o_mol'] == '0.98'
+    assert multidict['si_o2_mol'] == '9.87'
+    assert multidict['h2_o_mol'] == '8.76'

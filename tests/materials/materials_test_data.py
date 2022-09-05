@@ -127,8 +127,8 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid1 = Liquid(name='liquid 1', type='Liquid',
                          costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
                          composition=slamd.materials.processing.models.liquid.Composition(
-                             na2_si_o3=10.0, na_o_h=4.4, na2_si_o3_specific=7,
-                             water=11),
+                             na2_si_o3=10.0, na_o_h=4.4, na2_si_o3_mol=7,
+                             h2_o_mol=11),
                          additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                 AdditionalProperty(name='Prop2', value='Category'),
                                                 AdditionalProperty(name='Prop3', value='Not a liquid 1')])
@@ -138,8 +138,8 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid2 = Liquid(name='liquid 2', type='Liquid',
                          costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
                          composition=slamd.materials.processing.models.liquid.Composition(
-                             na2_si_o3=20.0, na_o_h=4.1, na2_si_o3_specific=4,
-                             water=11),
+                             na2_si_o3=20.0, na_o_h=4.1, na2_si_o3_mol=4,
+                             h2_o_mol=11),
                          additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                 AdditionalProperty(name='Prop2', value='Category'),
                                                 AdditionalProperty(name='Prop3', value='12')])
@@ -149,8 +149,8 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid3 = Liquid(name='liquid 3', type='Liquid',
                          costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
                          composition=slamd.materials.processing.models.liquid.Composition(
-                             na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_specific=6,
-                             water=16),
+                             na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_mol=6,
+                             h2_o_mol=16),
                          additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                 AdditionalProperty(name='Prop2', value='Other Category'),
                                                 AdditionalProperty(name='Prop3', value='Not a liquid 2')])
