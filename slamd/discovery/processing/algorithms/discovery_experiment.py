@@ -120,6 +120,10 @@ class DiscoveryExperiment:
 
             self._check_not_all_targets_labelled(training_labels)
 
+            nan_counts = list(self.target_df.isna().sum())
+            if nan_counts != set(nan_counts):
+                raise SequentialLearningException('Targets used are labelled for differing rows.')
+
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
