@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, request, render_template, make_response, jsonify, redirect
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
@@ -99,11 +99,19 @@ def run_experiment(dataset):
 
 @discovery.route('/<dataset>/download', methods=['GET'])
 def download_dataset(dataset):
-    filename, dataset_content = DiscoveryService.download_dataset(dataset)
+    dataset_content = DiscoveryService.download_dataset(dataset)
     response = make_response(dataset_content.encode())
-    response.headers['Content-Disposition'] = f'attachment; filename={filename}'
+    response.headers['Content-Disposition'] = f'attachment; filename={dataset}'
     response.mimetype = 'text/csv'
     return response
+
+
+@discovery.route('/download_prediction', methods=['GET'])
+def download_prediction():
+    dataset_content = DiscoveryService.download_prediction()
+    return send_file(dataset_content,
+                     attachment_filename="test.xlsx",
+                     as_attachment=True)
 
 
 @discovery.route('/<dataset>/add_targets', methods=['GET'])

@@ -129,3 +129,13 @@
     </a>
 </div>
 {% endmacro %}
+
+{% macro create_download_prediction_button(width, height) -%}
+<div class="me-1">
+    <a class="btn btn-secondary" href="/materials/discovery/download_prediction"
+       id="download-prediction-button" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Download predictions including parameter configuration">
+        {{ download_icon(width, height, "currentColor") }}
+    </a>
+</div>
+{% endmacro %}

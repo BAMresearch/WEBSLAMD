@@ -1,6 +1,8 @@
 import math
+from io import BytesIO
 
 import numpy as np
+import pandas as pd
 from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
@@ -12,6 +14,7 @@ from slamd.discovery.processing.discovery_persistence import DiscoveryPersistenc
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 
 
@@ -41,7 +44,7 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        return list(filter(lambda dataset: dataset.name != 'temporary.csv' and dataset.name != 'sequential_learning_predictions', all_datasets))
+        return list(filter(lambda dataset: dataset.name != 'temporary.csv', all_datasets))
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
@@ -71,8 +74,8 @@ class DiscoveryService:
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
         df_with_predictions = experiment.run()
 
-        dataset = Dataset('sequential_learning_predictions', df_with_predictions)
-        DiscoveryPersistence.save_dataset(dataset)
+        prediction = Prediction(df_with_predictions, request_body)
+        DiscoveryPersistence.save_prediction(prediction)
 
         return df_with_predictions
 
@@ -116,8 +119,25 @@ class DiscoveryService:
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
         # Return the CSV as a string. Represent NaNs in the dataframe as a string.
-        filename = dataset_name if dataset_name != 'sequential_learning_predictions' else 'sequential_learning_predictions.csv'
-        return filename, dataset.dataframe.to_csv(index=False, na_rep='NaN')
+        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+
+    @classmethod
+    def download_prediction(cls):
+        prediction = DiscoveryPersistence.query_prediction()
+        if empty(prediction):
+            raise DatasetNotFoundException('No prediction can be found')
+
+        prediction_df = prediction.dataframe
+        # metadata_df = pd.DataFrame.from_dict(prediction.metadata)
+
+        output = BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        prediction_df.to_excel(writer, sheet_name="Predictions")
+        writer.close()
+        output.seek(0)
+
+        # metadata_df.to_excel(writer, sheet_name='Sheet_name_2')
+        return output
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):

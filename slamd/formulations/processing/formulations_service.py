@@ -7,12 +7,12 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
     MaterialNotFoundException
 from slamd.common.slamd_utils import not_numeric, empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
-from slamd.formulations.processing.models.dataset import Dataset
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade

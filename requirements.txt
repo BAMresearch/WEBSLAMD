@@ -13,3 +13,5 @@ scikit-learn==1.1.2
 scipy==1.9.1
 numpy==1.23.2
 lolopy==1.3.0
+openpyxl== 3.0.10
+XlsxWriter==3.0.3
