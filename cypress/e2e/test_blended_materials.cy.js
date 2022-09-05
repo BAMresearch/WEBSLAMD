@@ -56,7 +56,7 @@ describe("Test blending powders and blended material deletion", () => {
     cy.findByText("Add blending ratio").click().click();
     cy.get('input[id="all_ratio_entries-4-ratio"]').type("80/20").should("have.value", "80/20");
     cy.get('input[id="all_ratio_entries-5-ratio"]').type("100/0").should("have.value", "100/0");
-    cy.findByText("6 - Create blended materials").click();
+    cy.findByText("Submit").click();
 
     // Check that the blended powders were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
@@ -114,7 +114,7 @@ describe("Test blending liquids and property interpolation", () => {
     cy.findByDisplayValue("40/60").should("exist");
     cy.findByDisplayValue("60/40").should("exist");
     cy.findByDisplayValue("80/20").should("exist");
-    cy.findByText("6 - Create blended materials").click();
+    cy.findByText("Submit").click();
 
     // Check that the blended liquids were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
@@ -228,7 +228,7 @@ describe("Test blending aggregates and incomplete data", () => {
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/80").should("exist");
     cy.findByDisplayValue("60/40").should("exist");
-    cy.findByText("6 - Create blended materials").click();
+    cy.findByText("Submit").click();
 
     // Check that the blended aggregates were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
@@ -286,7 +286,7 @@ describe("Test blending three custom materials with properties with negative val
     cy.findByDisplayValue("20/25/55").should("exist");
     cy.findByDisplayValue("70/20/10").should("exist");
     cy.findByDisplayValue("70/25/5").should("exist");
-    cy.findByText("6 - Create blended materials").click();
+    cy.findByText("Submit").click();
 
     // Check that the blended custom materials were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
@@ -360,7 +360,7 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.findByDisplayValue("20/25/55").should("exist");
     cy.findByDisplayValue("70/20/10").should("exist");
     cy.findByDisplayValue("70/25/5").should("exist");
-    cy.findByText("6 - Create blended materials").click();
+    cy.findByText("Submit").click();
 
     // Check that the blended admixtures were generated correctly
     cy.findByText("All blended materials").scrollIntoView();

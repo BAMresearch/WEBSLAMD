@@ -6,8 +6,9 @@ from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
+from sklearn.preprocessing import OrdinalEncoder
 
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 
 
 class DiscoveryExperiment:
@@ -31,6 +32,9 @@ class DiscoveryExperiment:
         self.target_df = dataframe[targets]
         self.fixed_target_df = dataframe[fixed_targets]
 
+        if len(targets) == 0:
+            raise SequentialLearningException('No targets were specified!')
+
         # Select the rows that have a label for the first target
         # These have a null value in the corresponding column
         self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
@@ -38,6 +42,7 @@ class DiscoveryExperiment:
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
     def run(self):
+        self._preprocess_features()
         self.decide_max_or_min(self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.fixed_targets, self.fixed_target_max_or_min)
         self.fit_model()
@@ -58,20 +63,40 @@ class DiscoveryExperiment:
         if self.uncertainty.ndim > 1:
             for i in range(len(self.targets)):
                 df[self.targets[i]] = self.prediction[:, i]
-                uncertainty_name_column = 'Uncertainty ('+self.targets[i]+' )'
+                uncertainty_name_column = 'Uncertainty (' + self.targets[i] + ' )'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
+                df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
-            uncertainty_name_column = 'Uncertainty ('+str(self.targets[0])+' )'
+            uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
+            df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+
+        df[self.targets] = df[self.targets].apply(lambda row: round(row, 6))
+        df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
+        df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
         return df.sort_values(by='Utility', ascending=False)
 
+    def _preprocess_features(self):
+        non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
+                                not np.issubdtype(datatype, np.number)]
+        if len(non_numeric_features) > 0:
+            encoder = OrdinalEncoder()
+            for feature in non_numeric_features:
+                self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
+        self.features_df = self.features_df.dropna(axis=1)
+
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
-        self.features_df = (self.features_df-self.features_df.mean()) / self.features_df.std()
-        self.target_df = (self.target_df-self.target_df.mean()) / self.target_df.std()
-        self.fixed_target_df = (self.fixed_target_df-self.fixed_target_df.mean()) / self.fixed_target_df.std()
+        std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
+        self.features_df = (self.features_df - self.features_df.mean()) / std
+
+        std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
+        self.target_df = (self.target_df - self.target_df.mean()) / std
+
+        std = self.fixed_target_df.std().apply(lambda x: x if x != 0 else 1)
+        self.fixed_target_df = (self.fixed_target_df - self.fixed_target_df.mean()) / std
 
     def decide_max_or_min(self, columns, max_or_min):
         # Multiply the column by -1 if it needs to be minimized
@@ -96,6 +121,17 @@ class DiscoveryExperiment:
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
+
+            self._check_not_all_targets_labelled(training_labels)
+
+            nan_counts = list(self.target_df.isna().sum())
+
+            previous_count = nan_counts[0]
+            for j in range(1, len(nan_counts)):
+                if nan_counts[1] != previous_count:
+                    raise SequentialLearningException('Targets used are labelled for differing rows.')
+                previous_count = nan_counts[j]
+
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
@@ -120,6 +156,9 @@ class DiscoveryExperiment:
             # Train the model
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df.iloc[self.sample_index]
+
+            self._check_not_all_targets_labelled(training_labels)
+
             self.x = training_rows
             # Sum the training labels for all targets
             self.y = training_labels.sum(axis=1).to_frame().to_numpy()
@@ -149,7 +188,7 @@ class DiscoveryExperiment:
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
-        return min_distances*(max_of_min_distances**(-1))
+        return min_distances * (max_of_min_distances ** (-1))
 
     def update_index_MLI(self):
         predicted_rows = self.target_df.iloc[self.sample_index]
@@ -195,3 +234,8 @@ class DiscoveryExperiment:
         # Sum the fixed targets values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return fixed_targets_for_predicted_rows.sum(axis=1)
+
+    def _check_not_all_targets_labelled(self, training_labels):
+        all_data_is_labelled = self.dataframe.shape[0] == training_labels.shape[0]
+        if all_data_is_labelled:
+            raise SequentialLearningException('All data is already labelled.')
