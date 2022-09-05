@@ -6,6 +6,7 @@ from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
+from sklearn.preprocessing import OrdinalEncoder
 
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 
@@ -77,9 +78,9 @@ class DiscoveryExperiment:
         non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
                                 not np.issubdtype(datatype, np.number)]
         if len(non_numeric_features) > 0:
+            encoder = OrdinalEncoder()
             for feature in non_numeric_features:
-                self.features_df[feature] = self.features_df[feature].astype('category')
-                self.features_df[feature] = self.features_df[feature].cat.codes
+                self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
         self.features_df = self.features_df.dropna(axis=1)
 
     def normalize_data(self):
