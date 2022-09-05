@@ -48,4 +48,4 @@ class MaterialsAndProcessesSelectionForm(Form):
         label='1.8 - Name of the dataset'
     )
 
-    submit = SubmitField(label='7 - Submit Dataset')
+    submit = SubmitField(label='Submit')

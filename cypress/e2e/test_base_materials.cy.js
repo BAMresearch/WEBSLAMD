@@ -64,7 +64,7 @@ describe("Test creating base materials", () => {
     cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
 
     // Save material and check that it is listed
-    cy.findByText("6 - Save material/process").click();
+    cy.findByText("Submit").click();
     cy.findByText("All base materials / processes").should("exist");
     cy.findByText("My Powder").should("exist");
   });
@@ -87,7 +87,7 @@ describe("Test creating base materials", () => {
     cy.findByLabelText("Relative Humidity (%)").type("34.5").should("have.value", "34.5");
 
     // Save material and check that it is listed
-    cy.findByText("6 - Save material/process").click();
+    cy.findByText("Submit").click();
     cy.findByText("All base materials / processes").should("exist");
     cy.findByText("My Process").should("exist");
   });
@@ -140,7 +140,7 @@ describe("Test creating base materials", () => {
     cy.findByText("Value 0").should("not.exist");
 
     // Save material and check that it is listed
-    cy.findByText("6 - Save material/process").click();
+    cy.findByText("Submit").click();
     cy.findByText("All base materials / processes").should("exist");
     cy.findByText("My Custom Material").should("exist");
   });
@@ -189,7 +189,7 @@ describe("Test creating base materials", () => {
     cy.findByText("Value 0").should("not.exist");
 
     // Save material and check that it is listed
-    cy.findByText("6 - Save material/process").click();
+    cy.findByText("Submit").click();
     cy.findByText("All base materials / processes").should("exist");
     cy.findByText("My Admixture").should("exist");
   });
