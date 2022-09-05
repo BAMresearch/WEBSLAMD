@@ -65,12 +65,16 @@ class DiscoveryExperiment:
                 df[self.targets[i]] = self.prediction[:, i]
                 uncertainty_name_column = 'Uncertainty (' + self.targets[i] + ' )'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
+                df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
             uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
+            df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
 
-        df[self.targets] = df[self.targets].apply(lambda row: round(row, 5))
+        df[self.targets] = df[self.targets].apply(lambda row: round(row, 6))
+        df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
+        df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
         return df.sort_values(by='Utility', ascending=False)
 
@@ -123,10 +127,10 @@ class DiscoveryExperiment:
             nan_counts = list(self.target_df.isna().sum())
 
             previous_count = nan_counts[0]
-            for i in range(1, len(nan_counts)):
+            for j in range(1, len(nan_counts)):
                 if nan_counts[1] != previous_count:
                     raise SequentialLearningException('Targets used are labelled for differing rows.')
-                previous_count = nan_counts[i]
+                previous_count = nan_counts[j]
 
             gpr.fit(training_rows, training_labels)
 
