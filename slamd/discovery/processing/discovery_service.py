@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 from io import BytesIO
 
 import numpy as np
@@ -128,16 +129,16 @@ class DiscoveryService:
             raise DatasetNotFoundException('No prediction can be found')
 
         prediction_df = prediction.dataframe
-        # metadata_df = pd.DataFrame.from_dict(prediction.metadata)
+        metadata_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in prediction.metadata.items()]))
 
         output = BytesIO()
         writer = pd.ExcelWriter(output, engine='xlsxwriter')
         prediction_df.to_excel(writer, sheet_name="Predictions")
+        metadata_df.to_excel(writer, sheet_name="Metadata")
         writer.close()
         output.seek(0)
 
-        # metadata_df.to_excel(writer, sheet_name='Sheet_name_2')
-        return output
+        return f'predictions-{datetime.now()}.xlsx', output
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):

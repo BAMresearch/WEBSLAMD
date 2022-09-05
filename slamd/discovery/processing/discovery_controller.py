@@ -108,9 +108,9 @@ def download_dataset(dataset):
 
 @discovery.route('/download_prediction', methods=['GET'])
 def download_prediction():
-    dataset_content = DiscoveryService.download_prediction()
+    filename, dataset_content = DiscoveryService.download_prediction()
     return send_file(dataset_content,
-                     attachment_filename="test.xlsx",
+                     attachment_filename=filename,
                      as_attachment=True)
 
 
