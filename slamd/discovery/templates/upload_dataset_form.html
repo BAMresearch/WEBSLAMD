@@ -1,7 +1,6 @@
 {% from 'errors.html' import with_errors -%}
 
 <form action="/materials/discovery" method="post" enctype="multipart/form-data" novalidate>
-    {{ upload_dataset_form.hidden_tag() }}
     {{ upload_dataset_form.csrf_token }}
     <div class="row g-3 mb-3 align-items-end">
         <div class="col-sm-12 col-md-9 col-lg-10">

@@ -1,6 +1,25 @@
 # WEBSLAMD
 
-WEBSLAMD is an app which allows users to improve the search for new materials by using sequential learning.
+### Summary
+##### Leverage the Digital Lab and AI optimization to discover exciting new materials
+- Represent resources and processes and their socio-economic impact.
+- Calculate complex compositions and enrich them with detailed material knowledge.
+- Integrate laboratory data and apply it to novel formulations.
+- Tailor materials to the purpose to achieve the best solution.
+
+#### Workflow
+
+##### Digital Lab
+1.	Specify resources:
+From base materials to manufacturing processes – “Base” enables a detailed and consistent description of existing resources
+2.	Combine resources 
+The combination of base materials and processes offers an almost infinite optimization potential. "Blend" makes it easier to design complex configurations.
+3.	Digital Formulations: 
+With "Formulations" you can effortlessly convert your resources into the entire spectrum of possible concrete formulations. This automatically generates a detailed set of data for AI optimization.
+
+##### AI-Optimization
+4.	Materials Discovery:
+Integrate data from the “Digital Lab” or upload your own material data. Enrich the data with lab results and adopt the knowledge to new recipes via artificial intelligence. Leverage socio-economic metrics to identify recipes tailored to your requirements.
 
 ### Installation
 

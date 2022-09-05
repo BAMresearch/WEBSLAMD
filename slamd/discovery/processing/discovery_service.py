@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 from werkzeug.datastructures import CombinedMultiDict
 
@@ -115,6 +117,14 @@ class DiscoveryService:
         )
 
     @classmethod
+    def download_dataset(cls, dataset_name):
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+        # Return the CSV as a string. Represent NaNs in the dataframe as a string.
+        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+
+    @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
@@ -137,7 +147,10 @@ class DiscoveryService:
             preview = preview.strip()[:-1]
             for target_name in target_list:
                 target_value = dataframe.at[i, target_name]
-                target_dto = TargetDto(i, target_name, float_if_not_empty(target_value))
+                target_value = float_if_not_empty(target_value)
+                if math.isnan(target_value):
+                    target_value = None
+                target_dto = TargetDto(i, target_name, target_value)
                 target_dtos.append(target_dto)
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''

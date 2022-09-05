@@ -1,5 +1,5 @@
 from flask import render_template
-from werkzeug.exceptions import NotFound, BadRequest, RequestEntityTooLarge
+from werkzeug.exceptions import NotFound, BadRequest, RequestEntityTooLarge, UnprocessableEntity
 
 
 def handle_404(err):
@@ -21,6 +21,13 @@ def handle_413(err):
         return render_template('413.html', message=err.message), 413
     except AttributeError:
         return render_template('413.html', message='Request is too large.'), 413
+
+
+def handle_422(err):
+    try:
+        return render_template('422.html', message=err.message), 422
+    except AttributeError:
+        return render_template('422.html', message='Cannot process data provided for learning.'), 422
 
 
 class MaterialNotFoundException(NotFound):
@@ -48,3 +55,9 @@ class SlamdRequestTooLargeException(RequestEntityTooLarge):
     def __init__(self, message):
         self.message = message
         super(SlamdRequestTooLargeException, self).__init__()
+
+
+class SequentialLearningException(UnprocessableEntity):
+    def __init__(self, message):
+        self.message = message
+        super(SequentialLearningException, self).__init__()

@@ -15,4 +15,4 @@ class BlendingNameAndTypeForm(Form):
                  'Admixture', 'Custom']
     )
 
-    submit = SubmitField('6 - Create blended materials')
+    submit = SubmitField('Submit')
