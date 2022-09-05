@@ -21,8 +21,8 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("CO₂ footprint (kg/ton for materials, kg for processes)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg for materials, € for processes)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // Fill out composition properties
@@ -76,8 +76,8 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("CO₂ footprint (kg/ton for materials, kg for processes)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg for materials, € for processes)").type("34.56").should("have.value", "34.56");
 
     // Fill out process information properties
     cy.findByText("4 - Composition").should("not.exist");
@@ -99,8 +99,8 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("CO₂ footprint (kg/ton for materials, kg for processes)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg for materials, € for processes)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // No properties for Custom
@@ -152,8 +152,8 @@ describe("Test creating base materials", () => {
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
-    cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
+    cy.findByLabelText("CO₂ footprint (kg/ton for materials, kg for processes)").type("12.34").should("have.value", "12.34");
+    cy.findByLabelText("Costs (€/kg for materials, € for processes)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
     // No properties for Admixture
