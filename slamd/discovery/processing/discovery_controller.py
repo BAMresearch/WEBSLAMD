@@ -1,4 +1,5 @@
 import json
+
 from flask import Blueprint, request, render_template, make_response, jsonify, redirect
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
@@ -98,9 +99,9 @@ def run_experiment(dataset):
 
 @discovery.route('/<dataset>/download', methods=['GET'])
 def download_dataset(dataset):
-    dataset_content = DiscoveryService.download_dataset(dataset)
+    filename, dataset_content = DiscoveryService.download_dataset(dataset)
     response = make_response(dataset_content.encode())
-    response.headers['Content-Disposition'] = f'attachment; filename={dataset}'
+    response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     response.mimetype = 'text/csv'
     return response
 

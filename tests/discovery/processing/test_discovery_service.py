@@ -130,12 +130,20 @@ def test_save_targets(monkeypatch):
     assert dtos[0].targets[0].value == 11.2
 
 
-def test_run_experiment_with_gauss(monkeypatch):
+def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
         return Dataset('test_data', test_df)
 
+    mock_save_dataset_called_with = None
+    def mock_save_dataset(dataset):
+        nonlocal mock_save_dataset_called_with
+        mock_save_dataset_called_with = dataset
+        test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
+        return Dataset('test_data', test_df)
+
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', mock_save_dataset)
 
     test_experiment_config = {
         'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
@@ -150,3 +158,4 @@ def test_run_experiment_with_gauss(monkeypatch):
 
     df_with_prediction = DiscoveryService.run_experiment('test_data', test_experiment_config)
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert mock_save_dataset_called_with.name == 'sequential_learning_predictions'

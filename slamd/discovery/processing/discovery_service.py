@@ -52,7 +52,7 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        return list(filter(lambda dataset: dataset.name != 'temporary.csv', all_datasets))
+        return list(filter(lambda dataset: dataset.name != 'temporary.csv' and dataset.name != 'sequential_learning_predictions', all_datasets))
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
@@ -80,7 +80,12 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        return experiment.run()
+        df_with_preditions = experiment.run()
+
+        dataset = Dataset('sequential_learning_predictions', df_with_preditions)
+        DiscoveryPersistence.save_dataset(dataset)
+
+        return df_with_preditions
 
     @classmethod
     def _parse_user_input(cls, discovery_form):
@@ -122,7 +127,8 @@ class DiscoveryService:
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
         # Return the CSV as a string. Represent NaNs in the dataframe as a string.
-        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+        filename = dataset_name if dataset_name != 'sequential_learning_predictions' else 'sequential_learning_predictions.csv'
+        return filename, dataset.dataframe.to_csv(index=False, na_rep='NaN')
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):
