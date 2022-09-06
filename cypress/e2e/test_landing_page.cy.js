@@ -11,8 +11,10 @@ describe("Test landing page", () => {
     cy.title().should("contain", "SLAMD - Sequential Learning App for Materials Discovery");
     cy.findAllByText("SLAMD Dashboard").should("have.length", 2);
     cy.url().should("eq", "http://localhost:5001/");
-    cy.findByText("Step 1: Define base materials and processes").should("exist");
-    cy.findByText("Step 2: Blend base materials to create blended materials").should("exist");
+    cy.findByText("Specify resources").should("exist");
+    cy.findByText("Combine resources").should("exist");
+    cy.findByText("Digital recipes").should("exist");
+    cy.findByText("Materials Discovery").should("exist");
   });
 
   it("Link to GitHub repo is present", () => {
