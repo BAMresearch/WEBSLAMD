@@ -7,6 +7,7 @@ from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, Targe
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.targets_service import TargetsService
 
 
 def test_slamd_shows_discovery_page(client, monkeypatch):
@@ -76,7 +77,7 @@ def test_slamd_directs_to_add_targets_page(client, monkeypatch):
         all_dtos = [DataWithTargetsDto(0, 'feature1: 1, feature2: 2', [TargetDto(0, 'prediction', 11)])]
         return pd.DataFrame.from_dict(df_data), all_dtos, ['prediction']
 
-    monkeypatch.setattr(DiscoveryService, 'show_dataset_for_adding_targets', mock_show_dataset_for_adding_targets)
+    monkeypatch.setattr(TargetsService, 'show_dataset_for_adding_targets', mock_show_dataset_for_adding_targets)
 
     response = client.get('/materials/discovery/test_dataset/add_targets')
 
@@ -104,7 +105,7 @@ def test_slamd_adds_target_column(client, monkeypatch):
         all_dtos = [DataWithTargetsDto(0, 'feature1: 1, feature2: 2', [TargetDto(0, target_name, None)])]
         return pd.DataFrame.from_dict(df_data), all_dtos, [target_name]
 
-    monkeypatch.setattr(DiscoveryService, 'add_target_name', mock_add_target_name)
+    monkeypatch.setattr(TargetsService, 'add_target_name', mock_add_target_name)
 
     response = client.get('/materials/discovery/test_dataset/new_target/add_target')
 
@@ -135,7 +136,7 @@ def test_slamd_submits_targets_by_delegating_to_service(client, monkeypatch):
         mock_save_targets_called_with = {'target-1-1': 1}
         return None, None, None
 
-    monkeypatch.setattr(DiscoveryService, 'save_targets', mock_save_targets)
+    monkeypatch.setattr(TargetsService, 'save_targets', mock_save_targets)
     response = client.post('/materials/discovery/test_dataset/add_targets', data=b'{}', follow_redirects=True)
 
     assert response.request.path == '/materials/discovery'

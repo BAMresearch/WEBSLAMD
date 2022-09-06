@@ -6,6 +6,7 @@ from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.targets_service import TargetsService
 
 discovery = Blueprint('discovery', __name__,
                       template_folder='../templates',
@@ -116,7 +117,7 @@ def download_prediction():
 
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
-    dataframe, all_dtos, target_list = DiscoveryService.show_dataset_for_adding_targets(dataset)
+    dataframe, all_dtos, target_list = TargetsService.show_dataset_for_adding_targets(dataset)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover df-collapsed')
@@ -131,7 +132,7 @@ def add_targets(dataset):
 
 @discovery.route('/<dataset>/<target_name>/add_target', methods=['GET'])
 def add_target(dataset, target_name):
-    dataframe, all_dtos, target_list = DiscoveryService.add_target_name(dataset, target_name)
+    dataframe, all_dtos, target_list = TargetsService.add_target_name(dataset, target_name)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover df-collapsed')
@@ -146,6 +147,6 @@ def add_target(dataset, target_name):
 
 @discovery.route('/<dataset>/add_targets', methods=['POST'])
 def submit_target_values(dataset):
-    DiscoveryService.save_targets(dataset, request.form)
+    TargetsService.save_targets(dataset, request.form)
 
     return redirect('/materials/discovery')
