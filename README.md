@@ -26,6 +26,9 @@ Integrate data from the “Digital Lab” or upload your own material data. Enri
 Prerequisite: In order to run the app you need python >= 3.8. The most up-to-date version can be downloaded here:
 [Python Download](https://www.python.org/)
 
+Further, for running sequential learning with the lolopy random forest implementation you need to have java >= 8 installed.
+You find the most current version for installation here: [Java Download](https://www.oracle.com/java/technologies/downloads/)
+
 For the setup it is assumed that you first navigate to the root directory of the project. Otherwise you need
 to adjust the paths below accordingly.
 
