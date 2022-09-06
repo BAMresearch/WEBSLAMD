@@ -1,12 +1,11 @@
 from datetime import datetime
-from io import BytesIO
 
-import pandas as pd
 from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.algorithms.prediction_output_file_generator import PredictionOutputFileGenerator
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
@@ -92,17 +91,7 @@ class DiscoveryService:
         if empty(prediction):
             raise DatasetNotFoundException('No prediction can be found')
 
-        original_data = dataset_of_prediction.dataframe
-        prediction_df = prediction.dataframe
-        metadata_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in prediction.metadata.items()]))
-
-        output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        original_data.to_excel(writer, sheet_name="Original Data")
-        prediction_df.to_excel(writer, sheet_name="Predictions")
-        metadata_df.to_excel(writer, sheet_name="Metadata")
-        writer.close()
-        output.seek(0)
+        output = PredictionOutputFileGenerator.create_prediction_xlsx(dataset_of_prediction, prediction)
 
         return f'predictions-{dataset_of_prediction.name}-{datetime.now()}.xlsx', output
 

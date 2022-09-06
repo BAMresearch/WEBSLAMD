@@ -9,10 +9,12 @@ from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 from slamd import create_app
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
+from slamd.discovery.processing.algorithms.prediction_output_file_generator import PredictionOutputFileGenerator
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from tests.discovery.processing.test_dataframe_dicts import TEST_DF_DICT, TEST_GAUSS_PRED
 
@@ -145,3 +147,26 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     assert mock_save_prediction_called_with.metadata == test_experiment_config
     assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
     assert plot == 'Dummy Plot'
+
+
+def test_download_prediction(monkeypatch):
+    def mock_query_prediction():
+        return Prediction('test_dataset.csv', pd.DataFrame())
+
+    def mock_query_dataset_by_name(dataset_name):
+        if dataset_name == 'test_dataset.csv':
+            return Dataset(dataset_name, pd.DataFrame())
+        return None
+
+    # We do not want to test the creation of the xlsx but rather that the PredictionOutputFileGenerator is called
+    def mock_create_prediction_xlsx(dataset, prediction):
+        return 'Dummy.xslx'
+
+    monkeypatch.setattr(DiscoveryPersistence, 'query_prediction', mock_query_prediction)
+    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(PredictionOutputFileGenerator, 'create_prediction_xlsx', mock_create_prediction_xlsx)
+
+    filename, output = DiscoveryService.download_prediction()
+    assert output == 'Dummy.xslx'
+    assert filename.startswith('predictions-test_dataset.csv')
+    assert filename.endswith('.xlsx')
