@@ -9,45 +9,39 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
-    <h3 class="ms-2 text-center">
+    <h3 class="ms-2">
         SLAMD - Sequential Learning App for Materials Discovery
     </h3>
-    <div class="row g-3 mb-3">
-
-        <div class="col-sm-6 col-md-6 col-lg-6 ml-sm-auto px-md-2 px-md-2 py-2">
-            <div class="clearfix">
-                <div class="row g-3 mb-3">
-                    <div class="row g-3 mb-3">
-                        <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <img src="/static/sequential_learning_logo.png"
-                                 alt="sequential learning logo">
-                        </div>
-                        <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <div class="ms-2">
-                                <h6><b>Leverage the Digital Lab and AI optimization to discover exciting new concrete recipes</b></h6>
-                            </div>
-                            <p class="ms-2">
-                                > Represent resources and processes and their socio-economic impact.<br>
-                                > Calculate complex compositions and enrich them with detailed material knowledge.<br>
-                                > Integrate laboratory data and apply it to novel formulations.<br>
-                                > Tailor concretes to the purpose to achieve the best solution.<br>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="row g-3 ms-3 mt-1">
+        <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
+            <img src="/static/sequential_learning_logo.png"
+                 alt="sequential learning logo">
         </div>
-
+        <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
+            <div class="ms-2">
+                <h6><b>Leverage the Digital Lab and AI optimization to discover exciting new concrete
+                    recipes</b>
+                </h6>
+            </div>
+            <p class="ms-2">
+                > Represent resources and processes and their socio-economic impact.<br>
+                > Calculate complex compositions and enrich them with detailed material knowledge.<br>
+                > Integrate laboratory data and apply it to novel formulations.<br>
+                > Tailor concretes to the purpose to achieve the best solution.<br>
+            </p>
+        </div>
     </div>
     <h4 class="ms-2">
         Workflow
     </h4>
-    <div class="row g-3 mb-3">
+    <div class="row g-2 mb-2">
         <div class="col-sm-6 col-md-6 col-lg-6 ml-sm-auto px-md-2 px-md-2 py-2">
             <div class="clearfix">
-                <div class="row g-3 mb-3">
-                    <h5><b>Digital Lab</b></h5>
-                    <div class="row g-3 mb-3">
+                <div class="row g-2 mb-2">
+                    <h5 class="ms-2">
+                        <b>Digital Lab</b>
+                    </h5>
+                    <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
                             <img src="/static/base.png"
                                  alt="base materials">
@@ -66,14 +60,14 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
                             <img src="/static/blended.png"
                                  alt="blended materials">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
-                                <a class="nav-link link-dark" aria-current="page" href="/materials/base">
+                                <a class="nav-link link-dark" aria-current="page" href="/materials/blended">
                                     2. <u>Combine resources</u>
                                 </a>
                             </div>
@@ -83,14 +77,14 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
                             <img src="/static/formulations.png"
                                  alt="formulations">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
-                                <a class="nav-link link-dark" aria-current="page" href="/materials/base">
+                                <a class="nav-link link-dark" aria-current="page" href="/materials/formulations">
                                     3. <u>Digital recipes</u>
                                 </a>
                             </div>
@@ -107,17 +101,19 @@
         </div>
         <div class="col-sm-6 col-md-6 col-lg-6 ml-sm-auto px-md-2 px-md-2 py-2">
             <div class="clearfix">
-                <div class="row g-3 mb-3">
-                    <h5><b>AI Optimization</b></h5>
+                <div class="row g-2 mb-2">
+                    <h5 class="ms-2">
+                        <b>AI Optimization</b>
+                    </h5>
 
-                    <div class="row g-3 mb-3">
+                    <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
                             <img src="/static/discovery.png"
                                  alt="discovery">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
-                                <a class="nav-link link-dark" aria-current="page" href="/materials/base">
+                                <a class="nav-link link-dark" aria-current="page" href="/materials/discovery">
                                     4. <u>Materials Discovery</u>
                                 </a>
                             </div>
