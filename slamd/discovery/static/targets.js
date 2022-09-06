@@ -13,8 +13,15 @@ function toggleShowHideDataframe() {
   dataframeTable.classList.toggle("df-collapsed");
 }
 
+function toggleAddTargetButton() {
+  const targetValue = document.getElementById("target_value").value;
+  const addTargetButton = document.getElementById("add_target_button");
+  addTargetButton.disabled = targetValue === undefined || targetValue === "";
+}
+
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("add_target_button").addEventListener("click", addTarget);
+  document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
   document.getElementById("toggle_dataframe_button").addEventListener("click", toggleShowHideDataframe);
 });
