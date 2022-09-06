@@ -1,11 +1,9 @@
-import base64
 import math
 from datetime import datetime
 from io import BytesIO
 
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
@@ -75,21 +73,10 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        df_with_predictions = experiment.run()
+        df_with_predictions, plot_url = experiment.run()
 
         prediction = Prediction(df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
-
-        img = BytesIO()
-        y = [1, 2, 3, 4, 5]
-        x = [0, 2, 1, 3, 4]
-
-        plt.plot(x, y)
-        plt.savefig(img, format='png')
-        plt.close()
-        img.seek(0)
-
-        plot_url = base64.b64encode(img.getvalue()).decode()
 
         return df_with_predictions, plot_url
 

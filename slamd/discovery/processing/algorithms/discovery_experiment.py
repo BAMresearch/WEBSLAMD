@@ -1,8 +1,13 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
+import base64
+from io import BytesIO
+
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from lolopy.learners import RandomForestRegressor
+from matplotlib import pyplot as plt
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
@@ -76,7 +81,27 @@ class DiscoveryExperiment:
         df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
         df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
-        return df.sort_values(by='Utility', ascending=False)
+        sorted = df.sort_values(by='Utility', ascending=False)
+
+        target_list = sorted[self.targets]
+        if len(self.fixed_targets) > 0:
+            target_list = pd.concat((target_list, sorted[self.fixed_targets]), axis=1)
+        target_list = pd.concat((target_list, sorted['Utility']), axis=1)
+
+        img = BytesIO()
+
+        g = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue="Utility")
+        g.map_diag(sns.histplot, hue=None, color=".3")
+        g.map_lower(sns.scatterplot)
+        g.add_legend()
+        plt.plot()
+        plt.savefig(img, format='png')
+        plt.close()
+        img.seek(0)
+
+        plot_url = base64.b64encode(img.getvalue()).decode()
+
+        return sorted, plot_url
 
     def _preprocess_features(self):
         non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
