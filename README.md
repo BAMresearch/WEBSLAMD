@@ -71,3 +71,7 @@ Then, you may go to the root directory and run `npm run test` to run all the tes
 If you prefer to watch the test running in a GUI, go to the root directory and run `npm run cypress:open`.
 A window will open. Select "E2E Testing" and then select any browser on the list.
 You may then run each specs file separately and see the tests in action.
+
+### Documentation
+
+Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku
