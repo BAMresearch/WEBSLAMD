@@ -1,4 +1,9 @@
-{% from 'action_buttons.html' import create_download_prediction_button -%}
-{{ create_download_prediction_button(1903, 16) }}
+<div class="me-1">
+    <a class="btn btn-secondary col-12" href="/materials/discovery/download_prediction"
+       id="download-prediction-button" data-bs-toggle="tooltip" data-bs-placement="right"
+       title="Download predictions including parameter configuration">
+        Download Predictions
+    </a>
+</div>
 <img src="data:image/png;base64, {{ plot }}">
 {{ df | safe }}
