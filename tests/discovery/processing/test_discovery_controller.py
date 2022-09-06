@@ -48,7 +48,7 @@ def test_slamd_creates_new_dataset_when_saving_is_successful(client, monkeypatch
 def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
     def mock_run_experiment(dataset_name, request):
         data = {'feature': [1, 2], 'prediction': [3, 4]}
-        return pd.DataFrame.from_dict(data)
+        return pd.DataFrame.from_dict(data), None
 
     monkeypatch.setattr(DiscoveryService, 'run_experiment', mock_run_experiment)
 

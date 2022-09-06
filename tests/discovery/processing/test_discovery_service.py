@@ -1,12 +1,14 @@
+from io import BytesIO
+
 import numpy as np
 import pandas as pd
 import pytest
-from io import BytesIO
 from pandas import DataFrame
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import DatasetNotFoundException
+from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
@@ -135,15 +137,20 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
         test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
         return Dataset('test_data', test_df)
 
-    mock_save_dataset_called_with = None
-    def mock_save_dataset(dataset):
-        nonlocal mock_save_dataset_called_with
-        mock_save_dataset_called_with = dataset
-        test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
-        return Dataset('test_data', test_df)
+    mock_save_prediction_called_with = None
+
+    def mock_save_prediction(prediction):
+        nonlocal mock_save_prediction_called_with
+        mock_save_prediction_called_with = prediction
+        return None
+
+    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
+    def mock_create_target_scatter_plot(targets):
+        return 'Dummy Plot'
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
-    monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', mock_save_dataset)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
+    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
 
     test_experiment_config = {
         'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
@@ -156,6 +163,9 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
         'target_configurations': [{'max_or_min': 'max', 'weight': '1.00'}],
         'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00'}]}
 
-    df_with_prediction = DiscoveryService.run_experiment('test_data', test_experiment_config)
+    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
+
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
-    assert mock_save_dataset_called_with.name == 'sequential_learning_predictions'
+    assert mock_save_prediction_called_with.metadata == test_experiment_config
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert plot == 'Dummy Plot'

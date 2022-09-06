@@ -16,7 +16,7 @@ from slamd.formulations.processing.formulations_converter import FormulationsCon
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
-from slamd.ml_utils import concat
+from slamd.common.ml_utils import concat
 
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
