@@ -75,7 +75,7 @@ class DiscoveryService:
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
         df_with_predictions, plot = experiment.run()
 
-        prediction = Prediction(df_with_predictions, request_body)
+        prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
 
         return df_with_predictions, plot
@@ -125,20 +125,24 @@ class DiscoveryService:
     @classmethod
     def download_prediction(cls):
         prediction = DiscoveryPersistence.query_prediction()
+        dataset_of_prediction = DiscoveryPersistence.query_dataset_by_name(prediction.dataset_used_for_prediction)
+
         if empty(prediction):
             raise DatasetNotFoundException('No prediction can be found')
 
+        original_data = dataset_of_prediction.dataframe
         prediction_df = prediction.dataframe
         metadata_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in prediction.metadata.items()]))
 
         output = BytesIO()
         writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        original_data.to_excel(writer, sheet_name="Original Data")
         prediction_df.to_excel(writer, sheet_name="Predictions")
         metadata_df.to_excel(writer, sheet_name="Metadata")
         writer.close()
         output.seek(0)
 
-        return f'predictions-{datetime.now()}.xlsx', output
+        return f'predictions-{dataset_of_prediction.name}-{datetime.now()}.xlsx', output
 
     @classmethod
     def show_dataset_for_adding_targets(cls, dataset_name):

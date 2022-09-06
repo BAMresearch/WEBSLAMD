@@ -166,6 +166,7 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
 
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == test_experiment_config
     assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
     assert plot == 'Dummy Plot'
