@@ -71,7 +71,7 @@ def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
     assert '<td>2</td>' in template
     assert '<td>4</td>' in template
 
-# TODO Fix test
+
 def test_slamd_directs_to_add_targets_page(client, monkeypatch):
     def mock_get_data_for_target_page(dataset_name):
         df_data = {'feature1': [1], 'feature2': [2]}

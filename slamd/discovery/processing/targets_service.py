@@ -99,6 +99,22 @@ class TargetsService:
             all_data_row_dtos.append(dto)
         return all_data_row_dtos
 
+    @classmethod
+    def add_targets_for_editing(cls, dataset_name, names_of_targets_to_be_edited):
+        dataframe = None
+        dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
+        if empty(dataset):
+            raise DatasetNotFoundException('Dataset with given name not found')
+        if dataset:
+            dataframe = dataset.dataframe
+        for name in names_of_targets_to_be_edited:
+            dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
+
+        dataset_with_new_target = Dataset(dataset_name, dataframe)
+        DiscoveryPersistence.save_dataset(dataset_with_new_target)
+
+        return cls._create_target_page_data(dataset_with_new_target)
+
 
 @dataclass
 class TargetPageData:

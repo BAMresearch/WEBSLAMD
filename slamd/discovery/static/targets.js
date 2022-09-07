@@ -19,9 +19,29 @@ function toggleAddTargetButton() {
   addTargetButton.disabled = targetValue === undefined || targetValue === "";
 }
 
+async function onChangeTargetToBeLabelled(event) {
+  const names = collectSelectedValues(event.target.options);
+  const dataset = document.getElementById("dataset_to_add_targets_to").innerHTML;
+  const url = `${TARGET_BASE_URL}/${dataset}/edit_labels`;
+  await postDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder", {
+    names,
+  });
+}
+
+function collectSelectedValues(options) {
+  const values = [];
+  for (const option of options) {
+    if (option.selected) {
+      values.push(option.value);
+    }
+  }
+  return values;
+}
+
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("add_target_button").addEventListener("click", addTarget);
   document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
   document.getElementById("toggle_dataframe_button").addEventListener("click", toggleShowHideDataframe);
+  document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 });

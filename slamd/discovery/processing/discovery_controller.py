@@ -119,8 +119,8 @@ def download_prediction():
 def add_targets(dataset):
     target_page_data = TargetsService.get_data_for_target_page(dataset)
     html_dataframe = target_page_data.dataframe.to_html(index=False,
-                                       table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover df-collapsed')
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     return render_template('targets.html',
                            dataset_name=dataset,
@@ -134,8 +134,26 @@ def add_targets(dataset):
 def add_target(dataset, target_name):
     target_page_data = TargetsService.add_target_name(dataset, target_name)
     html_dataframe = target_page_data.dataframe.to_html(index=False,
-                                       table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover df-collapsed')
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
+
+    body = {'template': render_template('targets_form.html',
+                                        form=target_page_data.targets_form,
+                                        df=html_dataframe,
+                                        all_dtos=target_page_data.all_dtos,
+                                        target_list=target_page_data.target_name_list)}
+    return make_response(jsonify(body), 200)
+
+
+@discovery.route('/<dataset>/edit_labels', methods=['POST'])
+def edit_labels(dataset):
+    request_body = json.loads(request.data)
+
+    target_page_data = TargetsService.add_targets_for_editing(dataset, request_body['names'])
+
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     body = {'template': render_template('targets_form.html',
                                         form=target_page_data.targets_form,

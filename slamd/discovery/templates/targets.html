@@ -11,21 +11,21 @@
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
     <h3 id="dataset_to_add_targets_to">{{ dataset_name }}</h3>
     <div class="row g-3 mb-3">
-        <div class="col-md-2">
+        <div class="col-3">
             {{ form.target_value.label(class_="control-label") }}
             {{ form.target_value(class_="form-control", placeholder="Cannot be empty") }}
         </div>
-        <div class="pt-4 col-2">
+        <div class="col-2">
             <button class="btn btn-primary" type="button" id="add_target_button" data-bs-toggle="tooltip"
                     data-bs-placement="bottom" title="Add a new target column to your material formulation." disabled>
                 Add target
             </button>
         </div>
-        <div class="col-md-6">
+        <div class="col-5">
             {{ form.choose_target_field.label(class_="control-label") }}
             {{ form.choose_target_field(class_="form-control form-select") }}
         </div>
-        <div class="pt-4 col-2">
+        <div class="col-2">
             <button class="btn btn-secondary" type="button" id="toggle_dataframe_button" data-bs-toggle="tooltip"
                     data-bs-placement="bottom" title="Hide / Show the dataframe below.">
                 Show / Hide
