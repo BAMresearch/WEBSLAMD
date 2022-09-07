@@ -6,6 +6,7 @@ async function addTarget() {
   const url = `${TARGET_BASE_URL}/${dataset}/${targetName}/add_target`;
 
   await fetchDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder");
+  document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 }
 
 function toggleShowHideDataframe() {
@@ -22,10 +23,11 @@ function toggleAddTargetButton() {
 async function onChangeTargetToBeLabelled(event) {
   const names = collectSelectedValues(event.target.options);
   const dataset = document.getElementById("dataset_to_add_targets_to").innerHTML;
-  const url = `${TARGET_BASE_URL}/${dataset}/edit_labels`;
+  const url = `${TARGET_BASE_URL}/${dataset}/toggle_targets`;
   await postDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder", {
     names,
   });
+  document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 }
 
 function collectSelectedValues(options) {

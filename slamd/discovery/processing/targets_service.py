@@ -100,7 +100,7 @@ class TargetsService:
         return all_data_row_dtos
 
     @classmethod
-    def add_targets_for_editing(cls, dataset_name, names_of_targets_to_be_edited):
+    def toggle_targets_for_editing(cls, dataset_name, names_of_targets_to_be_edited):
         dataframe = None
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):

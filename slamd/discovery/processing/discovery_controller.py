@@ -145,11 +145,11 @@ def add_target(dataset, target_name):
     return make_response(jsonify(body), 200)
 
 
-@discovery.route('/<dataset>/edit_labels', methods=['POST'])
-def edit_labels(dataset):
+@discovery.route('/<dataset>/toggle_targets', methods=['POST'])
+def toggle_targets(dataset):
     request_body = json.loads(request.data)
 
-    target_page_data = TargetsService.add_targets_for_editing(dataset, request_body['names'])
+    target_page_data = TargetsService.toggle_targets_for_editing(dataset, request_body['names'])
 
     html_dataframe = target_page_data.dataframe.to_html(index=False,
                                                         table_id='formulations_dataframe',
