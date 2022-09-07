@@ -5,9 +5,10 @@ import pandas as pd
 from slamd import create_app
 from slamd.discovery.processing.add_targets_dto import DataWithTargetsDto, TargetDto
 from slamd.discovery.processing.discovery_service import DiscoveryService
+from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
-from slamd.discovery.processing.targets_service import TargetsService
+from slamd.discovery.processing.targets_service import TargetsService, TargetPageData
 
 
 def test_slamd_shows_discovery_page(client, monkeypatch):
@@ -70,20 +71,25 @@ def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
     assert '<td>2</td>' in template
     assert '<td>4</td>' in template
 
-
+# TODO Fix test
 def test_slamd_directs_to_add_targets_page(client, monkeypatch):
-    def mock_show_dataset_for_adding_targets(dataset_name):
+    def mock_get_data_for_target_page(dataset_name):
         df_data = {'feature1': [1], 'feature2': [2]}
         all_dtos = [DataWithTargetsDto(0, 'feature1: 1, feature2: 2', [TargetDto(0, 'prediction', 11)])]
-        return pd.DataFrame.from_dict(df_data), all_dtos, ['prediction']
+        targets_form = TargetsForm()
+        targets_form.choose_target_field.choices = ['Prop 1', 'Prop 2']
+        return TargetPageData(pd.DataFrame.from_dict(df_data), all_dtos, ['prediction'],  targets_form)
 
-    monkeypatch.setattr(TargetsService, 'show_dataset_for_adding_targets', mock_show_dataset_for_adding_targets)
+    monkeypatch.setattr(TargetsService, 'get_data_for_target_page', mock_get_data_for_target_page)
 
     response = client.get('/materials/discovery/test_dataset/add_targets')
 
     assert response.status_code == 200
 
     template = response.data.decode('utf-8')
+    assert 'Prop 1' in template
+    assert 'Prop 2' in template
+
     assert '<table ' in template
     assert 'id="formulations_dataframe"' in template
 
@@ -103,7 +109,7 @@ def test_slamd_adds_target_column(client, monkeypatch):
     def mock_add_target_name(dataset_name, target_name):
         df_data = {'feature1': [1], 'feature2': [2]}
         all_dtos = [DataWithTargetsDto(0, 'feature1: 1, feature2: 2', [TargetDto(0, target_name, None)])]
-        return pd.DataFrame.from_dict(df_data), all_dtos, [target_name]
+        return TargetPageData(pd.DataFrame.from_dict(df_data), all_dtos, [target_name], TargetsForm())
 
     monkeypatch.setattr(TargetsService, 'add_target_name', mock_add_target_name)
 

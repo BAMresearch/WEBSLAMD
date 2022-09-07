@@ -1,23 +1,26 @@
 import math
+from dataclasses import dataclass
 
 import numpy as np
+from pandas import DataFrame
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
 from slamd.common.slamd_utils import empty, not_numeric, not_empty, float_if_not_empty
 from slamd.discovery.processing.add_targets_dto import TargetDto, DataWithTargetsDto
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
+from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
 
 
 class TargetsService:
 
     @classmethod
-    def show_dataset_for_adding_targets(cls, dataset_name):
+    def get_data_for_target_page(cls, dataset_name):
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
 
-        return cls._create_data_tables(dataset.dataframe)
+        return cls._create_target_page_data(dataset)
 
     @classmethod
     def add_target_name(cls, dataset, target_name):
@@ -32,7 +35,7 @@ class TargetsService:
         dataset_with_new_target = Dataset(dataset, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
-        return cls._create_data_tables(dataframe)
+        return cls._create_target_page_data(dataset_with_new_target)
 
     @classmethod
     def save_targets(cls, dataset_name, form):
@@ -52,17 +55,23 @@ class TargetsService:
                 target_number_index = int(pieces_of_target_key[2]) - 1
                 dataframe.at[row_index, targets_column_names[target_number_index]] = float_if_not_empty(value)
 
-        DiscoveryPersistence.save_dataset(Dataset(dataset_name, dataframe))
+        updated_dataset = Dataset(dataset_name, dataframe)
+        DiscoveryPersistence.save_dataset(updated_dataset)
 
-        return cls._create_data_tables(dataframe)
+        return cls._create_target_page_data(updated_dataset)
 
     @classmethod
-    def _create_data_tables(cls, dataframe):
+    def _create_target_page_data(cls, dataset):
+        dataframe = dataset.dataframe
+
+        targets_form = TargetsForm()
+        targets_form.choose_target_field.choices = dataset.columns
+
         all_dtos = cls._create_all_dtos(dataframe)
         target_name_list = []
         if dataframe is not None:
             target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
-        return dataframe, all_dtos, target_name_list
+        return TargetPageData(dataframe, all_dtos, target_name_list, targets_form)
 
     @classmethod
     def _create_all_dtos(cls, dataframe):
@@ -89,3 +98,12 @@ class TargetsService:
             target_dtos = []
             all_data_row_dtos.append(dto)
         return all_data_row_dtos
+
+
+@dataclass
+class TargetPageData:
+
+    dataframe: DataFrame = None
+    all_dtos: list[DataWithTargetsDto] = None
+    target_name_list: list[str] = None
+    targets_form: TargetsForm = None

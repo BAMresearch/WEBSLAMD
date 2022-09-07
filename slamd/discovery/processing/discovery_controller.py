@@ -117,31 +117,31 @@ def download_prediction():
 
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
-    dataframe, all_dtos, target_list = TargetsService.show_dataset_for_adding_targets(dataset)
-    html_dataframe = dataframe.to_html(index=False,
+    target_page_data = TargetsService.get_data_for_target_page(dataset)
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     return render_template('targets.html',
                            dataset_name=dataset,
-                           form=TargetsForm(),
+                           form=target_page_data.targets_form,
                            df=html_dataframe,
-                           all_dtos=all_dtos,
-                           target_list=target_list)
+                           all_dtos=target_page_data.all_dtos,
+                           target_list=target_page_data.target_name_list)
 
 
 @discovery.route('/<dataset>/<target_name>/add_target', methods=['GET'])
 def add_target(dataset, target_name):
-    dataframe, all_dtos, target_list = TargetsService.add_target_name(dataset, target_name)
-    html_dataframe = dataframe.to_html(index=False,
+    target_page_data = TargetsService.add_target_name(dataset, target_name)
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     body = {'template': render_template('targets_form.html',
-                                        form=TargetsForm(),
+                                        form=target_page_data.targets_form,
                                         df=html_dataframe,
-                                        all_dtos=all_dtos,
-                                        target_list=target_list)}
+                                        all_dtos=target_page_data.all_dtos,
+                                        target_list=target_page_data.target_name_list)}
     return make_response(jsonify(body), 200)
 
 
