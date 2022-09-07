@@ -114,6 +114,9 @@ class TargetsService:
 
     @classmethod
     def toggle_targets_for_editing(cls, dataset_name, names_of_targets_to_be_edited):
+        if len(names_of_targets_to_be_edited) == 0:
+            raise ValueNotSupportedException('You must specify at least on target to be labelled')
+
         dataframe = None
         dataset = DiscoveryPersistence.query_dataset_by_name(dataset_name)
         if empty(dataset):
