@@ -108,7 +108,11 @@ class TargetsService:
         if dataset:
             dataframe = dataset.dataframe
         for name in names_of_targets_to_be_edited:
-            dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
+            if name.startswith('Target: '):
+                name_without_target = name.split('Target: ')[1]
+                dataframe = dataframe.rename(columns={name: name_without_target, 1: 'proj_two'})
+            else:
+                dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
 
         dataset_with_new_target = Dataset(dataset_name, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
@@ -118,7 +122,6 @@ class TargetsService:
 
 @dataclass
 class TargetPageData:
-
     dataframe: DataFrame = None
     all_dtos: list[DataWithTargetsDto] = None
     target_name_list: list[str] = None
