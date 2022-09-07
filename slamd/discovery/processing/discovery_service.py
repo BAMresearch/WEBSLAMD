@@ -5,7 +5,7 @@ from werkzeug.datastructures import CombinedMultiDict
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
-from slamd.discovery.processing.algorithms.prediction_output_file_generator import PredictionOutputFileGenerator
+from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
@@ -81,7 +81,7 @@ class DiscoveryService:
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
         # Return the CSV as a string. Represent NaNs in the dataframe as a string.
-        return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+        return CsvStrategy.to_csv(dataset)
 
     @classmethod
     def download_prediction(cls):
@@ -91,7 +91,7 @@ class DiscoveryService:
         if empty(prediction):
             raise DatasetNotFoundException('No prediction can be found')
 
-        output = PredictionOutputFileGenerator.create_prediction_xlsx(dataset_of_prediction, prediction)
+        output = ExcelStrategy.create_prediction_excel(dataset_of_prediction, prediction)
 
         return f'predictions-{dataset_of_prediction.name}-{datetime.now()}.xlsx', output
 

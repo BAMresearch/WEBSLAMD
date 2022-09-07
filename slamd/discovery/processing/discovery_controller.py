@@ -4,7 +4,6 @@ from flask import Blueprint, request, render_template, make_response, jsonify, r
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
-from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.targets_service import TargetsService
 
