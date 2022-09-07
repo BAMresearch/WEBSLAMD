@@ -11,6 +11,8 @@ from slamd.discovery.processing.discovery_persistence import DiscoveryPersistenc
 from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
 
+TARGET_COLUMN_PREFIX = 'Target: '
+
 
 class TargetsService:
 
@@ -32,9 +34,11 @@ class TargetsService:
             dataframe = initial_dataset.dataframe
 
         cols = list(dataframe.columns)
-        cols_without_target_prefix = list(map(lambda col_name: col_name.split('Target: ')[1] if col_name.startswith('Target: ') else col_name, cols))
+        cols_without_target_prefix = list(
+            map(lambda col_name: col_name.split(TARGET_COLUMN_PREFIX)[1] if col_name.startswith(
+                TARGET_COLUMN_PREFIX) else col_name, cols))
 
-        if target_name in cols_without_target_prefix or target_name.startswith('Target: '):
+        if target_name in cols_without_target_prefix or target_name.startswith(TARGET_COLUMN_PREFIX):
             raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
 
         dataframe[f'Target: {target_name}'] = np.nan
@@ -52,7 +56,8 @@ class TargetsService:
         dataframe = dataset.dataframe
         all_columns = dataset.columns
 
-        targets_column_names = list(filter(lambda column_name: column_name.startswith('Target: '), all_columns))
+        targets_column_names = list(
+            filter(lambda column_name: column_name.startswith(TARGET_COLUMN_PREFIX), all_columns))
         for key, value in form.items():
             if key.startswith('target'):
                 if not_empty(value) and not_numeric(value):
@@ -77,7 +82,7 @@ class TargetsService:
         all_dtos = cls._create_all_dtos(dataframe)
         target_name_list = []
         if dataframe is not None:
-            target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+            target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
         return TargetPageData(dataframe, all_dtos, target_name_list, targets_form)
 
     @classmethod
@@ -88,7 +93,7 @@ class TargetsService:
         all_data_row_dtos = []
         target_dtos = []
         preview = ''
-        target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
+        target_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}: {value}, '
@@ -115,8 +120,8 @@ class TargetsService:
         if dataset:
             dataframe = dataset.dataframe
         for name in names_of_targets_to_be_edited:
-            if name.startswith('Target: '):
-                name_without_target = name.split('Target: ')[1]
+            if name.startswith(TARGET_COLUMN_PREFIX):
+                name_without_target = name.split(TARGET_COLUMN_PREFIX)[1]
                 dataframe = dataframe.rename(columns={name: name_without_target, 1: 'proj_two'})
             else:
                 dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
