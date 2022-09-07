@@ -30,6 +30,13 @@ class TargetsService:
             raise DatasetNotFoundException('Dataset with given name not found')
         if initial_dataset:
             dataframe = initial_dataset.dataframe
+
+        cols = list(dataframe.columns)
+        cols_without_target_prefix = list(map(lambda col_name: col_name.split('Target: ')[1] if col_name.startswith('Target: ') else col_name, cols))
+
+        if target_name in cols_without_target_prefix or target_name.startswith('Target: '):
+            raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
+
         dataframe[f'Target: {target_name}'] = np.nan
 
         dataset_with_new_target = Dataset(dataset, dataframe)
