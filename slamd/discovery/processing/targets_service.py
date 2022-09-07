@@ -26,17 +26,18 @@ class TargetsService:
 
     @classmethod
     def add_target_name(cls, dataset, target_name):
-        dataframe = None
+        if empty(target_name):
+            raise ValueNotSupportedException('Target name cannot be empty')
+
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
         if empty(initial_dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
-        if initial_dataset:
-            dataframe = initial_dataset.dataframe
+
+        dataframe = initial_dataset.dataframe
 
         cols = list(dataframe.columns)
-        cols_without_target_prefix = list(
-            map(lambda col_name: col_name.split(TARGET_COLUMN_PREFIX)[1] if col_name.startswith(
-                TARGET_COLUMN_PREFIX) else col_name, cols))
+        cols_without_target_prefix = list(map(lambda name: name.split(TARGET_COLUMN_PREFIX)[1] if name.startswith(
+                TARGET_COLUMN_PREFIX) else name, cols))
 
         if target_name in cols_without_target_prefix or target_name.startswith(TARGET_COLUMN_PREFIX):
             raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
