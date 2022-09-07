@@ -1,8 +1,5 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
-import base64
-from io import BytesIO
-
 import numpy as np
 import pandas as pd
 from lolopy.learners import RandomForestRegressor
