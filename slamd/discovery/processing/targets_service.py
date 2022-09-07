@@ -91,7 +91,7 @@ class TargetsService:
         target_list = list(dataframe.loc[:, dataframe.columns.str.startswith('Target')])
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
-                preview += f'{column}:{value}, '
+                preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
             for target_name in target_list:
                 target_value = dataframe.at[i, target_name]

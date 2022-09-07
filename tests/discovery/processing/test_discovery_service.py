@@ -159,12 +159,12 @@ def test_download_prediction(monkeypatch):
         return None
 
     # We do not want to test the creation of the xlsx but rather that the PredictionOutputFileGenerator is called
-    def mock_create_prediction_xlsx(dataset, prediction):
+    def mock_create_prediction_excel(dataset, prediction):
         return 'Dummy.xslx'
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_prediction', mock_query_prediction)
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
-    monkeypatch.setattr(ExcelStrategy, 'create_prediction_xlsx', mock_create_prediction_xlsx)
+    monkeypatch.setattr(ExcelStrategy, 'create_prediction_excel', mock_create_prediction_excel)
 
     filename, output = DiscoveryService.download_prediction()
     assert output == 'Dummy.xslx'

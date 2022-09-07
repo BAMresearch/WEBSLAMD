@@ -23,7 +23,7 @@ def test_add_target(monkeypatch):
     assert target_page_data.targets_form.choose_target_field.choices == ['feature1', 'Target: Test Target', 'Target: X']
     assert len(dtos) == 1
     assert dtos[0].index == 0
-    assert dtos[0].preview_of_data == 'feature1:1.0, Target: Test Target:2.0, Target: X:nan'
+    assert dtos[0].preview_of_data == 'feature1: 1.0, Target: Test Target: 2.0, Target: X: nan'
     assert len(dtos[0].targets) == 2
     assert dtos[0].targets[0].index == 0
     assert dtos[0].targets[0].name == 'Target: Test Target'
@@ -46,7 +46,7 @@ def test_save_targets(monkeypatch):
     assert target_page_data.target_name_list == ['Target: Test Target']
     assert len(dtos) == 1
     assert dtos[0].index == 0
-    assert dtos[0].preview_of_data == 'feature1:1.0, Target: Test Target:11.2'
+    assert dtos[0].preview_of_data == 'feature1: 1.0, Target: Test Target: 11.2'
     assert len(dtos[0].targets) == 1
     assert dtos[0].targets[0].index == 0
     assert dtos[0].targets[0].name == 'Target: Test Target'
