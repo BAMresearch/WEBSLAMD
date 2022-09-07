@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test": "cypress run",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "pytest": "pytest --cov=slamd tests/"
   },
   "repository": {
     "type": "git",

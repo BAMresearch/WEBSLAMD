@@ -357,16 +357,14 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
                                   mock_save_called_with_second_blended_material):
     assert mock_save_called_with_first_blended_material.composition.na2_si_o3 == 17.4
     assert mock_save_called_with_first_blended_material.composition.na_o_h == 5.2
-    assert mock_save_called_with_first_blended_material.composition.na2_si_o3_specific == 5.6
-    assert mock_save_called_with_first_blended_material.composition.water == 12.0
-    assert mock_save_called_with_first_blended_material.composition.na_o_h_specific is None
-    assert mock_save_called_with_first_blended_material.composition.total is None
+    assert mock_save_called_with_first_blended_material.composition.na2_si_o3_mol == 5.6
+    assert mock_save_called_with_first_blended_material.composition.h2_o_mol == 12.0
+    assert mock_save_called_with_first_blended_material.composition.na_o_h_mol is None
     assert mock_save_called_with_first_blended_material.composition.na2_o is None
     assert mock_save_called_with_first_blended_material.composition.si_o2 is None
     assert mock_save_called_with_first_blended_material.composition.h2_o is None
-    assert mock_save_called_with_first_blended_material.composition.na2_o_dry is None
-    assert mock_save_called_with_first_blended_material.composition.si_o2_dry is None
-    assert mock_save_called_with_first_blended_material.composition.na_o_h_total is None
+    assert mock_save_called_with_first_blended_material.composition.na2_o_mol is None
+    assert mock_save_called_with_first_blended_material.composition.si_o2_mol is None
 
     assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
     assert mock_save_called_with_first_blended_material.costs.costs == 36.0
@@ -385,16 +383,14 @@ def _assert_saved_blended_liquids(mock_save_called_with_first_blended_material,
 
     assert mock_save_called_with_second_blended_material.composition.na2_si_o3 == 18.1
     assert mock_save_called_with_second_blended_material.composition.na_o_h == 5.69
-    assert mock_save_called_with_second_blended_material.composition.na2_si_o3_specific == 5.8
-    assert mock_save_called_with_second_blended_material.composition.water == 12.5
-    assert mock_save_called_with_second_blended_material.composition.na_o_h_specific is None
-    assert mock_save_called_with_second_blended_material.composition.total is None
+    assert mock_save_called_with_second_blended_material.composition.na2_si_o3_mol == 5.8
+    assert mock_save_called_with_second_blended_material.composition.h2_o_mol == 12.5
+    assert mock_save_called_with_second_blended_material.composition.na_o_h_mol is None
     assert mock_save_called_with_second_blended_material.composition.na2_o is None
     assert mock_save_called_with_second_blended_material.composition.si_o2 is None
     assert mock_save_called_with_second_blended_material.composition.h2_o is None
-    assert mock_save_called_with_second_blended_material.composition.na2_o_dry is None
-    assert mock_save_called_with_second_blended_material.composition.si_o2_dry is None
-    assert mock_save_called_with_second_blended_material.composition.na_o_h_total is None
+    assert mock_save_called_with_second_blended_material.composition.na2_o_mol is None
+    assert mock_save_called_with_second_blended_material.composition.si_o2_mol is None
 
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
     assert mock_save_called_with_second_blended_material.costs.costs == 35.0

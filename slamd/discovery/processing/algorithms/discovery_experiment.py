@@ -9,6 +9,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from sklearn.preprocessing import OrdinalEncoder
 
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
+from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
 class DiscoveryExperiment:
@@ -76,7 +77,16 @@ class DiscoveryExperiment:
         df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
         df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
-        return df.sort_values(by='Utility', ascending=False)
+        sorted = df.sort_values(by='Utility', ascending=False)
+
+        target_list = sorted[self.targets]
+        if len(self.fixed_targets) > 0:
+            target_list = pd.concat((target_list, sorted[self.fixed_targets]), axis=1)
+        target_list = pd.concat((target_list, sorted['Utility']), axis=1)
+
+        plot = PlotGenerator.create_target_scatter_plot(target_list)
+
+        return sorted, plot
 
     def _preprocess_features(self):
         non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if

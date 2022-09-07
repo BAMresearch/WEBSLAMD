@@ -1,9 +1,9 @@
-from werkzeug.utils import secure_filename
 from pandas import read_csv
+from werkzeug.utils import secure_filename
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
+from slamd.discovery.processing.models.dataset import Dataset
 
 
 class CsvStrategy:
@@ -20,3 +20,7 @@ class CsvStrategy:
     @classmethod
     def save_dataset(cls, dataset):
         DiscoveryPersistence.save_dataset(dataset)
+
+    @classmethod
+    def to_csv(cls, dataset):
+        return dataset.dataframe.to_csv(index=False, na_rep='NaN')

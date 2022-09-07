@@ -21,14 +21,14 @@ class MaterialsForm(Form):
     )
 
     co2_footprint = DecimalField(
-        label='CO₂ footprint (kg/ton)',
+        label='CO₂ footprint (kg/ton for materials, kg for processes)',
         validators=[
             validators.Optional()
         ]
     )
 
     costs = DecimalField(
-        label='Costs (€/kg)',
+        label='Costs (€/kg for materials, € for processes)',
         validators=[
             validators.Optional()
         ]

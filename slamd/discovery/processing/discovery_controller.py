@@ -1,10 +1,11 @@
 import json
-from flask import Blueprint, request, render_template, make_response, jsonify, redirect
+
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
-from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.targets_service import TargetsService
 
 discovery = Blueprint('discovery', __name__,
                       template_folder='../templates',
@@ -87,12 +88,12 @@ def create_a_priori_information_configuration_form():
 @discovery.route('/<dataset>', methods=['POST'])
 def run_experiment(dataset):
     request_body = json.loads(request.data)
-    dataframe = DiscoveryService.run_experiment(dataset, request_body)
+    dataframe, plot = DiscoveryService.run_experiment(dataset, request_body)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover')
 
-    body = {'template': render_template('experiment_result.html', df=html_dataframe)}
+    body = {'template': render_template('experiment_result.html', df=html_dataframe, plot=plot)}
     return make_response(jsonify(body), 200)
 
 
@@ -105,38 +106,64 @@ def download_dataset(dataset):
     return response
 
 
+@discovery.route('/download_prediction', methods=['GET'])
+def download_prediction():
+    filename, dataset_content = DiscoveryService.download_prediction()
+    return send_file(dataset_content,
+                     attachment_filename=filename,
+                     as_attachment=True)
+
+
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
-    dataframe, all_dtos, target_list = DiscoveryService.show_dataset_for_adding_targets(dataset)
-    html_dataframe = dataframe.to_html(index=False,
-                                       table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover df-collapsed')
+    target_page_data = TargetsService.get_data_for_target_page(dataset)
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     return render_template('targets.html',
                            dataset_name=dataset,
-                           form=TargetsForm(),
+                           form=target_page_data.targets_form,
                            df=html_dataframe,
-                           all_dtos=all_dtos,
-                           target_list=target_list)
+                           all_dtos=target_page_data.all_dtos,
+                           target_list=target_page_data.target_name_list)
 
 
 @discovery.route('/<dataset>/<target_name>/add_target', methods=['GET'])
 def add_target(dataset, target_name):
-    dataframe, all_dtos, target_list = DiscoveryService.add_target_name(dataset, target_name)
-    html_dataframe = dataframe.to_html(index=False,
-                                       table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover df-collapsed')
+    target_page_data = TargetsService.add_target_name(dataset, target_name)
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
 
     body = {'template': render_template('targets_form.html',
-                                        form=TargetsForm(),
+                                        form=target_page_data.targets_form,
                                         df=html_dataframe,
-                                        all_dtos=all_dtos,
-                                        target_list=target_list)}
+                                        all_dtos=target_page_data.all_dtos,
+                                        target_list=target_page_data.target_name_list)}
+    return make_response(jsonify(body), 200)
+
+
+@discovery.route('/<dataset>/toggle_targets', methods=['POST'])
+def toggle_targets(dataset):
+    request_body = json.loads(request.data)
+
+    target_page_data = TargetsService.toggle_targets_for_editing(dataset, request_body['names'])
+
+    html_dataframe = target_page_data.dataframe.to_html(index=False,
+                                                        table_id='formulations_dataframe',
+                                                        classes='table table-bordered table-striped table-hover df-collapsed')
+
+    body = {'template': render_template('targets_form.html',
+                                        form=target_page_data.targets_form,
+                                        df=html_dataframe,
+                                        all_dtos=target_page_data.all_dtos,
+                                        target_list=target_page_data.target_name_list)}
     return make_response(jsonify(body), 200)
 
 
 @discovery.route('/<dataset>/add_targets', methods=['POST'])
 def submit_target_values(dataset):
-    DiscoveryService.save_targets(dataset, request.form)
+    TargetsService.save_targets(dataset, request.form)
 
     return redirect('/materials/discovery')

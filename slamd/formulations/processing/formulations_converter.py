@@ -1,5 +1,5 @@
 from slamd.materials.processing.materials_facade import MaterialsFacade
-from slamd.ml_utils import from_list_of_dicts
+from slamd.common.ml_utils import from_list_of_dicts
 
 
 class FormulationsConverter:

@@ -126,69 +126,62 @@ describe("Test blending liquids and property interpolation", () => {
     // Check that the properties for the first blended liquid were interpolated correctly
     cy.findByText("Na₂SiO₃ (m%): 6.0", { exact: false }).should("exist");
     cy.findByText("NaOH (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Na₂SiO₃ specific (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("NaOH specific (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Total solution (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (I) (%): 6.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (I) (%): 6.0", { exact: false }).should("exist");
-    cy.findByText("H₂O (%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (dry) (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (dry) (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Water (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Total NaOH (m%): 6.0", { exact: false }).should("exist");
-    cy.findByText("Costs (€/kg): 6.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 6.0", { exact: false }).should("exist");
+    cy.findByText("Na₂SiO₃ (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("NaOH (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (m%): 6.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (m%): 6.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (m%): 6.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("NaOH (mol%): 6.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 6.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 6.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).first().should("exist");
 
     // Check that the properties for the second blended liquid were interpolated correctly
     cy.findByText("Na₂SiO₃ (m%): 7.0", { exact: false }).should("exist");
     cy.findByText("NaOH (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Na₂SiO₃ specific (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("NaOH specific (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Total solution (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (I) (%): 7.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (I) (%): 7.0", { exact: false }).should("exist");
-    cy.findByText("H₂O (%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (dry) (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (dry) (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Water (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Total NaOH (m%): 7.0", { exact: false }).should("exist");
-    cy.findByText("Costs (€/kg): 7.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 7.0", { exact: false }).should("exist");
+    cy.findByText("Na₂SiO₃ (mol%): 7.0", { exact: false }).should("exist");
+    cy.findByText("NaOH (mol%): 7.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (m%): 7.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (m%): 7.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (m%): 7.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (mol%): 7.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (mol%): 7.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (mol%): 7.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 7.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 7.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).eq(1).should("exist");
 
     // Check that the properties for the third blended liquid were interpolated correctly
     cy.findByText("Na₂SiO₃ (m%): 8.0", { exact: false }).should("exist");
     cy.findByText("NaOH (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Na₂SiO₃ specific (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("NaOH specific (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Total solution (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (I) (%): 8.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (I) (%): 8.0", { exact: false }).should("exist");
-    cy.findByText("H₂O (%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (dry) (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (dry) (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Water (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Total NaOH (m%): 8.0", { exact: false }).should("exist");
-    cy.findByText("Costs (€/kg): 8.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 8.0", { exact: false }).should("exist");
+    cy.findByText("Na₂SiO₃ (mol%): 8.0", { exact: false }).should("exist");
+    cy.findByText("NaOH (mol%): 8.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (m%): 8.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (m%): 8.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (m%): 8.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (mol%): 8.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (mol%): 8.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (mol%): 8.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 8.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 8.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).eq(2).should("exist");
 
     // Check that the properties for the fourth blended liquid were interpolated correctly
     cy.findByText("Na₂SiO₃ (m%): 9.0", { exact: false }).should("exist");
     cy.findByText("NaOH (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Na₂SiO₃ specific (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("NaOH specific (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Total solution (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (I) (%): 9.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (I) (%): 9.0", { exact: false }).should("exist");
-    cy.findByText("H₂O (%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Na₂O (dry) (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("SiO₂ (dry) (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Water (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Total NaOH (m%): 9.0", { exact: false }).should("exist");
-    cy.findByText("Costs (€/kg): 9.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 9.0", { exact: false }).should("exist");
+    cy.findByText("Na₂SiO₃ (mol%): 9.0", { exact: false }).should("exist");
+    cy.findByText("NaOH (mol%): 9.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (m%): 9.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (m%): 9.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (m%): 9.0", { exact: false }).should("exist");
+    cy.findByText("Na₂O (mol%): 9.0", { exact: false }).should("exist");
+    cy.findByText("SiO₂ (mol%): 9.0", { exact: false }).should("exist");
+    cy.findByText("H₂O (mol%): 9.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 9.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 9.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).last().should("exist");
   });
 });
@@ -236,12 +229,12 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.findByText("Example Blended Aggregates-1").should("exist");
 
     // Check that only the properties common to both base materials were interpolated
-    cy.findByText("Costs (€/kg): 6.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 6.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 6.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 6.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).first().should("exist");
     cy.findByText("Example shared property: 6.0", { exact: false }).should("exist");
-    cy.findByText("Costs (€/kg): 8.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 8.0", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 8.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 8.0", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 10.0", { exact: false }).last().should("exist");
     cy.findByText("Example shared property: 8.0", { exact: false }).should("exist");
   });
@@ -296,23 +289,23 @@ describe("Test blending three custom materials with properties with negative val
     cy.findByText("Example Blended Custom-3").should("exist");
 
     // Check that the properties for the first blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 15.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): -4.4", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 15.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): -4.4", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).first().should("exist");
 
     // Check that the properties for the second blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 20.5", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): -3.65", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 20.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): -3.65", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
 
     // Check that the properties for the third blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 22.5", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 2.1", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 22.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 2.1", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
 
     // Check that the properties for the last blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 28.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 2.85", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 28.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 2.85", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).last().should("exist");
   });
 });
@@ -370,23 +363,23 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.findByText("Example Blended Admixture-3").should("exist");
 
     // Check that the properties for the first blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 15.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): -4.4", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 15.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): -4.4", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).first().should("exist");
 
     // Check that the properties for the second blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 20.5", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): -3.65", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 20.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): -3.65", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
 
     // Check that the properties for the third blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 22.5", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 2.1", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 22.5", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 2.1", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).eq(1).should("exist");
 
     // Check that the properties for the last blend were interpolated correctly
-    cy.findByText("Costs (€/kg): 28.0", { exact: false }).should("exist");
-    cy.findByText("CO₂ footprint (kg/ton): 2.85", { exact: false }).should("exist");
+    cy.findByText("Costs (€/kg for materials, € for processes): 28.0", { exact: false }).should("exist");
+    cy.findByText("CO₂ footprint (kg/ton for materials, kg for processes): 2.85", { exact: false }).should("exist");
     cy.findAllByText("Delivery time (days): 20.0", { exact: false }).last().should("exist");
   });
 });

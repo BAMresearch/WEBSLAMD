@@ -1,16 +1,20 @@
+from io import BytesIO
+
 import numpy as np
 import pandas as pd
 import pytest
-from io import BytesIO
 from pandas import DataFrame
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import DatasetNotFoundException
+from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
+from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from tests.discovery.processing.test_dataframe_dicts import TEST_DF_DICT, TEST_GAUSS_PRED
 
@@ -105,37 +109,25 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
     assert datasets[2] == Dataset('Dataset 3')
 
 
-def test_save_targets(monkeypatch):
-    def mock_query_dataset_by_name(dataset_name):
-        test_df = {'feature1': [1], 'Target: Test Target': [2]}
-        dataframe = pd.DataFrame.from_dict(test_df)
-        return Dataset(dataset_name, dataframe)
-
-    def mock_save_dataset(dataset):
-        return None
-
-    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
-    monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', mock_save_dataset)
-
-    form = ImmutableMultiDict([('target-1-1', '11.2'), ('submit', '3 - Save targets')])
-    df, dtos, targets = DiscoveryService.save_targets('test_data', form)
-
-    assert df.to_dict() == {'feature1': {0: 1}, 'Target: Test Target': {0: 11.2}}
-    assert len(dtos) == 1
-    assert dtos[0].index == 0
-    assert dtos[0].preview_of_data == 'feature1:1.0, Target: Test Target:11.2'
-    assert len(dtos[0].targets) == 1
-    assert dtos[0].targets[0].index == 0
-    assert dtos[0].targets[0].name == 'Target: Test Target'
-    assert dtos[0].targets[0].value == 11.2
-
-
-def test_run_experiment_with_gauss(monkeypatch):
+def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
         return Dataset('test_data', test_df)
 
+    mock_save_prediction_called_with = None
+
+    def mock_save_prediction(prediction):
+        nonlocal mock_save_prediction_called_with
+        mock_save_prediction_called_with = prediction
+        return None
+
+    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
+    def mock_create_target_scatter_plot(targets):
+        return 'Dummy Plot'
+
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
+    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
 
     test_experiment_config = {
         'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
@@ -148,5 +140,33 @@ def test_run_experiment_with_gauss(monkeypatch):
         'target_configurations': [{'max_or_min': 'max', 'weight': '1.00'}],
         'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00'}]}
 
-    df_with_prediction = DiscoveryService.run_experiment('test_data', test_experiment_config)
+    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
+
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
+    assert mock_save_prediction_called_with.metadata == test_experiment_config
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert plot == 'Dummy Plot'
+
+
+def test_download_prediction(monkeypatch):
+    def mock_query_prediction():
+        return Prediction('test_dataset.csv', pd.DataFrame())
+
+    def mock_query_dataset_by_name(dataset_name):
+        if dataset_name == 'test_dataset.csv':
+            return Dataset(dataset_name, pd.DataFrame())
+        return None
+
+    # We do not want to test the creation of the xlsx but rather that the PredictionOutputFileGenerator is called
+    def mock_create_prediction_excel(dataset, prediction):
+        return 'Dummy.xslx'
+
+    monkeypatch.setattr(DiscoveryPersistence, 'query_prediction', mock_query_prediction)
+    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(ExcelStrategy, 'create_prediction_excel', mock_create_prediction_excel)
+
+    filename, output = DiscoveryService.download_prediction()
+    assert output == 'Dummy.xslx'
+    assert filename.startswith('predictions-test_dataset.csv')
+    assert filename.endswith('.xlsx')

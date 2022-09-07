@@ -60,18 +60,16 @@ def test_slamd_selects_liquid(client):
     template = response.json['template']
 
     assert response.status_code == 200
-    assert 'Na₂SiO₃' in template
-    assert 'NaOH' in template
-    assert 'Na₂SiO₃ specific' in template
-    assert 'NaOH specific' in template
-    assert 'Total solution' in template
-    assert 'Na₂O (I)' in template
-    assert 'SiO₂ (I)' in template
-    assert 'H₂O' in template
-    assert 'Na₂O (dry)' in template
-    assert 'SiO₂ (dry)' in template
-    assert 'Water' in template
-    assert 'Total NaOH' in template
+    assert 'Na₂SiO₃ (m%)' in template
+    assert 'Na₂SiO₃ (mol%)' in template
+    assert 'NaOH (m%)' in template
+    assert 'NaOH (mol%)' in template
+    assert 'SiO₂ (m%)' in template
+    assert 'SiO₂ (mol%)' in template
+    assert 'Na₂O (m%)' in template
+    assert 'Na₂O (mol%)' in template
+    assert 'H₂O (m%)' in template
+    assert 'H₂O (mol%)' in template
 
     assert '4 - Composition' in template
     assert '5 - Additional Properties - Leave empty if not needed.' in template

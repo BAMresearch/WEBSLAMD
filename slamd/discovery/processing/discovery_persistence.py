@@ -13,6 +13,14 @@ class DiscoveryPersistence:
             cls.extend_session_property(dataset)
 
     @classmethod
+    def save_prediction(cls, prediction):
+        cls.set_session_prediction(prediction)
+
+    @classmethod
+    def set_session_prediction(cls, prediction):
+        session['sequential_learning_predictions'] = prediction
+
+    @classmethod
     def delete_dataset_by_name(cls, dataset_name):
         datasets = cls.get_session_property()
         return datasets.pop(dataset_name, None)
@@ -27,6 +35,14 @@ class DiscoveryPersistence:
         return datasets.get(dataset_name, None)
 
     @classmethod
+    def query_prediction(cls):
+        """
+        Return the first element matching the given dataset name.
+        Return None if no matching element was found.
+        """
+        return cls.get_session_prediction()
+
+    @classmethod
     def find_all_datasets(cls):
         datasets = cls.get_session_property()
         return list(datasets.values())
@@ -35,9 +51,14 @@ class DiscoveryPersistence:
     Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
     context and session. Check test_discovery_persistence for examples.
     """
+
     @classmethod
     def get_session_property(cls):
         return session.get('datasets', {})
+
+    @classmethod
+    def get_session_prediction(cls):
+        return session.get('sequential_learning_predictions', {})
 
     @classmethod
     def set_session_property(cls, datasets):
