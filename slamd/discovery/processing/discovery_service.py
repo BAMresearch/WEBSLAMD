@@ -86,10 +86,12 @@ class DiscoveryService:
     @classmethod
     def download_prediction(cls):
         prediction = DiscoveryPersistence.query_prediction()
-        dataset_of_prediction = DiscoveryPersistence.query_dataset_by_name(prediction.dataset_used_for_prediction)
-
         if empty(prediction):
             raise DatasetNotFoundException('No prediction can be found')
+
+        dataset_of_prediction = DiscoveryPersistence.query_dataset_by_name(prediction.dataset_used_for_prediction)
+        if empty(dataset_of_prediction):
+            raise DatasetNotFoundException('No dataset for the last prediction can be found')
 
         output = ExcelStrategy.create_prediction_excel(dataset_of_prediction, prediction)
 
