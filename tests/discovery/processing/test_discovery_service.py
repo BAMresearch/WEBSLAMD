@@ -112,7 +112,7 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
 def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(TEST_DF_DICT)
-        return Dataset('test_data', test_df)
+        return Dataset('test_data', ['Target: X'], test_df)
 
     mock_save_prediction_called_with = None
 
@@ -155,7 +155,7 @@ def test_download_prediction(monkeypatch):
 
     def mock_query_dataset_by_name(dataset_name):
         if dataset_name == 'test_dataset.csv':
-            return Dataset(dataset_name, pd.DataFrame())
+            return Dataset(name=dataset_name, dataframe=pd.DataFrame())
         return None
 
     # We do not want to test the creation of the xlsx but rather that the PredictionOutputFileGenerator is called

@@ -55,10 +55,10 @@ def test_save_targets(monkeypatch):
 
 def _mock_discovery_persistence(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
-        test_df = {'feature1': [1], 'Target: Test Target': [2]}
+        test_df = {'feature1': [1], 'Test Target': [2]}
         import pandas as pd
         dataframe = pd.DataFrame.from_dict(test_df)
-        return Dataset(dataset_name, dataframe)
+        return Dataset(dataset_name, ['Test Target'], dataframe)
 
     def mock_save_dataset(dataset):
         return None
