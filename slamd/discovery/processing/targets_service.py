@@ -14,6 +14,12 @@ from slamd.discovery.processing.models.dataset import Dataset
 TARGET_COLUMN_PREFIX = 'Target: '
 
 
+"""
+In order to identify target rows, we add a prefix to the column name before saving. In our views, howeever, we show the
+names without prefixes
+"""
+
+
 class TargetsService:
 
     @classmethod
@@ -26,8 +32,8 @@ class TargetsService:
 
     @classmethod
     def add_target_name(cls, dataset, target_name):
-        if empty(target_name):
-            raise ValueNotSupportedException('Target name cannot be empty')
+        if empty(target_name) or 'Target' in target_name:
+            raise ValueNotSupportedException(f'Target name cannot be empty or start with {TARGET_COLUMN_PREFIX}')
 
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
         if empty(initial_dataset):
@@ -35,11 +41,9 @@ class TargetsService:
 
         dataframe = initial_dataset.dataframe
 
-        cols = list(dataframe.columns)
-        cols_without_target_prefix = list(map(lambda name: name.split(TARGET_COLUMN_PREFIX)[1] if name.startswith(
-                TARGET_COLUMN_PREFIX) else name, cols))
+        cols_without_target_prefix = cls._target_names_for_display(list(dataframe.columns))
 
-        if target_name in cols_without_target_prefix or target_name.startswith(TARGET_COLUMN_PREFIX):
+        if target_name in cols_without_target_prefix:
             raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
 
         dataframe[f'Target: {target_name}'] = np.nan
@@ -78,13 +82,25 @@ class TargetsService:
         dataframe = dataset.dataframe
 
         targets_form = TargetsForm()
-        targets_form.choose_target_field.choices = dataset.columns
+        targets_form.choose_target_field.choices = cls._target_names_for_display(dataset.columns)
 
         all_dtos = cls._create_all_dtos(dataframe)
-        target_name_list = []
+        names_to_display = []
         if dataframe is not None:
             target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
-        return TargetPageData(dataframe, all_dtos, target_name_list, targets_form)
+            names_to_display = cls._target_names_for_display(target_name_list)
+            for i, name in enumerate(target_name_list):
+                dataframe = dataframe.rename(columns={name: names_to_display[i]})
+        return TargetPageData(dataframe, all_dtos, names_to_display, targets_form)
+
+    @classmethod
+    def _target_name_for_display(cls, name):
+        return name.split(TARGET_COLUMN_PREFIX)[1] if name.startswith(TARGET_COLUMN_PREFIX) else name
+
+    @classmethod
+    def _target_names_for_display(cls, names):
+        return list(map(lambda name: cls._target_name_for_display(name), names))
+
 
     @classmethod
     def _create_all_dtos(cls, dataframe):
@@ -97,6 +113,8 @@ class TargetsService:
         target_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
+                if column.startswith(TARGET_COLUMN_PREFIX):
+                    column = cls._target_name_for_display(column)
                 preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
             for target_name in target_list:
@@ -104,7 +122,7 @@ class TargetsService:
                 target_value = float_if_not_empty(target_value)
                 if math.isnan(target_value):
                     target_value = None
-                target_dto = TargetDto(i, target_name, target_value)
+                target_dto = TargetDto(i, cls._target_name_for_display(target_name), target_value)
                 target_dtos.append(target_dto)
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
             preview = ''
@@ -123,12 +141,12 @@ class TargetsService:
             raise DatasetNotFoundException('Dataset with given name not found')
         if dataset:
             dataframe = dataset.dataframe
+
         for name in names_of_targets_to_be_edited:
-            if name.startswith(TARGET_COLUMN_PREFIX):
-                name_without_target = name.split(TARGET_COLUMN_PREFIX)[1]
-                dataframe = dataframe.rename(columns={name: name_without_target, 1: 'proj_two'})
+            if name in dataframe.columns:
+                dataframe = dataframe.rename(columns={name: TARGET_COLUMN_PREFIX + name})
             else:
-                dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
+                dataframe = dataframe.rename(columns={TARGET_COLUMN_PREFIX + name: name})
 
         dataset_with_new_target = Dataset(dataset_name, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)

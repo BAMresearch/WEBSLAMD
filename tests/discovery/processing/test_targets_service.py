@@ -17,19 +17,19 @@ def test_add_target(monkeypatch):
     dtos = target_page_data.all_dtos
 
     assert target_page_data.dataframe.replace({np.nan: None}).to_dict() == {'feature1': {0: 1},
-                                                                            'Target: Test Target': {0: 2},
-                                                                            'Target: X': {0: None}}
-    assert target_page_data.target_name_list == ['Target: Test Target', 'Target: X']
-    assert target_page_data.targets_form.choose_target_field.choices == ['feature1', 'Target: Test Target', 'Target: X']
+                                                                            'Test Target': {0: 2},
+                                                                            'X': {0: None}}
+    assert target_page_data.target_name_list == ['Test Target', 'X']
+    assert target_page_data.targets_form.choose_target_field.choices == ['feature1', 'Test Target', 'X']
     assert len(dtos) == 1
     assert dtos[0].index == 0
-    assert dtos[0].preview_of_data == 'feature1: 1.0, Target: Test Target: 2.0, Target: X: nan'
+    assert dtos[0].preview_of_data == 'feature1: 1.0, Test Target: 2.0, X: nan'
     assert len(dtos[0].targets) == 2
     assert dtos[0].targets[0].index == 0
-    assert dtos[0].targets[0].name == 'Target: Test Target'
+    assert dtos[0].targets[0].name == 'Test Target'
     assert dtos[0].targets[0].value == 2
     assert dtos[0].targets[1].index == 0
-    assert dtos[0].targets[1].name == 'Target: X'
+    assert dtos[0].targets[1].name == 'X'
     assert dtos[0].targets[1].value is None
 
 
@@ -42,14 +42,14 @@ def test_save_targets(monkeypatch):
 
     dtos = target_page_data.all_dtos
 
-    assert target_page_data.dataframe.to_dict() == {'feature1': {0: 1}, 'Target: Test Target': {0: 11.2}}
-    assert target_page_data.target_name_list == ['Target: Test Target']
+    assert target_page_data.dataframe.to_dict() == {'feature1': {0: 1}, 'Test Target': {0: 11.2}}
+    assert target_page_data.target_name_list == ['Test Target']
     assert len(dtos) == 1
     assert dtos[0].index == 0
-    assert dtos[0].preview_of_data == 'feature1: 1.0, Target: Test Target: 11.2'
+    assert dtos[0].preview_of_data == 'feature1: 1.0, Test Target: 11.2'
     assert len(dtos[0].targets) == 1
     assert dtos[0].targets[0].index == 0
-    assert dtos[0].targets[0].name == 'Target: Test Target'
+    assert dtos[0].targets[0].name == 'Test Target'
     assert dtos[0].targets[0].value == 11.2
 
 
