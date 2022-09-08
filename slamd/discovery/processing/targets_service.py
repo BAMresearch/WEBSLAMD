@@ -78,8 +78,7 @@ class TargetsService:
         targets_form.choose_target_field.choices = dataset.columns
 
         all_dtos = cls._create_all_dtos(dataset)
-        target_columns = dataset.target_columns if dataset.target_columns else []
-        return TargetPageData(dataframe, all_dtos, target_columns, targets_form)
+        return TargetPageData(dataframe, all_dtos, dataset.targets, targets_form)
 
     @classmethod
     def _create_all_dtos(cls, dataset):
@@ -94,7 +93,7 @@ class TargetsService:
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
-            target_columns = dataset.target_columns if dataset.target_columns else []
+            target_columns = dataset.targets
             for target_name in target_columns:
                 target_value = dataframe.at[i, target_name]
                 target_value = float_if_not_empty(target_value)
@@ -121,7 +120,7 @@ class TargetsService:
             dataframe = dataset.dataframe
 
         for name in names_of_targets_to_be_edited:
-            if name in dataset.target_columns:
+            if name in dataset.targets:
                 dataset.target_columns.remove(name)
             else:
                 dataset.add_target(name)
