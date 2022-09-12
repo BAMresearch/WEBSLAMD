@@ -5,12 +5,12 @@ from wtforms import StringField, validators, SubmitField, SelectField
 class BlendingNameAndTypeForm(Form):
     blended_material_name = StringField(
         label='1 - Name',
-        validators=[validators.DataRequired()]
+        validators=[validators.DataRequired(message='Blended material name cannot be empty')]
     )
 
     base_type = SelectField(
         label='2 - Material type',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Base material type cannot be empty')],
         choices=['Powder', 'Liquid', 'Aggregates',
                  'Admixture', 'Custom']
     )
