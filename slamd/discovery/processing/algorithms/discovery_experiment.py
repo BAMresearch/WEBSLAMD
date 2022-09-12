@@ -132,7 +132,7 @@ class DiscoveryExperiment:
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
 
-            self._check_not_all_targets_labelled(training_labels)
+            self._check_target_label_validity(training_labels)
 
             nan_counts = list(self.target_df.isna().sum())
 
@@ -167,7 +167,7 @@ class DiscoveryExperiment:
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
             training_labels = self.target_df.iloc[self.sample_index]
 
-            self._check_not_all_targets_labelled(training_labels)
+            self._check_target_label_validity(training_labels)
 
             self.x = training_rows
             # Sum the training labels for all targets
@@ -245,7 +245,10 @@ class DiscoveryExperiment:
         # We need to simply add their contributions in that case
         return fixed_targets_for_predicted_rows.sum(axis=1)
 
-    def _check_not_all_targets_labelled(self, training_labels):
-        all_data_is_labelled = self.dataframe.shape[0] == training_labels.shape[0]
+    def _check_target_label_validity(self, training_labels):
+        number_of_labelled_targets = training_labels.shape[0]
+        if number_of_labelled_targets == 0:
+            raise SequentialLearningException('No labels exist.')
+        all_data_is_labelled = self.dataframe.shape[0] == number_of_labelled_targets
         if all_data_is_labelled:
             raise SequentialLearningException('All data is already labelled.')

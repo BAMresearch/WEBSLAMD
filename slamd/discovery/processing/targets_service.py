@@ -11,7 +11,10 @@ from slamd.discovery.processing.discovery_persistence import DiscoveryPersistenc
 from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
 
-TARGET_COLUMN_PREFIX = 'Target: '
+"""
+In order to identify target rows, we add a prefix to the column name before saving. In our views, howeever, we show the
+names without prefixes
+"""
 
 
 class TargetsService:
@@ -27,7 +30,7 @@ class TargetsService:
     @classmethod
     def add_target_name(cls, dataset, target_name):
         if empty(target_name):
-            raise ValueNotSupportedException('Target name cannot be empty')
+            raise ValueNotSupportedException(f'Target name cannot be empty')
 
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
         if empty(initial_dataset):
@@ -35,16 +38,13 @@ class TargetsService:
 
         dataframe = initial_dataset.dataframe
 
-        cols = list(dataframe.columns)
-        cols_without_target_prefix = list(map(lambda name: name.split(TARGET_COLUMN_PREFIX)[1] if name.startswith(
-                TARGET_COLUMN_PREFIX) else name, cols))
-
-        if target_name in cols_without_target_prefix or target_name.startswith(TARGET_COLUMN_PREFIX):
+        if target_name in initial_dataset.columns:
             raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
 
-        dataframe[f'Target: {target_name}'] = np.nan
+        dataframe[target_name] = np.nan
+        initial_dataset.add_target(target_name)
 
-        dataset_with_new_target = Dataset(dataset, dataframe)
+        dataset_with_new_target = Dataset(dataset, initial_dataset.target_columns, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
         return cls._create_target_page_data(dataset_with_new_target)
@@ -55,10 +55,7 @@ class TargetsService:
         if empty(dataset):
             raise DatasetNotFoundException('Dataset with given name not found')
         dataframe = dataset.dataframe
-        all_columns = dataset.columns
 
-        targets_column_names = list(
-            filter(lambda column_name: column_name.startswith(TARGET_COLUMN_PREFIX), all_columns))
         for key, value in form.items():
             if key.startswith('target'):
                 if not_empty(value) and not_numeric(value):
@@ -66,9 +63,9 @@ class TargetsService:
                 pieces_of_target_key = key.split('-')
                 row_index = int(pieces_of_target_key[1]) - 1
                 target_number_index = int(pieces_of_target_key[2]) - 1
-                dataframe.at[row_index, targets_column_names[target_number_index]] = float_if_not_empty(value)
+                dataframe.at[row_index, dataset.target_columns[target_number_index]] = float_if_not_empty(value)
 
-        updated_dataset = Dataset(dataset_name, dataframe)
+        updated_dataset = Dataset(dataset_name, dataset.target_columns, dataframe)
         DiscoveryPersistence.save_dataset(updated_dataset)
 
         return cls._create_target_page_data(updated_dataset)
@@ -80,26 +77,24 @@ class TargetsService:
         targets_form = TargetsForm()
         targets_form.choose_target_field.choices = dataset.columns
 
-        all_dtos = cls._create_all_dtos(dataframe)
-        target_name_list = []
-        if dataframe is not None:
-            target_name_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
-        return TargetPageData(dataframe, all_dtos, target_name_list, targets_form)
+        all_dtos = cls._create_all_dtos(dataset)
+        return TargetPageData(dataframe, all_dtos, dataset.targets, targets_form)
 
     @classmethod
-    def _create_all_dtos(cls, dataframe):
-        if dataframe is None:
+    def _create_all_dtos(cls, dataset):
+        if dataset.dataframe is None:
             return []
-        columns = dataframe.columns
+        columns = dataset.columns
+        dataframe = dataset.dataframe
         all_data_row_dtos = []
         target_dtos = []
         preview = ''
-        target_list = list(dataframe.loc[:, dataframe.columns.str.startswith(TARGET_COLUMN_PREFIX)])
         for i in range(len(dataframe.index)):
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
-            for target_name in target_list:
+            target_columns = dataset.targets
+            for target_name in target_columns:
                 target_value = dataframe.at[i, target_name]
                 target_value = float_if_not_empty(target_value)
                 if math.isnan(target_value):
@@ -123,14 +118,14 @@ class TargetsService:
             raise DatasetNotFoundException('Dataset with given name not found')
         if dataset:
             dataframe = dataset.dataframe
-        for name in names_of_targets_to_be_edited:
-            if name.startswith(TARGET_COLUMN_PREFIX):
-                name_without_target = name.split(TARGET_COLUMN_PREFIX)[1]
-                dataframe = dataframe.rename(columns={name: name_without_target, 1: 'proj_two'})
-            else:
-                dataframe = dataframe.rename(columns={name: f'Target: {name}', 1: 'proj_two'})
 
-        dataset_with_new_target = Dataset(dataset_name, dataframe)
+        for name in names_of_targets_to_be_edited:
+            if name in dataset.targets:
+                dataset.target_columns.remove(name)
+            else:
+                dataset.add_target(name)
+
+        dataset_with_new_target = Dataset(dataset_name, dataset.target_columns, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
         return cls._create_target_page_data(dataset_with_new_target)

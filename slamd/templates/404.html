@@ -2,12 +2,13 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width">
     <title>404 - Page not found</title>
 </head>
 
-<body>
-    <p>Resource not found: {{ message }}</p>
-</body>
-
-</html>
+{% extends 'index.html' %}
+{% block content %}
+<main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
+    Resource not found: {{ message }}
+</main>
+{%endblock%}

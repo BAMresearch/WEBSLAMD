@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width">
     <title>413 - Request too large</title>
 </head>
-<body>
-Request too large: {{ message }}
-</body>
-</html>
+
+{% extends 'index.html' %}
+{% block content %}
+<main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
+    Request too large: {{ message }}
+</main>
+{%endblock%}
