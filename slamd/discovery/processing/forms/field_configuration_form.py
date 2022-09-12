@@ -6,9 +6,7 @@ class FieldConfigurationForm(Form):
 
     max_or_min = RadioField(
         label='Maximize or minimize target',
-        validators=[
-            validators.DataRequired(message='Target column must be either maximized or minimized')
-        ],
+        validators=[validators.DataRequired(message='Target column must be either maximized or minimized')],
         default='max',
         choices=[
             ('max', 'Maximize'),
@@ -19,7 +17,5 @@ class FieldConfigurationForm(Form):
     weight = DecimalField(
         label='Weight',
         default=1.0,
-        validators=[
-            validators.DataRequired(message='Weight for the target column cannot be empty')
-        ]
+        validators=[validators.DataRequired(message='Weight for the target column cannot be empty')]
     )
