@@ -1,9 +1,9 @@
 {% macro with_errors(field_name) -%}
-    {% if field_name.errors %}
-    <ul>
-        {% for error in field_name.errors %}
-        <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+{% if field_name.errors %}
+{% for error in field_name.errors %}
+<div class="alert alert-danger text-center" role="alert">
+    {{ error }}
+</div>
+{% endfor %}
+{% endif %}
 {% endmacro %}

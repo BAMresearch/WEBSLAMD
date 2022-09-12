@@ -6,7 +6,6 @@
     <div class="col-md-6">
         {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
         {{ form.material_name(class_="form-control") }}
-        {{ with_errors(form.material_name) }}
     </div>
     <div class="col-md-6">
         {{ form.material_type.label(class_="control-label") }}
@@ -36,7 +35,6 @@
                         <div class="col-md-4">
                             {{ form.delivery_time.label(class_="control-label") }}
                             {{ form.delivery_time(class_="form-control") }}
-                            {{ with_errors(form.delivery_time) }}
                         </div>
                     </div>
                 </div>
@@ -49,6 +47,8 @@
             {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
             title="Select at least a name and a type")
             }}
+            {{ with_errors(form.material_name) }}
+            {{ with_errors(form.delivery_time) }}
         </div>
     </div>
 </form>

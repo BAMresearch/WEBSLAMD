@@ -6,10 +6,10 @@
         <div class="col-sm-12 col-md-9 col-lg-10">
             {{ upload_dataset_form.dataset.label(class_="control-label") }}
             {{ upload_dataset_form.dataset(class_="form-control form-select dataset-input") }}
-            {{ with_errors(upload_dataset_form.dataset) }}
         </div>
         <div class="col-12 col-md-3 col-lg-2">
             {{ upload_dataset_form.upload_button(class_="btn btn-success col-12") }}
+            {{ with_errors(upload_dataset_form.dataset) }}
         </div>
     </div>
 </form>
