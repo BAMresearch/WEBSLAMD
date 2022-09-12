@@ -5,7 +5,7 @@ from wtforms import validators, SelectMultipleField
 class BaseMaterialSelectionForm(Form):
 
     base_material_selection = SelectMultipleField(
-        label='3 - Base materials',
+        label='3 - Base materials *',
         validators=[validators.DataRequired(message='Select at least two base materials')],
         choices=[]
     )
