@@ -11,10 +11,3 @@ class Dataset:
     @property
     def columns(self):
         return list(self.dataframe.columns)
-
-    @property
-    def targets(self):
-        return self.target_columns
-
-    def add_target(self, target_name):
-        self.target_columns.append(target_name)
