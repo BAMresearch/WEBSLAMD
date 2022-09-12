@@ -10,10 +10,12 @@
             {{ radio_option.label(class_="form-check-label") }}
         </div>
         {% endfor %}
+        {{ with_errors(target.max_or_min) }}
     </div>
     <div class="col-12 col-md-3 d-flex align-items-center">
         {{ target.weight.label(class_="control-label mx-2") }}
         {{ target.weight(class_="form-control mx-2") }}
+        {{ with_errors(target.weight) }}
     </div>
 </div>
 {% endfor %}
