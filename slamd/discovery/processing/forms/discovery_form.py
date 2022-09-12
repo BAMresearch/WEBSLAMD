@@ -6,28 +6,28 @@ from slamd.discovery.processing.forms.field_configuration_form import FieldConfi
 class DiscoveryForm(Form):
     materials_data_input = SelectMultipleField(
         label='Materials Data (Input)',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Select at least one column of the dataset as input')],
         choices=[],
         render_kw={'style': 'height:120px'}
     )
 
     target_properties = SelectMultipleField(
         label='Target Properties',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Select at least one column of the dataset as target')],
         choices=[],
         render_kw={'style': 'height:120px'}
     )
 
     a_priori_information = SelectMultipleField(
         label='A priori Information',
-        validators=[validators.DataRequired()],
+        validators=[validators.Optional()],
         choices=[],
         render_kw={'style': 'height:120px'}
     )
 
     model = SelectField(
         label='Select Model',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Model cannot be empty')],
         choices=[
             'Statistics-based model (Gaussian Process Regression)',
             'AI Model (lolo Random Forest)'
