@@ -1,4 +1,5 @@
 {% from 'action_buttons.html' import create_change_selection_button -%}
+{% from 'show_form_field_errors.html' import show_form_field_errors -%}
 
 <h3>Materials formulations</h3>
 <form class="row g-3" action="" method="post" novalidate>
@@ -45,11 +46,11 @@
         {{ create_change_selection_button("change_materials_and_processes_selection_button",
         "confirm_materials_and_processes_selection_button",
         "Choose at least one powder, a liquid and an aggregate for creating materials formulations") }}
-        {{ with_errors(materials_and_processes_selection_form.powder_selection) }}
-        {{ with_errors(materials_and_processes_selection_form.liquid_selection) }}
-        {{ with_errors(materials_and_processes_selection_form.aggregates_selection) }}
-        {{ with_errors(materials_and_processes_selection_form.weight_constraint) }}
-        {{ with_errors(materials_and_processes_selection_form.dataset_name) }}
+        {{ show_form_field_errors(materials_and_processes_selection_form.powder_selection) }}
+        {{ show_form_field_errors(materials_and_processes_selection_form.liquid_selection) }}
+        {{ show_form_field_errors(materials_and_processes_selection_form.aggregates_selection) }}
+        {{ show_form_field_errors(materials_and_processes_selection_form.weight_constraint) }}
+        {{ show_form_field_errors(materials_and_processes_selection_form.dataset_name) }}
     </div>
 
     <div class="justify-content-center">
