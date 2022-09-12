@@ -6,46 +6,48 @@ class MaterialsAndProcessesSelectionForm(Form):
 
     powder_selection = SelectMultipleField(
         label='1.1 - Powders',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Select at least one powder')],
         choices=[]
     )
 
     liquid_selection = SelectMultipleField(
         label='1.2 - Liquids',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Select at least one liquid')],
         choices=[]
     )
 
     aggregates_selection = SelectMultipleField(
         label='1.3 - Aggregates',
-        validators=[validators.DataRequired()],
+        validators=[validators.DataRequired(message='Select at least one aggregate')],
         choices=[]
     )
 
     admixture_selection = SelectMultipleField(
         label='1.4 - Admixture',
-        validators=[validators.DataRequired()],
+        validators=[validators.Optional()],
         choices=[]
     )
 
     custom_selection = SelectMultipleField(
         label='1.5 - Custom',
-        validators=[validators.DataRequired()],
+        validators=[validators.Optional()],
         choices=[]
     )
 
     process_selection = SelectMultipleField(
         label='1.6 - Processes',
-        validators=[validators.DataRequired()],
+        validators=[validators.Optional()],
         choices=[]
     )
 
     weight_constraint = DecimalField(
-        label='1.7 - Constraint (Sum of materials used for formulation) (kg)'
+        label='1.7 - Constraint (Sum of materials used for formulation) (kg)',
+        validators=[validators.DataRequired(message='Weight constraint cannot be empty')]
     )
 
     dataset_name = StringField(
-        label='1.8 - Name of the dataset'
+        label='1.8 - Name of the dataset',
+        validators=[validators.DataRequired(message='Dataset name cannot be empty')]
     )
 
     submit = SubmitField(label='Submit')
