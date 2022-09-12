@@ -5,14 +5,14 @@ from slamd.discovery.processing.forms.field_configuration_form import FieldConfi
 
 class DiscoveryForm(Form):
     materials_data_input = SelectMultipleField(
-        label='Materials Data (Input) (1 at least)',
+        label='Materials Data (Input) (select one column at least)',
         validators=[validators.DataRequired(message='Select at least one column of the dataset as input')],
         choices=[],
         render_kw={'style': 'height:120px'}
     )
 
     target_properties = SelectMultipleField(
-        label='Target Properties (1 at least)',
+        label='Target Properties (select one column at least)',
         validators=[validators.DataRequired(message='Select at least one column of the dataset as target')],
         choices=[],
         render_kw={'style': 'height:120px'}

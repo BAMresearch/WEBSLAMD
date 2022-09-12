@@ -5,19 +5,19 @@ from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, 
 class MaterialsAndProcessesSelectionForm(Form):
 
     powder_selection = SelectMultipleField(
-        label='1.1 - Powders (1 at least)',
+        label='1.1 - Powders (select one at least)',
         validators=[validators.DataRequired(message='Select at least one powder')],
         choices=[]
     )
 
     liquid_selection = SelectMultipleField(
-        label='1.2 - Liquids (1 at least)',
+        label='1.2 - Liquids (select one at least)',
         validators=[validators.DataRequired(message='Select at least one liquid')],
         choices=[]
     )
 
     aggregates_selection = SelectMultipleField(
-        label='1.3 - Aggregates (1 at least)',
+        label='1.3 - Aggregates (select one at least)',
         validators=[validators.DataRequired(message='Select at least one aggregate')],
         choices=[]
     )
