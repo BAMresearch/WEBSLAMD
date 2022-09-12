@@ -1,8 +1,5 @@
 import math
-from dataclasses import dataclass
-
 import numpy as np
-from pandas import DataFrame
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
 from slamd.common.slamd_utils import empty, not_numeric, not_empty, float_if_not_empty
@@ -10,6 +7,7 @@ from slamd.discovery.processing.add_targets_dto import TargetDto, DataWithTarget
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.discovery.processing.target_page_data import TargetPageData
 
 """
 In order to identify target rows, we add a prefix to the column name before saving.
@@ -129,11 +127,3 @@ class TargetsService:
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
         return cls._create_target_page_data(dataset_with_new_target)
-
-
-@dataclass
-class TargetPageData:
-    dataframe: DataFrame = None
-    all_dtos: list[DataWithTargetsDto] = None
-    target_name_list: list[str] = None
-    targets_form: TargetsForm = None
