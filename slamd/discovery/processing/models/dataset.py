@@ -1,11 +1,11 @@
 from pandas import DataFrame
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class Dataset:
     name: str = None
-    target_columns: list[str] = None
+    target_columns: list[str] = field(default_factory=lambda: [])
     dataframe: DataFrame = None
 
     @property
@@ -14,10 +14,7 @@ class Dataset:
 
     @property
     def targets(self):
-        return self.target_columns if self.target_columns else []
+        return self.target_columns
 
     def add_target(self, target_name):
-        if self.target_columns:
-            self.target_columns.append(target_name)
-        else:
-            self.target_columns = [target_name]
+        self.target_columns.append(target_name)
