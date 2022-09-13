@@ -1,5 +1,7 @@
 const ACTION_BUTTON_DELIMITER = "___";
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
+const SPINNER =
+  '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
 function roundInputFieldValueToTwoDecimalPlaces(inputFieldElem) {
   if (MORE_THAN_TWO_DECIMAL_PLACES.test(inputFieldElem.value)) {
@@ -38,10 +40,24 @@ function countSelectedOptionsMultipleSelectField(elem) {
   return 0;
 }
 
+function insertSpinnerInPlaceholder(placeholderId, append = false) {
+  if (append) {
+    document.getElementById(placeholderId).innerHTML += SPINNER;
+  } else {
+    document.getElementById(placeholderId).innerHTML = SPINNER;
+  }
+}
+
+function removeSpinnerInPlaceholder(placeholderId) {
+  document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
+}
+
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
+  insertSpinnerInPlaceholder(placeholderID, append);
   const response = await fetch(url);
   if (response.ok) {
     const form = await response.json();
+    removeSpinnerInPlaceholder(placeholderId);
     if (append) {
       document.getElementById(placeholderID).innerHTML += form["template"];
     } else {
@@ -54,6 +70,7 @@ async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append
 }
 
 async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
+  insertSpinnerInPlaceholder(placeholderID);
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "POST",
@@ -64,6 +81,7 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
   });
   if (response.ok) {
     const form = await response.json();
+    removeSpinnerInPlaceholder(placeholderID);
     document.getElementById(placeholderID).innerHTML = form["template"];
   } else {
     const error = await response.text();
