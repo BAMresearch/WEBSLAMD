@@ -1,5 +1,3 @@
-{% from 'show_form_field_errors.html' import show_form_field_errors -%}
-
 <h3>New material / process</h3>
 <form class="row g-3" action="" method="post" novalidate>
     {{ form.csrf_token }}
@@ -45,9 +43,8 @@
     <div class="form-group mb-3">
         <div class="col-sm-offset-2 col-sm-12">
             {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
-            title="Select at least a name and a type")
+            title="Select at least a name and a type", disabled=True)
             }}
-            {{ show_form_field_errors(form.material_name) }}
         </div>
     </div>
 </form>

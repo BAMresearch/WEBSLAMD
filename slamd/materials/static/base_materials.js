@@ -1,6 +1,11 @@
 const WARNING_MAX_ADDITIONAL_PROPERTIES = '<p class="text-warning">You may define up to 10 additional properties</p>';
 const MAX_ADDITIONAL_PROPERTIES = 10;
 
+function checkMaterialNameIsNotEmpty() {
+  const materialName = document.getElementById("material_name").value;
+  document.getElementById("submit").disabled = materialName === undefined || materialName === "";
+}
+
 async function selectMaterialType() {
   const elem = document.getElementById("material_type");
   const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
@@ -70,6 +75,7 @@ function autocorrectDeliveryTime(event) {
 
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-base").setAttribute("class", "nav-link active");
+  document.getElementById("material_name").addEventListener("keyup", checkMaterialNameIsNotEmpty);
   document.getElementById("material_type").addEventListener("change", selectMaterialType);
   document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty);
   document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty);
