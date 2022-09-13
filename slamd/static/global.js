@@ -40,24 +40,10 @@ function countSelectedOptionsMultipleSelectField(elem) {
   return 0;
 }
 
-function insertSpinnerInPlaceholder(placeholderId, append = false) {
-  if (append) {
-    document.getElementById(placeholderId).innerHTML += SPINNER;
-  } else {
-    document.getElementById(placeholderId).innerHTML = SPINNER;
-  }
-}
-
-function removeSpinnerInPlaceholder(placeholderId) {
-  document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
-}
-
 async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderId, append = false) {
-  insertSpinnerInPlaceholder(placeholderId, append);
   const response = await fetch(url);
   if (response.ok) {
     const form = await response.json();
-    removeSpinnerInPlaceholder(placeholderId);
     if (append) {
       document.getElementById(placeholderId).innerHTML += form["template"];
     } else {
@@ -70,7 +56,6 @@ async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderId, append
 }
 
 async function postDataAndEmbedTemplateInPlaceholder(url, placeholderId, body) {
-  insertSpinnerInPlaceholder(placeholderId);
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "POST",
@@ -81,7 +66,6 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderId, body) {
   });
   if (response.ok) {
     const form = await response.json();
-    removeSpinnerInPlaceholder(placeholderId);
     document.getElementById(placeholderId).innerHTML = form["template"];
   } else {
     const error = await response.text();
@@ -108,6 +92,18 @@ async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderId) {
 
 function removeInnerHtmlFromPlaceholder(placeholderId) {
   document.getElementById(placeholderId).innerHTML = "";
+}
+
+function insertSpinnerInPlaceholder(placeholderId, append = false) {
+  if (append) {
+    document.getElementById(placeholderId).innerHTML += SPINNER;
+  } else {
+    document.getElementById(placeholderId).innerHTML = SPINNER;
+  }
+}
+
+function removeSpinnerInPlaceholder(placeholderId) {
+  document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
 }
 
 function collectSelection(placeholder) {

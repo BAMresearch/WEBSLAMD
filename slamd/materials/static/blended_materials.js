@@ -28,7 +28,10 @@ async function confirmSelection() {
   const type = document.getElementById("base_type").value;
 
   const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${type.toLowerCase()}/${selectedMaterials.length}`;
+
+  insertSpinnerInPlaceholder("min-max-placeholder");
   await postDataAndEmbedTemplateInPlaceholder(url, "min-max-placeholder", uuids);
+  removeSpinnerInPlaceholder("min-max-placeholder");
 
   prepareMinMaxInputFieldsFromSelection(selectedMaterials);
   assignKeyboardEventsToMinMaxForm();
@@ -42,7 +45,11 @@ async function assignConfirmBlendingConfigurationEvent() {
   elem.addEventListener("click", async () => {
     const minMaxValuesWithIncrements = collectMinMaxValuesWithIncrements();
     const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
+
+    insertSpinnerInPlaceholder("blending-ratio-placeholder");
     await postDataAndEmbedTemplateInPlaceholder(url, "blending-ratio-placeholder", minMaxValuesWithIncrements);
+    removeSpinnerInPlaceholder("blending-ratio-placeholder");
+
     assignKeyboardEventsToRatiosForm(true);
     assignAddCustomBlendEvent();
     assignDeleteCustomBlendEvent();
