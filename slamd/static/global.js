@@ -52,16 +52,16 @@ function removeSpinnerInPlaceholder(placeholderId) {
   document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
 }
 
-async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
-  insertSpinnerInPlaceholder(placeholderID, append);
+async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderId, append = false) {
+  insertSpinnerInPlaceholder(placeholderId, append);
   const response = await fetch(url);
   if (response.ok) {
     const form = await response.json();
     removeSpinnerInPlaceholder(placeholderId);
     if (append) {
-      document.getElementById(placeholderID).innerHTML += form["template"];
+      document.getElementById(placeholderId).innerHTML += form["template"];
     } else {
-      document.getElementById(placeholderID).innerHTML = form["template"];
+      document.getElementById(placeholderId).innerHTML = form["template"];
     }
   } else {
     const error = await response.text();
@@ -69,8 +69,8 @@ async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append
   }
 }
 
-async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
-  insertSpinnerInPlaceholder(placeholderID);
+async function postDataAndEmbedTemplateInPlaceholder(url, placeholderId, body) {
+  insertSpinnerInPlaceholder(placeholderId);
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "POST",
@@ -81,15 +81,15 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
   });
   if (response.ok) {
     const form = await response.json();
-    removeSpinnerInPlaceholder(placeholderID);
-    document.getElementById(placeholderID).innerHTML = form["template"];
+    removeSpinnerInPlaceholder(placeholderId);
+    document.getElementById(placeholderId).innerHTML = form["template"];
   } else {
     const error = await response.text();
     document.write(error);
   }
 }
 
-async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderID) {
+async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderId) {
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "DELETE",
@@ -99,16 +99,15 @@ async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderID) {
   });
   if (response.ok) {
     const form = await response.json();
-    document.getElementById(placeholderID).innerHTML = form["template"];
+    document.getElementById(placeholderId).innerHTML = form["template"];
   } else {
     const error = await response.text();
     document.write(error);
   }
 }
 
-function removeInnerHtmlFromPlaceholder(placeholderID) {
-  let placeholder = document.getElementById(placeholderID);
-  placeholder.innerHTML = "";
+function removeInnerHtmlFromPlaceholder(placeholderId) {
+  document.getElementById(placeholderId).innerHTML = "";
 }
 
 function collectSelection(placeholder) {
