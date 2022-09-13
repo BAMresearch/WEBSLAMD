@@ -4,13 +4,13 @@ let nameIsEmpty = true;
  * When changing the base material type, we dynamically replace the multiselect input field. As a consequence, the change event
  * related to choosing from this selection must be reattached to it. Further, for consistency, former min-max fields are reset
  */
-async function selectBaseMaterialType() {
+async function selectBaseMaterialType(event) {
   removeInnerHtmlFromPlaceholder("min-max-placeholder");
   removeInnerHtmlFromPlaceholder("blending-ratio-placeholder");
   document.getElementById("change-base-material-selection-button").disabled = true;
 
-  const elem = document.getElementById("base_type");
-  const url = `${BLENDED_MATERIALS_URL}/${elem.value.toLowerCase()}`;
+  const baseType = event.target.value;
+  const url = `${BLENDED_MATERIALS_URL}/${baseType.toLowerCase()}`;
   await fetchDataAndEmbedTemplateInPlaceholder(url, "base-material-selection-placeholder");
 
   document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);

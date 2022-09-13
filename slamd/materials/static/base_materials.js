@@ -1,9 +1,9 @@
 const WARNING_MAX_ADDITIONAL_PROPERTIES = '<p class="text-warning">You may define up to 10 additional properties</p>';
 const MAX_ADDITIONAL_PROPERTIES = 10;
 
-async function selectMaterialType() {
-  const elem = document.getElementById("material_type");
-  const url = `${BASE_MATERIALS_URL}/${elem.value.toLowerCase()}`;
+async function selectMaterialType(event) {
+  const materialType = event.target.value;
+  const url = `${BASE_MATERIALS_URL}/${materialType.toLowerCase()}`;
   await fetchDataAndEmbedTemplateInPlaceholder(url, "material-type-form-placeholder");
   document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty);
   document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty);
