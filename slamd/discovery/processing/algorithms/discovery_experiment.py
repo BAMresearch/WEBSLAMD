@@ -29,9 +29,9 @@ class DiscoveryExperiment:
         self.features = features
 
         # Partition the dataframe in three parts: features, targets and fixed targets
-        self.features_df = dataframe[features]
-        self.target_df = dataframe[targets]
-        self.fixed_target_df = dataframe[fixed_targets]
+        self.features_df = dataframe[features].copy()
+        self.target_df = dataframe[targets].copy()
+        self.fixed_target_df = dataframe[fixed_targets].copy()
 
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
@@ -94,7 +94,7 @@ class DiscoveryExperiment:
         if len(non_numeric_features) > 0:
             encoder = OrdinalEncoder()
             for feature in non_numeric_features:
-                self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
+                self.features_df[feature] = encoder.fit_transform(self.features_df[[feature]])
         self.features_df = self.features_df.dropna(axis=1)
 
     def normalize_data(self):
