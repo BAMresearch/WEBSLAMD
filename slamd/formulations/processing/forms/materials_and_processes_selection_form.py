@@ -46,7 +46,7 @@ class MaterialsAndProcessesSelectionForm(Form):
     )
 
     dataset_name = StringField(
-        label='1.8 - Name of the dataset *',
+        label='1.8 - Name of the dataset',
         validators=[validators.DataRequired(message='Dataset name cannot be empty')]
     )
 
