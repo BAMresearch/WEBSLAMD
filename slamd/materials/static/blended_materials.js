@@ -54,9 +54,9 @@ function toggleConfirmationButton() {
   document.getElementById("change-base-material-selection-button").disabled = count < 2;
 }
 
-function checkNameIsNotEmpty() {
-  let nameField = document.getElementById("blended_material_name");
-  nameIsEmpty = nameField.value === undefined || nameField.value === "";
+function checkNameIsNotEmpty(event) {
+  const blendedMaterialName = event.target.value;
+  nameIsEmpty = blendedMaterialName === undefined || blendedMaterialName === "";
   document.getElementById("submit").disabled = nameIsEmpty || !allRatioFieldsHaveValidInput;
 }
 
@@ -66,7 +66,7 @@ async function deleteMaterial(id, material_type) {
 
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-blended").setAttribute("class", "nav-link active");
+  document.getElementById("blended_material_name").addEventListener("keyup", checkNameIsNotEmpty);
   document.getElementById("base_type").addEventListener("change", selectBaseMaterialType);
   document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
-  document.getElementById("blended_material_name").addEventListener("change", checkNameIsNotEmpty);
 });
