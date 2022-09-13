@@ -111,7 +111,9 @@ class DiscoveryExperiment:
     def decide_max_or_min(self, columns, max_or_min):
         # Multiply the column by -1 if it needs to be minimized
         for (column, value) in zip(columns, max_or_min):
-            if value == 'minimize':
+            if value not in ['min', 'max']:
+                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+            if value == 'min':
                 self.fixed_target_df[column] *= (-1)
 
     def fit_model(self):
