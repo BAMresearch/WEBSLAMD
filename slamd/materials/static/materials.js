@@ -5,6 +5,11 @@
 const BASE_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/base`;
 const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/blended`;
 
+function toggleSubmitButtonIfInputFieldEmpty(event) {
+  const value = event.target.value;
+  document.getElementById("submit").disabled = value === undefined || value === "";
+}
+
 /**
  * The id parameter corresponds to the id of the HTML <button> element. It is specified in materials_table.html
  * For consistency, it is constructed from a part describing the action, here 'delete_material_button' and a uuid
