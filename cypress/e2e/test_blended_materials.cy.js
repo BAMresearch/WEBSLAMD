@@ -26,7 +26,7 @@ describe("Test blending powders and blended material deletion", () => {
     cy.findByLabelText("1 - Name *").type("Example Blended Powder").should("have.value", "Example Blended Powder");
     cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
     cy.findByLabelText("3 - Base materials *").select(["Example Powder 1", "Example Powder 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -92,7 +92,7 @@ describe("Test blending liquids and property interpolation", () => {
     cy.findByLabelText("1 - Name *").type("Example Blended Liquid").should("have.value", "Example Blended Liquid");
     cy.findByLabelText("2 - Material type *").select("Liquid").should("have.value", "Liquid");
     cy.findByLabelText("3 - Base materials *").select(["Example Liquid 1", "Example Liquid 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -201,7 +201,7 @@ describe("Test blending aggregates and incomplete data", () => {
       .should("have.value", "Example Blended Aggregates");
     cy.findByLabelText("2 - Material type *").select("Aggregates").should("have.value", "Aggregates");
     cy.findByLabelText("3 - Base materials *").select(["Example Aggregates 1", "Example Aggregates 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -254,7 +254,7 @@ describe("Test blending three custom materials with properties with negative val
     cy.findByLabelText("1 - Name *").type("Example Blended Custom").should("have.value", "Example Blended Custom");
     cy.findByLabelText("2 - Material type *").select("Custom").should("have.value", "Custom");
     cy.findByLabelText("3 - Base materials *").select(["Example Custom 1", "Example Custom 2", "Example Custom 3"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -330,7 +330,7 @@ describe("Test blending three admixtures with properties with negative values", 
       "Example Admixture 2",
       "Example Admixture 3",
     ]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -398,7 +398,7 @@ describe("Test autocorrect features", () => {
     cy.findByLabelText("1 - Name *").type("Example Blended Powder").should("have.value", "Example Blended Powder");
     cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
     cy.findByLabelText("3 - Base materials *").select(["Example Powder 1", "Example Powder 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
