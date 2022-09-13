@@ -1,5 +1,3 @@
-{% from 'show_form_field_errors.html' import show_form_field_errors -%}
-
 <form action="" method="post" novalidate>
     <div class="row g-3 mb-3">
         <div class="col-12 col-md-4">
@@ -34,8 +32,5 @@
             disabled>
             Run experiment with given configuration
         </button>
-        {{ show_form_field_errors(discovery_form.materials_data_input) }}
-        {{ show_form_field_errors(discovery_form.target_properties) }}
-        {{ show_form_field_errors(discovery_form.model) }}
     </div>
 </form>
