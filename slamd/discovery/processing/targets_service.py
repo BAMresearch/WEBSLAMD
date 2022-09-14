@@ -9,11 +9,6 @@ from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.target_page_data import TargetPageData
 
-"""
-In order to identify target rows, we add a prefix to the column name before saving.
-In our views, however, we show the names without prefixes.
-"""
-
 
 class TargetsService:
 
