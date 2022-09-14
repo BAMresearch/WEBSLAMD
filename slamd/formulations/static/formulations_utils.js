@@ -28,7 +28,7 @@ function collectSelectionForFormulations(placeholder) {
   return Array.from(placeholder.children)
     .filter((option) => option.selected)
     .map((option) => {
-      let typeAndUuid = option.value.split("|");
+      const typeAndUuid = option.value.split("|");
       const type = typeAndUuid[0];
       const uuid = typeAndUuid[1];
       return {
@@ -44,10 +44,10 @@ function updateWZRatio(fieldName, independentInputFields) {
     .filter((item) => item[fieldName].name === "Powder")
     .map((item) => parseFloat(item[fieldName].value))[0];
 
-  let liquid = independentInputFields.filter((item) => item[fieldName].name === "Liquid")[0];
+  const liquid = independentInputFields.filter((item) => item[fieldName].name === "Liquid")[0];
   const liquidWeight = liquid[fieldName].value;
 
-  let wcRatio = "Not available; you need to set the weight of the powders and liquids.";
+  const wcRatio = "Not available; you need to set the weight of the powders and liquids.";
   if (liquidWeight && powderWeight) {
     wcRatio = (liquidWeight / powderWeight).toFixed(2);
   }
@@ -56,7 +56,7 @@ function updateWZRatio(fieldName, independentInputFields) {
 
 function addListenersToIndependentFields() {
   const independentInputFields = collectInputFields();
-  for (let item of independentInputFields) {
+  for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
       computeDependentValue("min", item.min, independentInputFields);
       updateWZRatio("min", independentInputFields);
@@ -79,9 +79,9 @@ function addListenersToIndependentFields() {
 }
 
 function toggleConfirmationFormulationsButtons(inputFields) {
-  let allIncrementsFilled = inputFields.filter((item) => item["increment"].value === "").length === 0;
-  let allMinFilled = inputFields.filter((item) => item["min"].value === "").length === 0;
-  let allMaxFilled = inputFields.filter((item) => item["max"].value === "").length === 0;
+  const allIncrementsFilled = inputFields.filter((item) => item["increment"].value === "").length === 0;
+  const allMinFilled = inputFields.filter((item) => item["min"].value === "").length === 0;
+  const allMaxFilled = inputFields.filter((item) => item["max"].value === "").length === 0;
   document.getElementById("confirm_formulations_configuration_button").disabled = !(
     allIncrementsFilled &&
     allMinFilled &&
@@ -100,11 +100,11 @@ function collectInputFields(only_independent = true) {
     numberOfIndependentRows += 1;
   }
 
-  let inputFields = [];
+  const inputFields = [];
   for (let i = 0; i < numberOfIndependentRows; i++) {
-    let min = document.getElementById(`materials_min_max_entries-${i}-min`);
-    let max = document.getElementById(`materials_min_max_entries-${i}-max`);
-    let increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+    const min = document.getElementById(`materials_min_max_entries-${i}-min`);
+    const max = document.getElementById(`materials_min_max_entries-${i}-max`);
+    const increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
     inputFields.push({
       min: min,
       max: max,
@@ -117,13 +117,13 @@ function collectInputFields(only_independent = true) {
 function collectFormulationsMinMaxRequestData() {
   const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-  let rowData = [];
+  const rowData = [];
   for (let i = 0; i <= numberOfIndependentRows; i++) {
-    let uuid = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
-    let type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
-    let min = document.getElementById(`materials_min_max_entries-${i}-min`);
-    let max = document.getElementById(`materials_min_max_entries-${i}-max`);
-    let increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+    const uuid = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
+    const type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
+    const min = document.getElementById(`materials_min_max_entries-${i}-min`);
+    const max = document.getElementById(`materials_min_max_entries-${i}-max`);
+    const increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
     rowData.push({
       uuid: uuid.value,
       type: type.value,
@@ -142,7 +142,7 @@ function collectFormulationsMinMaxRequestData() {
 function collectProcessesRequestData() {
   const numberOfIndependentRows = document.querySelectorAll('[id^="non_editable_entries-"]').length / 2;
 
-  let rowData = [];
+  const rowData = [];
   for (let i = 0; i < numberOfIndependentRows; i++) {
     const uuid = document.getElementById(`non_editable_entries-${i}-uuid_field`).value;
     rowData.push({
@@ -157,10 +157,10 @@ function collectProcessesRequestData() {
 function collectMaterialRequestData() {
   const numberOfMaterialsRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-  let rowData = [];
+  const rowData = [];
   for (let i = 0; i <= numberOfMaterialsRows; i++) {
-    let uuids = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
-    let type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
+    const uuids = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
+    const type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
     rowData.push({
       uuids: uuids.value,
       type: type.value,
@@ -172,10 +172,10 @@ function collectMaterialRequestData() {
 }
 
 function collectWeights() {
-  let weightFields = document.querySelectorAll('[id^="all_weights_entries-"]');
+  const weightFields = document.querySelectorAll('[id^="all_weights_entries-"]');
 
-  let weightData = [];
-  for (let weightField of weightFields) {
+  const weightData = [];
+  for (const weightField of weightFields) {
     weightData.push(weightField.value);
   }
   return {
@@ -184,7 +184,7 @@ function collectWeights() {
 }
 
 function computeDependentValue(inputFieldName, currentInputField, independentMinMaxInputFields) {
-  let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField);
+  const sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField);
 
   const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
   if (unfilledFields.length === 0) {
@@ -198,7 +198,7 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
   correctInputFieldValue(currentInputField, 0);
 
-  let sumOfIndependentFields = independentMinMaxInputFields
+  const sumOfIndependentFields = independentMinMaxInputFields
     .filter((item) => item[inputFieldName].value !== "")
     .map((item) => parseFloat(item[inputFieldName].value))
     .reduce((x, y) => x + y, 0);
@@ -219,9 +219,9 @@ function assignKeyboardEventsToWeightForm(initialCreationOfForm = false) {
 }
 
 function toggleSubmitButtonBasedOnWeights() {
-  let weightFields = collectWeightFields();
-  let numberOfMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-  for (let weightInput of weightFields) {
+  const weightFields = collectWeightFields();
+  const numberOfMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+  for (const weightInput of weightFields) {
     weightInput.addEventListener("keyup", () => {
       toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields);
     });
@@ -231,17 +231,17 @@ function toggleSubmitButtonBasedOnWeights() {
 function collectWeightFields() {
   const numberOfWeightFields = document.querySelectorAll('[id$="-weights"]').length;
 
-  let weightFields = [];
+  const weightFields = [];
   for (let i = 0; i < numberOfWeightFields; i++) {
-    let weights = document.getElementById(`all_weights_entries-${i}-weights`);
+    const weights = document.getElementById(`all_weights_entries-${i}-weights`);
     weightFields.push(weights);
   }
   return weightFields;
 }
 
 function toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields) {
-  let regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfMaterials + "}$");
-  let nonMatchingInputs = weightFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
+  const regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfMaterials + "}$");
+  const nonMatchingInputs = weightFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
   allWeightFieldsHaveValidInput = nonMatchingInputs <= 0;
   document.getElementById("create_formulations_batch_button").disabled = !allWeightFieldsHaveValidInput;
 }

@@ -16,8 +16,8 @@ function collectAdditionalProperties(newPropIndex) {
   }
 
   for (let i = 0; i < newPropIndex; i++) {
-    let name = document.getElementById(`additional_properties-${i}-property_name`).value;
-    let value = document.getElementById(`additional_properties-${i}-property_value`).value;
+    const name = document.getElementById(`additional_properties-${i}-property_name`).value;
+    const value = document.getElementById(`additional_properties-${i}-property_value`).value;
     usersInputs.push({
       property_name: name,
       property_value: value,

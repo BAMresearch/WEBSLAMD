@@ -87,10 +87,10 @@ function assignCreateFormulationsBatchEvent() {
 }
 
 function assignDeleteWeightEvent() {
-  let numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
+  const numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
 
   for (let i = 0; i < numberOfWeightEntries; i++) {
-    let deleteButton = document.getElementById(`delete_weight_button___${i}`);
+    const deleteButton = document.getElementById(`delete_weight_button___${i}`);
     deleteButton.addEventListener("click", () => {
       document.getElementById(`all_weights_entries-${i}-weights`).remove();
       deleteButton.remove();
