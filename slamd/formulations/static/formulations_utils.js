@@ -198,7 +198,7 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
   correctInputFieldValue(currentInputField, 0);
 
-  const sumOfIndependentFields = independentMinMaxInputFields
+  let sumOfIndependentFields = independentMinMaxInputFields
     .filter((item) => item[inputFieldName].value !== "")
     .map((item) => parseFloat(item[inputFieldName].value))
     .reduce((x, y) => x + y, 0);
