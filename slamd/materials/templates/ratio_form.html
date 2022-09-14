@@ -7,9 +7,9 @@
         Note that also decimals with up to two decimal places are allowed.
     </div>
 </div>
-<!--Custom ratio fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
-<!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
-<div class="row g-3 mb-3 align-items-end">
+<!-- Custom ratio fields can be dynamically added through the assignAddCustomBlendEvent function in JS -->
+<!-- Note that this assumes a specific structure of the DOM. Keep in mind to update the JS function accordingly, if you make changes here.-->
+<div id="ratio-entries" class="row g-3 mb-3 align-items-end">
     {% for entry in ratio_form.all_ratio_entries %}
     <div class="col-3">
         {{ entry.ratio(class_="form-control") }}

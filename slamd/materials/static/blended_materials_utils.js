@@ -133,28 +133,28 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 /**
- * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
- * requires a certain structure of DOM elements within the blending-ratio-placeholder. Thus, when changing this function always
- * check the corresponding HTML DOM structure and vice versa.
+ * After adding a new field we need to reassign the ratio events as new input fields must be registered.
+ * Note that this functionality requires a certain structure of DOM elements within the ratio-entries div tag.
+ * Thus, when changing this function always check the corresponding HTML DOM structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
-  const placeholder = document.getElementById("blending-ratio-placeholder");
+  const ratioEntries = document.getElementById("ratio-entries");
   const button = document.getElementById("add-custom-blend-button");
   enableTooltip(button);
 
   button.addEventListener("click", () => {
-    const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
-    let div = document.createElement("div");
-    div.className = "col-md-3";
+    const numberOfRatioFields = ratioEntries.childElementCount;
+    const div = document.createElement("div");
+    div.className = "col-3";
 
-    let input = document.createElement("input");
-    input.id = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
-    input.name = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
+    const input = document.createElement("input");
+    input.id = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+    input.name = `all_ratio_entries-${numberOfRatioFields}-ratio`;
     input.type = "text";
     input.className = "form-control";
     div.appendChild(input);
 
-    placeholder.insertBefore(div, button);
+    ratioEntries.appendChild(div);
 
     allRatioFieldsHaveValidInput = false;
     document.getElementById("submit").disabled = true;
