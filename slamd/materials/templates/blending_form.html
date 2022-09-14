@@ -1,18 +1,21 @@
 {% from 'action_buttons.html' import create_change_selection_button -%}
 
 <h3>Blended base materials</h3>
-<form class="row g-3" action="" method="post" novalidate>
+<form action="" method="post" novalidate>
     {{ blending_name_and_type_form.csrf_token }}
-    <div class="col-md-6">
-        {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
-        {{ blending_name_and_type_form.blended_material_name(class_="form-control", placeholder="Cannot be empty") }}
-    </div>
-    <div class="col-md-6">
-        {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
-        {{ blending_name_and_type_form.base_type(class_="form-control form-select") }}
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
+            {{ blending_name_and_type_form.blended_material_name(class_="form-control", placeholder="Cannot be empty")
+            }}
+        </div>
+        <div class="col-md-6">
+            {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
+            {{ blending_name_and_type_form.base_type(class_="form-control form-select") }}
+        </div>
     </div>
 
-    <div id="base-material-selection-placeholder" class="row g-3 mb-3 align-items-end">
+    <div id="base-material-selection-placeholder">
         {% include 'base_material_selection.html' %}
     </div>
 
@@ -20,18 +23,14 @@
     "confirm_base_material_selection_button",
     "Select at least two base materials") }}
 
-    <div class="justify-content-center">
-        <div id="min-max-placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
-    </div>
+    <div id="min-max-placeholder"></div>
 
-    <div class="justify-content-center">
-        <div id="blending-ratio-placeholder" class="row g-3 mb-3 align-items-end w-95"></div>
-    </div>
+    <div id="blending-ratio-placeholder"></div>
 
     <div class="form-group mb-12">
         <div class="col-sm-offset-2 col-sm-12" id="submit-bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
             title="For enabling submission please specify a name and configure a valid configuration.">
-            {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12", data_bs_toggle="modal",
+            {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12 mb-3", data_bs_toggle="modal",
             data_bs_target="#submit-blending-modal", disabled=True) }}
         </div>
     </div>

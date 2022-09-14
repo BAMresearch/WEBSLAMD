@@ -9,16 +9,18 @@
 </div>
 <!--Custom ratio fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
 <!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
-{% for entry in ratio_form.all_ratio_entries %}
-<div class="col-md-3">
-    {{ entry.ratio(class_="form-control") }}
+<div class="row g-3 mb-3 align-items-end">
+    {% for entry in ratio_form.all_ratio_entries %}
+    <div class="col-3">
+        {{ entry.ratio(class_="form-control") }}
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
-<button class="btn btn-secondary col-12" type="button" id="add-custom-blend-button" data-bs-toggle="tooltip"
+<button class="btn btn-secondary col-12 mb-3" type="button" id="add-custom-blend-button" data-bs-toggle="tooltip"
     data-bs-placement="bottom" title="Add additional blend configurations manually">
     Add blending ratio
 </button>
-<button class="btn btn-danger col-12" type="button" id="delete-custom-blend-button" data-bs-toggle="tooltip"
+<button class="btn btn-danger col-12 mb-3" type="button" id="delete-custom-blend-button" data-bs-toggle="tooltip"
     data-bs-placement="bottom" title="Delete the last blending ratio field">
     Delete blending ratio
 </button>

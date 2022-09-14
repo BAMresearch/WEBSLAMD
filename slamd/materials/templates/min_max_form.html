@@ -13,24 +13,26 @@
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
-<div class="col-md-3">
-    {{ entry.blended_material_name.label(class_="control-label") }}
-    {{ entry.blended_material_name(class_="form-control", disabled=True) }}
-</div>
-<div class="col-md-3">
-    {{ entry.increment.label(class_="control-label") }}
-    {{ entry.increment(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.min.label(class_="control-label") }}
-    {{ entry.min(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.max.label(class_="control-label") }}
-    {{ entry.max(class_="form-control") }}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ entry.blended_material_name.label(class_="control-label") }}
+        {{ entry.blended_material_name(class_="form-control", disabled=True) }}
+    </div>
+    <div class="col-3">
+        {{ entry.increment.label(class_="control-label") }}
+        {{ entry.increment(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.min.label(class_="control-label") }}
+        {{ entry.min(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.max.label(class_="control-label") }}
+        {{ entry.max(class_="form-control") }}
+    </div>
 </div>
 {% endfor %}
-<button class="btn btn-success col-12" type="button" id="confirm-blending-configuration-button" data-bs-toggle="tooltip"
-    data-bs-placement="bottom" title="Fill in all editable fields" disabled>
+<button class="btn btn-success col-12 mb-3" type="button" id="confirm-blending-configuration-button"
+    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fill in all editable fields" disabled>
     5 - Preview blending ratios
 </button>
