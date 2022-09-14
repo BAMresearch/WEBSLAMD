@@ -10,8 +10,8 @@ async function addTarget() {
 }
 
 function toggleShowHideDataframe() {
-  const dataframeTable = document.getElementById("formulations_dataframe");
-  dataframeTable.classList.toggle("df-collapsed");
+  const dataframeTable = document.getElementById("dataframe-container");
+  dataframeTable.style.display = dataframeTable.style.display === "none" ? "block" : "none";
 }
 
 function toggleAddTargetButton() {

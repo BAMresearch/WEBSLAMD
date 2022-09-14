@@ -14,7 +14,9 @@ class BaseMaterialService(MaterialsService):
 
     @classmethod
     def create_material_form(cls, type):
-        return MaterialFactory.create_material_form(type=type)
+        form = MaterialFactory.create_material_form(type=type)
+        form.submit.render_kw = {'disabled': 'disabled'}
+        return form
 
     @classmethod
     def create_additional_property_form(cls, additional_property_entries):

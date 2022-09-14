@@ -5,12 +5,12 @@ describe("Test blending materials page", () => {
 
   it("Material types are listed correctly", () => {
     cy.findByText("Powder").should("exist");
-    cy.findByLabelText("2 - Material type").select("Powder").should("have.value", "Powder");
-    cy.findByLabelText("2 - Material type").select("Liquid").should("have.value", "Liquid");
-    cy.findByLabelText("2 - Material type").select("Aggregates").should("have.value", "Aggregates");
-    cy.findByLabelText("2 - Material type").select("Admixture").should("have.value", "Admixture");
-    cy.findByLabelText("2 - Material type").select("Custom").should("have.value", "Custom");
-    cy.findByLabelText("2 - Material type").select("Powder").should("have.value", "Powder");
+    cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
+    cy.findByLabelText("2 - Material type *").select("Liquid").should("have.value", "Liquid");
+    cy.findByLabelText("2 - Material type *").select("Aggregates").should("have.value", "Aggregates");
+    cy.findByLabelText("2 - Material type *").select("Admixture").should("have.value", "Admixture");
+    cy.findByLabelText("2 - Material type *").select("Custom").should("have.value", "Custom");
+    cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
   });
 });
 
@@ -23,10 +23,10 @@ describe("Test blending powders and blended material deletion", () => {
   });
 
   it("Create blended powder", () => {
-    cy.findByLabelText("1 - Name").type("Example Blended Powder").should("have.value", "Example Blended Powder");
-    cy.findByLabelText("2 - Material type").select("Powder").should("have.value", "Powder");
-    cy.findByLabelText("3 - Base materials").select(["Example Powder 1", "Example Powder 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByLabelText("1 - Name *").type("Example Blended Powder").should("have.value", "Example Blended Powder");
+    cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
+    cy.findByLabelText("3 - Base materials *").select(["Example Powder 1", "Example Powder 2"]);
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -83,16 +83,16 @@ describe("Test blending liquids and property interpolation", () => {
   beforeEach(() => {
     cy.createExampleLiquids();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByLabelText("2 - Material type").select("Liquid").should("have.value", "Liquid");
+    cy.findByLabelText("2 - Material type *").select("Liquid").should("have.value", "Liquid");
     cy.findByText("Example Liquid 1").should("exist");
     cy.findByText("Example Liquid 2").should("exist");
   });
 
   it("Create blended liquid", () => {
-    cy.findByLabelText("1 - Name").type("Example Blended Liquid").should("have.value", "Example Blended Liquid");
-    cy.findByLabelText("2 - Material type").select("Liquid").should("have.value", "Liquid");
-    cy.findByLabelText("3 - Base materials").select(["Example Liquid 1", "Example Liquid 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByLabelText("1 - Name *").type("Example Blended Liquid").should("have.value", "Example Blended Liquid");
+    cy.findByLabelText("2 - Material type *").select("Liquid").should("have.value", "Liquid");
+    cy.findByLabelText("3 - Base materials *").select(["Example Liquid 1", "Example Liquid 2"]);
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -190,18 +190,18 @@ describe("Test blending aggregates and incomplete data", () => {
   beforeEach(() => {
     cy.createExampleAggregates();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByLabelText("2 - Material type").select("Aggregates").should("have.value", "Aggregates");
+    cy.findByLabelText("2 - Material type *").select("Aggregates").should("have.value", "Aggregates");
     cy.findByText("Example Aggregates 1").should("exist");
     cy.findByText("Example Aggregates 2").should("exist");
   });
 
   it("Create blended aggregates with additional properties", () => {
-    cy.findByLabelText("1 - Name")
+    cy.findByLabelText("1 - Name *")
       .type("Example Blended Aggregates")
       .should("have.value", "Example Blended Aggregates");
-    cy.findByLabelText("2 - Material type").select("Aggregates").should("have.value", "Aggregates");
-    cy.findByLabelText("3 - Base materials").select(["Example Aggregates 1", "Example Aggregates 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByLabelText("2 - Material type *").select("Aggregates").should("have.value", "Aggregates");
+    cy.findByLabelText("3 - Base materials *").select(["Example Aggregates 1", "Example Aggregates 2"]);
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -244,17 +244,17 @@ describe("Test blending three custom materials with properties with negative val
   beforeEach(() => {
     cy.createExampleCustomMaterials();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByLabelText("2 - Material type").select("Custom").should("have.value", "Custom");
+    cy.findByLabelText("2 - Material type *").select("Custom").should("have.value", "Custom");
     cy.findByText("Example Custom 1").should("exist");
     cy.findByText("Example Custom 2").should("exist");
     cy.findByText("Example Custom 3").should("exist");
   });
 
   it("Create blend from three custom materials", () => {
-    cy.findByLabelText("1 - Name").type("Example Blended Custom").should("have.value", "Example Blended Custom");
-    cy.findByLabelText("2 - Material type").select("Custom").should("have.value", "Custom");
-    cy.findByLabelText("3 - Base materials").select(["Example Custom 1", "Example Custom 2", "Example Custom 3"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByLabelText("1 - Name *").type("Example Blended Custom").should("have.value", "Example Blended Custom");
+    cy.findByLabelText("2 - Material type *").select("Custom").should("have.value", "Custom");
+    cy.findByLabelText("3 - Base materials *").select(["Example Custom 1", "Example Custom 2", "Example Custom 3"]);
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -314,21 +314,23 @@ describe("Test blending three admixtures with properties with negative values", 
   beforeEach(() => {
     cy.createExampleAdmixtures();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByLabelText("2 - Material type").select("Admixture").should("have.value", "Admixture");
+    cy.findByLabelText("2 - Material type *").select("Admixture").should("have.value", "Admixture");
     cy.findByText("Example Admixture 1").should("exist");
     cy.findByText("Example Admixture 2").should("exist");
     cy.findByText("Example Admixture 3").should("exist");
   });
 
   it("Create blend from three admixtures", () => {
-    cy.findByLabelText("1 - Name").type("Example Blended Admixture").should("have.value", "Example Blended Admixture");
-    cy.findByLabelText("2 - Material type").select("Admixture").should("have.value", "Admixture");
-    cy.findByLabelText("3 - Base materials").select([
+    cy.findByLabelText("1 - Name *")
+      .type("Example Blended Admixture")
+      .should("have.value", "Example Blended Admixture");
+    cy.findByLabelText("2 - Material type *").select("Admixture").should("have.value", "Admixture");
+    cy.findByLabelText("3 - Base materials *").select([
       "Example Admixture 1",
       "Example Admixture 2",
       "Example Admixture 3",
     ]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
@@ -393,10 +395,10 @@ describe("Test autocorrect features", () => {
   });
 
   it("Increment, min and max fields are corrected automatically", () => {
-    cy.findByLabelText("1 - Name").type("Example Blended Powder").should("have.value", "Example Blended Powder");
-    cy.findByLabelText("2 - Material type").select("Powder").should("have.value", "Powder");
-    cy.findByLabelText("3 - Base materials").select(["Example Powder 1", "Example Powder 2"]);
-    cy.findByText("4 - Confirm Selection").click();
+    cy.findByLabelText("1 - Name *").type("Example Blended Powder").should("have.value", "Example Blended Powder");
+    cy.findByLabelText("2 - Material type *").select("Powder").should("have.value", "Powder");
+    cy.findByLabelText("3 - Base materials *").select(["Example Powder 1", "Example Powder 2"]);
+    cy.findByText("4 - Configure blending ratios").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");

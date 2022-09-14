@@ -9,13 +9,13 @@ from slamd.materials.processing.forms.additional_property_form import Additional
 class MaterialsForm(Form):
 
     material_name = StringField(
-        label='1 - Name',
+        label='1 - Name *',
         validators=[validators.DataRequired(message='Material name cannot be empty')]
     )
 
     material_type = SelectField(
-        label='2 - Material type / Process',
-        validators=[validators.DataRequired()],
+        label='2 - Material type / Process *',
+        validators=[validators.DataRequired(message='Material type cannot be empty')],
         choices=['Powder', 'Liquid', 'Aggregates',
                  'Admixture', 'Process', 'Custom']
     )

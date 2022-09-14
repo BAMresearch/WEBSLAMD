@@ -1,5 +1,7 @@
 const ACTION_BUTTON_DELIMITER = "___";
 const MORE_THAN_TWO_DECIMAL_PLACES = /^\d*[.,]\d{3,}$/;
+const SPINNER =
+  '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
 
 function roundInputFieldValueToTwoDecimalPlaces(inputFieldElem) {
   if (MORE_THAN_TWO_DECIMAL_PLACES.test(inputFieldElem.value)) {
@@ -38,14 +40,14 @@ function countSelectedOptionsMultipleSelectField(elem) {
   return 0;
 }
 
-async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append = false) {
+async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderId, append = false) {
   const response = await fetch(url);
   if (response.ok) {
     const form = await response.json();
     if (append) {
-      document.getElementById(placeholderID).innerHTML += form["template"];
+      document.getElementById(placeholderId).innerHTML += form["template"];
     } else {
-      document.getElementById(placeholderID).innerHTML = form["template"];
+      document.getElementById(placeholderId).innerHTML = form["template"];
     }
   } else {
     const error = await response.text();
@@ -53,7 +55,7 @@ async function fetchDataAndEmbedTemplateInPlaceholder(url, placeholderID, append
   }
 }
 
-async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
+async function postDataAndEmbedTemplateInPlaceholder(url, placeholderId, body) {
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "POST",
@@ -64,14 +66,14 @@ async function postDataAndEmbedTemplateInPlaceholder(url, placeholderID, body) {
   });
   if (response.ok) {
     const form = await response.json();
-    document.getElementById(placeholderID).innerHTML = form["template"];
+    document.getElementById(placeholderId).innerHTML = form["template"];
   } else {
     const error = await response.text();
     document.write(error);
   }
 }
 
-async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderID) {
+async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderId) {
   const token = document.getElementById("csrf_token").value;
   const response = await fetch(url, {
     method: "DELETE",
@@ -81,16 +83,27 @@ async function deleteDataAndEmbedTemplateInPlaceholder(url, placeholderID) {
   });
   if (response.ok) {
     const form = await response.json();
-    document.getElementById(placeholderID).innerHTML = form["template"];
+    document.getElementById(placeholderId).innerHTML = form["template"];
   } else {
     const error = await response.text();
     document.write(error);
   }
 }
 
-function removeInnerHtmlFromPlaceholder(placeholderID) {
-  let placeholder = document.getElementById(placeholderID);
-  placeholder.innerHTML = "";
+function removeInnerHtmlFromPlaceholder(placeholderId) {
+  document.getElementById(placeholderId).innerHTML = "";
+}
+
+function insertSpinnerInPlaceholder(placeholderId, append = false) {
+  if (append) {
+    document.getElementById(placeholderId).innerHTML += SPINNER;
+  } else {
+    document.getElementById(placeholderId).innerHTML = SPINNER;
+  }
+}
+
+function removeSpinnerInPlaceholder(placeholderId) {
+  document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
 }
 
 function collectSelection(placeholder) {

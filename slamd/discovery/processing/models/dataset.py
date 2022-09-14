@@ -1,23 +1,13 @@
 from pandas import DataFrame
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class Dataset:
     name: str = None
-    target_columns: list[str] = None
+    target_columns: list[str] = field(default_factory=lambda: [])
     dataframe: DataFrame = None
 
     @property
     def columns(self):
         return list(self.dataframe.columns)
-
-    @property
-    def targets(self):
-        return self.target_columns if self.target_columns else []
-
-    def add_target(self, target_name):
-        if self.target_columns:
-            self.target_columns.append(target_name)
-        else:
-            self.target_columns = [target_name]

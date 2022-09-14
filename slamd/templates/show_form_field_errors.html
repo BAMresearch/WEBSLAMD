@@ -1,0 +1,9 @@
+{% macro show_form_field_errors(field_name) -%}
+{% if field_name.errors %}
+{% for error in field_name.errors %}
+<div class="alert alert-danger text-center" role="alert">
+    {{ error }}
+</div>
+{% endfor %}
+{% endif %}
+{% endmacro %}

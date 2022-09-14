@@ -1,23 +1,26 @@
-{% from 'errors.html' import with_errors -%}
-
-<div class="col-md-12 p-1 border rounded bg-light">
-    In case you want to edit the fields below, follow the pattern number/number/number...
-    N times where N is the number of selected base materials.
-    For example, in case you selected from 3 base materials a valid entry would be 10/20/70.
-    Note that also decimals with up to two decimal places are allowed.
+<div class="col-12 rounded bg-white" role="tooltip">
+    <h3 class="explanation-header">You may edit the configurations by hand</h3>
+    <div class="explanation-body bg-light">
+        In case you want to edit the fields below, follow the pattern number/number/number...
+        N times where N is the number of selected base materials.
+        For example, in case you selected from 3 base materials a valid entry would be 10/20/70.
+        Note that also decimals with up to two decimal places are allowed.
+    </div>
 </div>
-<!--Custom ratio fields can be dynamically added. This is achieved using the assignAddCustomBlendEvent function in javascript.-->
-<!--Note that this assumes a specific structure of the DOM. Therefore keep in mind to update the js function accordingly, if you make changes here.-->
-{% for entry in ratio_form.all_ratio_entries %}
-<div class="col-md-3">
-    {{ entry.ratio(class_="form-control") }}
+<!-- Custom ratio fields can be dynamically added through the assignAddCustomBlendEvent function in JS -->
+<!-- Note that this assumes a specific structure of the DOM. Keep in mind to update the JS function accordingly, if you make changes here.-->
+<div id="ratio-entries" class="row g-3 mb-3 align-items-end">
+    {% for entry in ratio_form.all_ratio_entries %}
+    <div class="col-3">
+        {{ entry.ratio(class_="form-control") }}
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
-<button class="btn btn-secondary col-12" type="button" id="add-custom-blend-button" data-bs-toggle="tooltip"
+<button class="btn btn-secondary col-12 mb-3" type="button" id="add-custom-blend-button" data-bs-toggle="tooltip"
     data-bs-placement="bottom" title="Add additional blend configurations manually">
     Add blending ratio
 </button>
-<button class="btn btn-danger col-12" type="button" id="delete-custom-blend-button" data-bs-toggle="tooltip"
+<button class="btn btn-danger col-12 mb-3" type="button" id="delete-custom-blend-button" data-bs-toggle="tooltip"
     data-bs-placement="bottom" title="Delete the last blending ratio field">
     Delete blending ratio
 </button>

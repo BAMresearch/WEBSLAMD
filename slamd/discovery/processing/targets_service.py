@@ -1,8 +1,5 @@
 import math
-from dataclasses import dataclass
-
 import numpy as np
-from pandas import DataFrame
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
 from slamd.common.slamd_utils import empty, not_numeric, not_empty, float_if_not_empty
@@ -10,11 +7,7 @@ from slamd.discovery.processing.add_targets_dto import TargetDto, DataWithTarget
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.targets_form import TargetsForm
 from slamd.discovery.processing.models.dataset import Dataset
-
-"""
-In order to identify target rows, we add a prefix to the column name before saving. In our views, howeever, we show the
-names without prefixes
-"""
+from slamd.discovery.processing.target_page_data import TargetPageData
 
 
 class TargetsService:
@@ -30,7 +23,7 @@ class TargetsService:
     @classmethod
     def add_target_name(cls, dataset, target_name):
         if empty(target_name):
-            raise ValueNotSupportedException(f'Target name cannot be empty')
+            raise ValueNotSupportedException('Target name cannot be empty')
 
         initial_dataset = DiscoveryPersistence.query_dataset_by_name(dataset)
         if empty(initial_dataset):
@@ -39,10 +32,10 @@ class TargetsService:
         dataframe = initial_dataset.dataframe
 
         if target_name in initial_dataset.columns:
-            raise ValueNotSupportedException('The chosen target name already exists in the dataset.')
+            raise ValueNotSupportedException('The chosen target name already exists in the dataset')
 
         dataframe[target_name] = np.nan
-        initial_dataset.add_target(target_name)
+        initial_dataset.target_columns.append(target_name)
 
         dataset_with_new_target = Dataset(dataset, initial_dataset.target_columns, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
@@ -78,7 +71,7 @@ class TargetsService:
         targets_form.choose_target_field.choices = dataset.columns
 
         all_dtos = cls._create_all_dtos(dataset)
-        return TargetPageData(dataframe, all_dtos, dataset.targets, targets_form)
+        return TargetPageData(dataframe, all_dtos, dataset.target_columns, targets_form)
 
     @classmethod
     def _create_all_dtos(cls, dataset):
@@ -93,8 +86,8 @@ class TargetsService:
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
-            target_columns = dataset.targets
-            for target_name in target_columns:
+
+            for target_name in dataset.target_columns:
                 target_value = dataframe.at[i, target_name]
                 target_value = float_if_not_empty(target_value)
                 if math.isnan(target_value):
@@ -120,20 +113,12 @@ class TargetsService:
             dataframe = dataset.dataframe
 
         for name in names_of_targets_to_be_edited:
-            if name in dataset.targets:
+            if name in dataset.target_columns:
                 dataset.target_columns.remove(name)
             else:
-                dataset.add_target(name)
+                dataset.target_columns.append(name)
 
         dataset_with_new_target = Dataset(dataset_name, dataset.target_columns, dataframe)
         DiscoveryPersistence.save_dataset(dataset_with_new_target)
 
         return cls._create_target_page_data(dataset_with_new_target)
-
-
-@dataclass
-class TargetPageData:
-    dataframe: DataFrame = None
-    all_dtos: list[DataWithTargetsDto] = None
-    target_name_list: list[str] = None
-    targets_form: TargetsForm = None

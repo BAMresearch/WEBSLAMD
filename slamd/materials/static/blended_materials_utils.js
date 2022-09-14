@@ -18,9 +18,9 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
 }
 
 function assignKeyboardEventsToMinMaxForm() {
-  let independentInputFields = collectIndependentInputFields();
+  const independentInputFields = collectIndependentInputFields();
 
-  for (let item of independentInputFields) {
+  for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
       computeDependentValue("min", item.min, independentInputFields);
       toggleConfirmBlendingButton(independentInputFields);
@@ -37,9 +37,9 @@ function assignKeyboardEventsToMinMaxForm() {
 }
 
 function toggleConfirmBlendingButton(independentInputFields) {
-  let allIncrementsFilled = independentInputFields.filter((item) => item["increment"].value === "").length === 0;
-  let allMinFilled = independentInputFields.filter((item) => item["min"].value === "").length === 0;
-  let allMaxFilled = independentInputFields.filter((item) => item["max"].value === "").length === 0;
+  const allIncrementsFilled = independentInputFields.filter((item) => item["increment"].value === "").length === 0;
+  const allMinFilled = independentInputFields.filter((item) => item["min"].value === "").length === 0;
+  const allMaxFilled = independentInputFields.filter((item) => item["max"].value === "").length === 0;
   document.getElementById("confirm-blending-configuration-button").disabled = !(
     allIncrementsFilled &&
     allMinFilled &&
@@ -59,9 +59,9 @@ function assignKeyboardEventsToRatiosForm(initialCreationOfForm = false) {
 function collectRatioFields() {
   const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length;
 
-  let ratioInputFields = [];
+  const ratioInputFields = [];
   for (let i = 0; i < numberOfRatioFields; i++) {
-    let ratio = document.getElementById(`all_ratio_entries-${i}-ratio`);
+    const ratio = document.getElementById(`all_ratio_entries-${i}-ratio`);
     ratioInputFields.push(ratio);
   }
   return ratioInputFields;
@@ -75,11 +75,11 @@ function collectRatioFields() {
 function collectIndependentInputFields() {
   const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-  let independentInputFields = [];
+  const independentInputFields = [];
   for (let i = 0; i < numberOfIndependentRows; i++) {
-    let min = document.getElementById(`all_min_max_entries-${i}-min`);
-    let max = document.getElementById(`all_min_max_entries-${i}-max`);
-    let increment = document.getElementById(`all_min_max_entries-${i}-increment`);
+    const min = document.getElementById(`all_min_max_entries-${i}-min`);
+    const max = document.getElementById(`all_min_max_entries-${i}-max`);
+    const increment = document.getElementById(`all_min_max_entries-${i}-increment`);
     independentInputFields.push({
       min: min,
       max: max,
@@ -92,11 +92,11 @@ function collectIndependentInputFields() {
 function collectMinMaxValuesWithIncrements() {
   const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
-  let minMaxValuesWithIncrements = [];
+  const minMaxValuesWithIncrements = [];
   for (let i = 0; i <= numberOfIndependentRows; i++) {
-    let min = document.getElementById(`all_min_max_entries-${i}-min`);
-    let max = document.getElementById(`all_min_max_entries-${i}-max`);
-    let increment = document.getElementById(`all_min_max_entries-${i}-increment`);
+    const min = document.getElementById(`all_min_max_entries-${i}-min`);
+    const max = document.getElementById(`all_min_max_entries-${i}-max`);
+    const increment = document.getElementById(`all_min_max_entries-${i}-increment`);
     minMaxValuesWithIncrements.push({
       idx: i,
       min: parseFloat(min.value),
@@ -108,7 +108,7 @@ function collectMinMaxValuesWithIncrements() {
 }
 
 function computeDependentValue(type, currentInputField, independentMinMaxInputFields) {
-  let sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, type, currentInputField);
+  const sumOfIndependentFields = autocorrectInput(independentMinMaxInputFields, type, currentInputField);
 
   const unfilledFields = independentMinMaxInputFields.filter((item) => item[type].value === "");
   if (unfilledFields.length === 0) {
@@ -133,28 +133,28 @@ function autocorrectInput(independentMinMaxInputFields, type, currentInputField)
 }
 
 /**
- * After adding a new field we need to reassign the ratio events as new input fields must be registered. Note that this functionality
- * requires a certain structure of DOM elements within the blending-ratio-placeholder. Thus, when changing this function always
- * check the corresponding HTML DOM structure and vice versa.
+ * After adding a new field we need to reassign the ratio events as new input fields must be registered.
+ * Note that this functionality requires a certain structure of DOM elements within the ratio-entries div tag.
+ * Thus, when changing this function always check the corresponding HTML DOM structure and vice versa.
  */
 function assignAddCustomBlendEvent() {
-  const placeholder = document.getElementById("blending-ratio-placeholder");
+  const ratioEntries = document.getElementById("ratio-entries");
   const button = document.getElementById("add-custom-blend-button");
   enableTooltip(button);
 
   button.addEventListener("click", () => {
-    const numberOfRatioFields = document.querySelectorAll('[id$="-ratio"]').length - 1;
-    let div = document.createElement("div");
-    div.className = "col-md-3";
+    const numberOfRatioFields = ratioEntries.childElementCount;
+    const div = document.createElement("div");
+    div.className = "col-3";
 
-    let input = document.createElement("input");
-    input.id = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
-    input.name = `all_ratio_entries-${numberOfRatioFields + 1}-ratio`;
+    const input = document.createElement("input");
+    input.id = `all_ratio_entries-${numberOfRatioFields}-ratio`;
+    input.name = `all_ratio_entries-${numberOfRatioFields}-ratio`;
     input.type = "text";
     input.className = "form-control";
     div.appendChild(input);
 
-    placeholder.insertBefore(div, button);
+    ratioEntries.appendChild(div);
 
     allRatioFieldsHaveValidInput = false;
     document.getElementById("submit").disabled = true;
@@ -171,8 +171,8 @@ function assignDeleteCustomBlendEvent() {
     const elem = document.getElementById(`all_ratio_entries-${numberOfRatioFields}-ratio`);
     elem.parentElement.remove();
 
-    let ratioInputFields = collectRatioFields();
-    let numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+    const ratioInputFields = collectRatioFields();
+    const numberOfIndependentBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
 
     toggleSubmitButtonBasedOnRatioInput(numberOfIndependentBaseMaterials, ratioInputFields);
     assignKeyboardEventsToRatiosForm();
@@ -180,9 +180,9 @@ function assignDeleteCustomBlendEvent() {
 }
 
 function toggleSubmitButtonBasedOnRatiosAndName() {
-  let ratioInputFields = collectRatioFields();
-  let numberOfBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-  for (let ratioInput of ratioInputFields) {
+  const ratioInputFields = collectRatioFields();
+  const numberOfBaseMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
+  for (const ratioInput of ratioInputFields) {
     ratioInput.addEventListener("keyup", () => {
       toggleSubmitButtonBasedOnRatioInput(numberOfBaseMaterials, ratioInputFields);
     });
@@ -190,8 +190,8 @@ function toggleSubmitButtonBasedOnRatiosAndName() {
 }
 
 function toggleSubmitButtonBasedOnRatioInput(numberOfBaseMaterials, ratioInputFields) {
-  let regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfBaseMaterials + "}$");
-  let nonMatchingInputs = ratioInputFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
+  const regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfBaseMaterials + "}$");
+  const nonMatchingInputs = ratioInputFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
   allRatioFieldsHaveValidInput = nonMatchingInputs <= 0;
   document.getElementById("submit").disabled = !(allRatioFieldsHaveValidInput && !nameIsEmpty);
 }

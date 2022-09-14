@@ -92,7 +92,10 @@ function getMaxMinValue(maxCheckboxId, minCheckboxId) {
 function parseTargetConfigurations(numberTargetProperties) {
   const result = [];
   for (let i = 0; i < numberTargetProperties; ++i) {
-    const max_or_min = getMaxMinValue(`target_configurations-${i}-max_or_min-0`, `target_configurations-${i}-max_or_min-1`);
+    const max_or_min = getMaxMinValue(
+      `target_configurations-${i}-max_or_min-0`,
+      `target_configurations-${i}-max_or_min-1`
+    );
     const weight = document.getElementById(`target_configurations-${i}-weight`).value;
     result.push({ max_or_min, weight });
   }
@@ -123,6 +126,7 @@ async function runExperiment() {
 
   // The endpoint is the current URL which should contain the dataset name
   // For example: http://127.0.0.1:5001/materials/discovery/MaterialsDiscoveryExampleData.csv
+  insertSpinnerInPlaceholder("experiment-result-placeholder");
   await postDataAndEmbedTemplateInPlaceholder(window.location.href, "experiment-result-placeholder", {
     materials_data_input,
     target_properties,
@@ -132,6 +136,7 @@ async function runExperiment() {
     target_configurations,
     a_priori_information_configurations,
   });
+  removeSpinnerInPlaceholder("experiment-result-placeholder");
 }
 
 function toggleRunExperimentButton() {

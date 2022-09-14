@@ -1,32 +1,38 @@
 {% if not complete %}
-<div class="text-danger">
-    The chosen configuration is not complete! Check that all properties are specified among all chosen base materials.
-    Further, make sure that all additional properties have the same keys and matching data types for a given key.
-    If you nevertheless want to continue with the chosen setup, not all blended properties will be inferred.
+<div class="col-12 rounded bg-white" role="tooltip">
+    <h3 class="explanation-header text-danger">Incomplete data</h3>
+    <div class="explanation-body bg-light text-danger">
+        The chosen configuration is not complete! Check that all properties are specified among all chosen base
+        materials.
+        Further, make sure that all additional properties have the same keys and matching data types for a given key.
+        If you nevertheless want to continue with the chosen setup, not all blended properties will be inferred.
+    </div>
 </div>
 {% endif %}
 {% for entry in min_max_form.all_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
-<div class="col-md-3">
-    {{ entry.blended_material_name.label(class_="control-label") }}
-    {{ entry.blended_material_name(class_="form-control", disabled=True) }}
-</div>
-<div class="col-md-3">
-    {{ entry.increment.label(class_="control-label") }}
-    {{ entry.increment(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.min.label(class_="control-label") }}
-    {{ entry.min(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.max.label(class_="control-label") }}
-    {{ entry.max(class_="form-control") }}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ entry.blended_material_name.label(class_="control-label") }}
+        {{ entry.blended_material_name(class_="form-control", disabled=True) }}
+    </div>
+    <div class="col-3">
+        {{ entry.increment.label(class_="control-label") }}
+        {{ entry.increment(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.min.label(class_="control-label") }}
+        {{ entry.min(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.max.label(class_="control-label") }}
+        {{ entry.max(class_="form-control") }}
+    </div>
 </div>
 {% endfor %}
-<button class="btn btn-success col-12" type="button" id="confirm-blending-configuration-button" data-bs-toggle="tooltip"
-    data-bs-placement="bottom" title="Fill in all editable fields" disabled>
+<button class="btn btn-success col-12 mb-3" type="button" id="confirm-blending-configuration-button"
+    data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fill in all editable fields" disabled>
     5 - Preview blending ratios
 </button>

@@ -30,7 +30,7 @@ def test_slamd_shows_formulations_page(client, monkeypatch):
     assert 'Custom' in html
     assert 'Processes' in html
     assert 'Constraint' in html
-    assert 'Confirm Selection' in html
+    assert 'Configure weights for each material type' in html
 
     assert 'Test Aggregate' in html
 

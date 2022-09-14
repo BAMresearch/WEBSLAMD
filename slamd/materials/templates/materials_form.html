@@ -1,16 +1,15 @@
-{% from 'errors.html' import with_errors -%}
-
 <h3>New material / process</h3>
-<form class="row g-3" action="" method="post" novalidate>
+<form action="" method="post" novalidate>
     {{ form.csrf_token }}
-    <div class="col-md-6">
-        {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
-        {{ form.material_name(class_="form-control") }}
-        {{ with_errors(form.material_name) }}
-    </div>
-    <div class="col-md-6">
-        {{ form.material_type.label(class_="control-label") }}
-        {{ form.material_type(class_="form-control form-select") }}
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
+            {{ form.material_name(class_="form-control") }}
+        </div>
+        <div class="col-md-6">
+            {{ form.material_type.label(class_="control-label") }}
+            {{ form.material_type(class_="form-control form-select") }}
+        </div>
     </div>
 
     <div class="accordion accordion-flush" id="accordion-materials-form">
@@ -24,7 +23,7 @@
             </h2>
             <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
                 <div class="accordion-body">
-                    <div class="row g-3">
+                    <div class="row g-3 align-items-end">
                         <div class="col-md-4">
                             {{ form.co2_footprint.label(class_="control-label") }}
                             {{ form.co2_footprint(class_="form-control") }}
@@ -36,7 +35,6 @@
                         <div class="col-md-4">
                             {{ form.delivery_time.label(class_="control-label") }}
                             {{ form.delivery_time(class_="form-control") }}
-                            {{ with_errors(form.delivery_time) }}
                         </div>
                     </div>
                 </div>
@@ -44,11 +42,7 @@
         </div>
         {% include 'material_type_form.html' %}
     </div>
-    <div class="form-group mb-3">
-        <div class="col-sm-offset-2 col-sm-12">
-            {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
-            title="Select at least a name and a type")
-            }}
-        </div>
-    </div>
+    {{ form.submit(class_="btn btn-primary col-12 mb-3", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    title="Select at least a name and a type")
+    }}
 </form>

@@ -1,15 +1,14 @@
-{% from 'errors.html' import with_errors -%}
-
+{% from 'show_form_field_errors.html' import show_form_field_errors -%}
 <form action="/materials/discovery" method="post" enctype="multipart/form-data" novalidate>
     {{ upload_dataset_form.csrf_token }}
     <div class="row g-3 mb-3 align-items-end">
         <div class="col-sm-12 col-md-9 col-lg-10">
             {{ upload_dataset_form.dataset.label(class_="control-label") }}
             {{ upload_dataset_form.dataset(class_="form-control form-select dataset-input") }}
-            {{ with_errors(upload_dataset_form.dataset) }}
         </div>
         <div class="col-12 col-md-3 col-lg-2">
             {{ upload_dataset_form.upload_button(class_="btn btn-success col-12") }}
         </div>
     </div>
+    {{ show_form_field_errors(upload_dataset_form.dataset) }}
 </form>

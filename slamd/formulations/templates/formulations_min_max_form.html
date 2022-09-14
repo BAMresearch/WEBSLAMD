@@ -1,25 +1,25 @@
 {% for entry in formulations_min_max_form.materials_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
-</div>
-<div class="d-none">
     {{ entry.type_field(class_="form-control", hidden=True) }}
 </div>
-<div class="col-md-3">
-    {{ entry.materials_entry_name.label(class_="control-label") }}
-    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
-</div>
-<div class="col-md-3">
-    {{ entry.increment.label(class_="control-label") }}
-    {{ entry.increment(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.min.label(class_="control-label") }}
-    {{ entry.min(class_="form-control") }}
-</div>
-<div class="col-md-3">
-    {{ entry.max.label(class_="control-label") }}
-    {{ entry.max(class_="form-control") }}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ entry.materials_entry_name.label(class_="control-label") }}
+        {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+    </div>
+    <div class="col-3">
+        {{ entry.increment.label(class_="control-label") }}
+        {{ entry.increment(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.min.label(class_="control-label") }}
+        {{ entry.min(class_="form-control") }}
+    </div>
+    <div class="col-3">
+        {{ entry.max.label(class_="control-label") }}
+        {{ entry.max(class_="form-control") }}
+    </div>
 </div>
 {% endfor %}
 
@@ -27,11 +27,13 @@
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
-<div class="col-md-3">
-    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+    </div>
 </div>
 {% endfor %}
-<button class="btn btn-success col-12" type="button" id="confirm_formulations_configuration_button"
+<button class="btn btn-success col-12 mb-3" type="button" id="confirm_formulations_configuration_button"
     data-bs-toggle="tooltip" data-bs-placement="bottom"
     title="Preview the chosen formulations in terms of their base material composition" disabled>
     5 - Show mixture in terms of base material composition
