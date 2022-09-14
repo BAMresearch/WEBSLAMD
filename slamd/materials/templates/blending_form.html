@@ -27,23 +27,8 @@
 
     <div id="blending-ratio-placeholder"></div>
 
-    <div class="form-group mb-12">
-        <div class="col-sm-offset-2 col-sm-12" id="submit-bracket" data-bs-toggle="tooltip" data-bs-placement="bottom"
-            title="For enabling submission please specify a name and configure a valid configuration.">
-            {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12 mb-3", data_bs_toggle="modal",
-            data_bs_target="#submit-blending-modal", disabled=True) }}
-        </div>
-    </div>
-
-    <div class="modal fade" id="submit-blending-modal" tabindex="-1" aria-labelledby="submit-blending-modal-label"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="submit-blending-modal-label">Created blended materials</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12 mb-3",
+    data_bs_toggle="tooltip", data_bs_placement="bottom",
+    title="For enabling submission please specify a name and configure a valid configuration.", disabled=True)
+    }}
 </form>
