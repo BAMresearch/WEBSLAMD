@@ -27,8 +27,10 @@
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
-<div class="col-3">
-    {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ entry.materials_entry_name(class_="form-control", disabled=True) }}
+    </div>
 </div>
 {% endfor %}
 <button class="btn btn-success col-12 mb-3" type="button" id="confirm_formulations_configuration_button"
