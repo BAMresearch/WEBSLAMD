@@ -110,11 +110,11 @@ window.addEventListener("load", function () {
     .addEventListener("click", confirmSelection);
   document
     .getElementById("weight_constraint")
-    .addEventListener("change", toggleSelectionConfirmationButtonAfterConstraintChange);
+    .addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
   document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
-  document.getElementById("powder_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
-  document.getElementById("liquid_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
-  document.getElementById("aggregates_selection").addEventListener("keyup", toggleBasedOnSelectionAndConstraints);
+  document.getElementById("powder_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
+  document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
+  document.getElementById("aggregates_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
   document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
 
   const formulations = document.getElementById("formulations_dataframe");
