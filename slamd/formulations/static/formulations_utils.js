@@ -47,7 +47,7 @@ function updateWZRatio(fieldName, independentInputFields) {
   const liquid = independentInputFields.filter((item) => item[fieldName].name === "Liquid")[0];
   const liquidWeight = liquid[fieldName].value;
 
-  const wcRatio = "Not available; you need to set the weight of the powders and liquids.";
+  let wcRatio = "Not available; you need to set the weight of the powders and liquids.";
   if (liquidWeight && powderWeight) {
     wcRatio = (liquidWeight / powderWeight).toFixed(2);
   }
