@@ -23,19 +23,19 @@ class MaterialsAndProcessesSelectionForm(Form):
     )
 
     admixture_selection = SelectMultipleField(
-        label='1.4 - Admixture (opt.)',
+        label='1.4 - Admixture (optional)',
         validators=[validators.Optional()],
         choices=[]
     )
 
     custom_selection = SelectMultipleField(
-        label='1.5 - Custom (opt.)',
+        label='1.5 - Custom (optional)',
         validators=[validators.Optional()],
         choices=[]
     )
 
     process_selection = SelectMultipleField(
-        label='1.6 - Processes (opt.)',
+        label='1.6 - Processes (optional)',
         validators=[validators.Optional()],
         choices=[]
     )

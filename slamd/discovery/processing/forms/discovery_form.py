@@ -19,7 +19,7 @@ class DiscoveryForm(Form):
     )
 
     a_priori_information = SelectMultipleField(
-        label='A priori Information (opt.)',
+        label='A priori Information (optional)',
         validators=[validators.Optional()],
         choices=[],
         render_kw={'style': 'height:120px'}
