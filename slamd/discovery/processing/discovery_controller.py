@@ -119,7 +119,7 @@ def add_targets(dataset):
     target_page_data = TargetsService.get_data_for_target_page(dataset)
     html_dataframe = target_page_data.dataframe.to_html(index=False,
                                                         table_id='formulations_dataframe',
-                                                        classes='table table-bordered table-striped table-hover df-collapsed')
+                                                        classes='table table-bordered table-striped table-hover')
 
     return render_template('targets.html',
                            dataset_name=dataset,
@@ -134,7 +134,7 @@ def add_target(dataset, target_name):
     target_page_data = TargetsService.add_target_name(dataset, target_name)
     html_dataframe = target_page_data.dataframe.to_html(index=False,
                                                         table_id='formulations_dataframe',
-                                                        classes='table table-bordered table-striped table-hover df-collapsed')
+                                                        classes='table table-bordered table-striped table-hover')
 
     body = {'template': render_template('targets_form.html',
                                         form=target_page_data.targets_form,
@@ -150,9 +150,9 @@ def toggle_targets(dataset):
 
     target_page_data = TargetsService.toggle_targets_for_editing(dataset, request_body['names'])
 
-    html_dataframe = target_page_data.dataframe.to_html(index=False,
-                                                        table_id='formulations_dataframe',
-                                                        classes='table table-bordered table-striped table-hover df-collapsed')
+    html_dataframe = target_page_data.dataframe.to_html(
+        index=False, table_id='formulations_dataframe',
+        classes='table table-bordered table-striped table-hover')
 
     body = {'template': render_template('targets_form.html',
                                         form=target_page_data.targets_form,

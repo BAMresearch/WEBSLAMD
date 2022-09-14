@@ -4,7 +4,7 @@
         {{ form.choose_target_field(class_="form-control form-select") }}
     </div>
 </div>
-<div class="table-responsive">
+<div id="dataframe-container" class="table-responsive" style="display: none;">
     {{ df | safe }}
 </div>
 <form action="" method="post" novalidate>
