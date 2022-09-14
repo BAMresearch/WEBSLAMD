@@ -10,6 +10,9 @@
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 px-md-2 py-2">
     {% include 'formulations_form.html' %}
+    <div id="formulations_tables_placeholder">
+        {% include 'formulations_tables.html' %}
+    </div>
 </main>
 <script src="{{url_for('formulations.static', filename='formulations.js')}}"></script>
 <script src="{{url_for('formulations.static', filename='formulations_utils.js')}}"></script>
