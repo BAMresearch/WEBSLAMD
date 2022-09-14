@@ -1,4 +1,5 @@
 from itertools import product
+from datetime import datetime
 
 from werkzeug.utils import secure_filename
 
@@ -236,16 +237,26 @@ class FormulationsService:
 
     @classmethod
     def save_dataset(cls, form):
-        filename = form['dataset_name']
-        if not filename.endswith('.csv'):
-            filename = filename + '.csv'
-
-        filename = secure_filename(filename)
-        if filename == TEMPORARY_FORMULATION:
-            raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
-
+        filename = cls._sanitize_filename(form['dataset_name'])
         formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
         DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
         formulation_to_be_saved_as_dataset.name = filename
         if formulation_to_be_saved_as_dataset:
             DiscoveryFacade.save_dataset(formulation_to_be_saved_as_dataset)
+
+    @classmethod
+    def _sanitize_filename(cls, user_input):
+        if user_input is '':
+            # Generate a filename to allow the user to create many datasets
+            # one after the other, without having to enter a filename.
+            user_input = f'Unnamed-Dataset-{datetime.now()}'
+
+        if not user_input.endswith('.csv'):
+            # Add the extension to make it clear which format the app supports
+            # for downloading datasets. This may change in the future.
+            user_input = user_input + '.csv'
+
+        filename = secure_filename(user_input)
+        if filename == TEMPORARY_FORMULATION:
+            raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
+        return filename
