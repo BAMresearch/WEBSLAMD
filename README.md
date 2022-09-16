@@ -30,7 +30,7 @@
 4. Materials Discovery:
    Integrate data from the "Digital Lab" or upload your own material data. Enrich the data with lab results and adopt the knowledge to new recipes via artificial intelligence. Leverage socio-economic metrics to identify recipes tailored to your requirements.
 
-## Project Setup
+## Project Setup <a name="project_setup"></a>
 
 The following sections describe how to install and run the app. Further, it is explained how tests can be executed. While
 the former are required for using the app locally, the latter is optional and might be useful in case one wants to dig deeper
