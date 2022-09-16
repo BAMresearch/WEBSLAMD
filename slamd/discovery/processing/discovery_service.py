@@ -3,7 +3,7 @@ from datetime import datetime
 from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
-from slamd.common.slamd_utils import empty
+from slamd.common.slamd_utils import empty, float_if_not_empty
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
@@ -67,6 +67,9 @@ class DiscoveryService:
             raise DatasetNotFoundException('Dataset with given name not found')
 
         user_input = cls._parse_user_input(request_body)
+        print(user_input)
+        print(str(user_input))
+        print("TEST TEST TEST")
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
         df_with_predictions, plot = experiment.run()
 
@@ -100,9 +103,11 @@ class DiscoveryService:
     @classmethod
     def _parse_user_input(cls, discovery_form):
         target_weights = [float(conf['weight']) for conf in discovery_form['target_configurations']]
+        target_thresholds = [float_if_not_empty(conf['threshold']) for conf in discovery_form['target_configurations']]
         target_max_or_min = [conf['max_or_min'] for conf in discovery_form['target_configurations']]
-        fixed_target_weights = [float(conf['weight']) for conf in discovery_form['a_priori_information_configurations']]
-        fixed_target_max_or_min = [conf['max_or_min'] for conf in discovery_form['a_priori_information_configurations']]
+        apriori_weights = [float(conf['weight']) for conf in discovery_form['a_priori_information_configurations']]
+        apriori_thresholds = [float_if_not_empty(conf['threshold']) for conf in discovery_form['a_priori_information_configurations']]
+        apriori_max_or_min = [conf['max_or_min'] for conf in discovery_form['a_priori_information_configurations']]
 
         return UserInput(
             model=discovery_form['model'],
@@ -110,10 +115,12 @@ class DiscoveryService:
             features=discovery_form['materials_data_input'],
             targets=discovery_form['target_properties'],
             target_weights=target_weights,
+            target_thresholds=target_thresholds,
             target_max_or_min=target_max_or_min,
-            fixed_targets=discovery_form['a_priori_information'],
-            fixed_target_weights=fixed_target_weights,
-            fixed_target_max_or_min=fixed_target_max_or_min,
+            apriori_columns=discovery_form['a_priori_information'],
+            apriori_weights=apriori_weights,
+            apriori_thresholds=apriori_thresholds,
+            apriori_max_or_min=apriori_max_or_min,
         )
 
     @classmethod
@@ -125,8 +132,10 @@ class DiscoveryService:
             features=user_input.features,
             targets=user_input.targets,
             target_weights=user_input.target_weights,
+            target_thresholds=user_input.target_thresholds,
             target_max_or_min=user_input.target_max_or_min,
-            fixed_targets=user_input.fixed_targets,
-            fixed_target_weights=user_input.fixed_target_weights,
-            fixed_target_max_or_min=user_input.fixed_target_max_or_min
+            apriori_thresholds=user_input.apriori_thresholds,
+            apriori_columns=user_input.apriori_columns,
+            apriori_weights=user_input.apriori_weights,
+            apriori_max_or_min=user_input.apriori_max_or_min
         )
