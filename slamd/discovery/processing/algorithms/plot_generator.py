@@ -31,5 +31,6 @@ class PlotGenerator:
 
     @classmethod
     def _create_interactive_plot(cls, target_list):
-        fig = px.scatter_matrix(target_list)
+        dimensions = [col for col in target_list.columns if col != "Utility"]
+        fig = px.scatter_matrix(target_list, dimensions=dimensions, color="Utility")
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
