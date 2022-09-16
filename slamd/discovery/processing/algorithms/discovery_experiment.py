@@ -32,10 +32,10 @@ class DiscoveryExperiment:
         self.features = features
 
         # Partition the dataframe in three parts: features, targets and fixed targets
-        dataframe = self.filter_apriori_with_thresholds(dataframe)
-        self.features_df = dataframe[features]
-        self.target_df = dataframe[targets]
-        self.apriori_df = dataframe[apriori_columns]
+        self.dataframe = self.filter_apriori_with_thresholds(self.dataframe)
+        self.features_df = self.dataframe[features]
+        self.target_df = self.dataframe[targets]
+        self.apriori_df = self.dataframe[apriori_columns]
 
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
@@ -130,7 +130,7 @@ class DiscoveryExperiment:
             if threshold is None:
                 continue
 
-            if value == 'min':
+            if value == 'max':
                 # Get dataframe mask based on threshold value. Apply mask to dataframe. Get index of remaining values.
                 # Use index to drop values from original dataframe.
                 df.drop(df[df[column] < threshold].index, inplace=True)
