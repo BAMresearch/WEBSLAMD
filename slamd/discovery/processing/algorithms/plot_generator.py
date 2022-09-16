@@ -18,8 +18,8 @@ class PlotGenerator:
 
     @classmethod
     def _create_static_plot(cls, target_list):
-        grid = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue="Utility")
-        grid.map_diag(sns.histplot, hue=None, color=".3")
+        grid = sns.PairGrid(target_list, diag_sharey=False, corner=True, hue='Utility')
+        grid.map_diag(sns.histplot, hue=None, color='.3')
         grid.map_lower(sns.scatterplot)
         grid.add_legend()
         plt.plot()
@@ -31,8 +31,8 @@ class PlotGenerator:
 
     @classmethod
     def _create_interactive_plot(cls, target_list):
-        dimensions = [col for col in target_list.columns if col != "Utility"]
-        fig = px.scatter_matrix(target_list, dimensions=dimensions, color="Utility",
+        dimensions = [col for col in target_list.columns if col != 'Utility']
+        fig = px.scatter_matrix(target_list, dimensions=dimensions, color='Utility',
                                 title='Scatter matrix of target properties')
         fig.update_traces(diagonal_visible=False, showupperhalf=False)
         fig.update_layout(
