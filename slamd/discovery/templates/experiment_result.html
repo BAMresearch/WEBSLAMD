@@ -2,7 +2,8 @@
     data-bs-toggle="tooltip" data-bs-placement="right" title="Download predictions including parameter configuration">
     Download Predictions
 </a>
-<img class="img-fluid" src="data:image/png;base64, {{ plot }}">
+<img class="img-fluid" src="data:image/png;base64, {{ static_plot }}">
+<div id="interactive-plot-placeholder">{{ interactive_plot | safe }}</div>
 <div class="table-responsive">
     {{ df | safe }}
 </div>
