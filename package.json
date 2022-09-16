@@ -23,8 +23,5 @@
   "devDependencies": {
     "@testing-library/cypress": "^8.0.3",
     "cypress": "^10.8.0"
-  },
-  "dependencies": {
-    "plotly.js-dist": "^2.14.0"
   }
 }
