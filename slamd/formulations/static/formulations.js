@@ -78,9 +78,9 @@ function assignCreateFormulationsBatchEvent() {
 
     const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
 
-    insertSpinnerInPlaceholder("formulations_tables_placeholder");
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_tables_placeholder", formulationsRequest);
-    removeSpinnerInPlaceholder("formulations_tables_placeholder");
+    insertSpinnerInPlaceholder("formulations-table-placeholder");
+    await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
+    removeSpinnerInPlaceholder("formulations-table-placeholder");
 
     document.getElementById("submit").disabled = false;
   });
@@ -99,7 +99,7 @@ function assignDeleteWeightEvent() {
 }
 
 async function deleteFormulations() {
-  await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations_tables_placeholder");
+  await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
   document.getElementById("submit").disabled = true;
 }
 
