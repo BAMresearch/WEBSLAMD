@@ -2,8 +2,11 @@
 
 1. [Summary](#summary)
 2. [Project Setup](#project_setup)
-   1. [Installation](#1._Installation_(Required))
-   1. [Starting the App](#2._Starting_the_App_(Required))
+   1. [Installation](#project_installation)
+   2. [Starting the App](#start_app)
+   3. [Unit Tests](#unit_tests)
+   4. [Acceptance Tests](#acceptance_tests)
+3. [Documentation](#documentation)
 
 ## Summary
 
@@ -36,7 +39,7 @@ The following sections describe how to install and run the app. Further, it is e
 the former are required for using the app locally, the latter is optional and might be useful in case one wants to dig deeper
 into the code or extend the app locally.
 
-### 1. Installation (Required)
+### 1. Installation (Required) <a name="project_installation"></a>
 
 ##### Prerequisites
 In order to run the app you need Python >= 3.8. The most up-to-date version can be downloaded here:
@@ -61,7 +64,7 @@ to adjust the paths below accordingly.
 ##### Installation of dependencies with conda
 TBD
 
-### 2. Starting the App (Required)
+### Starting the App (Required) <a name="start_app"></a>
 
 In order to start the app, you must specify some environment variables. This can e.g. be done via command line.
 For convenience, we added two scripts (`run.bat` for Windows and `run.sh` for Unix and Mac) which automate these steps.
@@ -80,12 +83,12 @@ In a local deployment `<KEY>` can be replaced by `ABC`, i.e. `run.bat ABC` or `.
 The console should now show that the app is running. You can now open http://127.0.0.1:5001 in your browser to
 access the running application.
 
-### 3. Running Unit Tests (Optional)
+### Running Unit Tests (Optional) <a name="unit_tests"></a>
 
 Go to the root directory and run `pytest` to run all tests. If you want to generate a report showing test coverage, run
 `pytest --cov=slamd tests/`
 
-### 4. Running Acceptance Tests (Optional)
+### Running Acceptance Tests (Optional) <a name="acceptance_tests"></a>
 
 We have several end-to-end tests in Cypress. More information about the framework here: [Cypress Website](https://www.cypress.io/)
 
@@ -104,6 +107,6 @@ If you prefer to watch the test running in a GUI, go to the root directory and r
 A window will open. Select "E2E Testing" and then select any browser on the list.
 You may then run each specs file separately and see the tests in action.
 
-### 5. Documentation (Optional)
+## Documentation (Optional) <a name="documentation"></a>
 
 Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku
