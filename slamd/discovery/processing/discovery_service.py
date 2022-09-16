@@ -68,12 +68,12 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        df_with_predictions, static_plot, interactive_plot = experiment.run()
+        df_with_predictions, plot = experiment.run()
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
 
-        return df_with_predictions, static_plot, interactive_plot
+        return df_with_predictions, plot
 
     @classmethod
     def download_dataset(cls, dataset_name):
