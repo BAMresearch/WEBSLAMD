@@ -67,9 +67,6 @@ class DiscoveryService:
             raise DatasetNotFoundException('Dataset with given name not found')
 
         user_input = cls._parse_user_input(request_body)
-        print(user_input)
-        print(str(user_input))
-        print("TEST TEST TEST")
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
         df_with_predictions, plot = experiment.run()
 

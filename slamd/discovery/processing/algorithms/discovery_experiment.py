@@ -30,10 +30,9 @@ class DiscoveryExperiment:
         self.apriori_thresholds = apriori_thresholds
         self.apriori_max_or_min = apriori_max_or_min
         self.features = features
-        print(self)
-        print(str(self))
 
         # Partition the dataframe in three parts: features, targets and fixed targets
+        dataframe = self.filter_apriori_with_thresholds(dataframe)
         self.features_df = dataframe[features]
         self.target_df = dataframe[targets]
         self.apriori_df = dataframe[apriori_columns]
@@ -43,7 +42,7 @@ class DiscoveryExperiment:
 
         # Select the rows that have a label for the first target
         # These have a null value in the corresponding column
-        self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
+        self._update_prediction_index()
         # The rows with labels (the training set) are the rest of the rows
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
@@ -51,7 +50,6 @@ class DiscoveryExperiment:
         self._preprocess_features()
         self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.apriori_df, self.apriori_columns, self.apriori_max_or_min)
-        self.filter_apriori_with_thresholds()
         self.fit_model()
 
         # The strategy is always 'MLI (explore & exploit)' for this implementation
@@ -94,6 +92,9 @@ class DiscoveryExperiment:
 
         return sorted, plot
 
+    def _update_prediction_index(self):
+        self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
+
     def _preprocess_features(self):
         non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
                                 not np.issubdtype(datatype, np.number)]
@@ -122,7 +123,7 @@ class DiscoveryExperiment:
             if value == 'min':
                 df[column] *= (-1)
 
-    def filter_apriori_with_thresholds(self):
+    def filter_apriori_with_thresholds(self, df):
         for (column, value, threshold) in zip(self.apriori_columns, self.apriori_max_or_min, self.apriori_thresholds):
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
@@ -132,9 +133,11 @@ class DiscoveryExperiment:
             if value == 'min':
                 # Get dataframe mask based on threshold value. Apply mask to dataframe. Get index of remaining values.
                 # Use index to drop values from original dataframe.
-                self.apriori_df.drop(self.apriori_df[self.apriori_df[column] < threshold].index, inplace=True)
+                df.drop(df[df[column] < threshold].index, inplace=True)
             else:
-                self.apriori_df.drop(self.apriori_df[self.apriori_df[column] > threshold].index, inplace=True)
+                df.drop(df[df[column] > threshold].index, inplace=True)
+
+        return df.reset_index(drop=True)
 
 
     def fit_model(self):
@@ -227,8 +230,38 @@ class DiscoveryExperiment:
         predicted_rows = self.target_df.iloc[self.sample_index]
         # Normalize the uncertainty of the predicted labels
         uncertainty_norm = self.uncertainty / np.array(predicted_rows.std())
+
+        if len(self.targets) == 1:
+            if self.target_thresholds[0] is not None:
+                if self.target_max_or_min[0] == 'min':
+                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0])
+                else:
+                    clipped_prediction = np.clip(self.prediction, a_max=self.target_thresholds[0])
+            else:
+                clipped_prediction = self.prediction
+
+        else:
+            # Multiple targets
+            column_indices = [i for i in range(len(self.targets))]
+            clipped_predictions = []
+            for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
+                if value not in ['min', 'max']:
+                    raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+                if threshold is None:
+                    continue
+
+                if value == 'min':
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold))
+                else:
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_max=threshold))
+
+            if clipped_predictions:
+                clipped_prediction = np.hstack(clipped_predictions)
+            else:
+                clipped_prediction = self.prediction
+
         # Normalize the predicted labels
-        prediction_norm = (self.prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
+        prediction_norm = (clipped_prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
 
         if self.prediction.ndim >= 2:
             # Scale the prediction and the uncertainty by the given weight for that target
@@ -244,22 +277,22 @@ class DiscoveryExperiment:
         self.normalize_data()
 
         if len(self.apriori_columns) > 0:
-            fixed_targets_for_predicted_rows = self.apply_weights_to_fixed_targets()
+            apriori_values_for_predicted_rows = self.apply_weights_to_apriori_values()
         else:
-            fixed_targets_for_predicted_rows = np.zeros(len(self.prediction_index))
+            apriori_values_for_predicted_rows = np.zeros(len(self.prediction_index))
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
         if len(self.targets) > 1:
-            utility_function = fixed_targets_for_predicted_rows.squeeze() + prediction_norm.sum(
+            utility_function = apriori_values_for_predicted_rows.squeeze() + prediction_norm.sum(
                 axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
         else:
-            utility_function = fixed_targets_for_predicted_rows.squeeze(
+            utility_function = apriori_values_for_predicted_rows.squeeze(
             ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()
 
         return utility_function
 
-    def apply_weights_to_fixed_targets(self):
+    def apply_weights_to_apriori_values(self):
         fixed_targets_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
 
         for w in range(len(self.apriori_weights)):
