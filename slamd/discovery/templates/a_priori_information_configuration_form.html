@@ -15,5 +15,9 @@
         {{ a_priori_information.weight.label(class_="control-label mx-2") }}
         {{ a_priori_information.weight(class_="form-control mx-2") }}
     </div>
+    <div class="col-12 col-md-3 d-flex align-items-center">
+        {{ a_priori_information.threshold.label(class_="control-label mx-2") }}
+        {{ a_priori_information.threshold(class_="form-control mx-2", placeholder="Leave empty if no threshold is required.") }}
+    </div>
 </div>
 {% endfor %}

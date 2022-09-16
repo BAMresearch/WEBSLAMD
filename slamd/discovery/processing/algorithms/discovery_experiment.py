@@ -230,8 +230,8 @@ class DiscoveryExperiment:
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
         if len(self.targets) > 1:
-            utility_function = fixed_targets_for_predicted_rows.squeeze(
-            ) + prediction_norm.sum(axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
+            utility_function = fixed_targets_for_predicted_rows.squeeze() + prediction_norm.sum(
+                axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
         else:
             utility_function = fixed_targets_for_predicted_rows.squeeze(
             ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()

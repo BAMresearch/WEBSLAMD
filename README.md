@@ -92,7 +92,7 @@ Go to the root directory and run `pytest` to run all tests. If you want to gener
 
 We have several end-to-end tests in Cypress. More information about the framework here: [Cypress Website](https://www.cypress.io/)
 
-##### Prerequisite: 
+##### Prerequisite 
 In order to run the app you need [Node.js](https://nodejs.org/). The most up-to-date version can be downloaded here:
 [https://nodejs.org/en/download/](https://nodejs.org/en/download/). Note that the prompt might ask you if you want to install additional
 options. This step can be skipped as it is not required for our purposes.
