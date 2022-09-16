@@ -1,8 +1,9 @@
 # WEBSLAMD
 
-# Table of Contents
 1. [Summary](#summary)
-2. [Execution](#execution)
+2. [Project Setup](#project_setup)
+   1. [Installation](#1._Installation_(Required))
+   1. [Starting the App](#2._Starting_the_App_(Required))
 
 ## Summary
 
