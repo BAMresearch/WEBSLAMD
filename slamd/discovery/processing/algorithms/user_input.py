@@ -21,7 +21,7 @@ class UserInput:
     targets: list[str] = field(default_factory=lambda: ['fc 28-d - Target (MPa)'])
     # Weights for every target property
     target_weights: list[float] = field(default_factory=lambda: [1])
-    # Thresholds for every apriori and target property
+    # Thresholds for target properties
     target_thresholds: list[float | None] = field(default_factory=lambda: [None])
     # Select for each target property if it should be maximized or minimized
     target_max_or_min: list[str] = field(default_factory=lambda: ['maximize'])

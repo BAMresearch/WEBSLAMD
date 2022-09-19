@@ -18,7 +18,7 @@ class DiscoveryExperiment:
                  targets, target_weights, target_thresholds, target_max_or_min,
                  apriori_thresholds,
                  apriori_columns, apriori_weights, apriori_max_or_min):
-        self.dataframe = dataframe
+        self.dataframe = dataframe.copy()
         self.model = model
         self.curiosity = curiosity
         self.targets = targets
