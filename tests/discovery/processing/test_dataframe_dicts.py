@@ -1,4 +1,4 @@
-TEST_GAUSS_WITHOUT_THRESHOLD_INPUT = {
+TEST_GAUSS_WITHOUT_THRES_INPUT = {
     'BC': {0: 'h', 1: 'h', 2: 'k', 3: 'h', 4: 'k', 5: 'k', 6: 'k', 7: 'k', 8: 'k', 9: 'k', 10: 'h', 11: 'k', 12: 'l'},
     'Idx_Sample': {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12},
     'Powder (kg)': {0: 200.0, 1: 200.0, 2: 200.0, 3: 200.0, 4: 300.0, 5: 300.0, 6: 300.0, 7: 300.0, 8: 200.0, 9: 200.0,
@@ -69,7 +69,7 @@ TEST_GAUSS_WITHOUT_THRESHOLD_INPUT = {
     'Target: X': {0: 21.0, 1: 5.2, 2: 72.0, 3: 12.0, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None, 10: None,
                   11: None, 12: None}}
 
-TEST_GAUSS_WITH_THRESH_INPUT = {
+TEST_GAUSS_WITH_THRES_INPUT = {
     'Idx_Sample': {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9},
     'Powder (kg)': {0: 200, 1: 200, 2: 200, 3: 300, 4: 300, 5: 300, 6: 400, 7: 400, 8: 400,
                     9: 500},
@@ -153,7 +153,7 @@ TEST_GAUSS_WITHOUT_THRES_PRED = {
         {8: 31.62278, 9: 31.62278, 10: 31.62278, 11: 31.62278, 12: 31.62278, 5: 31.62278, 6: 31.62278, 7: 31.62278, 4:
             31.62278}}
 
-TEST_GAUSS_WITH_THRESH_PRED = {
+TEST_GAUSS_WITH_THRES_PRED = {
     'Idx_Sample': {1: 1, 3: 3, 4: 4}, 'Powder (kg)': {1: 200.0, 3: 300.0, 4: 300.0},
     'Liquid (kg)': {1: 50.0, 3: 30.0, 4: 50.0}, 'Aggregates (kg)': {1: 750.0, 3: 670.0, 4: 650.0},
     'Materials': {1: 'Powder1, Liquid1, Aggregate1', 3: 'Powder1, Liquid1, Aggregate1',

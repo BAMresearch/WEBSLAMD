@@ -16,9 +16,9 @@ from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetFo
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRESHOLD_INPUT, \
-    TEST_GAUSS_WITH_THRESH_INPUT, TEST_GAUSS_WITHOUT_THRES_PRED, \
-    TEST_GAUSS_WITH_THRESH_PRED, TEST_GAUSS_WITHOUT_THRES_CONFIG, TEST_GAUSS_WITH_THRES_CONFIG
+from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRES_INPUT, \
+    TEST_GAUSS_WITH_THRES_INPUT, TEST_GAUSS_WITHOUT_THRES_PRED, \
+    TEST_GAUSS_WITH_THRES_PRED, TEST_GAUSS_WITHOUT_THRES_CONFIG, TEST_GAUSS_WITH_THRES_CONFIG
 
 app = create_app('testing', with_session=False)
 
@@ -111,11 +111,7 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
     assert datasets[2] == Dataset('Dataset 3')
 
 
-def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
-    def mock_query_dataset_by_name(dataset_name):
-        test_df = pd.DataFrame.from_dict(TEST_GAUSS_WITHOUT_THRESHOLD_INPUT)
-        return Dataset('test_data', ['Target: X'], test_df)
-
+def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypatch):
     mock_save_prediction_called_with = None
 
     def mock_save_prediction(prediction):
@@ -123,13 +119,8 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
-    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_target_scatter_plot(targets):
-        return 'Dummy Plot'
-
-    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRES_INPUT, 'Target: X')
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
 
@@ -141,10 +132,6 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
 
 
 def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
-    def mock_query_dataset_by_name(dataset_name):
-        test_df = pd.DataFrame.from_dict(TEST_GAUSS_WITH_THRESH_INPUT)
-        return Dataset('test_data', ['X'], test_df)
-
     mock_save_prediction_called_with = None
 
     def mock_save_prediction(prediction):
@@ -152,21 +139,16 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
-    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_target_scatter_plot(targets):
-        return 'Dummy Plot'
-
-    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRES_INPUT, 'X')
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_THRES_CONFIG)
     df_with_prediction = df_with_prediction.round(1)
 
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRESH_PRED).round(1).to_dict()
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRES_PRED).round(1).to_dict()
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
-    assert mock_save_prediction_called_with.dataframe.round(1).replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRESH_PRED).round(1).to_dict()
+    assert mock_save_prediction_called_with.dataframe.round(1).replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRES_PRED).round(1).to_dict()
     assert plot == 'Dummy Plot'
 
 
@@ -191,3 +173,16 @@ def test_download_prediction(monkeypatch):
     assert output == 'Dummy.xslx'
     assert filename.startswith('predictions-test_dataset.csv')
     assert filename.endswith('.xlsx')
+
+
+def _mock_dataset_and_plot(monkeypatch, data, target_name):
+    def mock_query_dataset_by_name(dataset_name):
+        test_df = pd.DataFrame.from_dict(data)
+        return Dataset('test_data', [target_name], test_df)
+
+    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
+    def mock_create_target_scatter_plot(targets):
+        return 'Dummy Plot'
+
+    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
