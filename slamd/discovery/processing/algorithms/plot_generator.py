@@ -10,7 +10,11 @@ class PlotGenerator:
         dimensions = [col for col in target_list.columns if col != 'Utility']
         fig = px.scatter_matrix(target_list, dimensions=dimensions, color='Utility',
                                 title='Scatter matrix of target properties')
-        fig.update_traces(diagonal_visible=False, showupperhalf=False)
+        fig.update_traces(
+            diagonal_visible=False,
+            showupperhalf=False,
+            hovertemplate='X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}'
+        )
         fig.update_layout(
             height=1000,
         )
