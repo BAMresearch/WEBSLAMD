@@ -150,7 +150,7 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
     assert plot == 'Dummy Plot'
 
 
-def test_run_experiment_with_thresholds_and_rfr_and_saves_result(monkeypatch):
+def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(GAUSS_THRESH_INPUT)
         return Dataset('test_data', ['X'], test_df)
@@ -183,18 +183,12 @@ def test_run_experiment_with_thresholds_and_rfr_and_saves_result(monkeypatch):
         'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': '27.0'}]}
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
+    df_with_prediction = df_with_prediction.round(1)
 
-    df_with_prediction[["Novelty", "Uncertainty (X )", "Utility", "X"]] =df_with_prediction.loc[["Novelty", "Uncertainty (X )", "Utility", "X"]].round(1)
-    expected_df = pd.DataFrame(GAUSS_THRESH_PRED)
-    expected_df[["Novelty", "Uncertainty (X )", "Utility", "X"]] = expected_df.loc[["Novelty", "Uncertainty (X )", "Utility", "X"]].round(1)
-
-    GAUSS_THRESH_PRED = expected_df.to_dict()
-
-
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == GAUSS_THRESH_PRED
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == pd.DataFrame(GAUSS_THRESH_PRED).round(1).to_dict()
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == test_experiment_config
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == GAUSS_THRESH_PRED
+    assert mock_save_prediction_called_with.dataframe.round(1).replace({np.nan: None}).to_dict() == pd.DataFrame(GAUSS_THRESH_PRED).round(1).to_dict()
     assert plot == 'Dummy Plot'
 
 
