@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import FieldList, FormField, DecimalField, validators, BooleanField
-from wtforms import StringField
+from wtforms import FieldList, FormField, DecimalField, StringField, validators
 
 
 class MaterialsMinMaxEntriesForm(Form):
@@ -27,12 +26,12 @@ class NonEditableFormulationItemsForm(Form):
 
     type_field = StringField(
         label='Name',
-        validators=[validators.DataRequired(message='Name cannot be empty')]
+        validators=[validators.DataRequired(message='Type cannot be empty')]
     )
 
     materials_entry_name = StringField(
         label='Name',
-        validators=[validators.DataRequired(message='Name cannot be empty')]
+        validators=[validators.DataRequired(message='Entry name cannot be empty')]
     )
 
 
