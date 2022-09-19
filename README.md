@@ -8,6 +8,8 @@
    4. [Acceptance Tests](#acceptance_tests)
 3. [Documentation](#documentation)
 
+![img.png](slamd/static/landing_page.png)
+
 ## 1. Summary
 
 ##### Leverage the Digital Lab and AI optimization to discover exciting new materials
