@@ -143,9 +143,9 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRES_INPUT, 'X')
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_THRES_CONFIG)
-    df_with_prediction = df_with_prediction.round(1)
+    df_with_prediction_rounded = df_with_prediction.round(1)
 
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRES_PRED).round(1).to_dict()
+    assert df_with_prediction_rounded.replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRES_PRED).round(1).to_dict()
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
     assert mock_save_prediction_called_with.dataframe.round(1).replace({np.nan: None}).to_dict() == pd.DataFrame(TEST_GAUSS_WITH_THRES_PRED).round(1).to_dict()

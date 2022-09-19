@@ -154,20 +154,33 @@ TEST_GAUSS_WITHOUT_THRES_PRED = {
             31.62278}}
 
 TEST_GAUSS_WITH_THRES_PRED = {
-    'Idx_Sample': {1: 1, 3: 3, 4: 4}, 'Powder (kg)': {1: 200.0, 3: 300.0, 4: 300.0},
-    'Liquid (kg)': {1: 50.0, 3: 30.0, 4: 50.0}, 'Aggregates (kg)': {1: 750.0, 3: 670.0, 4: 650.0},
-    'Materials': {1: 'Powder1, Liquid1, Aggregate1', 3: 'Powder1, Liquid1, Aggregate1',
-                  4: 'Powder1, Liquid1, Aggregate1'}, 'fe3_o2': {1: 34.0, 3: 34.0, 4: 34.0},
-    'al2_o3': {1: 21.0, 3: 21.0, 4: 21.0}, 'ca_o': {1: 14.0, 3: 14.0, 4: 14.0}, 'fine': {1: 4.0, 3: 4.0, 4: 4.0},
-    'gravity': {1: 23.0, 3: 23.0, 4: 23.0}, 'na2_si_o3': {1: 234.0, 3: 234.0, 4: 234.0},
-    'na2_si_o3_mol': {1: 25.0, 3: 25.0, 4: 25.0}, 'na_o_h': {1: 234.0, 3: 234.0, 4: 234.0},
-    'si_o2_mol': {1: 235.0, 3: 235.0, 4: 235.0}, 'h2_o': {1: 1.0, 3: 1.0, 4: 1.0},
-    'fine_aggregates': {1: 25.0, 3: 25.0, 4: 25.0}, 'coarse_aggregates': {1: 23.0, 3: 23.0, 4: 23.0},
-    'water_absorption': {1: 23.0, 3: 23.0, 4: 23.0}, 'total costs / ton': {1: 20.8, 3: 19.7, 4: 19.7},
-    'total co2_footprint / ton': {1: 30.8, 3: 27.3, 4: 27.7}, 'total delivery_time ': {1: 0, 3: 0, 4: 0},
-    'X': {1: -3.576697, 3: -6.0293, 4: -6.697163}, 'Utility': {1: 5.67555, 3: 5.355339, 4: 4.91459},
-    'Novelty': {1: 0.508662, 3: 1.0, 4: 0.508662}, 'Uncertainty (X )': {1: 0.36644, 3: 2.77922, 4: 1.5098}
-}
+    'Aggregates (kg)': {1: 750, 3: 670, 4: 650},
+    'Idx_Sample': {1: 1, 3: 3, 4: 4},
+    'Liquid (kg)': {1: 50, 3: 30, 4: 50},
+    'Materials': {1: 'Powder1, Liquid1, Aggregate1',
+                  3: 'Powder1, Liquid1, Aggregate1',
+                  4: 'Powder1, Liquid1, Aggregate1'},
+    'Novelty': {1: 0.5, 3: 1.0, 4: 0.5},
+    'Powder (kg)': {1: 200, 3: 300, 4: 300},
+    'Uncertainty (X )': {1: 0.4, 3: 2.8, 4: 1.5},
+    'Utility': {1: 5.7, 3: 5.4, 4: 4.9},
+    'X': {1: -3.6, 3: -6.0, 4: -6.7},
+    'al2_o3': {1: 21, 3: 21, 4: 21},
+    'ca_o': {1: 14, 3: 14, 4: 14},
+    'coarse_aggregates': {1: 23, 3: 23, 4: 23},
+    'fe3_o2': {1: 34, 3: 34, 4: 34},
+    'fine': {1: 4, 3: 4, 4: 4},
+    'fine_aggregates': {1: 25, 3: 25, 4: 25},
+    'gravity': {1: 23, 3: 23, 4: 23},
+    'h2_o': {1: 1, 3: 1, 4: 1},
+    'na2_si_o3': {1: 234, 3: 234, 4: 234},
+    'na2_si_o3_mol': {1: 25, 3: 25, 4: 25},
+    'na_o_h': {1: 234, 3: 234, 4: 234},
+    'si_o2_mol': {1: 235, 3: 235, 4: 235},
+    'total co2_footprint / ton': {1: 30.8, 3: 27.3, 4: 27.7},
+    'total costs / ton': {1: 20.8, 3: 19.7, 4: 19.7},
+    'total delivery_time ': {1: 0, 3: 0, 4: 0},
+    'water_absorption': {1: 23, 3: 23, 4: 23}}
 
 TEST_GAUSS_WITHOUT_THRES_CONFIG = {
     'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
