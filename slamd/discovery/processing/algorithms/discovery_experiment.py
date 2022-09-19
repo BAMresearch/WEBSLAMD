@@ -262,11 +262,13 @@ class DiscoveryExperiment:
                     clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
 
             if clipped_predictions:
-                clipped_prediction = np.hstack(clipped_predictions)
+                clipped_prediction = np.vstack(clipped_predictions)
+                clipped_prediction = clipped_prediction.T
             else:
                 clipped_prediction = self.prediction
 
         # Normalize the predicted labels
+        # TODO does this rely on broadcasting?
         prediction_norm = (clipped_prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
 
         if self.prediction.ndim >= 2:
