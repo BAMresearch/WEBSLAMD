@@ -69,6 +69,8 @@ class DiscoveryService:
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
         df_with_predictions, plot = experiment.run()
+        import numpy as np
+        print(df_with_predictions.replace({np.nan: None}).to_dict())
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
