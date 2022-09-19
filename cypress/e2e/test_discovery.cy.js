@@ -92,29 +92,29 @@ describe("Test running experiments with example dataset", () => {
       .scrollIntoView()
       .within(() => {
         // This number appears twice
-        cy.findAllByText("160.79328")
+        cy.findAllByText(160.79328)
           .eq(0)
           .next()
-          .should("have.text", "63.442981")
+          .expectFloatToEqual(63.442981)
           .next()
-          .should("have.text", "2.531052")
+          .expectFloatToEqual(2.531052)
           .next()
-          .should("have.text", "0.599547");
-        cy.findByText("164.35337")
+          .expectFloatToEqual(0.599547);
+        cy.findByText(164.35337)
           .next()
-          .should("have.text", "59.014729")
+          .expectFloatToEqual(59.014729)
           .next()
-          .should("have.text", "2.372714")
+          .expectFloatToEqual(2.372714)
           .next()
-          .should("have.text", "0.620889");
-        cy.findAllByText("160.79328")
+          .expectFloatToEqual(0.620889);
+        cy.findAllByText(160.79328)
           .eq(1)
           .next()
-          .should("have.text", "59.452994")
+          .expectFloatToEqual(59.452994)
           .next()
-          .should("have.text", "2.243499")
+          .expectFloatToEqual(2.243499)
           .next()
-          .should("have.text", "0.523664");
+          .expectFloatToEqual(0.523664);
       });
   });
 
@@ -168,29 +168,29 @@ describe("Test running experiments with example dataset", () => {
       .eq(1)
       .scrollIntoView()
       .within(() => {
-        cy.findByText("164.35337")
+        cy.findByText(164.35337)
           .next()
-          .should("have.text", "59.014729")
+          .expectFloatToEqual(59.014729)
           .next()
-          .should("have.text", "4.048724")
+          .expectFloatToEqual(4.048724)
           .next()
-          .should("have.text", "0.620889");
-        cy.findByText("167.90098")
+          .expectFloatToEqual(0.620889);
+        cy.findByText(167.90098)
           .next()
-          .should("have.text", "54.640386")
+          .expectFloatToEqual(54.640386)
           .next()
-          .should("have.text", "4.037003")
+          .expectFloatToEqual(4.037003)
           .next()
-          .should("have.text", "0.789527");
+          .expectFloatToEqual(0.789527);
         // This number appears twice
-        cy.findAllByText("160.79328")
+        cy.findAllByText(160.79328)
           .eq(0)
           .next()
-          .should("have.text", "63.442981")
+          .expectFloatToEqual(63.442981)
           .next()
-          .should("have.text", "3.954029")
+          .expectFloatToEqual(3.954029)
           .next()
-          .should("have.text", "0.599547");
+          .expectFloatToEqual(0.599547);
       });
   });
 });
