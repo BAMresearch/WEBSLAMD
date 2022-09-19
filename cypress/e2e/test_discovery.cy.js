@@ -85,6 +85,7 @@ describe("Test running experiments with example dataset", () => {
     cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
     cy.findByText("Run experiment with given configuration").click();
     cy.wait("@run_experiment");
+    cy.get(".spinner-border").should("not.exist");
 
     // Check first three rows for the columns [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa), Utility, Novelty]
     cy.get(".table-responsive")
@@ -162,6 +163,7 @@ describe("Test running experiments with example dataset", () => {
     cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
     cy.findByText("Run experiment with given configuration").click();
     cy.wait("@run_experiment");
+    cy.get(".spinner-border").should("not.exist");
 
     // Check first three rows for the columns [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa), Utility, Novelty]
     cy.get(".table-responsive")
@@ -191,6 +193,173 @@ describe("Test running experiments with example dataset", () => {
           .expectFloatToEqual(3.954029)
           .next()
           .expectFloatToEqual(0.599547);
+      });
+  });
+
+  it("One target property and one a priori information minimized works", () => {
+    // Select features
+    cy.findByLabelText("Materials Data (Input) (select one column at least)").select([
+      "SiO2",
+      "CaO",
+      "SO3",
+      "FA (kg/m3)",
+      "GGBFS (kg/m3)",
+      "Coarse aggregate (kg/m3)",
+      "Fine aggregate (kg/m3)",
+      "Total aggregates",
+      "Na2SiO3",
+      "Na2O (Dry)",
+      "Sio2 (Dry)",
+      "Superplasticizer",
+      "water -eff",
+    ]);
+
+    // Select target properties
+    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
+    cy.findByLabelText("Target Properties (select one column at least)").select(["fc 28-d - Target (MPa)"]);
+    cy.wait("@create_target_configuration_form");
+
+    // Check that a form appeared
+    cy.findAllByLabelText("Maximize").should("have.length", 1);
+    cy.findAllByLabelText("Minimize").should("have.length", 1);
+    cy.findAllByLabelText("Weight").should("have.length", 1);
+
+    // Select a priori information
+    cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
+      "create_a_priori_information_configuration_form"
+    );
+    cy.findByLabelText("A priori Information (optional)").select(["CO2 (kg/t) - A-priori Information"]);
+    cy.wait("@create_a_priori_information_configuration_form");
+
+    // Check that a second form appeared
+    cy.findAllByLabelText("Maximize").should("have.length", 2);
+    cy.findAllByLabelText("Minimize").should("have.length", 2);
+    cy.findAllByLabelText("Weight").should("have.length", 2);
+
+    // Minimize CO2
+    cy.findAllByLabelText("Minimize").eq(1).check();
+
+    // Run the experiment, wait for the request to complete
+    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
+    cy.findByText("Run experiment with given configuration").click();
+    cy.wait("@run_experiment");
+    cy.get(".spinner-border").should("not.exist");
+
+    // Check first three rows for the columns [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa), Utility, Novelty]
+    cy.get(".table-responsive")
+      .eq(1)
+      .scrollIntoView()
+      .within(() => {
+        // This number appears twice
+        cy.findAllByText(116.12407)
+          .eq(0)
+          .next()
+          .expectFloatToEqual(64.10796)
+          .next()
+          .expectFloatToEqual(3.831002)
+          .next()
+          .expectFloatToEqual(0.224525);
+        cy.findAllByText(116.12407)
+          .eq(1)
+          .next()
+          .expectFloatToEqual(64.099414)
+          .next()
+          .expectFloatToEqual(3.83015)
+          .next()
+          .expectFloatToEqual(0.224525);
+        // This number appears twice
+        cy.findAllByText(114.39607)
+          .eq(0)
+          .next()
+          .expectFloatToEqual(57.296066)
+          .next()
+          .expectFloatToEqual(3.424517)
+          .next()
+          .expectFloatToEqual(0.311907);
+      });
+  });
+
+  it("Two target properties and one a priori information minimized works", () => {
+    // Select features
+    cy.findByLabelText("Materials Data (Input) (select one column at least)").select([
+      "SiO2",
+      "CaO",
+      "SO3",
+      "FA (kg/m3)",
+      "GGBFS (kg/m3)",
+      "Coarse aggregate (kg/m3)",
+      "Fine aggregate (kg/m3)",
+      "Total aggregates",
+      "Na2SiO3",
+      "Na2O (Dry)",
+      "Sio2 (Dry)",
+      "Superplasticizer",
+      "water -eff",
+    ]);
+
+    // Select target properties
+    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
+    cy.findByLabelText("Target Properties (select one column at least)").select([
+      "fc 28-d - Target (MPa)",
+      "Slump - Target (mm)",
+    ]);
+    cy.wait("@create_target_configuration_form");
+
+    // Check that two forms appeared
+    cy.findAllByText("Maximize").should("have.length", 2);
+    cy.findAllByText("Minimize").should("have.length", 2);
+    cy.findAllByLabelText("Weight").should("have.length", 2);
+
+    // Select a priori information
+    cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
+      "create_a_priori_information_configuration_form"
+    );
+    cy.findByLabelText("A priori Information (optional)").select(["CO2 (kg/t) - A-priori Information"]);
+    cy.wait("@create_a_priori_information_configuration_form");
+
+    // Check that a third form appeared
+    cy.findAllByText("Maximize").should("have.length", 3);
+    cy.findAllByText("Minimize").should("have.length", 3);
+    cy.findAllByLabelText("Weight").should("have.length", 3);
+
+    // Minimize CO2
+    cy.findAllByLabelText("Minimize").eq(2).check();
+
+    // Run the experiment, wait for the request to complete
+    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
+    cy.findByText("Run experiment with given configuration").click();
+    cy.wait("@run_experiment");
+    cy.get(".spinner-border").should("not.exist");
+
+    // Check first three rows for the columns [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa), Utility, Novelty]
+    cy.get(".table-responsive")
+      .eq(1)
+      .scrollIntoView()
+      .within(() => {
+        // This number appears twice
+        cy.findAllByText(116.12407)
+          .eq(0)
+          .next()
+          .expectFloatToEqual(64.10796)
+          .next()
+          .expectFloatToEqual(6.061092)
+          .next()
+          .expectFloatToEqual(0.224525);
+        cy.findAllByText(116.12407)
+          .eq(1)
+          .next()
+          .expectFloatToEqual(64.099414)
+          .next()
+          .expectFloatToEqual(6.057715)
+          .next()
+          .expectFloatToEqual(0.224525);
+        cy.findByText(114.39607)
+          .next()
+          .expectFloatToEqual(57.296066)
+          .next()
+          .expectFloatToEqual(5.137301)
+          .next()
+          .expectFloatToEqual(0.311907);
       });
   });
 });
