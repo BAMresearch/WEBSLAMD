@@ -353,7 +353,9 @@ describe("Test running experiments with example dataset", () => {
           .expectFloatToEqual(6.057715)
           .next()
           .expectFloatToEqual(0.224525);
-        cy.findByText(114.39607)
+        // This number appears twice
+        cy.findAllByText(114.39607)
+          .eq(0)
           .next()
           .expectFloatToEqual(57.296066)
           .next()
