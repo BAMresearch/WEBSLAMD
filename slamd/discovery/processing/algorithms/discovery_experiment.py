@@ -29,9 +29,9 @@ class DiscoveryExperiment:
         self.features = features
 
         # Partition the dataframe in three parts: features, targets and fixed targets
-        self.features_df = dataframe[features]
-        self.target_df = dataframe[targets]
-        self.fixed_target_df = dataframe[fixed_targets]
+        self.features_df = dataframe[features].copy()
+        self.target_df = dataframe[targets].copy()
+        self.fixed_target_df = dataframe[fixed_targets].copy()
 
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
