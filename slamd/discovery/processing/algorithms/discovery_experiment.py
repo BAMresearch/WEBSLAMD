@@ -237,35 +237,7 @@ class DiscoveryExperiment:
         # Normalize the uncertainty of the predicted labels
         uncertainty_norm = self.uncertainty / np.array(predicted_rows.std())
 
-        if len(self.targets) == 1:
-            if self.target_thresholds[0] is not None:
-                if self.target_max_or_min[0] == 'min':
-                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0], a_max=None)
-                else:
-                    clipped_prediction = np.clip(self.prediction, a_min=None, a_max=self.target_thresholds[0])
-            else:
-                clipped_prediction = self.prediction
-
-        else:
-            # Multiple targets
-            column_indices = [i for i in range(len(self.targets))]
-            clipped_predictions = []
-            for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
-                if value not in ['min', 'max']:
-                    raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
-                if threshold is None:
-                    continue
-
-                if value == 'min':
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold, a_max=None))
-                else:
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
-
-            if clipped_predictions:
-                clipped_prediction = np.vstack(clipped_predictions)
-                clipped_prediction = clipped_prediction.T
-            else:
-                clipped_prediction = self.prediction
+        clipped_prediction = self.clip_predictions()
 
         # Normalize the predicted labels
         # TODO does this rely on broadcasting?
@@ -299,6 +271,39 @@ class DiscoveryExperiment:
             ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()
 
         return utility_function
+
+    def clip_predictions(self):
+        if len(self.targets) == 1:
+            if self.target_thresholds[0] is not None:
+                if self.target_max_or_min[0] == 'min':
+                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0], a_max=None)
+                else:
+                    clipped_prediction = np.clip(self.prediction, a_min=None, a_max=self.target_thresholds[0])
+            else:
+                clipped_prediction = self.prediction
+
+        else:
+            # Multiple targets
+            column_indices = [i for i in range(len(self.targets))]
+            clipped_predictions = []
+            for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
+                if value not in ['min', 'max']:
+                    raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+                if threshold is None:
+                    continue
+
+                if value == 'min':
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold, a_max=None))
+                else:
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
+
+            if clipped_predictions:
+                clipped_prediction = np.vstack(clipped_predictions)
+                clipped_prediction = clipped_prediction.T
+            else:
+                clipped_prediction = self.prediction
+
+        return clipped_prediction
 
     def apply_weights_to_apriori_values(self):
         fixed_targets_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
