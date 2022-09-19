@@ -137,6 +137,11 @@ async function runExperiment() {
     a_priori_information_configurations,
   });
   removeSpinnerInPlaceholder("experiment-result-placeholder");
+
+  // The plot data is embedded in the HTML placeholder. Turn the JSON data into an actual plot.
+  const plotJson = JSON.parse(document.getElementById("interactive-plot-placeholder").textContent);
+  removeInnerHtmlFromPlaceholder("interactive-plot-placeholder");
+  Plotly.plot("interactive-plot-placeholder", plotJson.data, plotJson.layout, { responsive: true });
 }
 
 function toggleRunExperimentButton() {

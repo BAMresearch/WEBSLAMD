@@ -53,14 +53,14 @@ def submit_formulation_batch():
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover')
-    body = {'template': render_template('formulations_tables.html', df=html_dataframe)}
+    body = {'template': render_template('formulations_table.html', df=html_dataframe)}
     return make_response(jsonify(body), 200)
 
 
 @formulations.route('', methods=['DELETE'])
 def delete_formulation():
     FormulationsService.delete_formulation()
-    body = {'template': render_template('formulations_tables.html', df=None)}
+    body = {'template': render_template('formulations_table.html', df=None)}
 
     return make_response(jsonify(body), 200)
 
