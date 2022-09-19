@@ -136,12 +136,15 @@ class DiscoveryExperiment:
             if threshold is None:
                 continue
 
+            # index of rows in which all target columns are nan
+            nodata_index = df[self.targets].isna().all(axis=1)
             if value == 'max':
-                # Get dataframe mask based on threshold value. Apply mask to dataframe. Get index of remaining values.
-                # Use index to drop values from original dataframe.
-                df.drop(df[df[column] < threshold].index, inplace=True)
+                # Get dataframe mask based on threshold value and nodata_index.
+                # Apply mask to dataframe. Get index of values to drop.
+                # Use new index to drop values from original dataframe.
+                df.drop(df[(df[column] < threshold) & nodata_index].index, inplace=True)
             else:
-                df.drop(df[df[column] > threshold].index, inplace=True)
+                df.drop(df[(df[column] > threshold) & nodata_index].index, inplace=True)
 
         return df.reset_index(drop=True)
 
