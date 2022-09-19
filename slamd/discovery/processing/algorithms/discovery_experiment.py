@@ -21,14 +21,17 @@ class DiscoveryExperiment:
         self.dataframe = dataframe.copy()
         self.model = model
         self.curiosity = curiosity
+
         self.targets = targets
         self.target_weights = target_weights
         self.target_thresholds = target_thresholds
         self.target_max_or_min = target_max_or_min
+
         self.apriori_columns = apriori_columns
         self.apriori_weights = apriori_weights
         self.apriori_thresholds = apriori_thresholds
         self.apriori_max_or_min = apriori_max_or_min
+
         self.features = features
 
         # Partition the dataframe in three parts: features, targets and fixed targets
@@ -40,11 +43,8 @@ class DiscoveryExperiment:
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
 
-        # Select the rows that have a label for the first target
-        # These have a null value in the corresponding column
         self._update_prediction_index()
-        # The rows with labels (the training set) are the rest of the rows
-        self.sample_index = self.dataframe.index.difference(self.prediction_index)
+        self._update_sample_index()
 
     def run(self):
         self._preprocess_features()
@@ -93,7 +93,13 @@ class DiscoveryExperiment:
         return sorted, plot
 
     def _update_prediction_index(self):
+        # Selects the rows that have a label for the first target
+        # These have a null value in the corresponding column
         self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
+
+    def _update_sample_index(self):
+        # Inverse of prediction index - The rows with labels (the training set) are the rest of the rows
+        self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
     def _preprocess_features(self):
         non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
@@ -227,16 +233,16 @@ class DiscoveryExperiment:
         return min_distances * (max_of_min_distances ** (-1))
 
     def update_index_MLI(self):
-        predicted_rows = self.target_df.iloc[self.sample_index]
+        predicted_rows = self.target_df.loc[self.sample_index]
         # Normalize the uncertainty of the predicted labels
         uncertainty_norm = self.uncertainty / np.array(predicted_rows.std())
 
         if len(self.targets) == 1:
             if self.target_thresholds[0] is not None:
                 if self.target_max_or_min[0] == 'min':
-                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0])
+                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0], a_max=None)
                 else:
-                    clipped_prediction = np.clip(self.prediction, a_max=self.target_thresholds[0])
+                    clipped_prediction = np.clip(self.prediction, a_min=None, a_max=self.target_thresholds[0])
             else:
                 clipped_prediction = self.prediction
 
@@ -251,9 +257,9 @@ class DiscoveryExperiment:
                     continue
 
                 if value == 'min':
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold))
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold, a_max=None))
                 else:
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_max=threshold))
+                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
 
             if clipped_predictions:
                 clipped_prediction = np.hstack(clipped_predictions)
@@ -304,7 +310,8 @@ class DiscoveryExperiment:
     def _check_target_label_validity(self, training_labels):
         number_of_labelled_targets = training_labels.shape[0]
         if number_of_labelled_targets == 0:
-            raise SequentialLearningException('No labels exist.')
+            raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
+                                              'your thresholds are set correctly.')
         all_data_is_labelled = self.dataframe.shape[0] == number_of_labelled_targets
         if all_data_is_labelled:
             raise SequentialLearningException('All data is already labelled.')
