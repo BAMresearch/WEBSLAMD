@@ -137,8 +137,8 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
                                  'total delivery_time '], 'target_properties': ['Target: X'],
         'a_priori_information': ['total co2_footprint / ton'],
         'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.48450244698206',
-        'target_configurations': [{'max_or_min': 'max', 'weight': '1.00'}],
-        'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00'}]}
+        'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''}],
+        'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00', 'threshold': ''}]}
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
 
