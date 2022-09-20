@@ -246,7 +246,7 @@ class FormulationsService:
 
     @classmethod
     def _sanitize_filename(cls, user_input):
-        if user_input is '':
+        if user_input == '':
             # Generate a filename to allow the user to create many datasets
             # one after the other, without having to enter a filename.
             user_input = f'Unnamed-Dataset-{datetime.now()}'
