@@ -161,7 +161,7 @@ class DiscoveryExperiment:
         for i in range(len(self.targets)):
             # Initialize the model with given hyperparameters
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
+            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
 
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()

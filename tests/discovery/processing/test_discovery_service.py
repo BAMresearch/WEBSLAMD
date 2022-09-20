@@ -144,16 +144,10 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
 
     df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_THRES_CONFIG)
 
-    df_with_prediction_dict = df_with_prediction.replace({np.nan: None}).to_dict()
-    for key in TEST_GAUSS_WITH_THRES_PRED.keys():
-        actual = pytest.approx(df_with_prediction_dict[key], 0.1)
-        assert actual == TEST_GAUSS_WITH_THRES_PRED[key]
-
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
-
-    mock_df_as_dict = mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict()
-    #assert mock_df_as_dict == pytest.approx(TEST_GAUSS_WITH_THRES_PRED, 0.02)
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
     assert plot == 'Dummy Plot'
 
 
