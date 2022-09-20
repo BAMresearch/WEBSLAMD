@@ -9,8 +9,9 @@ class PlotGenerator:
     def create_target_scatter_plot(cls, target_list):
         dimensions = [col for col in target_list.columns if col != 'Utility']
         if len(dimensions) == 1:
-            # Generate a simple scatter plot if there is only one target property
-            fig = px.scatter(target_list, x=dimensions[0], y='Utility', color='Utility')
+            # Generate a simple scatter plot if there is only one target property.
+            fig = px.scatter(target_list, x=dimensions[0], y='Utility', color='Utility',
+                             title='Scatter plot of target properties')
             fig.update_traces(hovertemplate='X: %{x:.2f}, Y: %{y:.2f}')
         elif len(dimensions) == 2:
             # Plotly 5.10 issue: px.scatter_matrix() does not output anything when the matrix is 1x1.
