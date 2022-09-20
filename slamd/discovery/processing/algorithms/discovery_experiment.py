@@ -243,7 +243,6 @@ class DiscoveryExperiment:
         clipped_prediction = self.clip_predictions()
 
         # Normalize the predicted labels
-        # TODO does this rely on broadcasting?
         prediction_norm = (clipped_prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
 
         if self.prediction.ndim >= 2:
@@ -289,15 +288,18 @@ class DiscoveryExperiment:
             # Multiple targets
             column_indices = [i for i in range(len(self.targets))]
             clipped_predictions = []
+
             for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
+                print(col_idx, value, threshold)
                 if value not in ['min', 'max']:
                     raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
                 if threshold is None:
+                    clipped_predictions.append(self.prediction[:, col_idx])
                     continue
 
                 if value == 'min':
                     clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold, a_max=None))
-                else:
+                elif value == 'max':
                     clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
 
             if clipped_predictions:
