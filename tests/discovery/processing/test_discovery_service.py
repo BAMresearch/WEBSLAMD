@@ -16,8 +16,9 @@ from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetFo
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_INPUT, GAUSS_THRESH_INPUT, TEST_GAUSS_PRED, \
-    GAUSS_THRESH_PRED
+from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRES_INPUT, \
+    TEST_GAUSS_WITH_THRES_INPUT, TEST_GAUSS_WITHOUT_THRES_PRED, \
+    TEST_GAUSS_WITH_THRES_PRED, TEST_GAUSS_WITHOUT_THRES_CONFIG, TEST_GAUSS_WITH_THRES_CONFIG
 
 app = create_app('testing', with_session=False)
 
@@ -110,11 +111,7 @@ def test_list_datasets_returns_all_datasets(monkeypatch):
     assert datasets[2] == Dataset('Dataset 3')
 
 
-def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
-    def mock_query_dataset_by_name(dataset_name):
-        test_df = pd.DataFrame.from_dict(TEST_GAUSS_INPUT)
-        return Dataset('test_data', ['Target: X'], test_df)
-
+def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypatch):
     mock_save_prediction_called_with = None
 
     def mock_save_prediction(prediction):
@@ -122,39 +119,19 @@ def test_run_experiment_with_gauss_and_saves_result(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
-    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_target_scatter_plot(targets):
-        return 'Dummy Plot'
-
-    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRES_INPUT, 'Target: X')
 
-    test_experiment_config = {
-        'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Custom (kg)', 'Materials', 'Prop 1',
-                                 'X', 'Y', 'fe3_o2', 'al2_o3', 'ca_o', 'mg_o', 'k2_o', 's_o3', 'ti_o2', 'p2_o5', 'sr_o',
-                                 'mn2_o3', 'fine', 'fine_aggregates', 'coarse_aggregates', 'water_absorption',
-                                 'duration', 'temperature', 'relative humidity', 'total costs / ton',
-                                 'total delivery_time '], 'target_properties': ['Target: X'],
-        'a_priori_information': ['total co2_footprint / ton'],
-        'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.48450244698206',
-        'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''}],
-        'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00', 'threshold': ''}]}
+    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
 
-    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
-
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
-    assert mock_save_prediction_called_with.metadata == test_experiment_config
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_PRED
+    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRES_CONFIG
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
     assert plot == 'Dummy Plot'
 
 
-def test_run_experiment_with_thresholds_and_rfr_and_saves_result(monkeypatch):
-    def mock_query_dataset_by_name(dataset_name):
-        test_df = pd.DataFrame.from_dict(GAUSS_THRESH_INPUT)
-        return Dataset('test_data', ['X'], test_df)
-
+def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     mock_save_prediction_called_with = None
 
     def mock_save_prediction(prediction):
@@ -162,39 +139,15 @@ def test_run_experiment_with_thresholds_and_rfr_and_saves_result(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
-    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_target_scatter_plot(targets):
-        return 'Dummy Plot'
-
-    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRES_INPUT, 'X')
 
-    test_experiment_config = {
-        'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Materials',
-                                 'fe3_o2', 'al2_o3', 'ca_o', 'fine', 'gravity', 'na2_si_o3', 'na2_si_o3_mol',
-                                 'na_o_h', 'si_o2_mol', 'h2_o',
-                                 'fine_aggregates', 'coarse_aggregates', 'water_absorption', 'total costs / ton',
-                                 'total co2_footprint / ton', 'total delivery_time '],
-        'target_properties': ['X'],
-        'a_priori_information': ['total co2_footprint / ton'],
-        'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.0',
-        'target_configurations': [{'max_or_min': 'min', 'weight': '1.00', 'threshold': '5.0'}],
-        'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': '27.0'}]}
+    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_THRES_CONFIG)
 
-    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', test_experiment_config)
-
-    df_with_prediction[["Novelty", "Uncertainty (X )", "Utility", "X"]] =df_with_prediction.loc[["Novelty", "Uncertainty (X )", "Utility", "X"]].round(1)
-    expected_df = pd.DataFrame(GAUSS_THRESH_PRED)
-    expected_df[["Novelty", "Uncertainty (X )", "Utility", "X"]] = expected_df.loc[["Novelty", "Uncertainty (X )", "Utility", "X"]].round(1)
-
-    GAUSS_THRESH_PRED = expected_df.to_dict()
-
-
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == GAUSS_THRESH_PRED
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
-    assert mock_save_prediction_called_with.metadata == test_experiment_config
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == GAUSS_THRESH_PRED
+    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
     assert plot == 'Dummy Plot'
 
 
@@ -219,3 +172,16 @@ def test_download_prediction(monkeypatch):
     assert output == 'Dummy.xslx'
     assert filename.startswith('predictions-test_dataset.csv')
     assert filename.endswith('.xlsx')
+
+
+def _mock_dataset_and_plot(monkeypatch, data, target_name):
+    def mock_query_dataset_by_name(dataset_name):
+        test_df = pd.DataFrame.from_dict(data)
+        return Dataset('test_data', [target_name], test_df)
+
+    # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
+    def mock_create_target_scatter_plot(targets):
+        return 'Dummy Plot'
+
+    monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)

@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import FieldList, FormField
-from wtforms import StringField
+from wtforms import FieldList, FormField, StringField, validators
 
 
 class WeightsEntriesForm(Form):
@@ -9,7 +8,7 @@ class WeightsEntriesForm(Form):
 
     weights = StringField(
         label='Weights',
-        validators=[]
+        validators=[validators.DataRequired(message='Weight cannot be empty')]
     )
 
 

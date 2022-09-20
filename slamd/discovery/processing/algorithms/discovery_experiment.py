@@ -34,7 +34,7 @@ class DiscoveryExperiment:
 
         self.features = features
 
-        # Partition the dataframe in three parts: features, targets and fixed targets
+        # Partition the dataframe in three parts: features, targets and apriori information
         self.dataframe = self.filter_apriori_with_thresholds(self.dataframe)
         self.features_df = self.dataframe[features]
         self.target_df = self.dataframe[targets]
@@ -161,7 +161,7 @@ class DiscoveryExperiment:
         for i in range(len(self.targets)):
             # Initialize the model with given hyperparameters
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
+            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
 
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = self.features_df.iloc[self.sample_index].to_numpy()
@@ -311,13 +311,13 @@ class DiscoveryExperiment:
         return clipped_prediction
 
     def apply_weights_to_apriori_values(self):
-        fixed_targets_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
+        apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
 
         for w in range(len(self.apriori_weights)):
-            fixed_targets_for_predicted_rows[w] *= self.apriori_weights[w]
-        # Sum the fixed targets values row-wise for the case that there are several of them
+            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
+        # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
-        return fixed_targets_for_predicted_rows.sum(axis=1)
+        return apriori_for_predicted_rows.sum(axis=1)
 
     def _check_target_label_validity(self, training_labels):
         number_of_labelled_targets = training_labels.shape[0]
