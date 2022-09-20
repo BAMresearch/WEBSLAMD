@@ -90,6 +90,8 @@ class DiscoveryExperiment:
 
         plot = PlotGenerator.create_target_scatter_plot(target_list)
 
+        # Show the pandas index column with the rest of the dataframe.
+        sorted.reset_index(inplace=True)
         return sorted, plot
 
     def _update_prediction_index(self):

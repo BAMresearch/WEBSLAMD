@@ -8,12 +8,14 @@ class PlotGenerator:
     @classmethod
     def create_target_scatter_plot(cls, target_list):
         dimensions = [col for col in target_list.columns if col != 'Utility']
+        # Use the pandas index to identify the specific point.
+        target_list.reset_index(inplace=True)
         if len(dimensions) == 1:
             # Generate a simple scatter plot if there is only one target property.
             # We include the Utility color-coded for aesthetic reasons.
-            fig = px.scatter(target_list, x=dimensions[0], y='Utility', color='Utility',
+            fig = px.scatter(target_list, x=dimensions[0], y='Utility', color='Utility', text='index',
                              title='Scatter plot of target properties')
-            fig.update_traces(hovertemplate='X: %{x:.2f}, Y: %{y:.2f}')
+            fig.update_traces(textposition='top center', hovertemplate='X: %{x:.2f}, Y: %{y:.2f}')
         elif len(dimensions) == 2:
             # Plotly 5.10 issue: px.scatter_matrix() does not output anything when the matrix is 1x1.
             # We need to handle this case separately and generate a single scatter plot.
