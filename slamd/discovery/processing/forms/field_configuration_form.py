@@ -19,3 +19,8 @@ class FieldConfigurationForm(Form):
         default=1.0,
         validators=[validators.DataRequired(message='Weight for the target column cannot be empty')]
     )
+
+    threshold = DecimalField(
+        label='Threshold',
+        validators=[validators.Optional()]
+    )
