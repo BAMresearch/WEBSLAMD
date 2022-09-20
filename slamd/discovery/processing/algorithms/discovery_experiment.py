@@ -290,7 +290,6 @@ class DiscoveryExperiment:
             clipped_predictions = []
 
             for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
-                print(col_idx, value, threshold)
                 if value not in ['min', 'max']:
                     raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
                 if threshold is None:
