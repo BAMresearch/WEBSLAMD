@@ -80,6 +80,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Maximize").should("have.length", 1);
     cy.findAllByLabelText("Minimize").should("have.length", 1);
     cy.findAllByLabelText("Weight").should("have.length", 1);
+    cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Run the experiment, wait for the request to complete
     cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
@@ -146,6 +147,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Maximize").should("have.length", 1);
     cy.findAllByLabelText("Minimize").should("have.length", 1);
     cy.findAllByLabelText("Weight").should("have.length", 1);
+    cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Select a priori information
     cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
@@ -158,6 +160,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Maximize").should("have.length", 2);
     cy.findAllByLabelText("Minimize").should("have.length", 2);
     cy.findAllByLabelText("Weight").should("have.length", 2);
+    cy.findAllByLabelText("Threshold").should("have.length", 2);
 
     // Run the experiment, wait for the request to complete
     cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
@@ -223,6 +226,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Maximize").should("have.length", 1);
     cy.findAllByLabelText("Minimize").should("have.length", 1);
     cy.findAllByLabelText("Weight").should("have.length", 1);
+    cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Select a priori information
     cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
@@ -235,6 +239,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Maximize").should("have.length", 2);
     cy.findAllByLabelText("Minimize").should("have.length", 2);
     cy.findAllByLabelText("Weight").should("have.length", 2);
+    cy.findAllByLabelText("Threshold").should("have.length", 2);
 
     // Minimize CO2
     cy.findAllByLabelText("Minimize").eq(1).check();
@@ -309,6 +314,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByText("Maximize").should("have.length", 2);
     cy.findAllByText("Minimize").should("have.length", 2);
     cy.findAllByLabelText("Weight").should("have.length", 2);
+    cy.findAllByLabelText("Threshold").should("have.length", 2);
 
     // Select a priori information
     cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
@@ -321,6 +327,7 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByText("Maximize").should("have.length", 3);
     cy.findAllByText("Minimize").should("have.length", 3);
     cy.findAllByLabelText("Weight").should("have.length", 3);
+    cy.findAllByLabelText("Threshold").should("have.length", 3);
 
     // Minimize CO2
     cy.findAllByLabelText("Minimize").eq(2).check();

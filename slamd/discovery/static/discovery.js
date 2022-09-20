@@ -97,7 +97,8 @@ function parseTargetConfigurations(numberTargetProperties) {
       `target_configurations-${i}-max_or_min-1`
     );
     const weight = document.getElementById(`target_configurations-${i}-weight`).value;
-    result.push({ max_or_min, weight });
+    const threshold = document.getElementById(`target_configurations-${i}-threshold`).value;
+    result.push({ max_or_min, weight, threshold });
   }
   return result;
 }
@@ -110,7 +111,8 @@ function parseAPrioriInformationConfigurations(numberAPrioriInformationPropertie
       `a_priori_information_configurations-${i}-max_or_min-1`
     );
     const weight = document.getElementById(`a_priori_information_configurations-${i}-weight`).value;
-    result.push({ max_or_min, weight });
+    const threshold = document.getElementById(`a_priori_information_configurations-${i}-threshold`).value;
+    result.push({ max_or_min, weight, threshold });
   }
   return result;
 }
