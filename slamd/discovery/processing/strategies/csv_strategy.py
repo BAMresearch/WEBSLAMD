@@ -19,12 +19,15 @@ class CsvStrategy:
         file_name = secure_filename(file_data.filename)
 
         delimiter = cls._determine_delimiter(file_data)
+        decimal = '.'
+        if delimiter == ';':
+            decimal = ','
 
         if file_name == 'temporary.csv':
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
         try:
-            dataset = Dataset(name=file_name, dataframe=read_csv(file_data, delimiter=delimiter))
+            dataset = Dataset(name=file_name, dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal))
         except:
             raise ValueNotSupportedException('The dataset you submitted could not be read.')
 
