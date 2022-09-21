@@ -53,14 +53,20 @@
 
     <div id="formulations_weights_placeholder"></div>
 
-    <button class="btn btn-danger col-12 mb-3" type="button" id="delete_formulations_batches_button"
-        data-bs-toggle="tooltip" data-bs-placement="bottom"
-        title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
-        Delete Material Formulation
-    </button>
+    <div class="row g-3 mb-3 align-items-end">
+        <div class="col-md-6">
+            <button class="btn btn-danger col-12 mb-3" type="button" id="delete_formulations_batches_button"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+                Delete Material Formulation
+            </button>
+        </div>
+        <div class="col-md-6">
+            {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12 mb-3",
+            data_bs_toggle="tooltip", data_bs_placement="bottom",
+            title="Save your created formulation as a dataset to be used for materials discovery. Specify any name but
+            'temporary' for the dataset.", disabled=True) }}
+        </div>
+    </div>
 
-    {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12 mb-3",
-    data_bs_toggle="tooltip", data_bs_placement="bottom",
-    title="Save your created formulation as a dataset to be used for materials discovery. Specify any name but
-    'temporary' for the dataset.", disabled=True) }}
 </form>
