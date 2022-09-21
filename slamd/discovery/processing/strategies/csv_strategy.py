@@ -1,21 +1,34 @@
 from pandas import read_csv
 from werkzeug.utils import secure_filename
+from csv import Sniffer
 
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
+    SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
 
 
 class CsvStrategy:
 
+    CSV_DELIM_SAMPLE_BYTES = 10000
+    CSV_DELIM_SAMPLE_LINES = 2
+
     @classmethod
     def create_dataset(cls, file_data):
         # Generate a safe filename for the new dataset
         file_name = secure_filename(file_data.filename)
 
+        delimiter = cls._determine_delimiter(file_data)
+
         if file_name == 'temporary.csv':
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
-        return Dataset(name=file_name, dataframe=read_csv(file_data))
+
+        try:
+            dataset = Dataset(name=file_name, dataframe=read_csv(file_data, delimiter=delimiter))
+        except:
+            raise ValueNotSupportedException('The dataset you submitted could not be read.')
+
+        return dataset
 
     @classmethod
     def save_dataset(cls, dataset):
@@ -24,3 +37,22 @@ class CsvStrategy:
     @classmethod
     def to_csv(cls, dataset):
         return dataset.dataframe.to_csv(index=False, na_rep='NaN')
+
+    @classmethod
+    def _determine_delimiter(cls, file_data):
+        head = file_data.read(cls.CSV_DELIM_SAMPLE_BYTES).decode('utf-8')
+        file_data.seek(0)   # reset file pointer to avoid side effects
+
+        if head.count('\n') < cls.CSV_DELIM_SAMPLE_LINES:
+            if not file_data.read():
+                # eof
+                raise SlamdUnprocessableEntityException('The csv file you tried to upload does not contain enough'
+                                                        'rows.')
+            else:
+                raise SlamdRequestTooLargeException('The csv file you tried to upload is too large or has too many'
+                                                    'columns.')
+
+        # csv.Sniffer() works best when reading at least the first two lines.
+        split_head = head.split('\n')
+        sample = '\n'.join(split_head[cls.CSV_DELIM_SAMPLE_LINES:])
+        return Sniffer().sniff(sample).delimiter
