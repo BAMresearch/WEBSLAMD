@@ -1,5 +1,21 @@
-<div class="table-responsive">
-    {% if df is not none %}
-    {{ df | safe }}
-    {% endif %}
+{% if df is not none %}
+<div class="accordion">
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="accordionFormulationsTable-headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#accordionFormulationsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionFormulationsTable-collapseOne">
+                Show / hide table
+            </button>
+        </h3>
+        <div id="accordionFormulationsTable-collapseOne" class="accordion-collapse collapse show"
+             aria-labelledby="accordionFormulationsTable-headingOne">
+            <div class="accordion-body">
+                <div class="table-responsive">
+                    {{ df | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endif %}
