@@ -66,4 +66,4 @@ class SequentialLearningException(UnprocessableEntity):
 class SlamdUnprocessableEntityException(UnprocessableEntity):
     def __init__(self, message):
         self.message = message
-        super(SequentialLearningException, self).__init__()
+        super(SlamdUnprocessableEntityException, self).__init__()

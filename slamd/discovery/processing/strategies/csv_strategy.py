@@ -44,16 +44,17 @@ class CsvStrategy:
     @classmethod
     def _determine_delimiter(cls, file_data):
         head = file_data.read(cls.CSV_DELIM_SAMPLE_BYTES).decode('utf-8')
-        file_data.seek(0)   # reset file pointer to avoid side effects
 
         if head.count('\n') < cls.CSV_DELIM_SAMPLE_LINES:
             if not file_data.read():
                 # eof
-                raise SlamdUnprocessableEntityException('The csv file you tried to upload does not contain enough'
+                raise SlamdUnprocessableEntityException('The csv file you tried to upload does not contain enough '
                                                         'rows.')
             else:
-                raise SlamdRequestTooLargeException('The csv file you tried to upload is too large or has too many'
+                raise SlamdRequestTooLargeException('The csv file you tried to upload is too large or has too many '
                                                     'columns.')
+
+        file_data.seek(0)   # reset file pointer to avoid side effects
 
         # csv.Sniffer() works best when reading at least the first two lines.
         split_head = head.split('\n')
