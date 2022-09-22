@@ -3,6 +3,18 @@
 <h3>Materials formulations</h3>
 <form action="" method="post" novalidate>
     {{ materials_and_processes_selection_form.csrf_token }}
+
+    <div class="col-12 rounded mb-3 bg-white" role="tooltip">
+        <h3 class="explanation-header">How to create and submit new formulations</h3>
+        <div class="explanation-body">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+            ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+            deserunt mollit anim id est laborum.
+        </div>
+    </div>
+
     <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
@@ -13,7 +25,7 @@
             {{ materials_and_processes_selection_form.liquid_selection(class_="form-control form-select") }}
         </div>
     </div>
-    <div class="row g-3 mb-3 align-items-end">
+    <div class="row g-3 mb-3 align-items-start">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.aggregates_selection.label(class_="control-label") }}
             {{ materials_and_processes_selection_form.aggregates_selection(class_="form-control form-select") }}
