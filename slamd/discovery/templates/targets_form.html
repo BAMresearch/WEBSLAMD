@@ -10,37 +10,49 @@
 <form action="" method="post" novalidate>
     {{ form.csrf_token }}
     <p>2 - Specify target values</p>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Formulation Index</th>
-                    <th>Feature Summary</th>
-                    {% for item in target_list %}
-                    <th>{{ item }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in all_dtos %}
-                {% set outer_loop = loop %}
-                <tr>
-                    <td>{{ item.index }}</td>
-                    <td>{{ item.preview_of_data }}</td>
-                    {% for target in item.targets %}
-                    {% if target.index == item.index %}
-                    <td>
-                        <input class="form-control"
-                            id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                            name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
-                            value="{{ target.value if target.value is not none }}">
-                    </td>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="accordion mb-3">
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
+                        aria-controls="accordionTargetsTable-collapseOne">
+                    Show / hide dataset
+                </button>
+            </h3>
+            <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse show"
+                 aria-labelledby="accordionTargetsTable-headingOne">
+                <table class="accordion-body table table-responsive table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Formulation Index</th>
+                            <th>Feature Summary</th>
+                            {% for item in target_list %}
+                            <th>{{ item }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in all_dtos %}
+                        {% set outer_loop = loop %}
+                        <tr>
+                            <td>{{ item.index }}</td>
+                            <td>{{ item.preview_of_data }}</td>
+                            {% for target in item.targets %}
+                            {% if target.index == item.index %}
+                            <td>
+                                <input class="form-control"
+                                    id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                                    name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
+                                    value="{{ target.value if target.value is not none }}">
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
