@@ -4,22 +4,22 @@
 <form action="" method="post" novalidate>
     {{ blending_name_and_type_form.csrf_token }}
     <div class="row mb-3">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
-            {{ blending_name_and_type_form.blended_material_name(class_="form-control", placeholder="Cannot be empty")
+            {{ blending_name_and_type_form.blended_material_name(class_="form-control mb-3", placeholder="Cannot be empty")
             }}
 
             {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
-            {{ blending_name_and_type_form.base_type(class_="form-control form-select") }}
+            {{ blending_name_and_type_form.base_type(class_="form-control form-select mb-3") }}
 
             <div id="base-material-selection-placeholder">
                 {% include 'base_material_selection.html' %}
             </div>
         </div>
 
-        <div class="col-6 rounded bg-white align-self-center" role="tooltip">
+        <div class="d-flex col-12 col-md-6 rounded bg-white flex-column" role="tooltip">
             <h3 class="explanation-header">What to select?</h3>
-            <div class="explanation-body">
+            <div class="explanation-body flex-grow-1">
                 Select at least two base materials for creating blended materials using Ctrl+Click or Shift+Click
                 in the Base Materials box.
                 After selection configure mixture ratios in terms of minimal and maximal values
