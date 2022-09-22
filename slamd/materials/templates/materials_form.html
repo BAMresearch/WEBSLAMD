@@ -12,16 +12,16 @@
         </div>
     </div>
 
-    <div class="accordion accordion-flush" id="accordion-materials-form">
+    <h5>Properties</h5>
+    <div class="accordion accordion" id="accordion-materials-form">
         <div class="accordion-item">
-            <h5>Properties</h5>
-            <h2 class="accordion-header" id="flush-headingOne">
+            <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     3 - Cost
                 </button>
             </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
                 <div class="accordion-body">
                     <div class="row g-3 align-items-end">
                         <div class="col-md-4">
@@ -42,7 +42,7 @@
         </div>
         {% include 'material_type_form.html' %}
     </div>
-    {{ form.submit(class_="btn btn-primary col-12 mb-3", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    {{ form.submit(class_="btn btn-primary col-12 my-3", data_bs_toggle="tooltip", data_bs_placement="bottom",
     title="Select at least a name and a type")
     }}
 </form>
