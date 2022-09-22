@@ -1,6 +1,7 @@
 import json
 import plotly
 import plotly.express as px
+from sklearn.manifold import TSNE
 
 
 class PlotGenerator:
@@ -29,6 +30,19 @@ class PlotGenerator:
             # Format the tooltips in a generic way good enough for all subplots
             fig.update_traces(diagonal_visible=False, showupperhalf=False,
                               hovertemplate='X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}')
+
+        fig.update_layout(height=1000)
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    @classmethod
+    def create_tsne_input_space_plot(cls, features_df):
+        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
+        features_df_embedded = tsne.fit_transform(features_df)
+        x_embedded = [x for (x, _) in features_df_embedded]
+        y_embedded = [y for (_, y) in features_df_embedded]
+
+        fig = px.scatter(x=x_embedded, y=y_embedded,
+                         title='Materials data in t-SNE coordinates: candidates and targets')
 
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

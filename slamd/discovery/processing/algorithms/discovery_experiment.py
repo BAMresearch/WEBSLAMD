@@ -88,11 +88,12 @@ class DiscoveryExperiment:
             target_list = pd.concat((target_list, sorted[self.apriori_columns]), axis=1)
         target_list = pd.concat((target_list, sorted['Utility']), axis=1)
 
-        plot = PlotGenerator.create_target_scatter_plot(target_list)
+        scatter_plot = PlotGenerator.create_target_scatter_plot(target_list)
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df)
 
         # Show the pandas index column with the rest of the dataframe.
         sorted.reset_index(inplace=True)
-        return sorted, plot
+        return sorted, scatter_plot, tsne_plot
 
     def _update_prediction_index(self):
         # Selects the rows that have a label for the first target

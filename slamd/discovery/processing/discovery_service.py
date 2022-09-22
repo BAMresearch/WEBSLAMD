@@ -68,12 +68,12 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        df_with_predictions, plot = experiment.run()
+        df_with_predictions, scatter_plot, tsne_plot = experiment.run()
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
 
-        return df_with_predictions, plot
+        return df_with_predictions, scatter_plot, tsne_plot
 
     @classmethod
     def download_dataset(cls, dataset_name):
@@ -103,7 +103,8 @@ class DiscoveryService:
         target_thresholds = [float_if_not_empty(conf['threshold']) for conf in discovery_form['target_configurations']]
         target_max_or_min = [conf['max_or_min'] for conf in discovery_form['target_configurations']]
         apriori_weights = [float(conf['weight']) for conf in discovery_form['a_priori_information_configurations']]
-        apriori_thresholds = [float_if_not_empty(conf['threshold']) for conf in discovery_form['a_priori_information_configurations']]
+        apriori_thresholds = [float_if_not_empty(conf['threshold'])
+                              for conf in discovery_form['a_priori_information_configurations']]
         apriori_max_or_min = [conf['max_or_min'] for conf in discovery_form['a_priori_information_configurations']]
 
         return UserInput(

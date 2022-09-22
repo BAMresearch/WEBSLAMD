@@ -140,10 +140,16 @@ async function runExperiment() {
   });
   removeSpinnerInPlaceholder("experiment-result-placeholder");
 
-  // The plot data is embedded in the HTML placeholder. Turn the JSON data into an actual plot.
-  const plotJson = JSON.parse(document.getElementById("interactive-plot-placeholder").textContent);
-  removeInnerHtmlFromPlaceholder("interactive-plot-placeholder");
-  Plotly.plot("interactive-plot-placeholder", plotJson.data, plotJson.layout, { responsive: true });
+  // The scatter plot data is embedded in the HTML placeholder. Turn the JSON data into an actual plot.
+  const scatterPlotJson = JSON.parse(document.getElementById("scatter-plot-placeholder").textContent);
+  removeInnerHtmlFromPlaceholder("scatter-plot-placeholder");
+  Plotly.plot("scatter-plot-placeholder", scatterPlotJson.data, scatterPlotJson.layout, { responsive: true });
+
+  // The t-SNE plot data is embedded in the HTML placeholder. Turn the JSON data into an actual plot.
+  const tsnePlotJson = JSON.parse(document.getElementById("tsne-plot-placeholder").textContent);
+  console.log(tsnePlotJson);
+  removeInnerHtmlFromPlaceholder("tsne-plot-placeholder");
+  Plotly.plot("tsne-plot-placeholder", tsnePlotJson.data, tsnePlotJson.layout, { responsive: true });
 }
 
 function toggleRunExperimentButton() {
