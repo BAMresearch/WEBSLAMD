@@ -10,10 +10,13 @@
             {{ upload_dataset_form.upload_button(class_="btn btn-success col-12") }}
         </div>
     </div>
-    <div class="explanation-body">
-        The column separator of the CSV file is automatically detected. It is recommended that you use ",".
-        If you want to use "," as decimal point instead you <b>must</b> use ";" as column separator.
-        Otherwise the decimal point character is assumed to be ".".
+    <div class="col-12 rounded align-self-center" role="tooltip">
+        <h3 class="explanation-header">CSV formatting</h3>
+        <div class="explanation-body">
+            The column separator of the CSV file is automatically detected. It is recommended that you use ",".
+            If you want to use "," as decimal point instead you <b>must</b> use ";" as column separator.
+            Otherwise the decimal point character is assumed to be ".".
+        </div>
     </div>
     {{ show_form_field_errors(upload_dataset_form.dataset) }}
 </form>
