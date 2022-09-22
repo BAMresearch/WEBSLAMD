@@ -122,13 +122,15 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRES_INPUT, 'Target: X')
 
-    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
+    df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
+        'test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
 
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRES_CONFIG
     assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
-    assert plot == 'Dummy Plot'
+    assert scatter_plot == 'Dummy Plot'
+    assert tsne_plot == 'Dummy Plot'
 
 
 def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
@@ -142,13 +144,15 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRES_INPUT, 'X')
 
-    df_with_prediction, plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_THRES_CONFIG)
+    df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
+        'test_data', TEST_GAUSS_WITH_THRES_CONFIG)
 
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
     assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
-    assert plot == 'Dummy Plot'
+    assert scatter_plot == 'Dummy Plot'
+    assert tsne_plot == 'Dummy Plot'
 
 
 def test_download_prediction(monkeypatch):
@@ -183,5 +187,10 @@ def _mock_dataset_and_plot(monkeypatch, data, target_name):
     def mock_create_target_scatter_plot(targets):
         return 'Dummy Plot'
 
+     # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
+    def mock_create_tsne_input_space_plot(features):
+        return 'Dummy Plot'
+
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
+    monkeypatch.setattr(PlotGenerator, 'create_tsne_input_space_plot', mock_create_tsne_input_space_plot)
