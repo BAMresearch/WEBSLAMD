@@ -188,7 +188,7 @@ def _mock_dataset_and_plot(monkeypatch, data, target_name):
         return 'Dummy Plot'
 
      # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_tsne_input_space_plot(features):
+    def mock_create_tsne_input_space_plot(features, candidate_or_target):
         return 'Dummy Plot'
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
