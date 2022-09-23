@@ -82,13 +82,15 @@ class DiscoveryExperiment:
         df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
         sorted = df.sort_values(by='Utility', ascending=False)
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
 
-        target_list = sorted[self.targets]
+        columns_for_plot = self.targets.copy()
+        columns_for_plot.extend(['Utility', 'Row number'])
         if len(self.apriori_columns) > 0:
-            target_list = pd.concat((target_list, sorted[self.apriori_columns]), axis=1)
-        target_list = pd.concat((target_list, sorted['Utility']), axis=1)
+            columns_for_plot.extend(self.apriori_columns)
 
-        scatter_plot = PlotGenerator.create_target_scatter_plot(target_list)
+        scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
         tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df)
 
         return sorted, scatter_plot, tsne_plot
