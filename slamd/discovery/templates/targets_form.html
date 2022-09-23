@@ -1,12 +1,10 @@
 <div class="row g-3 mb-3">
     <div class="col-12">
         {{ form.choose_target_field.label(class_="control-label") }}
-        {{ form.choose_target_field(class_="form-control form-select") }}
+        {{ form.choose_target_field(class_="form-control form-select multiple-select-lg") }}
     </div>
 </div>
-<div id="dataframe-container" class="table-responsive" style="display: none;">
-    {{ df | safe }}
-</div>
+
 <form action="" method="post" novalidate>
     {{ form.csrf_token }}
     <p>2 - Specify target values</p>
@@ -16,7 +14,7 @@
                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                         data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
                         aria-controls="accordionTargetsTable-collapseOne">
-                    Show / hide dataset
+                    Show / hide dataset for editing
                 </button>
             </h3>
             <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse show"

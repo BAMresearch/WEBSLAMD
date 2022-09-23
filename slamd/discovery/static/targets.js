@@ -9,11 +9,6 @@ async function addTarget() {
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 }
 
-function toggleShowHideDataframe() {
-  const dataframeTable = document.getElementById("dataframe-container");
-  dataframeTable.style.display = dataframeTable.style.display === "none" ? "block" : "none";
-}
-
 function toggleAddTargetButton() {
   const targetValue = document.getElementById("target_value").value;
   const addTargetButton = document.getElementById("add_target_button");
@@ -44,6 +39,5 @@ window.addEventListener("load", function () {
   document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("add_target_button").addEventListener("click", addTarget);
   document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
-  document.getElementById("toggle_dataframe_button").addEventListener("click", toggleShowHideDataframe);
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 });
