@@ -15,6 +15,13 @@ class BaseMaterialService(MaterialsService):
     @classmethod
     def create_material_form(cls, type):
         form = MaterialFactory.create_material_form(type=type)
+        if type == 'process':
+            form.co2_footprint.label.text = 'CO₂ footprint (kg)'
+            form.costs.label.text = 'Costs (€)'
+        else:
+            form.co2_footprint.label.text = 'CO₂ footprint (kg/ton)'
+            form.costs.label.text = 'Costs (€/kg)'
+
         form.submit.render_kw = {'disabled': 'disabled'}
         return form
 
