@@ -2,15 +2,15 @@
 
 <div class="accordion mb-3">
     <div class="accordion-item">
-        <h3 class="accordion-header" id="accordionTargetsTable-headingTwo">
+        <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#accordionTargetsTable-collapseTwo" aria-expanded="true"
-                    aria-controls="accordionTargetsTable-collapseTwo">
+                    data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionTargetsTable-collapseOne">
                 Show / hide dataset as raw table
             </button>
         </h3>
-        <div id="accordionTargetsTable-collapseTwo" class="accordion-collapse collapse table-responsive"
-             aria-labelledby="accordionTargetsTable-headingTwo">
+        <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse table-responsive"
+             aria-labelledby="accordionTargetsTable-headingOne">
             {{ df | safe }}
         </div>
     </div>
@@ -51,15 +51,15 @@
     <p>2 - Specify target values</p>
     <div class="accordion mb-3">
         <div class="accordion-item">
-            <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
+            <h3 class="accordion-header" id="accordionTargetsTable-headingTwo">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
-                        aria-controls="accordionTargetsTable-collapseOne">
+                        data-bs-target="#accordionTargetsTable-collapseTwo" aria-expanded="true"
+                        aria-controls="accordionTargetsTable-collapseTwo">
                     Show / hide dataset for editing
                 </button>
             </h3>
-            <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse show"
-                 aria-labelledby="accordionTargetsTable-headingOne">
+            <div id="accordionTargetsTable-collapseTwo" class="accordion-collapse collapse show"
+                 aria-labelledby="accordionTargetsTable-headingTwo">
                 <table class="accordion-body table table-responsive table-bordered table-striped">
                     <thead>
                         <tr>
