@@ -68,12 +68,12 @@ class DiscoveryExperiment:
         if self.uncertainty.ndim > 1:
             for i in range(len(self.targets)):
                 df[self.targets[i]] = self.prediction[:, i]
-                uncertainty_name_column = 'Uncertainty (' + self.targets[i] + ' )'
+                uncertainty_name_column = f'Uncertainty ({self.targets[i]})'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
                 df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
-            uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
+            uncertainty_name_column = f'Uncertainty ({self.targets[0]})'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
             df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
 
