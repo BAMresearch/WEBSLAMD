@@ -195,6 +195,12 @@ class DiscoveryExperiment:
 
     def fit_random_forest_with_jack_knife_variance_estimators(self):
         for i in range(len(self.targets)):
+            if self.dataframe.loc[:, self.targets[i]].count() <= 1:
+                raise ValueNotSupportedException(message=f'The given dataset does not contain enough training data '
+                                                         f'in column {self.targets[i]}. Please ensure that there are '
+                                                         f'at least 2 data points that are not filtered out by '
+                                                         f'apriori thresholds.')
+
             # Initialize the model
             rfr = RandomForestRegressor()
 
