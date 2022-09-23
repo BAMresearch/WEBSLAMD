@@ -90,8 +90,10 @@ class DiscoveryExperiment:
         if len(self.apriori_columns) > 0:
             columns_for_plot.extend(self.apriori_columns)
 
+        candidate_or_target = ['candidate' if row in self.sample_index else 'target' for row in self.features_df.index]
+
         scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
-        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df)
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df, candidate_or_target)
 
         return sorted, scatter_plot, tsne_plot
 

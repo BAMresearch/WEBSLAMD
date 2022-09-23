@@ -34,15 +34,16 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def create_tsne_input_space_plot(cls, features_df):
+    def create_tsne_input_space_plot(cls, features_df, candidate_or_target):
         tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
         tsne_result = tsne.fit_transform(features_df)
         tsne_result_df = pd.DataFrame(
             {'tsne_1': tsne_result[:, 0],
-             'tsne_2': tsne_result[:, 1]}
+             'tsne_2': tsne_result[:, 1],
+             'candidate_or_target': candidate_or_target}
         )
 
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2',
+        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='candidate_or_target',
                          title='Materials data in t-SNE coordinates: candidates and targets')
         fig.update_traces(
             hovertemplate='X: %{x:.2f}, Y: %{y:.2f}'
