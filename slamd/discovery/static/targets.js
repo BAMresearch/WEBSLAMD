@@ -6,6 +6,9 @@ async function addTarget() {
   const url = `${TARGET_BASE_URL}/${dataset}/${targetName}/add_target`;
 
   await fetchDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder");
+  // Template has been reloaded - callbacks need to be reconnected
+  document.getElementById("add_target_button").addEventListener("click", addTarget);
+  document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 }
 
