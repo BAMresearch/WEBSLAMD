@@ -8,13 +8,9 @@
                 Show / hide formulations
             </button>
         </h3>
-        <div id="accordionFormulationsTable-collapseOne" class="accordion-collapse collapse show"
+        <div id="accordionFormulationsTable-collapseOne" class="accordion-collapse collapse show table-responsive"
              aria-labelledby="accordionFormulationsTable-headingOne">
-            <div class="accordion-body">
-                <div class="table-responsive">
-                    {{ df | safe }}
-                </div>
-            </div>
+            {{ df | safe }}
         </div>
     </div>
 </div>
