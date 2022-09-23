@@ -7,8 +7,7 @@
         <div class="col-12 col-md-6">
             {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
             {{ blending_name_and_type_form.blended_material_name(class_="form-control mb-3",
-            placeholder="Cannot be empty")
-            }}
+            placeholder="Cannot be empty") }}
 
             {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
             {{ blending_name_and_type_form.base_type(class_="form-control form-select mb-3") }}
@@ -41,6 +40,5 @@
 
     {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12 mb-3",
     data_bs_toggle="tooltip", data_bs_placement="bottom",
-    title="For enabling submission please specify a name and configure a valid configuration.", disabled=True)
-    }}
+    title="For enabling submission please specify a name and configure a valid configuration.", disabled=True) }}
 </form>
