@@ -45,7 +45,6 @@ def test_create_dataset_parsing_error(monkeypatch):
         dataset = CsvStrategy.create_dataset(file_data)
 
 
-
 def test_save_dataset_calls_discovery_persistence(monkeypatch):
     mock_save_dataset_called_with = None
 
@@ -90,21 +89,3 @@ def test_delimiter_parsing_insufficient_rows():
 
     with pytest.raises(SlamdUnprocessableEntityException):
         CsvStrategy._determine_delimiter(file_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
