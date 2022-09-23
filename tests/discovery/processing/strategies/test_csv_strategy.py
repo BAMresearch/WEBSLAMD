@@ -32,7 +32,7 @@ def test_create_dataset_filename_error(monkeypatch):
     file_data = FileStorage(filename='temporary.csv', stream=stream)
 
     with pytest.raises(ValueNotSupportedException):
-        dataset = CsvStrategy.create_dataset(file_data)
+        CsvStrategy.create_dataset(file_data)
 
 
 def test_create_dataset_parsing_error(monkeypatch):
@@ -42,7 +42,7 @@ def test_create_dataset_parsing_error(monkeypatch):
     file_data = FileStorage(filename='temporary.csv', stream=stream)
 
     with pytest.raises(ValueNotSupportedException):
-        dataset = CsvStrategy.create_dataset(file_data)
+        CsvStrategy.create_dataset(file_data)
 
 
 def test_save_dataset_calls_discovery_persistence(monkeypatch):
@@ -71,7 +71,7 @@ def test_delimiter_parsing_semicolon():
 
 def test_delimiter_parsing_excessive_columns():
     headers = ','.join([f'column{i}' for i in range(10000)])
-    row     = ','.join([f'{i}' for i in range(10000)])
+    row = ','.join([f'{i}' for i in range(10000)])
     content = '\n'.join([row] * 3)
 
     stream = BytesIO(bytes(headers + content, 'utf-8'))
