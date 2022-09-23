@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 
-{% from 'icons.html' import add_icon -%}
-
 <head>
     <title>SLAMD - Materials Discovery</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width">
@@ -11,44 +9,6 @@
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 py-2 container">
     <h3 id="dataset_to_add_targets_to" class="mt-3">{{ dataset_name }}</h3>
-    <div class="accordion mb-3">
-        <div class="accordion-item">
-            <h3 class="accordion-header" id="accordionTargetsTable-headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#accordionTargetsTable-collapseTwo" aria-expanded="true"
-                        aria-controls="accordionTargetsTable-collapseTwo">
-                    Show / hide dataset as raw table
-                </button>
-            </h3>
-            <div id="accordionTargetsTable-collapseTwo" class="accordion-collapse collapse table-responsive"
-                 aria-labelledby="accordionTargetsTable-headingTwo">
-                {{ df | safe }}
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-12 rounded bg-white" role="tooltip">
-            <h3 class="explanation-header">How to label new targets</h3>
-            <div class="explanation-body">
-                Enrich you dataset by adding new targets or by editing target columns already present in your dataset.
-                For added / selected column, you can add / edit values in the table below. Note that while the main purpose
-                of this page is the management of targets, you can also select a feature column in case you want to edit its values.
-            </div>
-        </div>
-    </div>
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-sm-12 col-lg-10">
-            {{ form.target_value.label(class_="control-label") }}
-            {{ form.target_value(class_="form-control", placeholder="Cannot be empty") }}
-        </div>
-        <div class="col-12 col-md-3 col-lg-2">
-            <button class="btn btn-primary col-12" type="button" id="add_target_button" data-bs-toggle="tooltip"
-                data-bs-placement="bottom" title="Add a new target column to your material formulation. Make sure not to use a
-                    name which is already present." disabled>
-                {{ add_icon(20, 20, "currentColor") }} Add target
-            </button>
-        </div>
-    </div>
     <div id="targets-placeholder">
         {% include 'targets_form.html' %}
     </div>
