@@ -91,7 +91,7 @@ class DiscoveryExperiment:
             columns_for_plot.extend(self.apriori_columns)
 
         scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
-        tsne_plot = PlotGenerator.create_tsne_input_space_plot(sorted[self.features], sorted['Row number'])
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df)
 
         return sorted, scatter_plot, tsne_plot
 
