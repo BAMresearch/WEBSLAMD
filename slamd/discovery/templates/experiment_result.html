@@ -1,12 +1,12 @@
 <a class="btn btn-secondary col-12 mb-1" href="/materials/discovery/download_prediction" id="download-prediction-button"
-    data-bs-toggle="tooltip" data-bs-placement="right" title="Download predictions including parameter configuration">
+   data-bs-toggle="tooltip" data-bs-placement="right" title="Download predictions including parameter configuration">
     Download Predictions
 </a>
 <div class="accordion" id="accordionExperimentResult">
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
+                    aria-expanded="true" aria-controls="collapseOne">
                 Scatter matrix / plot of target properties and calculated utility
             </button>
         </h2>
@@ -19,7 +19,7 @@
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingTwo">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                aria-expanded="true" aria-controls="collapseTwo">
+                    aria-expanded="true" aria-controls="collapseTwo">
                 tSNE-Plot
             </button>
         </h2>
@@ -32,12 +32,13 @@
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingThree">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 Dataset with predicted values and uncertainties
             </button>
         </h2>
-        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
-            <div class="table-responsive">
+        <div id="collapseThree" class="accordion-collapse collapse table-responsive topscroll-table-container"
+             aria-labelledby="headingThree">
+            <div class="topscroll-table">
                 {{ df | safe }}
             </div>
         </div>
