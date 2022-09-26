@@ -1,6 +1,6 @@
-<div class="col-12 rounded bg-white" role="tooltip">
+<div class="col-12 rounded bg-white mb-3" role="tooltip">
     <h3 class="explanation-header">You may edit the configurations by hand</h3>
-    <div class="explanation-body bg-light">
+    <div class="explanation-body">
         In case you want to edit the fields below, follow the pattern number/number/number...
         N times where N is the number of selected base materials.
         For example, in case you selected from 3 base materials a valid entry would be 10/20/70.
@@ -8,7 +8,8 @@
     </div>
 </div>
 <!-- Custom ratio fields can be dynamically added through the assignAddCustomBlendEvent function in JS -->
-<!-- Note that this assumes a specific structure of the DOM. Keep in mind to update the JS function accordingly, if you make changes here.-->
+<!-- Note that this assumes a specific structure of the DOM. Keep in mind to update the JS function accordingly,
+if you make changes here.-->
 <div id="ratio-entries" class="row g-3 mb-3 align-items-end">
     {% for entry in ratio_form.all_ratio_entries %}
     <div class="col-3">

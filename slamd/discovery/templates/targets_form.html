@@ -1,46 +1,97 @@
+{% from 'icons.html' import add_icon -%}
+
+<div class="accordion mb-3">
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionTargetsTable-collapseOne">
+                Show / hide dataset as raw table
+            </button>
+        </h3>
+        <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse table-responsive"
+             aria-labelledby="accordionTargetsTable-headingOne">
+            {{ df | safe }}
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12 rounded bg-white" role="tooltip">
+        <h3 class="explanation-header">How to label new targets</h3>
+        <div class="explanation-body">
+            Enrich you dataset by adding new targets or by editing target columns already present in your dataset.
+            For added / selected column, you can add / edit values in the table below. Note that while the main purpose
+            of this page is the management of targets, you can also select a feature column in case you want to edit its values.
+        </div>
+    </div>
+</div>
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-sm-12 col-lg-10">
+        {{ form.target_value.label(class_="control-label") }}
+        {{ form.target_value(class_="form-control", placeholder="Cannot be empty") }}
+    </div>
+    <div class="col-12 col-md-3 col-lg-2">
+        <button class="btn btn-primary col-12" type="button" id="add_target_button"
+                data-bs-placement="bottom" title="Add a new target column to your material formulation. Make sure not to use a
+                    name which is already present." disabled>
+            {{ add_icon(20, 20, "currentColor") }} Add target
+        </button>
+    </div>
+</div>
+
 <div class="row g-3 mb-3">
     <div class="col-12">
         {{ form.choose_target_field.label(class_="control-label") }}
-        {{ form.choose_target_field(class_="form-control form-select") }}
+        {{ form.choose_target_field(class_="form-control form-select multiple-select-lg") }}
     </div>
 </div>
-<div id="dataframe-container" class="table-responsive" style="display: none;">
-    {{ df | safe }}
-</div>
+
 <form action="" method="post" novalidate>
     {{ form.csrf_token }}
     <p>2 - Specify target values</p>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Formulation Index</th>
-                    <th>Feature Summary</th>
-                    {% for item in target_list %}
-                    <th>{{ item }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in all_dtos %}
-                {% set outer_loop = loop %}
-                <tr>
-                    <td>{{ item.index }}</td>
-                    <td>{{ item.preview_of_data }}</td>
-                    {% for target in item.targets %}
-                    {% if target.index == item.index %}
-                    <td>
-                        <input class="form-control"
-                            id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                            name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
-                            value="{{ target.value if target.value is not none }}">
-                    </td>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="accordion mb-3">
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="accordionTargetsTable-headingTwo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#accordionTargetsTable-collapseTwo" aria-expanded="true"
+                        aria-controls="accordionTargetsTable-collapseTwo">
+                    Show / hide dataset for editing
+                </button>
+            </h3>
+            <div id="accordionTargetsTable-collapseTwo" class="accordion-collapse collapse show table-responsive"
+                 aria-labelledby="accordionTargetsTable-headingTwo">
+                <table class="accordion-body table table-responsive table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Formulation Index</th>
+                            <th>Feature Summary</th>
+                            {% for item in target_list %}
+                            <th>{{ item }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in all_dtos %}
+                        {% set outer_loop = loop %}
+                        <tr>
+                            <td>{{ item.index }}</td>
+                            <td>{{ item.preview_of_data }}</td>
+                            {% for target in item.targets %}
+                            {% if target.index == item.index %}
+                            <td style="min-width: 100px;">
+                                <input class="form-control"
+                                    id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                                    name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
+                                    value="{{ target.value if target.value is not none }}">
+                            </td>
+                            {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",

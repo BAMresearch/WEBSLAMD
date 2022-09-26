@@ -1,22 +1,33 @@
 {% from 'action_buttons.html' import create_change_selection_button -%}
 
-<h3>Blended base materials</h3>
+<h3 class="mt-3">Blended base materials</h3>
 <form action="" method="post" novalidate>
     {{ blending_name_and_type_form.csrf_token }}
-    <div class="row g-3 mb-3">
-        <div class="col-md-6">
+    <div class="row mb-3">
+        <div class="col-12 col-md-6">
             {{ blending_name_and_type_form.blended_material_name.label(class_="control-label") }}
-            {{ blending_name_and_type_form.blended_material_name(class_="form-control", placeholder="Cannot be empty")
-            }}
-        </div>
-        <div class="col-md-6">
-            {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
-            {{ blending_name_and_type_form.base_type(class_="form-control form-select") }}
-        </div>
-    </div>
+            {{ blending_name_and_type_form.blended_material_name(class_="form-control mb-3",
+            placeholder="Cannot be empty") }}
 
-    <div id="base-material-selection-placeholder">
-        {% include 'base_material_selection.html' %}
+            {{ blending_name_and_type_form.base_type.label(class_="control-label") }}
+            {{ blending_name_and_type_form.base_type(class_="form-control form-select mb-3") }}
+
+            <div id="base-material-selection-placeholder">
+                {% include 'base_material_selection.html' %}
+            </div>
+        </div>
+
+        <div class="d-flex col-12 col-md-6 rounded bg-white flex-column pb-3" role="tooltip">
+            <h3 class="explanation-header">What to select?</h3>
+            <div class="explanation-body flex-grow-1">
+                Select at least two base materials for creating blended materials using Ctrl+Click or Shift+Click
+                in the Base Materials box.
+                After selection configure mixture ratios in terms of minimal and maximal values
+                of each base material and the increments which define the step size from minimal to maximal value.
+                The last material's configuration will be determined automatically by the values used
+                in the other base materials. Values above 100% in total as well as negative values are not allowed.
+            </div>
+        </div>
     </div>
 
     {{ create_change_selection_button("4 - Configure blending ratios", "change-base-material-selection-button",
@@ -29,6 +40,5 @@
 
     {{ blending_name_and_type_form.submit(class_="btn btn-primary col-12 mb-3",
     data_bs_toggle="tooltip", data_bs_placement="bottom",
-    title="For enabling submission please specify a name and configure a valid configuration.", disabled=True)
-    }}
+    title="For enabling submission please specify a name and configure a valid configuration.", disabled=True) }}
 </form>

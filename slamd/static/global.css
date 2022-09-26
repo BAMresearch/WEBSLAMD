@@ -45,10 +45,11 @@
     padding: 0.5rem 1rem;
     margin-bottom: 0;
     font-size: 1rem;
-    background-color: #f0f0f0;
+    background-color: lightgrey; /*#f0f0f0;*/
     border-bottom: 1px solid rgba(0, 0, 0, 0.175);
     border-top-left-radius: calc(0.5rem - 1px);
-    border-top-right-radius: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-top-right-radius: calc(0.5rem - 1px);
+    /*border-top-right-radius: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);*/
 }
 
 /* Adapted from .popover-body from Bootstrap */
@@ -67,4 +68,17 @@
     word-wrap: break-word;
     padding: 1rem 1rem;
     color: #212529;
+    border-bottom-left-radius: calc(0.5rem - 1px);
+    border-bottom-right-radius: calc(0.5rem - 1px);
+    background-color: #f0f0f0;
+}
+
+
+.multiple-select-md {
+    height: 100px;
+}
+
+
+.multiple-select-lg {
+    height: 180px !important;
 }

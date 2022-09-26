@@ -27,7 +27,7 @@ def handle_422(err):
     try:
         return render_template('422.html', message=err.message), 422
     except AttributeError:
-        return render_template('422.html', message='Cannot process data provided for learning.'), 422
+        return render_template('422.html', message='Cannot process provided entity or data.'), 422
 
 
 class MaterialNotFoundException(NotFound):
@@ -61,3 +61,9 @@ class SequentialLearningException(UnprocessableEntity):
     def __init__(self, message):
         self.message = message
         super(SequentialLearningException, self).__init__()
+
+
+class SlamdUnprocessableEntityException(UnprocessableEntity):
+    def __init__(self, message):
+        self.message = message
+        super(SlamdUnprocessableEntityException, self).__init__()
