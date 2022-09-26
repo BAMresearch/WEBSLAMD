@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from itertools import product
 from datetime import datetime
 
@@ -22,6 +23,13 @@ from slamd.common.ml_utils import concat
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
 MAX_DATASET_SIZE = 10000
+
+
+@dataclass
+class MaterialsWithSortingKnowledge:
+    idx: int = 0
+    material_type: str = ''
+    materials: list = field(default_factory=lambda: [])
 
 
 class FormulationsService:
@@ -207,12 +215,27 @@ class FormulationsService:
                     customs.append(MaterialsFacade.get_material(material_type, uuid))
                 else:
                     raise MaterialNotFoundException('Cannot process the requested material!')
-        materials = [powders, liquids, aggregates]
+
+        materials_with_sorting_knowledge = [MaterialsWithSortingKnowledge(0, 'powder', powders),
+                                            MaterialsWithSortingKnowledge(1, 'liquid', liquids),
+                                            MaterialsWithSortingKnowledge(4, 'aggregates', aggregates)]
+
+        #materials = [powders, liquids, aggregates]
         if len(admixtures) > 0:
-            materials.append(admixtures)
+            materials_with_sorting_knowledge.append(MaterialsWithSortingKnowledge(2, 'admixture', admixtures))
+            #materials.append(admixtures)
         if len(customs) > 0:
-            materials.append(customs)
-        return materials
+            materials_with_sorting_knowledge.append(MaterialsWithSortingKnowledge(3, 'custom', customs))
+            # materials.append(customs)
+
+
+        #for_sorting
+        materials_with_sorting_knowledge = sorted(materials_with_sorting_knowledge, key=lambda material: material.idx)
+        #materials.sort()   MaterialsFacade.get_sorted_for_formulations()
+        return list(map(lambda mat: mat.materials, materials_with_sorting_knowledge))
+
+    # sorted(sorted_by_name, key=lambda material: material.type)
+
 
     @classmethod
     def _create_properties(cls, inner_dict):
@@ -246,7 +269,7 @@ class FormulationsService:
 
     @classmethod
     def _sanitize_filename(cls, user_input):
-        if user_input is '':
+        if user_input == '':
             # Generate a filename to allow the user to create many datasets
             # one after the other, without having to enter a filename.
             user_input = f'Unnamed-Dataset-{datetime.now()}'
