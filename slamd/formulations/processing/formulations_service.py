@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from itertools import product
 from datetime import datetime
 
@@ -16,7 +17,7 @@ from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
-from slamd.materials.processing.materials_facade import MaterialsFacade
+from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.common.ml_utils import concat
 
 WEIGHT_FORM_DELIMITER = '/'
@@ -207,12 +208,11 @@ class FormulationsService:
                     customs.append(MaterialsFacade.get_material(material_type, uuid))
                 else:
                     raise MaterialNotFoundException('Cannot process the requested material!')
-        materials = [powders, liquids, aggregates]
-        if len(admixtures) > 0:
-            materials.append(admixtures)
-        if len(customs) > 0:
-            materials.append(customs)
-        return materials
+
+        # We sort the materials according to a) the fact that for concrete, aggregates is always the dependent material
+        # in terms of the weight constraint thus appearing last and b) the order of appearance in the formulation UI
+        materials_for_formulation = MaterialsForFormulations(powders, aggregates, liquids, admixtures, customs)
+        return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
 
     @classmethod
     def _create_properties(cls, inner_dict):
