@@ -82,3 +82,13 @@
 .multiple-select-lg {
     height: 180px !important;
 }
+
+
+.topscroll-table-container {
+    transform: rotateX(180deg);
+}
+
+
+.topscroll-table {
+    transform: rotateX(180deg);
+}
