@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
@@ -15,12 +15,12 @@ from slamd.materials.processing.strategies.process_strategy import ProcessStrate
 
 @dataclass
 class MaterialsForFormulations:
-    powders: list[Powder]
-    aggregates_list: list[Aggregates]
-    liquids: list[Liquid]
-    admixtures: list[Admixture]
-    customs: list[Custom]
-    processes: list[Process]
+    powders: list[Powder] = field(default_factory=lambda: [])
+    aggregates_list: list[Aggregates] = field(default_factory=lambda: [])
+    liquids: list[Liquid] = field(default_factory=lambda: [])
+    admixtures: list[Admixture] = field(default_factory=lambda: [])
+    customs: list[Custom] = field(default_factory=lambda: [])
+    processes: list[Process] = field(default_factory=lambda: [])
 
 
 class MaterialsFacade:
@@ -55,12 +55,16 @@ class MaterialsFacade:
         return cls.get_material('process', process_uuid)
 
     @classmethod
-    def sort_for_concrete_formulation(cls, admixtures, aggregates, customs, liquids, powders):
-        sorted_materials = {0: powders, 1: liquids, 4: aggregates}
-        if len(admixtures) > 0:
-            sorted_materials[2] = admixtures
-        if len(customs) > 0:
-            sorted_materials[3] = customs
+    def sort_for_concrete_formulation(cls, materials_for_formulation):
+        sorted_materials = {0: materials_for_formulation.powders,
+                            1: materials_for_formulation.liquids,
+                            4: materials_for_formulation.aggregates_list}
+
+        if len(materials_for_formulation.admixtures) > 0:
+            sorted_materials[2] = materials_for_formulation.admixtures
+        if len(materials_for_formulation.customs) > 0:
+            sorted_materials[3] = materials_for_formulation.customs
+
         sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
         return list(sorted_materials.values())
 
