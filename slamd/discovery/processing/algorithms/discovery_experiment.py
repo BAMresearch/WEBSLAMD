@@ -98,10 +98,13 @@ class DiscoveryExperiment:
         scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
 
         plot_df = self.features_df.copy()
-        plot_df['is_train_data'] = False
-        plot_df['is_train_data'].iloc[self.sample_index] = True
+        plot_df['is_train_data'] = 'Predicted'
+        plot_df['is_train_data'].iloc[self.sample_index] = 'Labelled'
         plot_df['Utility'] = -np.inf
         plot_df['Utility'].iloc[self.prediction_index] = pd.Series(utility_function).values
+        plot_df = plot_df.sort_values(by='Utility', ascending=False)
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
         tsne_plot = PlotGenerator.create_tsne_input_space_plot(plot_df)
 
         return sorted, scatter_plot, tsne_plot
