@@ -42,11 +42,11 @@ class PlotGenerator:
             {'tsne_1': tsne_result[:, 0],
              'tsne_2': tsne_result[:, 1],
              'Utility': plot_df['Utility'],
-             'Train data': plot_df['Train data']}
+             'is_train_data': plot_df['is_train_data']}
         )
 
         fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility',
-                         custom_data=['Train data'],
+                         custom_data=['is_train_data'],
                          title='Materials data in t-SNE coordinates: train data and targets')
         fig.update_traces(
             hovertemplate='Utility: %{marker.color:.2f}, Train data: %{customdata}'
