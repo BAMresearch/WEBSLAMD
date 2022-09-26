@@ -26,6 +26,7 @@ class PlotGenerator:
                                     custom_data=['Row number'], title='Scatter matrix of target properties')
             fig.update_traces(diagonal_visible=False, showupperhalf=False)
 
+        # Format tooltips for all cases rounding the displayed values to two decimal places.
         fig.update_traces(
             hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}'
         )
