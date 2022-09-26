@@ -24,7 +24,6 @@ class PlotGenerator:
             # General case
             fig = px.scatter_matrix(plot_df, dimensions=dimensions, color='Utility',
                                     custom_data=['Row number'], title='Scatter matrix of target properties')
-            # Format the tooltips in a generic way good enough for all subplots
             fig.update_traces(diagonal_visible=False, showupperhalf=False)
 
         fig.update_traces(
