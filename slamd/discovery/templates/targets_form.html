@@ -78,7 +78,7 @@
                             <td>{{ item.preview_of_data }}</td>
                             {% for target in item.targets %}
                             {% if target.index == item.index %}
-                            <td>
+                            <td style="min-width: 100px;">
                                 <input class="form-control"
                                     id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
                                     name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
