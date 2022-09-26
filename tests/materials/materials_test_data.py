@@ -1,5 +1,6 @@
 import slamd
 from slamd.materials.processing.models.additional_property import AdditionalProperty
+from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.models.aggregates import Aggregates, Composition as AggregatesComposition
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.material import Costs
@@ -157,3 +158,11 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid3.uuid = 'uuid3'
         return liquid3
     return None
+
+
+def prepare_test_admixture():
+    aggregates1 = Admixture(name='admixture 1', type='Admixture',
+                            costs=Costs(co2_footprint=11, costs=55, delivery_time=31),
+                            additional_properties=[])
+    aggregates1.uuid = 'uuid admixture'
+    return aggregates1
