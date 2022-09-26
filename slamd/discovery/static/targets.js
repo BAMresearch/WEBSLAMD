@@ -25,7 +25,10 @@ async function onChangeTargetToBeLabelled(event) {
   await postDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder", {
     names,
   });
+  // Template has been reloaded - callbacks need to be reconnected
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
+  document.getElementById("add_target_button").addEventListener("click", addTarget);
+  document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
 }
 
 function collectSelectedValues(options) {
