@@ -8,16 +8,20 @@
         <h3 class="explanation-header">How to create and submit new formulations</h3>
         <div class="explanation-body">
             Select various materials / processes as well as a weight constraint and name in the selection boxes below.
-            Having configured the form, set weigth ratios in terms of minimal and maximal values of each material and the
+            Having configured the form, set weight ratios in terms of minimal and maximal values of each material and
+            the
             increments which define the step size from minimal to maximal value.
-            The weights of aggregates are automatically determined by the weight constraint and the weights of the other materials.
-            Note that the created mixtures can still be edited after submitting the weight form. With the given mixture a material formulation batch
-            can be created. Doing the process over again, until all batches of the formulation are created, you may now submit
+            The weights of aggregates are automatically determined by the weight constraint and the weights of the other
+            materials.
+            Note that the created mixtures can still be edited after submitting the weight form. With the given mixture
+            a material formulation batch
+            can be created. Doing the process over again, until all batches of the formulation are created, you may now
+            submit
             the formulation thus creating a dataset to be used in materials discovery.
         </div>
     </div>
 
-    <div class="row g-3 mb-3 align-items-start">
+    <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
             {{ materials_and_processes_selection_form.powder_selection(class_="form-control form-select
@@ -29,7 +33,7 @@
             multiple-select-md") }}
         </div>
     </div>
-    <div class="row g-3 mb-3 align-items-start">
+    <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.aggregates_selection.label(class_="control-label") }}
             {{ materials_and_processes_selection_form.aggregates_selection(class_="form-control form-select
@@ -41,7 +45,7 @@
             multiple-select-md") }}
         </div>
     </div>
-    <div class="row g-3 mb-3 align-items-start">
+    <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.custom_selection.label(class_="control-label") }}
             {{ materials_and_processes_selection_form.custom_selection(class_="form-control form-select
@@ -53,7 +57,7 @@
             multiple-select-md") }}
         </div>
     </div>
-    <div class="row g-3 mb-3 align-items-start">
+    <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
             {{ materials_and_processes_selection_form.weight_constraint(class_="form-control") }}
@@ -76,8 +80,8 @@
     <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             <button class="btn btn-danger col-12 mb-3" type="button" id="delete_formulations_batches_button"
-                    data-bs-toggle="tooltip" data-bs-placement="bottom" disabled
-                    title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+                data-bs-toggle="tooltip" data-bs-placement="bottom" disabled
+                title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
                 Delete Material Formulation
             </button>
         </div>
