@@ -98,8 +98,6 @@ class DiscoveryExperiment:
         scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
 
         plot_df = self.features_df.copy()
-        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
         plot_df['Train data'] = False
         plot_df['Train data'].iloc[self.sample_index] = True
         plot_df['Utility'] = -np.inf

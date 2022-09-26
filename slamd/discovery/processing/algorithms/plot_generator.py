@@ -37,20 +37,19 @@ class PlotGenerator:
     def create_tsne_input_space_plot(cls, plot_df):
         tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
         # Exclude the utility, it is not part of the original dataframe with the features
-        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility']))
+        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Utility']))
         tsne_result_df = pd.DataFrame(
-            {'Row number': plot_df['Row number'],
-             'tsne_1': tsne_result[:, 0],
+            {'tsne_1': tsne_result[:, 0],
              'tsne_2': tsne_result[:, 1],
              'Utility': plot_df['Utility'],
              'Train data': plot_df['Train data']}
         )
 
         fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility',
-                         custom_data=['Row number', 'Train data'],
+                         custom_data=['Train data'],
                          title='Materials data in t-SNE coordinates: train data and targets')
         fig.update_traces(
-            hovertemplate='Row number: %{customdata[0]}, Utility: %{marker.color:.2f}, Train data: %{customdata[1]}'
+            hovertemplate='Utility: %{marker.color:.2f}, Train data: %{customdata}'
         )
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
