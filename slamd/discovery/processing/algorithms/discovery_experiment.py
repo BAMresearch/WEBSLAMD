@@ -63,6 +63,12 @@ class DiscoveryExperiment:
         # Add the columns with utility and novelty values
         df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
         df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
+        # Position the columns [Utility, Novelty] first in the dataframe
+        utility = df['Utility']
+        novelty = df['Novelty']
+        df.drop(columns=['Utility', 'Novelty'], inplace=True)
+        df.insert(loc=0, column='Utility', value=utility)
+        df.insert(loc=1, column='Novelty', value=novelty)
 
         # Fill in prediction and uncertainty values
         if self.uncertainty.ndim > 1:
