@@ -36,8 +36,8 @@ class PlotGenerator:
     @classmethod
     def create_tsne_input_space_plot(cls, plot_df):
         tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
-        # Exclude the utility, it is not part of the original dataframe with the features
-        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Utility']))
+        # Exclude the columns that do not belong to the features
+        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Utility', 'is_train_data']))
         tsne_result_df = pd.DataFrame(
             {'tsne_1': tsne_result[:, 0],
              'tsne_2': tsne_result[:, 1],
