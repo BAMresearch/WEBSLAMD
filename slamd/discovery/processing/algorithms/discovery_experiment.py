@@ -211,9 +211,7 @@ class DiscoveryExperiment:
             self._check_target_label_validity(training_labels)
 
             self.x = training_rows
-            # Sum the training labels for all targets
-            # self.y = training_labels.sum(axis=1).to_frame().to_numpy()
-            self.y = training_labels.loc[:,self.targets[i]].to_frame().to_numpy()
+            self.y = training_labels.loc[:, self.targets[i]].to_frame().to_numpy()
             if self.y.shape[0] < 8:
                 self.x = np.tile(self.x, (4, 1))
                 self.y = np.tile(self.y, (4, 1))
