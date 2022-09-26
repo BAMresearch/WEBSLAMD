@@ -83,6 +83,7 @@ function assignCreateFormulationsBatchEvent() {
     removeSpinnerInPlaceholder("formulations-table-placeholder");
 
     document.getElementById("submit").disabled = false;
+    document.getElementById("delete_formulations_batches_button").disabled = false;
   });
 }
 
@@ -101,6 +102,7 @@ function assignDeleteWeightEvent() {
 async function deleteFormulations() {
   await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
   document.getElementById("submit").disabled = true;
+  document.getElementById("delete_formulations_batches_button").disabled = true;
 }
 
 window.addEventListener("load", function () {
@@ -120,5 +122,6 @@ window.addEventListener("load", function () {
   const formulations = document.getElementById("formulations_dataframe");
   if (formulations) {
     document.getElementById("submit").disabled = false;
+    document.getElementById("delete_formulations_batches_button").disabled = false;
   }
 });

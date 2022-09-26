@@ -6,12 +6,10 @@ async function addTarget() {
   const url = `${TARGET_BASE_URL}/${dataset}/${targetName}/add_target`;
 
   await fetchDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder");
+  // Template has been reloaded - callbacks need to be reconnected
+  document.getElementById("add_target_button").addEventListener("click", addTarget);
+  document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
-}
-
-function toggleShowHideDataframe() {
-  const dataframeTable = document.getElementById("dataframe-container");
-  dataframeTable.style.display = dataframeTable.style.display === "none" ? "block" : "none";
 }
 
 function toggleAddTargetButton() {
@@ -27,7 +25,10 @@ async function onChangeTargetToBeLabelled(event) {
   await postDataAndEmbedTemplateInPlaceholder(url, "targets-placeholder", {
     names,
   });
+  // Template has been reloaded - callbacks need to be reconnected
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
+  document.getElementById("add_target_button").addEventListener("click", addTarget);
+  document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
 }
 
 function collectSelectedValues(options) {
@@ -44,6 +45,5 @@ window.addEventListener("load", function () {
   document.getElementById("nav-bar-discovery").setAttribute("class", "nav-link active");
   document.getElementById("add_target_button").addEventListener("click", addTarget);
   document.getElementById("target_value").addEventListener("keyup", toggleAddTargetButton);
-  document.getElementById("toggle_dataframe_button").addEventListener("click", toggleShowHideDataframe);
   document.getElementById("choose_target_field").addEventListener("change", onChangeTargetToBeLabelled);
 });

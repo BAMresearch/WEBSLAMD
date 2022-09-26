@@ -1,48 +1,31 @@
-<h3>New material / process</h3>
+<h3 class="mt-3">New material / process</h3>
 <form action="" method="post" novalidate>
     {{ form.csrf_token }}
     <div class="row g-3 mb-3">
         <div class="col-md-6">
-            {{ form.material_name.label(class_="control-label", placeholder="Placeholder Text Here") }}
-            {{ form.material_name(class_="form-control") }}
-        </div>
-        <div class="col-md-6">
+            {{ form.material_name.label(class_="control-label") }}
+            {{ form.material_name(class_="form-control mb-3", placeholder="Cannot be empty") }}
+
             {{ form.material_type.label(class_="control-label") }}
-            {{ form.material_type(class_="form-control form-select") }}
+            {{ form.material_type(class_="form-control form-select mb-3") }}
+        </div>
+        <div class="col-md-6 rounded bg-white align-self-center" role="tooltip">
+            <h3 class="explanation-header">How to create new base materials</h3>
+            <div class="explanation-body">
+                Choose a specific material type or process that you want to create. Depending on your selection
+                you can define different properties for your material / process. While for all types
+                it is possible to set cost information (including CO₂ footprint and delivery time), compositional / process
+                information is specific to a given type / process. Finally, you may add some additional properties further
+                specifying you material / process.
+            </div>
         </div>
     </div>
 
-    <div class="accordion accordion-flush" id="accordion-materials-form">
-        <div class="accordion-item">
-            <h5>Properties</h5>
-            <h2 class="accordion-header" id="flush-headingOne">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                    3 - Cost
-                </button>
-            </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne">
-                <div class="accordion-body">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md-4">
-                            {{ form.co2_footprint.label(class_="control-label") }}
-                            {{ form.co2_footprint(class_="form-control") }}
-                        </div>
-                        <div class="col-md-4">
-                            {{ form.costs.label(class_="control-label") }}
-                            {{ form.costs(class_="form-control") }}
-                        </div>
-                        <div class="col-md-4">
-                            {{ form.delivery_time.label(class_="control-label") }}
-                            {{ form.delivery_time(class_="form-control") }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h5>Properties</h5>
+    <div id="material-type-form-placeholder">
         {% include 'material_type_form.html' %}
     </div>
-    {{ form.submit(class_="btn btn-primary col-12 mb-3", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    {{ form.submit(class_="btn btn-primary col-12 my-3", data_bs_toggle="tooltip", data_bs_placement="bottom",
     title="Select at least a name and a type")
     }}
 </form>

@@ -2,34 +2,49 @@
 {% from 'action_buttons.html' import create_edit_button -%}
 
 <h3>All {{ materials_response.ctx }}</h3>
-<div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
-        <thead>
-            <tr>
-                <th scope="col" class="col-1">Actions</th>
-                <th scope="col">Name</th>
-                <th scope="col" class="col-1">Type</th>
-                <th scope="col">Properties</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in materials_response.all_materials %}
-            <tr>
-                <th scope="row" class="col-1">
-                    {% if materials_response.ctx != 'blended materials' %}
-                    <div class="btn-group" role="group" aria-label="Delete/edit actions">
-                        {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 16, 16) }}
-                        {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 16, 16) }}
-                    </div>
-                    {% else %}
-                    {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 16, 16) }}
-                    {% endif %}
-                </th>
-                <td>{{ item.name }}</td>
-                <td class="col-1">{{ item.type }}</td>
-                <td>{{ item.all_properties }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="accordion">
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="accordionMaterialsTable-headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#accordionMaterialsTable-collapseOne" aria-expanded="true"
+                aria-controls="accordionMaterialsTable-collapseOne">
+                Show / hide table
+            </button>
+        </h3>
+        <div id="accordionMaterialsTable-collapseOne" class="accordion-collapse collapse show"
+            aria-labelledby="accordionMaterialsTable-headingOne">
+                <table class="accordion-body table-responsive table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="col-1">Actions</th>
+                            <th scope="col">Name</th>
+                            <th scope="col" class="col-1">Type</th>
+                            <th scope="col">Properties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in materials_response.all_materials %}
+                        <tr>
+                            <th scope="row" class="col-1">
+                                {% if materials_response.ctx != 'blended materials' %}
+                                <div class="btn-group" role="group" aria-label="Delete/edit actions">
+                                    {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type,
+                                    16, 16) }}
+                                    {{ create_edit_button("edit_material_button" + "___" + item.uuid, item.type, 16,
+                                    16) }}
+                                </div>
+                                {% else %}
+                                {{ create_delete_button("delete_material_button" + "___" + item.uuid, item.type, 16,
+                                16) }}
+                                {% endif %}
+                            </th>
+                            <td>{{ item.name }}</td>
+                            <td class="col-1">{{ item.type }}</td>
+                            <td>{{ item.all_properties }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+    </div>
 </div>
