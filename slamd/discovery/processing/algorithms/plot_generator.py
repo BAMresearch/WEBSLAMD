@@ -34,19 +34,23 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def create_tsne_input_space_plot(cls, features_df, candidate_or_target):
+    def create_tsne_input_space_plot(cls, plot_df):
         tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
-        tsne_result = tsne.fit_transform(features_df)
+        # Exclude the utility, it is not part of the original dataframe with the features
+        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility']))
         tsne_result_df = pd.DataFrame(
-            {'tsne_1': tsne_result[:, 0],
+            {'Row number': plot_df['Row number'],
+             'tsne_1': tsne_result[:, 0],
              'tsne_2': tsne_result[:, 1],
-             'candidate_or_target': candidate_or_target}
+             'Utility': plot_df['Utility'],
+             'Train data': plot_df['Train data']}
         )
 
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='candidate_or_target',
-                         title='Materials data in t-SNE coordinates: candidates and targets')
+        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility',
+                         custom_data=['Row number', 'Train data'],
+                         title='Materials data in t-SNE coordinates: train data and targets')
         fig.update_traces(
-            hovertemplate='X: %{x:.2f}, Y: %{y:.2f}'
+            hovertemplate='Row number: %{customdata[0]}, Utility: %{marker.color:.2f}, Train data: %{customdata[1]}'
         )
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

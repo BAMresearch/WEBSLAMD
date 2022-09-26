@@ -95,11 +95,16 @@ class DiscoveryExperiment:
         columns_for_plot.extend(['Utility', 'Row number'])
         if len(self.apriori_columns) > 0:
             columns_for_plot.extend(self.apriori_columns)
-
-        candidate_or_target = ['candidate' if row in self.sample_index else 'target' for row in self.features_df.index]
-
         scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
-        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df, candidate_or_target)
+
+        plot_df = self.features_df.copy()
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
+        plot_df['Train data'] = False
+        plot_df['Train data'].iloc[self.sample_index] = True
+        plot_df['Utility'] = -np.inf
+        plot_df['Utility'].iloc[self.prediction_index] = pd.Series(utility_function).values
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(plot_df)
 
         return sorted, scatter_plot, tsne_plot
 
