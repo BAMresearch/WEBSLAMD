@@ -45,11 +45,19 @@ class PlotGenerator:
              'is_train_data': plot_df['is_train_data']}
         )
 
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility',
-                         custom_data=['is_train_data'],
+        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility', symbol='is_train_data',
                          title='Materials data in t-SNE coordinates: train data and targets')
         fig.update_traces(
-            hovertemplate='Utility: %{marker.color:.2f}, Train data: %{customdata}'
+            hovertemplate='Utility: %{marker.color:.2f}'
         )
-        fig.update_layout(height=1000)
+        fig.update_layout(
+            height=1000,
+            legend_title_text="Is training data?",
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="left",
+                x=0.01
+            )
+        )
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
