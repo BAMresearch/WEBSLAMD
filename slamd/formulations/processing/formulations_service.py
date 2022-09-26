@@ -25,13 +25,6 @@ MAX_NUMBER_OF_WEIGHTS = 10000
 MAX_DATASET_SIZE = 10000
 
 
-@dataclass
-class MaterialsWithSortingKnowledge:
-    idx: int = 0
-    material_type: str = ''
-    materials: list = field(default_factory=lambda: [])
-
-
 class FormulationsService:
 
     @classmethod
@@ -216,26 +209,17 @@ class FormulationsService:
                 else:
                     raise MaterialNotFoundException('Cannot process the requested material!')
 
-        materials_with_sorting_knowledge = [MaterialsWithSortingKnowledge(0, 'powder', powders),
-                                            MaterialsWithSortingKnowledge(1, 'liquid', liquids),
-                                            MaterialsWithSortingKnowledge(4, 'aggregates', aggregates)]
+        sorted_materials = {0: powders, 1: liquids, 4: aggregates}
 
-        #materials = [powders, liquids, aggregates]
         if len(admixtures) > 0:
-            materials_with_sorting_knowledge.append(MaterialsWithSortingKnowledge(2, 'admixture', admixtures))
-            #materials.append(admixtures)
+            sorted_materials[2] = admixtures
         if len(customs) > 0:
-            materials_with_sorting_knowledge.append(MaterialsWithSortingKnowledge(3, 'custom', customs))
-            # materials.append(customs)
+            sorted_materials[3] = customs
 
-
-        #for_sorting
-        materials_with_sorting_knowledge = sorted(materials_with_sorting_knowledge, key=lambda material: material.idx)
-        #materials.sort()   MaterialsFacade.get_sorted_for_formulations()
-        return list(map(lambda mat: mat.materials, materials_with_sorting_knowledge))
+        sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
+        return sorted(sorted_materials.values())
 
     # sorted(sorted_by_name, key=lambda material: material.type)
-
 
     @classmethod
     def _create_properties(cls, inner_dict):

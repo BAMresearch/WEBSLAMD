@@ -55,6 +55,26 @@ class MaterialsFacade:
         return cls.get_material('process', process_uuid)
 
     @classmethod
+    def get_sorted_for_formulations(cls, materials):
+        sort_dict = {}
+
+        for material in materials:
+            if material.type == MaterialType.POWDER.value:
+                sort_dict[0] = material
+            elif material.type == MaterialType.POWDER.value:
+                sort_dict[1] = material
+
+        sort_dict = {
+            0: cls.POWDER,
+            1: cls.LIQUID,
+            2: cls.AGGREGATES,
+            3: cls.ADMIXTURE,
+            4: cls.CUSTOM,
+            5: cls.PROCESS,
+        }
+        return MaterialType.get_sorted(sort_dict)
+
+    @classmethod
     def materials_formulation_as_dict(cls, materials):
         full_dict = {}
         types = []
