@@ -217,9 +217,7 @@ class FormulationsService:
             sorted_materials[3] = customs
 
         sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
-        return sorted(sorted_materials.values())
-
-    # sorted(sorted_by_name, key=lambda material: material.type)
+        return list(sorted_materials.values())
 
     @classmethod
     def _create_properties(cls, inner_dict):
