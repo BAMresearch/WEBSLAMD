@@ -209,15 +209,7 @@ class FormulationsService:
                 else:
                     raise MaterialNotFoundException('Cannot process the requested material!')
 
-        sorted_materials = {0: powders, 1: liquids, 4: aggregates}
-
-        if len(admixtures) > 0:
-            sorted_materials[2] = admixtures
-        if len(customs) > 0:
-            sorted_materials[3] = customs
-
-        sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
-        return list(sorted_materials.values())
+        return MaterialsFacade.sort_for_concrete_formulation(admixtures, aggregates, customs, liquids, powders)
 
     @classmethod
     def _create_properties(cls, inner_dict):

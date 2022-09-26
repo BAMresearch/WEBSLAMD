@@ -20,9 +20,3 @@ class MaterialType(Enum):
     @classmethod
     def get_all_processes(cls):
         return [e.value for e in MaterialType if e.value == 'process']
-
-    @classmethod
-    def get_sorted(cls, sort_dict):
-        all_types = cls.get_all_types()
-
-        return sorted(all_types, key=lambda mat_type: [k for k, v in sort_dict.items() if v == mat_type][0])
