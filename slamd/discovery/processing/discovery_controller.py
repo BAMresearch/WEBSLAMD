@@ -88,12 +88,13 @@ def create_a_priori_information_configuration_form():
 @discovery.route('/<dataset>', methods=['POST'])
 def run_experiment(dataset):
     request_body = json.loads(request.data)
-    dataframe, plot = DiscoveryService.run_experiment(dataset, request_body)
+    dataframe, scatter_plot, tsne_plot = DiscoveryService.run_experiment(dataset, request_body)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover')
 
-    body = {'template': render_template('experiment_result.html', df=html_dataframe, plot=plot)}
+    body = {'template': render_template('experiment_result.html', df=html_dataframe,
+                                        scatter_plot=scatter_plot, tsne_plot=tsne_plot)}
     return make_response(jsonify(body), 200)
 
 
@@ -117,9 +118,11 @@ def download_prediction():
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
 def add_targets(dataset):
     target_page_data = TargetsService.get_data_for_target_page(dataset)
-    html_dataframe = target_page_data.dataframe.to_html(index=False,
-                                                        table_id='formulations_dataframe',
-                                                        classes='table table-bordered table-striped table-hover')
+    html_dataframe = target_page_data.dataframe.to_html(
+        index=False,
+        table_id='formulations_dataframe',
+        classes='table table-bordered table-striped table-hover topscroll-table'
+    )
 
     return render_template('targets.html',
                            dataset_name=dataset,

@@ -15,7 +15,7 @@ from slamd.materials.processing.models.material import Costs
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.models.process import Process
 from tests.materials.materials_test_data import prepare_test_base_powders_for_blending, \
-    prepare_test_base_liquids_for_blending, prepare_test_base_aggregates_for_blending
+    prepare_test_base_liquids_for_blending, prepare_test_base_aggregates_for_blending, prepare_test_admixture
 
 MATERIALS_CONFIG = [
     {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 0.1},
@@ -125,6 +125,8 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
             return prepare_test_base_liquids_for_blending(material_type, uuid)
         elif material_type == 'Aggregates':
             return prepare_test_base_aggregates_for_blending(material_type, uuid)
+        elif material_type == 'Admixture':
+            return prepare_test_admixture()
         return None
 
     def mock_save_temporary_dataset(input):
@@ -142,10 +144,12 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
             'materials_formulation_configuration': [
                 {'uuids': 'uuid1,additional', 'type': 'Powder'},
                 {'uuids': 'uuid2', 'type': 'Liquid'},
+                {'uuids': 'uuid admixture', 'type': 'Admixture'},
                 {'uuids': 'uuid3', 'type': 'Aggregates'}]
         },
         'weights_request_data': {
-            'all_weights': ['200.0/20.0/780.0', '200.0/30.0/770.0', '300.0/20.0/680.0', '300.0/30.0/670.0']
+            'all_weights': ['200.0/20.0/1.0/779.0', '200.0/30.0/1.0/769.0', '300.0/20.0/2.0/678.0',
+                            '300.0/30.0/2.0/668.0']
         },
         'processes_request_data': {
             'processes': []
@@ -223,11 +227,16 @@ def _create_expected_df_as_dict():
     return {'Idx_Sample': {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7},
             'Powder (kg)': {0: 200.0, 1: 200.0, 2: 300.0, 3: 300.0, 4: 200.0, 5: 200.0, 6: 300.0, 7: 300.0},
             'Liquid (kg)': {0: 20.0, 1: 30.0, 2: 20.0, 3: 30.0, 4: 20.0, 5: 30.0, 6: 20.0, 7: 30.0},
-            'Aggregates (kg)': {0: 780.0, 1: 770.0, 2: 680.0, 3: 670.0, 4: 780.0, 5: 770.0, 6: 680.0, 7: 670.0},
-            'Materials': {0: 'powder 1, liquid 2, aggregate 3', 1: 'powder 1, liquid 2, aggregate 3',
-                          2: 'powder 1, liquid 2, aggregate 3', 3: 'powder 1, liquid 2, aggregate 3',
-                          4: 'powder 1, liquid 2, aggregate 3', 5: 'powder 1, liquid 2, aggregate 3',
-                          6: 'powder 1, liquid 2, aggregate 3', 7: 'powder 1, liquid 2, aggregate 3'},
+            'Admixture (kg)': {0: 1.0, 1: 1.0, 2: 2.0, 3: 2.0, 4: 1.0, 5: 1.0, 6: 2.0, 7: 2.0},
+            'Aggregates (kg)': {0: 779.0, 1: 769.0, 2: 678.0, 3: 668.0, 4: 779.0, 5: 769.0, 6: 678.0, 7: 668.0},
+            'Materials': {0: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          1: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          2: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          3: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          4: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          5: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          6: 'powder 1, liquid 2, admixture 1, aggregate 3',
+                          7: 'powder 1, liquid 2, admixture 1, aggregate 3'},
             'Prop1': {0: 5.0, 1: 5.0, 2: 5.0, 3: 5.0, 4: 5.0, 5: 5.0, 6: 5.0, 7: 5.0},
             'Prop2': {0: 'Other Category', 1: 'Other Category', 2: 'Other Category', 3: 'Other Category',
                       4: 'Other Category', 5: 'Other Category', 6: 'Other Category', 7: 'Other Category'},
@@ -237,18 +246,19 @@ def _create_expected_df_as_dict():
             'fe3_o2': {0: 10.0, 1: 10.0, 2: 10.0, 3: 10.0, 4: 2.3, 5: 2.3, 6: 2.3, 7: 2.3},
             'al2_o3': {0: 7.0, 1: 7.0, 2: 7.0, 3: 7.0, 4: None, 5: None, 6: None, 7: None},
             'fine': {0: 50.0, 1: 50.0, 2: 50.0, 3: 50.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0},
+            'gravity': {0: 6.0, 1: 6.0, 2: 6.0, 3: 6.0, 4: 6.0, 5: 6.0, 6: 6.0, 7: 6.0},
             'na2_si_o3': {0: 20.0, 1: 20.0, 2: 20.0, 3: 20.0, 4: 20.0, 5: 20.0, 6: 20.0, 7: 20.0},
-            'na_o_h': {0: 4.1, 1: 4.1, 2: 4.1, 3: 4.1, 4: 4.1, 5: 4.1, 6: 4.1, 7: 4.1},
             'na2_si_o3_mol': {0: 4.0, 1: 4.0, 2: 4.0, 3: 4.0, 4: 4.0, 5: 4.0, 6: 4.0, 7: 4.0},
+            'na_o_h': {0: 4.1, 1: 4.1, 2: 4.1, 3: 4.1, 4: 4.1, 5: 4.1, 6: 4.1, 7: 4.1},
             'h2_o_mol': {0: 11.0, 1: 11.0, 2: 11.0, 3: 11.0, 4: 11.0, 5: 11.0, 6: 11.0, 7: 11.0},
             'fine_aggregates': {0: 27.0, 1: 27.0, 2: 27.0, 3: 27.0, 4: 27.0, 5: 27.0, 6: 27.0, 7: 27.0},
             'coarse_aggregates': {0: 9.0, 1: 9.0, 2: 9.0, 3: 9.0, 4: 9.0, 5: 9.0, 6: 9.0, 7: 9.0},
-            'gravity': {0: 6.0, 1: 6.0, 2: 6.0, 3: 6.0, 4: 6.0, 5: 6.0, 6: 6.0, 7: 6.0},
             'bulk_density': {0: 16.0, 1: 16.0, 2: 16.0, 3: 16.0, 4: 16.0, 5: 16.0, 6: 16.0, 7: 16.0},
             'fineness_modulus': {0: 5.0, 1: 5.0, 2: 5.0, 3: 5.0, 4: 5.0, 5: 5.0, 6: 5.0, 7: 5.0},
             'water_absorption': {0: 10.0, 1: 10.0, 2: 10.0, 3: 10.0, 4: 10.0, 5: 10.0, 6: 10.0, 7: 10.0},
-            'total costs / ton': {0: 26.2, 1: 26.3, 2: 29.2, 3: 29.3, 4: 16.64, 5: 16.74, 6: 14.86, 7: 14.96},
-            'total co2_footprint / ton': {0: 58.8, 1: 58.2, 2: 53.8, 3: 53.2, 4: 55.2, 5: 54.6, 6: 48.4, 7: 47.8},
+            'total costs / ton': {0: 26.23, 1: 26.34, 2: 29.27, 3: 29.37, 4: 16.68, 5: 16.77, 6: 14.93, 7: 15.03},
+            'total co2_footprint / ton': {0: 58.74, 1: 58.14, 2: 53.68, 3: 53.08, 4: 55.14, 5: 54.54, 6: 48.28,
+                                          7: 47.68},
             'total delivery_time ': {0: 40.0, 1: 40.0, 2: 40.0, 3: 40.0, 4: 40.0, 5: 40.0, 6: 40.0, 7: 40.0}}
 
 

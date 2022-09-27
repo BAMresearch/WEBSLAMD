@@ -36,9 +36,9 @@ class DiscoveryExperiment:
 
         # Partition the dataframe in three parts: features, targets and apriori information
         self.dataframe = self.filter_apriori_with_thresholds(self.dataframe)
-        self.features_df = self.dataframe[features]
-        self.target_df = self.dataframe[targets]
-        self.apriori_df = self.dataframe[apriori_columns]
+        self.features_df = self.dataframe[features].copy()
+        self.target_df = self.dataframe[targets].copy()
+        self.apriori_df = self.dataframe[apriori_columns].copy()
 
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
@@ -68,12 +68,12 @@ class DiscoveryExperiment:
         if self.uncertainty.ndim > 1:
             for i in range(len(self.targets)):
                 df[self.targets[i]] = self.prediction[:, i]
-                uncertainty_name_column = 'Uncertainty (' + self.targets[i] + ' )'
+                uncertainty_name_column = f'Uncertainty ({self.targets[i]})'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
                 df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
-            uncertainty_name_column = 'Uncertainty (' + str(self.targets[0]) + ' )'
+            uncertainty_name_column = f'Uncertainty ({self.targets[0]})'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
             df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
 
@@ -82,15 +82,20 @@ class DiscoveryExperiment:
         df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
         sorted = df.sort_values(by='Utility', ascending=False)
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
 
-        target_list = sorted[self.targets]
+        columns_for_plot = self.targets.copy()
+        columns_for_plot.extend(['Utility', 'Row number'])
         if len(self.apriori_columns) > 0:
-            target_list = pd.concat((target_list, sorted[self.apriori_columns]), axis=1)
-        target_list = pd.concat((target_list, sorted['Utility']), axis=1)
+            columns_for_plot.extend(self.apriori_columns)
 
-        plot = PlotGenerator.create_target_scatter_plot(target_list)
+        candidate_or_target = ['candidate' if row in self.sample_index else 'target' for row in self.features_df.index]
 
-        return sorted, plot
+        scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df, candidate_or_target)
+
+        return sorted, scatter_plot, tsne_plot
 
     def _update_prediction_index(self):
         # Selects the rows that have a label for the first target
@@ -147,7 +152,6 @@ class DiscoveryExperiment:
                 df.drop(df[(df[column] > threshold) & nodata_index].index, inplace=True)
 
         return df.reset_index(drop=True)
-
 
     def fit_model(self):
         if self.model == 'AI Model (lolo Random Forest)':
