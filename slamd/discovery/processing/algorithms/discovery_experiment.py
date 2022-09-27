@@ -12,7 +12,7 @@ from slamd.common.error_handling import ValueNotSupportedException, SequentialLe
 from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
-### DANGER - WARNING SUPPRESSION ###
+# Attention - suppressing expected Gaussian Regressor warnings
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
