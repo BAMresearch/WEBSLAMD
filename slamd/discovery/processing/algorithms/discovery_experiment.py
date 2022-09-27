@@ -81,10 +81,7 @@ class DiscoveryExperiment:
         df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
         df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
 
-        sorted = df.sort_values(by='Utility', ascending=False)
-        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
-        sorted = self.place_prediction_columns_after_row_number(sorted)
+        sorted = self.preprocess_dataframe_for_output_table(df)
 
         columns_for_plot = self.targets.copy()
         columns_for_plot.extend(['Utility', 'Row number'])
@@ -142,7 +139,14 @@ class DiscoveryExperiment:
         # Return a new dataset with the columns in the new order to be assigned to the same variable.
         return df[seg1 + seg2 + seg3]
 
-    def place_prediction_columns_after_row_number(self, df):
+    def preprocess_dataframe_for_output_table(self, df):
+        """
+        - Sort by Utility in decreasing order
+        - Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        - Move Utility, Novelty, all the target columns and their uncertainties to the left of the dataframe.
+        """
+        df = df.sort_values(by='Utility', ascending=False)
+        df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
         cols_to_move = ['Utility', 'Novelty'] + self.targets + [f'Uncertainty ({target})' for target in self.targets]
         return self._movecol(df, cols_to_move=cols_to_move, ref_col='Row number', place='after')
 
