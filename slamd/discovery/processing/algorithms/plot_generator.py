@@ -35,7 +35,9 @@ class PlotGenerator:
 
     @classmethod
     def create_tsne_input_space_plot(cls, plot_df):
-        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
+        # The perplexity cannot be bigger than the number of data points (the length of the dataframe).
+        # Prevent this error case by picking the smallest of the two.
+        tsne = TSNE(n_components=2, verbose=1, perplexity=min(40, len(plot_df)), n_iter=300, random_state=1000)
         # Exclude the columns that do not belong to the features
         tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility', 'is_train_data']))
         tsne_result_df = pd.DataFrame(
