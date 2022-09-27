@@ -63,12 +63,6 @@ class DiscoveryExperiment:
         # Add the columns with utility and novelty values
         df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
         df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
-        # Position the columns [Utility, Novelty] first in the dataframe
-        utility = df['Utility']
-        novelty = df['Novelty']
-        df.drop(columns=['Utility', 'Novelty'], inplace=True)
-        df.insert(loc=0, column='Utility', value=utility)
-        df.insert(loc=1, column='Novelty', value=novelty)
 
         # Fill in prediction and uncertainty values
         if self.uncertainty.ndim > 1:
@@ -90,6 +84,7 @@ class DiscoveryExperiment:
         sorted = df.sort_values(by='Utility', ascending=False)
         # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
         sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
+        sorted = self.place_prediction_columns_after_row_number(sorted)
 
         columns_for_plot = self.targets.copy()
         columns_for_plot.extend(['Utility', 'Row number'])
@@ -126,6 +121,30 @@ class DiscoveryExperiment:
             for feature in non_numeric_features:
                 self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
         self.features_df = self.features_df.dropna(axis=1)
+
+    def _movecol(self, df, cols_to_move=[], ref_col='', place='after'):
+        """
+        Move one or several columns before or after a given reference column.
+        Adapted from: https://towardsdatascience.com/reordering-pandas-dataframe-columns-thumbs-down-on-standard-solutions-1ff0bc2941d5
+        """
+        cols = df.columns.tolist()
+        if place == 'after':
+            seg1 = cols[:list(cols).index(ref_col) + 1]
+            seg2 = cols_to_move
+        elif place == 'before':
+            seg1 = cols[:list(cols).index(ref_col)]
+            seg2 = cols_to_move + [ref_col]
+        else:
+            raise SequentialLearningException(f'Invalid value for max_or_min, got {place}')
+        # Make sure to remove overlapping elements between the segments
+        seg1 = [i for i in seg1 if i not in seg2]
+        seg3 = [i for i in cols if i not in seg1 + seg2]
+        # Return a new dataset with the columns in the new order to be assigned to the same variable.
+        return df[seg1 + seg2 + seg3]
+
+    def place_prediction_columns_after_row_number(self, df):
+        cols_to_move = ['Utility', 'Novelty'] + self.targets + [f'Uncertainty ({target})' for target in self.targets]
+        return self._movecol(df, cols_to_move=cols_to_move, ref_col='Row number', place='after')
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
