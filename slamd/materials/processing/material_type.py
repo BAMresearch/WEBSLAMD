@@ -9,14 +9,14 @@ class MaterialType(Enum):
     ADMIXTURE = 'admixture'
     CUSTOM = 'custom'
 
-    @staticmethod
-    def get_all_types():
+    @classmethod
+    def get_all_types(cls):
         return [e.value for e in MaterialType]
 
-    @staticmethod
-    def get_all_materials():
+    @classmethod
+    def get_all_materials(cls):
         return [e.value for e in MaterialType if e.value != 'process']
 
-    @staticmethod
-    def get_all_processes():
+    @classmethod
+    def get_all_processes(cls):
         return [e.value for e in MaterialType if e.value == 'process']

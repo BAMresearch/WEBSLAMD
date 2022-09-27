@@ -66,7 +66,16 @@ to adjust the paths below accordingly.
 - Install all dependencies via `pip3 install -r requirements.txt`
 
 ##### Installation of dependencies with conda
-TBD
+On Linux:
+- Download and install [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+- Open a terminal in your project folder and run `conda env create -f environment.yml`
+- You have now installed a new conda environment named WEBSLAMD. You need to activate the environment before you can use it using `conda activate WEBSLAMD`
+
+On Windows:
+- Install [anaconda](https://www.anaconda.com/). Anaconda provides its own Python version; you do not need to manually install Python. (Advanced users may also use miniconda on Windows, instead.)
+- Open "Anaconda Prompt" from your start menu and navigate to your project folder.
+- Run `conda env create -f environment.yaml`
+- You have now installed a new conda environment named WEBSLAMD. You need to activate the environment before you can use it using `conda activate WEBSLAMD`, or by opening the anaconda navigator and going to "Environments", then selecting the WEBSLAMD environment and click "Open Terminal". You will need to run the project from here.
 
 ### 2.2 Starting the App (Required) <a name="start_app"></a>
 
