@@ -9,7 +9,7 @@
                 Show / hide dataset as raw table
             </button>
         </h3>
-        <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse table-responsive"
+        <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse table-responsive topscroll-table-container"
              aria-labelledby="accordionTargetsTable-headingOne">
             {{ df | safe }}
         </div>
@@ -21,7 +21,8 @@
         <div class="explanation-body">
             Enrich you dataset by adding new targets or by editing target columns already present in your dataset.
             For added / selected column, you can add / edit values in the table below. Note that while the main purpose
-            of this page is the management of targets, you can also select a feature column in case you want to edit its values.
+            of this page is the management of targets, you can also select a feature column in case you want to edit its
+            values.
         </div>
     </div>
 </div>
@@ -31,9 +32,7 @@
         {{ form.target_value(class_="form-control", placeholder="Cannot be empty") }}
     </div>
     <div class="col-12 col-md-3 col-lg-2">
-        <button class="btn btn-primary col-12" type="button" id="add_target_button"
-                data-bs-placement="bottom" title="Add a new target column to your material formulation. Make sure not to use a
-                    name which is already present." disabled>
+        <button class="btn btn-primary col-12" type="button" id="add_target_button" disabled>
             {{ add_icon(20, 20, "currentColor") }} Add target
         </button>
     </div>
@@ -58,36 +57,37 @@
                     Show / hide dataset for editing
                 </button>
             </h3>
-            <div id="accordionTargetsTable-collapseTwo" class="accordion-collapse collapse show table-responsive"
-                 aria-labelledby="accordionTargetsTable-headingTwo">
-                <table class="accordion-body table table-responsive table-bordered table-striped">
+            <div id="accordionTargetsTable-collapseTwo" aria-labelledby="accordionTargetsTable-headingTwo"
+                 class="accordion-collapse collapse show table-responsive topscroll-table-container">
+                <table class="accordion-body table table-responsive table-bordered table-striped topscroll-table">
                     <thead>
-                        <tr>
-                            <th>Formulation Index</th>
-                            <th>Feature Summary</th>
-                            {% for item in target_list %}
-                            <th>{{ item }}</th>
-                            {% endfor %}
-                        </tr>
+                    <tr>
+                        <th>Formulation Index</th>
+                        <th>Feature Summary</th>
+                        {% for item in target_list %}
+                        <th>{{ item }}</th>
+                        {% endfor %}
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for item in all_dtos %}
-                        {% set outer_loop = loop %}
-                        <tr>
-                            <td>{{ item.index }}</td>
-                            <td>{{ item.preview_of_data }}</td>
-                            {% for target in item.targets %}
-                            {% if target.index == item.index %}
-                            <td style="min-width: 100px;">
-                                <input class="form-control"
-                                    id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
-                                    name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}" type="number"
-                                    value="{{ target.value if target.value is not none }}">
-                            </td>
-                            {% endif %}
-                            {% endfor %}
-                        </tr>
+                    {% for item in all_dtos %}
+                    {% set outer_loop = loop %}
+                    <tr>
+                        <td>{{ item.index }}</td>
+                        <td>{{ item.preview_of_data }}</td>
+                        {% for target in item.targets %}
+                        {% if target.index == item.index %}
+                        <td style="min-width: 100px;">
+                            <input class="form-control"
+                                   id="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                                   name="{{'target-' + outer_loop.index|string + '-' + loop.index|string}}"
+                                   type="number"
+                                   value="{{ target.value if target.value is not none }}">
+                        </td>
+                        {% endif %}
                         {% endfor %}
+                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
