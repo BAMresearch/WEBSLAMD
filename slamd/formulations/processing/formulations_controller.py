@@ -52,7 +52,7 @@ def submit_formulation_batch():
 
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover')
+                                       classes='table table-bordered table-striped table-hover topscroll-table')
     body = {'template': render_template('formulations_table.html', df=html_dataframe)}
     return make_response(jsonify(body), 200)
 

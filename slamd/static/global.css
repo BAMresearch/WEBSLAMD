@@ -82,3 +82,14 @@
 .multiple-select-lg {
     height: 180px !important;
 }
+
+/* 
+ * Custom classes for moving the scrollbar from the bottom
+ * to the top of a table-responsive element.
+ * The idea is to rotate the container element by 180 degrees to
+ * see the scrollbar on top and then rotate the content again by
+ * 180 degrees to restore it to the right orientation.
+ */
+.topscroll-table, .topscroll-table-container {
+    transform: rotateX(180deg);
+}
