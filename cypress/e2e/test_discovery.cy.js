@@ -88,19 +88,37 @@ describe("Test running experiments with example dataset", () => {
     cy.wait("@run_experiment");
     cy.get(".spinner-border").should("not.exist");
 
-    // Check the first three rows for the columns [Row number, Utility, Novelty]
-    // while also checking [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa)]
+    // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
+    // while also checking [CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
       .scrollIntoView()
       .within(() => {
-        cy.findByText(1).next().expectFloatToEqual(2.531052).next().expectFloatToEqual(0.599547);
+        cy.findByText(1)
+          .next()
+          .expectFloatToEqual(2.531052)
+          .next()
+          .expectFloatToEqual(0.599547)
+          .next()
+          .expectFloatToEqual(63.442981);
         // This number appears twice
-        cy.findAllByText(160.79328).eq(0).next().expectFloatToEqual(63.442981);
-        cy.findByText(2).next().expectFloatToEqual(2.372714).next().expectFloatToEqual(0.620889);
-        cy.findByText(164.35337).next().expectFloatToEqual(59.014729);
-        cy.findByText(3).next().expectFloatToEqual(2.243499).next().expectFloatToEqual(0.523664);
-        cy.findAllByText(160.79328).eq(1).next().expectFloatToEqual(59.452994);
+        cy.findAllByText(160.79328);
+        cy.findByText(2)
+          .next()
+          .expectFloatToEqual(2.372714)
+          .next()
+          .expectFloatToEqual(0.620889)
+          .next()
+          .expectFloatToEqual(59.014729);
+        cy.findByText(164.35337);
+        cy.findByText(3)
+          .next()
+          .expectFloatToEqual(2.243499)
+          .next()
+          .expectFloatToEqual(0.523664)
+          .next()
+          .expectFloatToEqual(59.452994);
+        cy.findAllByText(160.79328);
       });
   });
 
@@ -152,19 +170,37 @@ describe("Test running experiments with example dataset", () => {
     cy.wait("@run_experiment");
     cy.get(".spinner-border").should("not.exist");
 
-    // Check the first three rows for the columns [Row number, Utility, Novelty]
-    // while also checking [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa)]
+    // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
+    // while also checking [CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
       .scrollIntoView()
       .within(() => {
-        cy.findByText(1).next().expectFloatToEqual(4.048724).next().expectFloatToEqual(0.620889);
-        cy.findByText(164.35337).next().expectFloatToEqual(59.014729);
-        cy.findByText(2).next().expectFloatToEqual(4.037003).next().expectFloatToEqual(0.789527);
-        cy.findByText(167.90098).next().expectFloatToEqual(54.640386);
-        cy.findByText(3).next().expectFloatToEqual(3.954029).next().expectFloatToEqual(0.599547);
+        cy.findByText(1)
+          .next()
+          .expectFloatToEqual(4.048724)
+          .next()
+          .expectFloatToEqual(0.620889)
+          .next()
+          .expectFloatToEqual(59.014729);
+        cy.findByText(164.35337);
+        cy.findByText(2)
+          .next()
+          .expectFloatToEqual(4.037003)
+          .next()
+          .expectFloatToEqual(0.789527)
+          .next()
+          .expectFloatToEqual(54.640386);
+        cy.findByText(167.90098);
+        cy.findByText(3)
+          .next()
+          .expectFloatToEqual(3.954029)
+          .next()
+          .expectFloatToEqual(0.599547)
+          .next()
+          .expectFloatToEqual(63.442981);
         // This number appears twice
-        cy.findAllByText(160.79328).eq(0).next().expectFloatToEqual(63.442981);
+        cy.findAllByText(160.79328);
       });
   });
 
@@ -219,20 +255,38 @@ describe("Test running experiments with example dataset", () => {
     cy.wait("@run_experiment");
     cy.get(".spinner-border").should("not.exist");
 
-    // Check the first three rows for the columns [Row number, Utility, Novelty]
-    // while also checking [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa)]
+    // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
+    // while also checking [CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
       .scrollIntoView()
       .within(() => {
-        cy.findByText(1).next().expectFloatToEqual(3.831002).next().expectFloatToEqual(0.224525);
+        cy.findByText(1)
+          .next()
+          .expectFloatToEqual(3.831002)
+          .next()
+          .expectFloatToEqual(0.224525)
+          .next()
+          .expectFloatToEqual(64.10796);
         // This number appears twice
-        cy.findAllByText(116.12407).eq(0).next().expectFloatToEqual(64.10796);
-        cy.findByText(2).next().expectFloatToEqual(3.83015).next().expectFloatToEqual(0.224525);
-        cy.findAllByText(116.12407).eq(1).next().expectFloatToEqual(64.099414);
-        cy.findByText(3).next().expectFloatToEqual(3.424517).next().expectFloatToEqual(0.311907);
+        cy.findAllByText(116.12407);
+        cy.findByText(2)
+          .next()
+          .expectFloatToEqual(3.83015)
+          .next()
+          .expectFloatToEqual(0.224525)
+          .next()
+          .expectFloatToEqual(64.099414);
+        cy.findAllByText(116.12407);
+        cy.findByText(3)
+          .next()
+          .expectFloatToEqual(3.424517)
+          .next()
+          .expectFloatToEqual(0.311907)
+          .next()
+          .expectFloatToEqual(57.296066);
         // This number appears twice
-        cy.findAllByText(114.39607).eq(0).next().expectFloatToEqual(57.296066);
+        cy.findAllByText(114.39607);
       });
   });
 
@@ -290,20 +344,38 @@ describe("Test running experiments with example dataset", () => {
     cy.wait("@run_experiment");
     cy.get(".spinner-border").should("not.exist");
 
-    // Check the first three rows for the columns [Row number, Utility, Novelty]
-    // while also checking [CO2 (kg/t) - A-priori Information, fc 28-d - Target (MPa)]
+    // Check the first three rows for the columns [Row number, Utility, Novelty, Slump - Target (mm)]
+    // while also checking [CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
       .scrollIntoView()
       .within(() => {
-        cy.findByText(1).next().expectFloatToEqual(6.061092).next().expectFloatToEqual(0.224525);
+        cy.findByText(1)
+          .next()
+          .expectFloatToEqual(6.061092)
+          .next()
+          .expectFloatToEqual(0.224525)
+          .next()
+          .expectFloatToEqual(181.669628);
         // This number appears twice
-        cy.findAllByText(116.12407).eq(0).next().expectFloatToEqual(64.10796);
-        cy.findByText(2).next().expectFloatToEqual(6.057715).next().expectFloatToEqual(0.224525);
-        cy.findAllByText(116.12407).eq(1).next().expectFloatToEqual(64.099414);
-        cy.findByText(3).next().expectFloatToEqual(5.137301).next().expectFloatToEqual(0.311907);
+        cy.findAllByText(116.12407);
+        cy.findByText(2)
+          .next()
+          .expectFloatToEqual(6.057715)
+          .next()
+          .expectFloatToEqual(0.224525)
+          .next()
+          .expectFloatToEqual(181.588483);
+        cy.findAllByText(116.12407);
+        cy.findByText(3)
+          .next()
+          .expectFloatToEqual(5.137301)
+          .next()
+          .expectFloatToEqual(0.311907)
+          .next()
+          .expectFloatToEqual(151.522781);
         // This number appears twice
-        cy.findAllByText(114.39607).eq(0).next().expectFloatToEqual(57.296066);
+        cy.findAllByText(114.39607);
       });
   });
 });
