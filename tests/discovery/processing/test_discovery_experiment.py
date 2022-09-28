@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
-from slamd.discovery.processing.models.experiment import ExperimentData
+from slamd.discovery.processing.models.experiment_data import ExperimentData
 
 
 def test_clip_predictions_for_one_target_no_threshold():

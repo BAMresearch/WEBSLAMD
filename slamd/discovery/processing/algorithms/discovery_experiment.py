@@ -14,38 +14,6 @@ from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 class DiscoveryExperiment:
 
-    def __init__(self, dataframe, model, curiosity, features,
-                 targets, target_weights, target_thresholds, target_max_or_min,
-                 apriori_thresholds,
-                 apriori_columns, apriori_weights, apriori_max_or_min):
-        self.dataframe = dataframe.copy()
-        self.model = model
-        self.curiosity = curiosity
-
-        self.targets = targets
-        self.target_weights = target_weights
-        self.target_thresholds = target_thresholds
-        self.target_max_or_min = target_max_or_min
-
-        self.apriori_columns = apriori_columns
-        self.apriori_weights = apriori_weights
-        self.apriori_thresholds = apriori_thresholds
-        self.apriori_max_or_min = apriori_max_or_min
-
-        self.features = features
-
-        # Partition the dataframe in three parts: features, targets and apriori information
-        self.dataframe = self.filter_apriori_with_thresholds(self.dataframe)
-        self.features_df = self.dataframe[features].copy()
-        self.target_df = self.dataframe[targets].copy()
-        self.apriori_df = self.dataframe[apriori_columns].copy()
-
-        if len(targets) == 0:
-            raise SequentialLearningException('No targets were specified!')
-
-        self._update_prediction_index()
-        self._update_sample_index()
-
     def run(self):
         self._encode_categoricals()
         self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
@@ -97,35 +65,6 @@ class DiscoveryExperiment:
 
         return sorted, scatter_plot, tsne_plot
 
-    def _update_prediction_index(self):
-        # Selects the rows that have a label for the first target
-        # These have a null value in the corresponding column
-        self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
-
-    def _update_sample_index(self):
-        # Inverse of prediction index - The rows with labels (the training set) are the rest of the rows
-        self.sample_index = self.dataframe.index.difference(self.prediction_index)
-
-    @classmethod
-    def _encode_categoricals(cls, exp):
-        # TODO The previous version of this function used to do a dropna (axis=1) on features_df.
-        #  This should be done in a separate function
-        non_numeric_features = exp.features_df.select_dtypes(exclude='number').columns
-
-        for feature in non_numeric_features:
-            exp.dataframe[feature], _ = exp.dataframe[feature].factorize()
-
-    def normalize_data(self):
-        # Subtract the mean and divide by the standard deviation of each column
-        std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
-        self.features_df = (self.features_df - self.features_df.mean()) / std
-
-        std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
-        self.target_df = (self.target_df - self.target_df.mean()) / std
-
-        std = self.apriori_df.std().apply(lambda x: x if x != 0 else 1)
-        self.apriori_df = (self.apriori_df - self.apriori_df.mean()) / std
-
     def decide_max_or_min(self, df, columns, max_or_min):
         # Multiply the column by -1 if it needs to be minimized
         for (column, value) in zip(columns, max_or_min):
@@ -133,25 +72,6 @@ class DiscoveryExperiment:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
             if value == 'min':
                 df[column] *= (-1)
-
-    def filter_apriori_with_thresholds(self, df):
-        for (column, value, threshold) in zip(self.apriori_columns, self.apriori_max_or_min, self.apriori_thresholds):
-            if value not in ['min', 'max']:
-                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
-            if threshold is None:
-                continue
-
-            # index of rows in which all target columns are nan
-            nodata_index = df[self.targets].isna().all(axis=1)
-            if value == 'max':
-                # Get dataframe mask based on threshold value and nodata_index.
-                # Apply mask to dataframe. Get index of values to drop.
-                # Use new index to drop values from original dataframe.
-                df.drop(df[(df[column] < threshold) & nodata_index].index, inplace=True)
-            else:
-                df.drop(df[(df[column] > threshold) & nodata_index].index, inplace=True)
-
-        return df.reset_index(drop=True)
 
     def fit_model(self):
         if self.model == 'AI Model (lolo Random Forest)':
@@ -265,7 +185,7 @@ class DiscoveryExperiment:
             prediction_norm *= self.target_weights[0]
             uncertainty_norm *= self.target_weights[0]
 
-        self.normalize_data()
+        self._normalize_data()
 
         if len(self.apriori_columns) > 0:
             apriori_values_for_predicted_rows = self.apply_weights_to_apriori_values()
@@ -317,21 +237,3 @@ class DiscoveryExperiment:
                 clipped_prediction = self.prediction
 
         return clipped_prediction
-
-    def apply_weights_to_apriori_values(self):
-        apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
-
-        for w in range(len(self.apriori_weights)):
-            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
-        # Sum the apriori values row-wise for the case that there are several of them
-        # We need to simply add their contributions in that case
-        return apriori_for_predicted_rows.sum(axis=1)
-
-    def _check_target_label_validity(self, training_labels):
-        number_of_labelled_targets = training_labels.shape[0]
-        if number_of_labelled_targets == 0:
-            raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
-                                              'your thresholds are set correctly.')
-        all_data_is_labelled = self.dataframe.shape[0] == number_of_labelled_targets
-        if all_data_is_labelled:
-            raise SequentialLearningException('All data is already labelled.')
