@@ -206,40 +206,22 @@ class DiscoveryExperiment:
 
         return utility_function
 
-    def clip_predictions(self):
-        if len(self.targets) == 1:
-            if self.target_thresholds[0] is not None:
-                if self.target_max_or_min[0] == 'min':
-                    clipped_prediction = np.clip(self.prediction, a_min=self.target_thresholds[0], a_max=None)
-                else:
-                    clipped_prediction = np.clip(self.prediction, a_min=None, a_max=self.target_thresholds[0])
-            else:
-                clipped_prediction = self.prediction
+    def clip_predictions(cls, exp):
+        # TODO this currently will not work, because prediction is a numpy array, not a dataframe
+        clipped_predictions = exp.predictions.copy()
+        for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
+            if max_or_min not in ['min', 'max']:
+                raise SequentialLearningException(f'Invalid value for max_or_min, got {max_or_min}')
 
-        else:
-            # Multiple targets
-            column_indices = [i for i in range(len(self.targets))]
-            clipped_predictions = []
+            if threshold is None:
+                continue
 
-            for (col_idx, value, threshold) in zip(column_indices, self.target_max_or_min, self.target_thresholds):
-                if value not in ['min', 'max']:
-                    raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
-                if threshold is None:
-                    clipped_predictions.append(self.prediction[:, col_idx])
-                    continue
+            if max_or_min == 'min':
+                clipped_predictions[target].clip(lower=threshold)
+            elif max_or_min == 'max':
+                clipped_predictions[target].clip(upper=threshold)
 
-                if value == 'min':
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=threshold, a_max=None))
-                elif value == 'max':
-                    clipped_predictions.append(np.clip(self.prediction[:, col_idx], a_min=None, a_max=threshold))
-
-            if clipped_predictions:
-                clipped_prediction = np.vstack(clipped_predictions)
-                clipped_prediction = clipped_prediction.T
-            else:
-                clipped_prediction = self.prediction
-
-        return clipped_prediction
+        return clipped_predictions
 
 
 
