@@ -121,8 +121,7 @@ class DiscoveryExperiment:
 
     def move_after_row_column(self, df, cols_to_move=[]):
         """
-        Move one or several columns after a given reference column.
-        Adapted from: https://towardsdatascience.com/reordering-pandas-dataframe-columns-thumbs-down-on-standard-solutions-1ff0bc2941d5
+        Move one or several columns after the column named 'Row number'.
         """
         cols = df.columns.tolist()
         seg1 = cols[:list(cols).index('Row number') + 1]
