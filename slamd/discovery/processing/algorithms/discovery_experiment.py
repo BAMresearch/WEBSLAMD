@@ -47,7 +47,7 @@ class DiscoveryExperiment:
         self._update_sample_index()
 
     def run(self):
-        self._preprocess_features()
+        self._encode_categoricals()
         self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
         self.decide_max_or_min(self.apriori_df, self.apriori_columns, self.apriori_max_or_min)
         self.fit_model()
@@ -106,14 +106,14 @@ class DiscoveryExperiment:
         # Inverse of prediction index - The rows with labels (the training set) are the rest of the rows
         self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
-    def _preprocess_features(self):
-        non_numeric_features = [col for col, datatype in self.features_df.dtypes.items() if
-                                not np.issubdtype(datatype, np.number)]
-        if len(non_numeric_features) > 0:
-            encoder = OrdinalEncoder()
-            for feature in non_numeric_features:
-                self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
-        self.features_df = self.features_df.dropna(axis=1)
+    @classmethod
+    def _encode_categoricals(cls, exp):
+        # TODO The previous version of this function used to do a dropna (axis=1) on features_df.
+        #  This should be done in a separate function
+        non_numeric_features = exp.features_df.select_dtypes(exlude='number').columns
+
+        for feature in non_numeric_features:
+            exp.dataframe[feature], _ = exp.dataframe[feature].factorize()
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
