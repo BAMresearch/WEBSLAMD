@@ -21,14 +21,9 @@ class DiscoveryExperiment:
 
         cls.fit_model(exp)
 
-        # self._encode_categoricals()
-        # self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
-        # self.decide_max_or_min(self.apriori_df, self.apriori_columns, self.apriori_max_or_min)
-        # self.fit_model()
-
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
-        utility_function = self.update_index_MLI()
+        utility_function = cls.update_index_MLI(exp)
 
         novelty_factor = self.compute_novelty_factor()
 
@@ -135,6 +130,43 @@ class DiscoveryExperiment:
         exp.prediction = pd.DataFrame(predictions)
         exp.uncertainty = pd.DataFrame(uncertainties)
 
+    @classmethod
+    def update_index_MLI(cls, exp):
+        # TODO rename to "predicted_results" or "predicted_labels"
+        predicted_rows = exp.targets_df.loc[exp.nolabel_index].copy()
+
+        # Normalize the uncertainty of the predicted labels, then clip to given thresholds
+        # TODO What if the standard deviation is 0? also further down
+        normed_uncertainty = exp.uncertainty / predicted_rows.std()
+        clipped_prediction = cls.clip_prediction(exp)
+
+        # Normalize the predicted labels
+        normed_prediction = (clipped_prediction - predicted_rows.mean()) / predicted_rows.std()
+
+        for (target, weight) in zip(exp.target_names, exp.target_weights):
+            normed_prediction[target] *= weight
+            normed_uncertainty[target] *= weight
+
+        cls._normalize_data(exp)
+
+        if len(exp.apriori_names) > 0:
+            apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
+        else:
+            apriori_values_for_predicted_rows = np.zeros(len(exp.nolabel_index)) # TODO which index?
+
+        # Compute the value of the utility function
+        # See slide 43 of the PowerPoint presentation
+        # TODO This can probably be turned into a single expression
+        if len(exp.targets) > 1:
+            utility = apriori_values_for_predicted_rows.squeeze() + normed_prediction.sum(axis=1) +\
+                               exp.curiosity * normed_uncertainty.sum(axis=1)
+        else:
+            utility = apriori_values_for_predicted_rows.squeeze() + normed_prediction.squeeze() +\
+                               exp.curiosity * normed_uncertainty.squeeze()
+
+        # TODO This can probably be written into a dataframe
+        return utility
+
     def compute_novelty_factor(self):
         features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
         features_of_known_rows = self.features_df.iloc[self.sample_index]
@@ -144,49 +176,9 @@ class DiscoveryExperiment:
         max_of_min_distances = min_distances.max()
         return min_distances * (max_of_min_distances ** (-1))
 
-    def update_index_MLI(self):
-        predicted_rows = self.target_df.loc[self.sample_index]
-        # Normalize the uncertainty of the predicted labels
-        uncertainty_norm = self.uncertainty / np.array(predicted_rows.std())
-
-        clipped_prediction = self.clip_predictions()
-
-        # Normalize the predicted labels
-        prediction_norm = (clipped_prediction - np.array(predicted_rows.mean())) / np.array(predicted_rows.std())
-
-        if self.prediction.ndim >= 2:
-            # Scale the prediction and the uncertainty by the given weight for that target
-            for w in range(len(self.target_weights)):
-                prediction_norm[:, w] *= self.target_weights[w]
-                uncertainty_norm[:, w] *= self.target_weights[w]
-        else:
-            # There is only one target property and weights do not matter
-            # Nevertheless multiply by the single weight available
-            prediction_norm *= self.target_weights[0]
-            uncertainty_norm *= self.target_weights[0]
-
-        self._normalize_data()
-
-        if len(self.apriori_columns) > 0:
-            apriori_values_for_predicted_rows = self.apply_weights_to_apriori_values()
-        else:
-            apriori_values_for_predicted_rows = np.zeros(len(self.prediction_index))
-
-        # Compute the value of the utility function
-        # See slide 43 of the PowerPoint presentation
-        if len(self.targets) > 1:
-            utility_function = apriori_values_for_predicted_rows.squeeze() + prediction_norm.sum(
-                axis=1) + self.curiosity * uncertainty_norm.sum(axis=1)
-        else:
-            utility_function = apriori_values_for_predicted_rows.squeeze(
-            ) + prediction_norm.squeeze() + self.curiosity * uncertainty_norm.squeeze()
-
-        return utility_function
-
     @classmethod
-    def clip_predictions(cls, exp):
-        # TODO this currently will not work, because prediction is a numpy array, not a dataframe
-        clipped_predictions = exp.predictions.copy()
+    def clip_prediction(cls, exp):
+        clipped_prediction = exp.prediction.copy()
         for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
             if max_or_min not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {max_or_min}')
@@ -195,37 +187,19 @@ class DiscoveryExperiment:
                 continue
 
             if max_or_min == 'min':
-                clipped_predictions[target].clip(lower=threshold)
+                clipped_prediction[target].clip(lower=threshold)
             elif max_or_min == 'max':
-                clipped_predictions[target].clip(upper=threshold)
+                clipped_prediction[target].clip(upper=threshold)
 
-        return clipped_predictions
-
-
-
+        return clipped_prediction
 
     @classmethod
     def _normalize_data(cls, exp):
-        # TODO average over categoricals?
-        # TODO turn into "normalize dataframe" instead?
-        # Subtract the mean and divide by the standard deviation of each column
-        for col in exp.dataframe.columns:
-            std = exp.dataframe[col].std()
-
-            if std == 0:
-                std = 1
-
-            pass
-        # std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.features_df = (self.features_df - self.features_df.mean()) / std
-        #
-        # std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.target_df = (self.target_df - self.target_df.mean()) / std
-        #
-        # std = self.apriori_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.apriori_df = (self.apriori_df - self.apriori_df.mean()) / std
-
-
+        # TODO What about categoricals?
+        # TODO What happens to the data afterwards? This is a destructive operation
+        # replace 0s with 1s for division
+        std = exp.dataframe.std().replace(0, 1)
+        exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
 
     def apply_weights_to_apriori_values(self):
         apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()

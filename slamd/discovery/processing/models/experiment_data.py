@@ -11,13 +11,13 @@ class ExperimentData:
     curiosity: float = None
 
     target_names: list[str] = field(default_factory=lambda: [''])
-    target_weights: list[float] = field(default_factory=lambda: [0])
-    target_thresholds: list[float] = field(default_factory=lambda: [0])
+    target_weights: list[float] = field(default_factory=lambda: [1])
+    target_thresholds: list[float | None] = field(default_factory=lambda: [None])
     target_max_or_min: list[str] = field(default_factory=lambda: [''])
 
     apriori_names: list[str] = field(default_factory=lambda: [''])
-    apriori_weights: list[float] = field(default_factory=lambda: [0])
-    apriori_thresholds: list[float] = field(default_factory=lambda: [0])
+    apriori_weights: list[float] = field(default_factory=lambda: [1])
+    apriori_thresholds: list[float | None] = field(default_factory=lambda: [None])
     apriori_max_or_min: list[str] = field(default_factory=lambda: [''])
 
     feature_names: list[str] = field(default_factory=lambda: [''])
