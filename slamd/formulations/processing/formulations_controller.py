@@ -21,7 +21,7 @@ def base_material_page():
     if df is not None:
         df_table = df.to_html(index=False,
                               table_id='formulations_dataframe',
-                              classes='accordion-body table table-bordered table-striped table-hover')
+                              classes='accordion-body table table-bordered table-striped table-hover topscroll-table')
 
     return render_template('formulations.html',
                            materials_and_processes_selection_form=form,
