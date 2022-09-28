@@ -4,13 +4,38 @@ from slamd.common.error_handling import SequentialLearningException
 class ExperimentPreprocessor:
     @classmethod
     def preprocess(cls, exp):
-        cls._encode_categoricals(exp)
-        cls.decide_max_or_min(exp)
-
-        if len(targets) == 0:
+        if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
 
+        cls._encode_categoricals(exp)
+        cls._filter_missing_inputs(exp)
+        cls._decide_max_or_min(exp)
 
+
+    @classmethod
+    def _encode_categoricals(cls, exp):
+        # TODO The previous version of this function used to do a dropna (axis=1) on features_df.
+        #  This has been moved to _filter_missing_inputs
+        non_numeric_features = exp.features_df.select_dtypes(exclude='number').columns
+
+        for feature in non_numeric_features:
+            exp.dataframe[feature], _ = exp.dataframe[feature].factorize()
+
+    @classmethod
+    def _filter_missing_inputs(cls, exp):
+        # TODO Confirm that we want to drop columns, not rows
+        #  (Originally, dropping rows was not possible since the operation acted only on features_df)
+        exp.dataframe.dropna(inplace=True, subset=exp.feature_names, axis=1)
+
+    @classmethod
+    def _decide_max_or_min(cls, exp):
+        # TODO find a way to do this non-destructively
+        # Multiply the column by -1 if it needs to be minimized
+        for (column, value) in zip(exp.target_names+exp.apriori_names, exp.target_max_or_min+exp.apriori_max_or_min):
+            if value not in ['min', 'max']:
+                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+            if value == 'min':
+                exp.dataframe[column] *= (-1)
 
 
 
@@ -35,17 +60,6 @@ class ExperimentPreprocessor:
         #
         # std = self.apriori_df.std().apply(lambda x: x if x != 0 else 1)
         # self.apriori_df = (self.apriori_df - self.apriori_df.mean()) / std
-
-
-
-    @classmethod
-    def _encode_categoricals(cls, exp):
-        # TODO The previous version of this function used to do a dropna (axis=1) on features_df.
-        #  This should be done in a separate function
-        non_numeric_features = exp.features_df.select_dtypes(exclude='number').columns
-
-        for feature in non_numeric_features:
-            exp.dataframe[feature], _ = exp.dataframe[feature].factorize()
 
 
 
@@ -78,11 +92,3 @@ class ExperimentPreprocessor:
         # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)
-
-    def decide_max_or_min(self, df, columns, max_or_min):
-        # Multiply the column by -1 if it needs to be minimized
-        for (column, value) in zip(columns, max_or_min):
-            if value not in ['min', 'max']:
-                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
-            if value == 'min':
-                df[column] *= (-1)
