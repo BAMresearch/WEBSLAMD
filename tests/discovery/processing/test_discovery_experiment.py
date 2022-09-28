@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.models.experiment import Experiment
 
 
 def test_clip_predictions_for_one_target_no_threshold():
@@ -119,3 +120,22 @@ def test_filter_apriori_thresholds():
     assert np.array_equal(result['v'].values, np.array([1, 4, 5, 7, 8]))
     assert np.array_equal(np.nan_to_num(result['x'].values), np.array([0, 4, 0, 7, 8]))
     assert np.array_equal(np.nan_to_num(result['y'].values), np.array([1, 0, 0, 0, 8]))
+
+
+def test_encode_categoricals_multiple():
+    input_df = pd.DataFrame({
+        'u': [1, 2, 3],
+        'v': [1.0, 2.3, 4.5],
+        'w': ['a', 'b', 'c'],
+        'x': ['asdf', 'qwer', 'yxcv']
+    })
+
+    experiment = Experiment(
+        dataframe=input_df,
+        feature_names=input_df.columns
+    )
+
+    DiscoveryExperiment._encode_categoricals(experiment)
+
+    assert np.array_equal(experiment.dataframe['u'].values, input_df['u'].values)
+    pass

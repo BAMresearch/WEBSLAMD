@@ -110,7 +110,7 @@ class DiscoveryExperiment:
     def _encode_categoricals(cls, exp):
         # TODO The previous version of this function used to do a dropna (axis=1) on features_df.
         #  This should be done in a separate function
-        non_numeric_features = exp.features_df.select_dtypes(exlude='number').columns
+        non_numeric_features = exp.features_df.select_dtypes(exclude='number').columns
 
         for feature in non_numeric_features:
             exp.dataframe[feature], _ = exp.dataframe[feature].factorize()
