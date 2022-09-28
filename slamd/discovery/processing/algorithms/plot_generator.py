@@ -47,11 +47,13 @@ class PlotGenerator:
              'Utility': plot_df['Utility'],
              'is_train_data': plot_df['is_train_data']}
         )
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility',
-                         symbol='is_train_data', custom_data=['Row number'],
-                         title='Materials data in t-SNE coordinates: train data and targets')
+        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility', symbol='is_train_data',
+                         custom_data=['Row number'],
+                         title='Materials data in t-SNE coordinates: train data and targets',
+                         symbol_sequence=['circle', 'cross'])
         fig.update_traces(
-            hovertemplate='Row number: %{customdata}, Utility: %{marker.color:.2f}'
+            hovertemplate='Row number: %{customdata}, Utility: %{marker.color:.2f}',
+            marker=dict(size=7)
         )
         fig.update_layout(
             height=1000,
