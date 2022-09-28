@@ -35,7 +35,8 @@ class PlotGenerator:
 
     @classmethod
     def create_tsne_input_space_plot(cls, features_df, candidate_or_target):
-        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000)
+        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000,
+                    init='random', learning_rate=200)
         tsne_result = tsne.fit_transform(features_df)
         tsne_result_df = pd.DataFrame(
             {'tsne_1': tsne_result[:, 0],

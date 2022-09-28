@@ -12,6 +12,12 @@ from slamd.common.error_handling import ValueNotSupportedException, SequentialLe
 from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
+# Attention - suppressing expected Gaussian Regressor warnings
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+
+
 class DiscoveryExperiment:
 
     def __init__(self, dataframe, model, curiosity, features,
@@ -184,7 +190,10 @@ class DiscoveryExperiment:
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
-            rows_to_predict = self.features_df.iloc[self.prediction_index]
+            # Note: GPR is trained on numpy arrays, which do not have feature names, but predicts using dataframes,
+            # which do have feature names. Convert the dataframe .to_numpy() in order to suppress sklearn warnings
+            # These should probably all be turned into dataframes during a refactor
+            rows_to_predict = self.features_df.iloc[self.prediction_index].to_numpy()
             prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
 
             if i == 0:
