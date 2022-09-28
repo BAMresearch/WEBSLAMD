@@ -125,6 +125,10 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
     df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
         'test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
 
+    print()
+    print(df_with_prediction.to_string())
+    print()
+    print(pd.DataFrame(TEST_GAUSS_WITHOUT_THRES_PRED).to_string())
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRES_CONFIG

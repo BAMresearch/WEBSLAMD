@@ -81,9 +81,6 @@ class DiscoveryExperiment:
             # Predict the label for the remaining rows
             rows_to_predict = exp.features_df.loc[exp.nolabel_index].values
             prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
-            print()
-            print(prediction)
-            print(prediction.to_string())
 
             predictions[target] = prediction
             uncertainties[target] = uncertainty
@@ -122,8 +119,8 @@ class DiscoveryExperiment:
 
     @classmethod
     def update_index_MLI(cls, exp):
-        # TODO rename to "predicted_results" or "predicted_labels"
-        predicted_rows = exp.targets_df.loc[exp.nolabel_index].copy()
+        # TODO predicted_rows is misleadingly named! not actually predicted!
+        predicted_rows = exp.targets_df.loc[exp.label_index].copy()
 
         # Normalize the uncertainty of the predicted labels, then clip to given thresholds
         # TODO What if the standard deviation is 0? also further down
