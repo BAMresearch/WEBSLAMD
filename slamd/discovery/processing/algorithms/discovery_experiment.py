@@ -25,7 +25,7 @@ class DiscoveryExperiment:
         # See the original app for other possibilities
         utility_function = cls.update_index_MLI(exp)
 
-        novelty_factor = self.compute_novelty_factor()
+        novelty_factor = cls.compute_novelty_factor(exp)
 
         # Original dataframe
         df = self.dataframe
@@ -167,9 +167,10 @@ class DiscoveryExperiment:
         # TODO This can probably be written into a dataframe
         return utility
 
-    def compute_novelty_factor(self):
-        features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
-        features_of_known_rows = self.features_df.iloc[self.sample_index]
+    @classmethod
+    def compute_novelty_factor(cls, exp):
+        features_of_predicted_rows = exp.features_df.iloc[exp.nolabel_index]
+        features_of_known_rows = exp.features_df.iloc[exp.label_index]
 
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)

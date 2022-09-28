@@ -27,6 +27,7 @@ class ExperimentData:
 
     uncertainty: DataFrame = None
     prediction: DataFrame = None
+    novelty_factor = None  # TODO Series?
 
     def __post_init__(self):
         self.orig_data = self.dataframe.copy()
