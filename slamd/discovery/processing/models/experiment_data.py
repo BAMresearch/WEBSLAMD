@@ -25,9 +25,8 @@ class ExperimentData:
     labelled_index: Index = None
     unlabelled_index: Index = None
 
-    # TODO datatypes
-    uncertainty = None
-    prediction = None
+    uncertainty: DataFrame = None
+    prediction: DataFrame = None
 
     def __post_init__(self):
         self.orig_data = self.dataframe.copy()

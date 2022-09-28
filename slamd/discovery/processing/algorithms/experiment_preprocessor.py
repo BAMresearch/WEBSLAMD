@@ -4,10 +4,10 @@ from slamd.common.error_handling import SequentialLearningException
 class ExperimentPreprocessor:
     @classmethod
     def preprocess(cls, exp):
-        cls._validate_experiment(exp)
         cls._filter_apriori_with_thresholds(exp)
-        cls._encode_categoricals(exp)
         cls._filter_missing_inputs(exp)
+        cls._validate_experiment(exp)
+        cls._encode_categoricals(exp)
         cls._decide_max_or_min(exp)
 
     @classmethod
@@ -18,6 +18,27 @@ class ExperimentPreprocessor:
         for value in exp.target_max_or_min + exp.apriori_max_or_min:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+
+        # TODO Implement this validation formerly from fit_gaussian_...
+        # nan_counts = list(self.target_df.isna().sum())
+        #
+        # previous_count = nan_counts[0]
+        # for j in range(1, len(nan_counts)):
+        #     if nan_counts[1] != previous_count:
+        #         raise SequentialLearningException('Targets used are labelled for differing rows.')
+        #     previous_count = nan_counts[j]
+
+        # TODO Implement the validation checks from this function. Needs to run AFTER filter apriori
+        #
+        # @classmethod
+        # def _check_target_label_validity(cls, training_labels):
+        #     number_of_labelled_targets = training_labels.shape[0]
+        #     if number_of_labelled_targets == 0:
+        #         raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
+        #                                           'your thresholds are set correctly.')
+            # all_data_is_labelled = exp.dataframe.shape[0] == number_of_labelled_targets
+            # if all_data_is_labelled:
+            #     raise SequentialLearningException('All data is already labelled.')
 
     @classmethod
     def _encode_categoricals(cls, exp):
@@ -62,36 +83,3 @@ class ExperimentPreprocessor:
         exp.dataframe.reset_index(drop=True, inplace=True)
 
 
-
-
-    @classmethod
-    def _normalize_data(cls, exp):
-        # TODO average over categoricals?
-        # TODO turn into "normalize dataframe" instead?
-        # Subtract the mean and divide by the standard deviation of each column
-        for col in exp.dataframe.columns:
-            std = exp.dataframe[col].std()
-
-            if std == 0:
-                std = 1
-
-            pass
-        # std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.features_df = (self.features_df - self.features_df.mean()) / std
-        #
-        # std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.target_df = (self.target_df - self.target_df.mean()) / std
-        #
-        # std = self.apriori_df.std().apply(lambda x: x if x != 0 else 1)
-        # self.apriori_df = (self.apriori_df - self.apriori_df.mean()) / std
-
-
-
-    def apply_weights_to_apriori_values(self):
-        apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
-
-        for w in range(len(self.apriori_weights)):
-            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
-        # Sum the apriori values row-wise for the case that there are several of them
-        # We need to simply add their contributions in that case
-        return apriori_for_predicted_rows.sum(axis=1)

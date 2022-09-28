@@ -82,26 +82,17 @@ class DiscoveryExperiment:
 
     @classmethod
     def fit_gaussian_process_regression(cls, exp):
+        # TODO I am 99% sure you can fit the same gpr object multiple times, verify
+        # Initialize the model with given hyperparameters
+        kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
+        gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
+
+        predictions = {}
+        uncertainties = {}
         for i, target in enumerate(exp.target_names):
-            # Initialize the model with given hyperparameters
-            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
-
             # Train the GPR model for every target with the corresponding rows and labels
-
             training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.sample_index, target].values
-
-            cls._check_target_label_validity(training_labels, exp)
-
-            # TODO this should be checked during preprocessing
-            # nan_counts = list(self.target_df.isna().sum())
-            #
-            # previous_count = nan_counts[0]
-            # for j in range(1, len(nan_counts)):
-            #     if nan_counts[1] != previous_count:
-            #         raise SequentialLearningException('Targets used are labelled for differing rows.')
-            #     previous_count = nan_counts[j]
+            training_labels = exp.targets_df.loc[exp.nolabel_index, target].values
 
             gpr.fit(training_rows, training_labels)
 
@@ -109,15 +100,11 @@ class DiscoveryExperiment:
             rows_to_predict = exp.features_df.loc[exp.nolabel_index]
             prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
 
-            if i == 0:
-                uncertainty_stacked = uncertainty
-                pred_stacked = prediction
-            else:
-                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, prediction))
+            predictions[target] = prediction
+            uncertainties[target] = uncertainty
 
-        exp.uncertainty = uncertainty_stacked.T
-        exp.prediction = pred_stacked.T
+        exp.prediction = pd.DataFrame(predictions)
+        exp.uncertainty = pd.DataFrame(uncertainties)
 
     @classmethod
     def fit_random_forest_with_jack_knife_variance_estimators(cls, exp):
@@ -206,6 +193,7 @@ class DiscoveryExperiment:
 
         return utility_function
 
+    @classmethod
     def clip_predictions(cls, exp):
         # TODO this currently will not work, because prediction is a numpy array, not a dataframe
         clipped_predictions = exp.predictions.copy()
@@ -225,14 +213,35 @@ class DiscoveryExperiment:
 
 
 
-    @classmethod
-    def _check_target_label_validity(cls, training_labels, exp):
-        number_of_labelled_targets = training_labels.shape[0]
-        if number_of_labelled_targets == 0:
-            raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
-                                              'your thresholds are set correctly.')
 
-        # TODO: Check all_data_is_labelled in preprocessing
-        all_data_is_labelled = exp.dataframe.shape[0] == number_of_labelled_targets
-        if all_data_is_labelled:
-            raise SequentialLearningException('All data is already labelled.')
+    @classmethod
+    def _normalize_data(cls, exp):
+        # TODO average over categoricals?
+        # TODO turn into "normalize dataframe" instead?
+        # Subtract the mean and divide by the standard deviation of each column
+        for col in exp.dataframe.columns:
+            std = exp.dataframe[col].std()
+
+            if std == 0:
+                std = 1
+
+            pass
+        # std = self.features_df.std().apply(lambda x: x if x != 0 else 1)
+        # self.features_df = (self.features_df - self.features_df.mean()) / std
+        #
+        # std = self.target_df.std().apply(lambda x: x if x != 0 else 1)
+        # self.target_df = (self.target_df - self.target_df.mean()) / std
+        #
+        # std = self.apriori_df.std().apply(lambda x: x if x != 0 else 1)
+        # self.apriori_df = (self.apriori_df - self.apriori_df.mean()) / std
+
+
+
+    def apply_weights_to_apriori_values(self):
+        apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
+
+        for w in range(len(self.apriori_weights)):
+            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
+        # Sum the apriori values row-wise for the case that there are several of them
+        # We need to simply add their contributions in that case
+        return apriori_for_predicted_rows.sum(axis=1)
