@@ -125,7 +125,8 @@ class DiscoveryExperiment:
         """
         df = df.sort_values(by='Utility', ascending=False)
         df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
-        cols_to_move = ['Utility', 'Novelty'] + self.targets + [f'Uncertainty ({target})' for target in self.targets]
+        cols_to_move = ['Utility', 'Novelty'] + self.targets
+        cols_to_move += [f'Uncertainty ({target})' for target in self.targets] + self.apriori_columns
         return self.move_after_row_column(df, cols_to_move)
 
     def plot_output_space(self, df):
