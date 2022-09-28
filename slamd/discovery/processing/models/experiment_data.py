@@ -10,6 +10,7 @@ class ExperimentData:
     model: str = None # TODO rename
     curiosity: float = None
 
+    # TODO Defaults: List of empty str or empty list?
     target_names: list[str] = field(default_factory=lambda: [''])
     target_weights: list[float] = field(default_factory=lambda: [1])
     target_thresholds: list[float | None] = field(default_factory=lambda: [None])

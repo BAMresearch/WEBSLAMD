@@ -6,7 +6,6 @@ from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
-from sklearn.preprocessing import OrdinalEncoder
 
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
@@ -27,44 +26,32 @@ class DiscoveryExperiment:
 
         novelty_factor = cls.compute_novelty_factor(exp)
 
-        # Original dataframe
-        df = self.dataframe
+        # Construct dataframe for output
+        df = exp.orig_data.loc[exp.nolabel_index].copy()
         # Add the columns with utility and novelty values
-        df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
-        df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
+        df['Utility'] = utility_function.round(6)
+        df['Novelty'] = novelty_factor.round(6)
+        # df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
+        # df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
 
-        # Fill in prediction and uncertainty values
-        if self.uncertainty.ndim > 1:
-            for i in range(len(self.targets)):
-                df[self.targets[i]] = self.prediction[:, i]
-                uncertainty_name_column = f'Uncertainty ({self.targets[i]})'
-                df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
-                df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
-        else:
-            df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
-            uncertainty_name_column = f'Uncertainty ({self.targets[0]})'
-            df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
-            df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+        for target in exp.target_names:
+            df[target] = exp.prediction[target].round(6)
+            df[f'Uncertainty({target}'] = exp.uncertainty[target].round(5)
 
-        df[self.targets] = df[self.targets].apply(lambda row: round(row, 6))
-        df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
-        df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
-
-        sorted = df.sort_values(by='Utility', ascending=False)
+        df = df.sort_values(by='Utility', ascending=False)
         # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
+        # TODO This line can probably be simplified
+        df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
 
-        columns_for_plot = self.targets.copy()
-        columns_for_plot.extend(['Utility', 'Row number'])
-        if len(self.apriori_columns) > 0:
-            columns_for_plot.extend(self.apriori_columns)
+        columns_for_plot = exp.target_names + ['Utility', 'Row number'] + exp.apriori_names
 
-        candidate_or_target = ['candidate' if row in self.sample_index else 'target' for row in self.features_df.index]
+        # TODO candidate/target confusing naming. verify and rename.
+        candidate_or_target = ['candidate' if row in exp.label_index else 'target' for row in exp.features_df.index]
 
-        scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
-        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df, candidate_or_target)
+        scatter_plot = PlotGenerator.create_target_scatter_plot(df[columns_for_plot])
+        tsne_plot = PlotGenerator.create_tsne_input_space_plot(exp.features_df, candidate_or_target)
 
-        return sorted, scatter_plot, tsne_plot
+        return df, scatter_plot, tsne_plot
 
     @classmethod
     def fit_model(cls, exp):
