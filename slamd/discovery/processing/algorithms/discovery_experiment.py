@@ -362,8 +362,13 @@ class DiscoveryExperiment:
     def apply_weights_to_apriori_values(self):
         apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
 
-        for w in range(len(self.apriori_weights)):
-            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
+        if len(self.apriori_weights) == 1:
+            for w in range(len(self.apriori_weights)):
+                apriori_for_predicted_rows *= self.apriori_weights[w]
+        else:
+            for w in range(len(self.apriori_weights)):
+                apriori_for_predicted_rows[:, w] *= self.apriori_weights[w]
+
         # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)
