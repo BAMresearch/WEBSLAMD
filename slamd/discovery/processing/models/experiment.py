@@ -2,7 +2,7 @@ from pandas import DataFrame, Index
 from dataclasses import dataclass, field
 
 @dataclass
-class Experiment:
+class ExperimentData:
     dataframe: DataFrame = None
     # Original copy of the data - no transformations applied. TODO necessary?
     dataframe_orig: DataFrame = None

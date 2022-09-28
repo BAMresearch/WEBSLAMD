@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
-from slamd.discovery.processing.models.experiment import Experiment
+from slamd.discovery.processing.models.experiment import ExperimentData
 
 
 def test_clip_predictions_for_one_target_no_threshold():
@@ -130,7 +130,7 @@ def test_encode_categoricals_multiple():
         'x': ['asdf', 'qwer', 'yxcv']
     })
 
-    experiment = Experiment(
+    experiment = ExperimentData(
         dataframe=input_df,
         feature_names=list(input_df.columns)
     )
@@ -149,7 +149,7 @@ def test_encode_categoricals_none():
         'v': [1.0, 2.3, 4.5],
     })
 
-    experiment = Experiment(
+    experiment = ExperimentData(
         dataframe=input_df,
         feature_names=list(input_df.columns)
     )
@@ -163,7 +163,7 @@ def test_encode_categoricals_none():
 def test_encode_categoricals_empty():
     input_df = pd.DataFrame()
 
-    experiment = Experiment(
+    experiment = ExperimentData(
         dataframe=input_df,
         feature_names=list(input_df.columns)
     )
