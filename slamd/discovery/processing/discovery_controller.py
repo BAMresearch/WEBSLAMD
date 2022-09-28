@@ -91,7 +91,7 @@ def run_experiment(dataset):
     dataframe, scatter_plot, tsne_plot = DiscoveryService.run_experiment(dataset, request_body)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover')
+                                       classes='table table-bordered table-striped table-hover topscroll-table')
 
     body = {'template': render_template('experiment_result.html', df=html_dataframe,
                                         scatter_plot=scatter_plot, tsne_plot=tsne_plot)}
@@ -135,9 +135,11 @@ def add_targets(dataset):
 @discovery.route('/<dataset>/<target_name>/add_target', methods=['GET'])
 def add_target(dataset, target_name):
     target_page_data = TargetsService.add_target_name(dataset, target_name)
-    html_dataframe = target_page_data.dataframe.to_html(index=False,
-                                                        table_id='formulations_dataframe',
-                                                        classes='table table-bordered table-striped table-hover')
+    html_dataframe = target_page_data.dataframe.to_html(
+        index=False,
+        table_id='formulations_dataframe',
+        classes='table table-bordered table-striped table-hover topscroll-table'
+    )
 
     body = {'template': render_template('targets_form.html',
                                         form=target_page_data.targets_form,
@@ -155,7 +157,7 @@ def toggle_targets(dataset):
 
     html_dataframe = target_page_data.dataframe.to_html(
         index=False, table_id='formulations_dataframe',
-        classes='table table-bordered table-striped table-hover')
+        classes='table table-bordered table-striped table-hover topscroll-table')
 
     body = {'template': render_template('targets_form.html',
                                         form=target_page_data.targets_form,
