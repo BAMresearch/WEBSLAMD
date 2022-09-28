@@ -19,7 +19,7 @@ class ExperimentPreprocessor:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
-        # TODO Implement this validation formerly from fit_gaussian_...
+        # TODO Implement this validation function formerly called by regressor functions
         # nan_counts = list(self.target_df.isna().sum())
         #
         # previous_count = nan_counts[0]
@@ -39,6 +39,13 @@ class ExperimentPreprocessor:
             # all_data_is_labelled = exp.dataframe.shape[0] == number_of_labelled_targets
             # if all_data_is_labelled:
             #     raise SequentialLearningException('All data is already labelled.')
+
+        # TODO Implement this validation check for the random forest regressor
+        # if self.dataframe.loc[:, self.targets[i]].count() <= 1:
+        #     raise ValueNotSupportedException(message=f'The given dataset does not contain enough training data '
+        #                                              f'in column {self.targets[i]}. Please ensure that there are '
+        #                                              f'at least 2 data points that are not filtered out by '
+        #                                              f'apriori thresholds.')
 
     @classmethod
     def _encode_categoricals(cls, exp):

@@ -89,7 +89,7 @@ class DiscoveryExperiment:
 
         predictions = {}
         uncertainties = {}
-        for i, target in enumerate(exp.target_names):
+        for target in exp.target_names:
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = exp.features_df.loc[exp.label_index].values
             training_labels = exp.targets_df.loc[exp.nolabel_index, target].values
@@ -108,42 +108,32 @@ class DiscoveryExperiment:
 
     @classmethod
     def fit_random_forest_with_jack_knife_variance_estimators(cls, exp):
-        for i in range(len(self.targets)):
-            if self.dataframe.loc[:, self.targets[i]].count() <= 1:
-                raise ValueNotSupportedException(message=f'The given dataset does not contain enough training data '
-                                                         f'in column {self.targets[i]}. Please ensure that there are '
-                                                         f'at least 2 data points that are not filtered out by '
-                                                         f'apriori thresholds.')
+        # TODO This is very similar to fit_gaussian. Could feasibly be turned into a single function
+        rfr = RandomForestRegressor()
 
-            # Initialize the model
-            rfr = RandomForestRegressor()
-
+        predictions = {}
+        uncertainties = {}
+        for target in exp.target_names:
             # Train the model
-            training_rows = self.features_df.iloc[self.sample_index].to_numpy()
-            training_labels = self.target_df.iloc[self.sample_index]
+            training_rows = exp.features_df.loc[exp.label_index].values
+            training_labels = exp.targets_df.loc[exp.nolabel_index, target].values
 
-            self._check_target_label_validity(training_labels)
+            # Artificially pad data to work with lolopy random forest implementation, if necessary
+            if training_labels.shape[0] < 8:
+                training_rows = np.tile(training_rows, (4, 1))
+                training_labels = np.tile(training_labels, (4, 1))
 
-            self.x = training_rows
-            self.y = training_labels.loc[:, self.targets[i]].to_frame().to_numpy()
-            if self.y.shape[0] < 8:
-                self.x = np.tile(self.x, (4, 1))
-                self.y = np.tile(self.y, (4, 1))
-            rfr.fit(self.x, self.y)
+            rfr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
-            rows_to_predict = self.features_df.iloc[self.prediction_index]
+            rows_to_predict = exp.features_df.loc[exp.nolabel_index]
             prediction, uncertainty = rfr.predict(rows_to_predict, return_std=True)
 
-            if i == 0:
-                uncertainty_stacked = uncertainty
-                pred_stacked = prediction
-            else:
-                uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
-                pred_stacked = np.vstack((pred_stacked, prediction))
+            predictions[target] = prediction
+            uncertainties[target] = uncertainty
 
-        self.uncertainty = uncertainty_stacked.T
-        self.prediction = pred_stacked.T
+        exp.prediction = pd.DataFrame(predictions)
+        exp.uncertainty = pd.DataFrame(uncertainties)
 
     def compute_novelty_factor(self):
         features_of_predicted_rows = self.features_df.iloc[self.prediction_index]
