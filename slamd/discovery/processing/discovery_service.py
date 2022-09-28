@@ -9,6 +9,7 @@ from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.models.experiment_data import ExperimentData
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
@@ -68,7 +69,7 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        df_with_predictions, scatter_plot, tsne_plot = experiment.run()
+        df_with_predictions, scatter_plot, tsne_plot = DiscoveryExperiment.run(experiment)
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
@@ -123,17 +124,19 @@ class DiscoveryService:
 
     @classmethod
     def _initialize_experiment(cls, dataframe, user_input):
-        return DiscoveryExperiment(
+        return ExperimentData(
             dataframe=dataframe,
             model=user_input.model,
             curiosity=user_input.curiosity,
-            features=user_input.features,
-            targets=user_input.targets,
+            feature_names=user_input.features,
+
+            target_names=user_input.targets,
             target_weights=user_input.target_weights,
             target_thresholds=user_input.target_thresholds,
             target_max_or_min=user_input.target_max_or_min,
+
+            apriori_names=user_input.apriori_columns,
             apriori_thresholds=user_input.apriori_thresholds,
-            apriori_columns=user_input.apriori_columns,
             apriori_weights=user_input.apriori_weights,
             apriori_max_or_min=user_input.apriori_max_or_min
         )

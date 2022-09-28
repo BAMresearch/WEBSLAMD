@@ -74,13 +74,16 @@ class DiscoveryExperiment:
         for target in exp.target_names:
             # Train the GPR model for every target with the corresponding rows and labels
             training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.nolabel_index, target].values
+            training_labels = exp.targets_df.loc[exp.label_index, target].values
 
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
-            rows_to_predict = exp.features_df.loc[exp.nolabel_index]
+            rows_to_predict = exp.features_df.loc[exp.nolabel_index].values
             prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
+            print()
+            print(prediction)
+            print(prediction.to_string())
 
             predictions[target] = prediction
             uncertainties[target] = uncertainty
@@ -98,7 +101,7 @@ class DiscoveryExperiment:
         for target in exp.target_names:
             # Train the model
             training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.nolabel_index, target].values
+            training_labels = exp.targets_df.loc[exp.label_index, target].values
 
             # Artificially pad data to work with lolopy random forest implementation, if necessary
             if training_labels.shape[0] < 8:
@@ -144,7 +147,7 @@ class DiscoveryExperiment:
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
         # TODO This can probably be turned into a single expression
-        if len(exp.targets) > 1:
+        if len(exp.target_names) > 1:
             utility = apriori_values_for_predicted_rows.squeeze() + normed_prediction.sum(axis=1) +\
                                exp.curiosity * normed_uncertainty.sum(axis=1)
         else:

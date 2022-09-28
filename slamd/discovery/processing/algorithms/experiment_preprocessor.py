@@ -60,7 +60,12 @@ class ExperimentPreprocessor:
     def _filter_missing_inputs(cls, exp):
         # TODO Confirm that we want to drop columns, not rows
         #  (Originally, dropping rows was not possible since the operation acted only on features_df)
-        exp.dataframe.dropna(inplace=True, subset=exp.feature_names, axis=1)
+        #  -> would simply be exp.dataframe.dropna(inplace=True, subset=exp.feature_names)
+        # TODO Technically this is modifying a dataframe as we are iterating over it which is not really clean
+        #  not really an issue here but still...
+        for col in exp.feature_names:
+            if exp.dataframe[col].isna().values.any():
+                exp.dataframe.drop(col, axis=1, inplace=True)
 
     @classmethod
     def _decide_max_or_min(cls, exp):

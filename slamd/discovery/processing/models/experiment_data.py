@@ -1,3 +1,4 @@
+import pandas as pd
 from pandas import DataFrame, Index
 from dataclasses import dataclass, field
 
@@ -5,8 +6,6 @@ from dataclasses import dataclass, field
 class ExperimentData:
     orig_data: DataFrame = None
     dataframe: DataFrame = None
-    # Original copy of the data - no transformations applied. TODO necessary?
-    dataframe_orig: DataFrame = None
     model: str = None # TODO rename
     curiosity: float = None
 
@@ -49,18 +48,14 @@ class ExperimentData:
     #  sample index -> marks data used for training. has labels.
     #  prediction index -> marks data used for prediction. has no labels.
     #  Verify.
+    # return self.targets_df.notnull().all(axis=1)
     @property
     def label_index(self):
-        # TODO Old version: checks only for the first column
-        # Selects the rows that have a label for the first target
-        # These have a null value in the corresponding column
-        # self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
-        # TODO New version: Checks for all columns. Verify this is correct
-        return self.targets_df.notnull().all(axis=1)
+        return self.dataframe.index.difference(self.nolabel_index)
 
     @property
     def nolabel_index(self):
-        return self.dataframe.index.difference(self.label_index)
+        return pd.isnull(self.dataframe[[self.target_names[0]]]).to_numpy().nonzero()[0]
     # def _update_prediction_index(self):
     #     # Selects the rows that have a label for the first target TODO should be "no label"?
     #     # These have a null value in the corresponding column
