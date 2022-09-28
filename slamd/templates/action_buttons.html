@@ -40,9 +40,9 @@
 {% endmacro %}
 
 {% macro create_change_selection_button(label, changeButtonId, confirmButtonId, tooltip) -%}
-<div data-bs-toggle="tooltip" title="{{ tooltip }}">
-    <button id="{{ changeButtonId }}" class="btn btn-success col-12 mb-3" type="button" data-bs-toggle="modal"
-        data-bs-placement="bottom" data-bs-target="#change-modal" title="{{ tooltip }}" disabled>
+<div data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ tooltip }}">
+    <button id="{{ changeButtonId }}" class="btn btn-success col-12 mb-3" type="button" data-bs-target="#change-modal"
+        data-bs-toggle="modal" title="{{ tooltip }}" disabled>
         {{ label }}
     </button>
 </div>
