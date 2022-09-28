@@ -119,20 +119,14 @@ class DiscoveryExperiment:
                 self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
         self.features_df = self.features_df.dropna(axis=1)
 
-    def _movecol(self, df, cols_to_move=[], ref_col='', place='after'):
+    def move_after_row_column(self, df, cols_to_move=[]):
         """
-        Move one or several columns before or after a given reference column.
+        Move one or several columns after a given reference column.
         Adapted from: https://towardsdatascience.com/reordering-pandas-dataframe-columns-thumbs-down-on-standard-solutions-1ff0bc2941d5
         """
         cols = df.columns.tolist()
-        if place == 'after':
-            seg1 = cols[:list(cols).index(ref_col) + 1]
-            seg2 = cols_to_move
-        elif place == 'before':
-            seg1 = cols[:list(cols).index(ref_col)]
-            seg2 = cols_to_move + [ref_col]
-        else:
-            raise SequentialLearningException(f'Invalid value for max_or_min, got {place}')
+        seg1 = cols[:list(cols).index('Row number') + 1]
+        seg2 = cols_to_move
         # Make sure to remove overlapping elements between the segments
         seg1 = [i for i in seg1 if i not in seg2]
         seg3 = [i for i in cols if i not in seg1 + seg2]
@@ -148,7 +142,7 @@ class DiscoveryExperiment:
         df = df.sort_values(by='Utility', ascending=False)
         df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
         cols_to_move = ['Utility', 'Novelty'] + self.targets + [f'Uncertainty ({target})' for target in self.targets]
-        return self._movecol(df, cols_to_move=cols_to_move, ref_col='Row number', place='after')
+        return self.move_after_row_column(df, cols_to_move)
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
