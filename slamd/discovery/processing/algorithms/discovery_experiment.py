@@ -189,11 +189,13 @@ class DiscoveryExperiment:
         std = exp.dataframe.std().replace(0, 1)
         exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
 
-    def apply_weights_to_apriori_values(self):
-        apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
+    @classmethod
+    def apply_weights_to_apriori_values(cls, exp):
+        apriori_for_predicted_rows = exp.apriori_df.loc[exp.nolabel_index]
 
-        for w in range(len(self.apriori_weights)):
-            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
+        for (col, weight) in zip(exp.apriori_df.columns, exp.apriori_weights):
+            apriori_for_predicted_rows[col] *= weight
+
         # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)
