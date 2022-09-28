@@ -70,16 +70,16 @@ class DiscoveryExperiment:
                 df[self.targets[i]] = self.prediction[:, i]
                 uncertainty_name_column = f'Uncertainty ({self.targets[i]})'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
-                df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+                df[uncertainty_name_column] = df[uncertainty_name_column].round(5)
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
             uncertainty_name_column = f'Uncertainty ({self.targets[0]})'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
-            df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+            df[uncertainty_name_column] = df[uncertainty_name_column].round(5)
 
-        df[self.targets] = df[self.targets].apply(lambda row: round(row, 6))
-        df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
-        df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
+        df[self.targets] = df[self.targets].round(6)
+        df['Utility'] = df['Utility'].round(6)
+        df['Novelty'] = df['Novelty'].round(6)
 
         sorted = self.preprocess_dataframe_for_output_table(df)
         scatter_plot = self.plot_output_space(sorted)
