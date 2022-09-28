@@ -2,23 +2,16 @@ from slamd.common.error_handling import SequentialLearningException
 
 
 class ExperimentPreprocessor:
-
-    def preprocess(self):
-
+    @classmethod
+    def preprocess(cls, exp):
+        cls._encode_categoricals(exp)
+        cls.decide_max_or_min(exp)
 
         if len(targets) == 0:
             raise SequentialLearningException('No targets were specified!')
 
 
 
-    def _update_prediction_index(self):
-        # Selects the rows that have a label for the first target
-        # These have a null value in the corresponding column
-        self.prediction_index = pd.isnull(self.dataframe[[self.targets[0]]]).to_numpy().nonzero()[0]
-
-    def _update_sample_index(self):
-        # Inverse of prediction index - The rows with labels (the training set) are the rest of the rows
-        self.sample_index = self.dataframe.index.difference(self.prediction_index)
 
 
 
@@ -86,13 +79,10 @@ class ExperimentPreprocessor:
         # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)
 
-
-
-    def _check_target_label_validity(self, training_labels):
-        number_of_labelled_targets = training_labels.shape[0]
-        if number_of_labelled_targets == 0:
-            raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
-                                              'your thresholds are set correctly.')
-        all_data_is_labelled = self.dataframe.shape[0] == number_of_labelled_targets
-        if all_data_is_labelled:
-            raise SequentialLearningException('All data is already labelled.')
+    def decide_max_or_min(self, df, columns, max_or_min):
+        # Multiply the column by -1 if it needs to be minimized
+        for (column, value) in zip(columns, max_or_min):
+            if value not in ['min', 'max']:
+                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
+            if value == 'min':
+                df[column] *= (-1)

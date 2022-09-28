@@ -9,16 +9,22 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from sklearn.preprocessing import OrdinalEncoder
 
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
+from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
 from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
 class DiscoveryExperiment:
 
-    def run(self):
-        self._encode_categoricals()
-        self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
-        self.decide_max_or_min(self.apriori_df, self.apriori_columns, self.apriori_max_or_min)
-        self.fit_model()
+    @classmethod
+    def run(cls, exp):
+        ExperimentPreprocessor.preprocess(exp)
+
+        cls.fit_model(exp)
+
+        # self._encode_categoricals()
+        # self.decide_max_or_min(self.target_df, self.targets, self.target_max_or_min)
+        # self.decide_max_or_min(self.apriori_df, self.apriori_columns, self.apriori_max_or_min)
+        # self.fit_model()
 
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
@@ -65,46 +71,42 @@ class DiscoveryExperiment:
 
         return sorted, scatter_plot, tsne_plot
 
-    def decide_max_or_min(self, df, columns, max_or_min):
-        # Multiply the column by -1 if it needs to be minimized
-        for (column, value) in zip(columns, max_or_min):
-            if value not in ['min', 'max']:
-                raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
-            if value == 'min':
-                df[column] *= (-1)
-
-    def fit_model(self):
-        if self.model == 'AI Model (lolo Random Forest)':
-            self.fit_random_forest_with_jack_knife_variance_estimators()
-        elif self.model == 'Statistics-based model (Gaussian Process Regression)':
-            self.fit_gaussian_process_regression()
+    @classmethod
+    def fit_model(cls, exp):
+        if exp.model == 'AI Model (lolo Random Forest)':
+            cls.fit_random_forest_with_jack_knife_variance_estimators(exp)
+        elif exp.model == 'Statistics-based model (Gaussian Process Regression)':
+            cls.fit_gaussian_process_regression(exp)
         else:
-            raise ValueNotSupportedException(f'Model {self.model} value not supported')
+            raise ValueNotSupportedException(f'Model {exp.model} value not supported')
 
-    def fit_gaussian_process_regression(self):
-        for i in range(len(self.targets)):
+    @classmethod
+    def fit_gaussian_process_regression(cls, exp):
+        for i, target in enumerate(exp.target_names):
             # Initialize the model with given hyperparameters
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
 
             # Train the GPR model for every target with the corresponding rows and labels
-            training_rows = self.features_df.iloc[self.sample_index].to_numpy()
-            training_labels = self.target_df[self.targets[i]].iloc[self.sample_index].to_numpy()
 
-            self._check_target_label_validity(training_labels)
+            training_rows = exp.features_df.loc[exp.label_index].values
+            training_labels = exp.targets_df.loc[exp.sample_index, target].values
 
-            nan_counts = list(self.target_df.isna().sum())
+            cls._check_target_label_validity(training_labels, exp)
 
-            previous_count = nan_counts[0]
-            for j in range(1, len(nan_counts)):
-                if nan_counts[1] != previous_count:
-                    raise SequentialLearningException('Targets used are labelled for differing rows.')
-                previous_count = nan_counts[j]
+            # TODO this should be checked during preprocessing
+            # nan_counts = list(self.target_df.isna().sum())
+            #
+            # previous_count = nan_counts[0]
+            # for j in range(1, len(nan_counts)):
+            #     if nan_counts[1] != previous_count:
+            #         raise SequentialLearningException('Targets used are labelled for differing rows.')
+            #     previous_count = nan_counts[j]
 
             gpr.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
-            rows_to_predict = self.features_df.iloc[self.prediction_index]
+            rows_to_predict = exp.features_df.loc[exp.nolabel_index]
             prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
 
             if i == 0:
@@ -114,10 +116,11 @@ class DiscoveryExperiment:
                 uncertainty_stacked = np.vstack((uncertainty_stacked, uncertainty))
                 pred_stacked = np.vstack((pred_stacked, prediction))
 
-        self.uncertainty = uncertainty_stacked.T
-        self.prediction = pred_stacked.T
+        exp.uncertainty = uncertainty_stacked.T
+        exp.prediction = pred_stacked.T
 
-    def fit_random_forest_with_jack_knife_variance_estimators(self):
+    @classmethod
+    def fit_random_forest_with_jack_knife_variance_estimators(cls, exp):
         for i in range(len(self.targets)):
             if self.dataframe.loc[:, self.targets[i]].count() <= 1:
                 raise ValueNotSupportedException(message=f'The given dataset does not contain enough training data '
@@ -237,3 +240,17 @@ class DiscoveryExperiment:
                 clipped_prediction = self.prediction
 
         return clipped_prediction
+
+
+
+    @classmethod
+    def _check_target_label_validity(cls, training_labels, exp):
+        number_of_labelled_targets = training_labels.shape[0]
+        if number_of_labelled_targets == 0:
+            raise SequentialLearningException('No labels exist. Check your target and apriori columns and ensure '
+                                              'your thresholds are set correctly.')
+
+        # TODO: Check all_data_is_labelled in preprocessing
+        all_data_is_labelled = exp.dataframe.shape[0] == number_of_labelled_targets
+        if all_data_is_labelled:
+            raise SequentialLearningException('All data is already labelled.')
