@@ -132,10 +132,42 @@ def test_encode_categoricals_multiple():
 
     experiment = Experiment(
         dataframe=input_df,
-        feature_names=input_df.columns
+        feature_names=list(input_df.columns)
     )
 
     DiscoveryExperiment._encode_categoricals(experiment)
 
     assert np.array_equal(experiment.dataframe['u'].values, input_df['u'].values)
-    pass
+    assert np.array_equal(experiment.dataframe['v'].values, input_df['v'].values)
+    assert np.array_equal(experiment.dataframe['w'].values, np.array([0, 1, 2]))
+    assert np.array_equal(experiment.dataframe['x'].values, np.array([0, 1, 2]))
+
+
+def test_encode_categoricals_none():
+    input_df = pd.DataFrame({
+        'u': [1, 2, 3],
+        'v': [1.0, 2.3, 4.5],
+    })
+
+    experiment = Experiment(
+        dataframe=input_df,
+        feature_names=list(input_df.columns)
+    )
+
+    DiscoveryExperiment._encode_categoricals(experiment)
+
+    assert np.array_equal(experiment.dataframe['u'].values, input_df['u'].values)
+    assert np.array_equal(experiment.dataframe['v'].values, input_df['v'].values)
+
+
+def test_encode_categoricals_empty():
+    input_df = pd.DataFrame()
+
+    experiment = Experiment(
+        dataframe=input_df,
+        feature_names=list(input_df.columns)
+    )
+
+    DiscoveryExperiment._encode_categoricals(experiment)
+
+    assert input_df.empty
