@@ -91,7 +91,7 @@ def run_experiment(dataset):
     dataframe, scatter_plot, tsne_plot = DiscoveryService.run_experiment(dataset, request_body)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
-                                       classes='table table-bordered table-striped table-hover')
+                                       classes='table table-bordered table-striped table-hover topscroll-table')
 
     body = {'template': render_template('experiment_result.html', df=html_dataframe,
                                         scatter_plot=scatter_plot, tsne_plot=tsne_plot)}
