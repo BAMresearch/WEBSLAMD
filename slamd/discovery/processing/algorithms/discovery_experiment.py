@@ -35,14 +35,18 @@ class DiscoveryExperiment:
         # Construct dataframe for output
         df = exp.orig_data.loc[exp.nolabel_index].copy()
         # Add the columns with utility and novelty values
-        df['Utility'] = utility_function.round(6)
+        df['Utility'] = utility_function
+        df['Utility'] = df['Utility'].round(6)
         df['Novelty'] = novelty_factor.round(6)
         # df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
         # df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
 
+        # TODO prediction index mismatch
         for target in exp.target_names:
-            df[target] = exp.prediction[target].round(6)
-            df[f'Uncertainty ({target})'] = exp.uncertainty[target].round(5)
+            df.loc[exp.nolabel_index, target] = exp.prediction[target].values
+            df[target] = df[target].round(6)
+            df[f'Uncertainty ({target})'] = exp.uncertainty[target].values
+            df[f'Uncertainty ({target})'] = df[f'Uncertainty ({target})'].round(5)
 
         df = cls.preprocess_dataframe_for_output_table(df, exp)
         scatter_plot = cls.plot_output_space(df, exp)
@@ -189,12 +193,16 @@ class DiscoveryExperiment:
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
         # TODO This can probably be turned into a single expression
+        # TODO because prediction is written into a new dataframe instead of exp.dataframe, the indices do not match
+        #  This leads to nans being inserted and the dimension not working out
+        #  For now, work with arrays instead
+        # TODO why squeeze?
         if len(exp.target_names) > 1:
-            utility = apriori_values_for_predicted_rows.squeeze() + normed_prediction.sum(axis=1) +\
-                               exp.curiosity * normed_uncertainty.sum(axis=1)
+            utility = apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.sum(axis=1) +\
+                               exp.curiosity * normed_uncertainty.values.sum(axis=1)
         else:
-            utility = apriori_values_for_predicted_rows.squeeze() + normed_prediction.squeeze() +\
-                               exp.curiosity * normed_uncertainty.squeeze()
+            utility = apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.squeeze() +\
+                               exp.curiosity * normed_uncertainty.values.squeeze()
 
         # TODO This can probably be written into a dataframe
         return utility
