@@ -15,7 +15,7 @@ def test_filter_apriori_thresholds():
     experiment = ExperimentData(dataframe=df, target_names=['x', 'y'], apriori_names=['u', 'v'],
                                 apriori_thresholds=[4, 5], apriori_max_or_min=['max', 'min'])
 
-    ExperimentPreprocessor._filter_apriori_with_thresholds(experiment)
+    ExperimentPreprocessor.filter_apriori_with_thresholds(experiment)
     result = experiment.dataframe
 
     assert np.array_equal(result['u'].values, np.array([1, 4, 5, 7, 8]))
@@ -37,7 +37,7 @@ def test_encode_categoricals_multiple():
         feature_names=list(input_df.columns)
     )
 
-    ExperimentPreprocessor._encode_categoricals(experiment)
+    ExperimentPreprocessor.encode_categoricals(experiment)
 
     assert np.array_equal(experiment.dataframe['u'].values, input_df['u'].values)
     assert np.array_equal(experiment.dataframe['v'].values, input_df['v'].values)
@@ -56,7 +56,7 @@ def test_encode_categoricals_none():
         feature_names=list(input_df.columns)
     )
 
-    ExperimentPreprocessor._encode_categoricals(experiment)
+    ExperimentPreprocessor.encode_categoricals(experiment)
 
     assert np.array_equal(experiment.dataframe['u'].values, input_df['u'].values)
     assert np.array_equal(experiment.dataframe['v'].values, input_df['v'].values)
@@ -70,7 +70,7 @@ def test_encode_categoricals_empty():
         feature_names=list(input_df.columns)
     )
 
-    ExperimentPreprocessor._encode_categoricals(experiment)
+    ExperimentPreprocessor.encode_categoricals(experiment)
 
     assert experiment.dataframe.empty
 
@@ -85,7 +85,7 @@ def test_decide_max_or_min_full():
     experiment = ExperimentData(dataframe=df, target_names=['x', 'y'], apriori_names=['u', 'v'],
                                 target_max_or_min=['min', 'max'], apriori_max_or_min=['max', 'min'])
 
-    ExperimentPreprocessor._decide_max_or_min(experiment)
+    ExperimentPreprocessor.decide_max_or_min(experiment)
     result = experiment.dataframe
 
     assert np.array_equal(result['u'].values, np.array([1, 2, 3, 4, 5, 6, 7, 8]))
@@ -100,6 +100,6 @@ def test_decide_max_or_min_empty():
     experiment = ExperimentData(dataframe=df, target_names=[], apriori_names=[],
                                 target_max_or_min=[], apriori_max_or_min=[])
 
-    ExperimentPreprocessor._decide_max_or_min(experiment)
+    ExperimentPreprocessor.decide_max_or_min(experiment)
 
     assert experiment.dataframe.empty
