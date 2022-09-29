@@ -23,9 +23,17 @@ class PlotGenerator:
                 x=dimensions[0],
                 y='Utility',
                 color='Utility',
-                error_x=cls._select_error_if_available(dimensions[0], uncertainties),
                 custom_data=['Row number'],
                 title='Scatter plot of target properties'
+            )
+            # Add light gray error bars
+            fig.update_traces(
+                error_x=dict(
+                    type='data',
+                    array=plot_df[cls._select_error_if_available(dimensions[0], uncertainties)],
+                    color='lightgray',
+                    thickness=1,
+                )
             )
         elif len(dimensions) == 2:
             # Plotly 5.10 issue: px.scatter_matrix() does not output anything when the matrix is 1x1.
@@ -39,6 +47,21 @@ class PlotGenerator:
                 error_y=cls._select_error_if_available(dimensions[1], uncertainties),
                 custom_data=['Row number'],
                 title='Scatter plot of target properties'
+            )
+            # Add light gray error bars
+            fig.update_traces(
+                error_x=dict(
+                    type='data',
+                    array=plot_df[cls._select_error_if_available(dimensions[0], uncertainties)],
+                    color='lightgray',
+                    thickness=1,
+                ),
+                error_y=dict(
+                    type='data',
+                    array=plot_df[cls._select_error_if_available(dimensions[1], uncertainties)],
+                    color='lightgray',
+                    thickness=1,
+                )
             )
         else:
             # General case
