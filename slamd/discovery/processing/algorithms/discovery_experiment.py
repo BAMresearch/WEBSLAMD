@@ -57,34 +57,34 @@ class ExperimentConductor:
             predictions[target] = prediction
             uncertainties[target] = uncertainty
 
-        # TODO Reindex to match dataframe
-        exp.prediction = pd.DataFrame(predictions)
-        exp.uncertainty = pd.DataFrame(uncertainties)
+        exp.prediction = pd.DataFrame(predictions, index=exp.nolabel_index)
+        exp.uncertainty = pd.DataFrame(uncertainties, index=exp.nolabel_index)
 
     @classmethod
     def update_index_MLI(cls, exp):
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
-        labelled_rows = exp.targets_df.loc[exp.label_index].copy()
 
-        # Normalize the uncertainty of the predicted labels, then clip to given thresholds
-        # TODO What if the standard deviation is 0? also further down => replace with 1
-        normed_uncertainty = exp.uncertainty / labelled_rows.std()
+        # Clip predicted values with thresholds for utility calculation
         clipped_prediction = cls.clip_prediction(exp)
 
-        # Normalize the predicted labels
-        normed_prediction = (clipped_prediction - labelled_rows.mean()) / labelled_rows.std()
+        # Mean and stdev of supplied labels for normalization - use 1 instead of 0 to avoid division by 0
+        labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
+        labels_mean = exp.targets_df.loc[exp.label_index].mean()
 
+        # Normalize prediction data
+        normed_uncertainty = exp.uncertainty / labels_std
+        normed_prediction = (clipped_prediction - labels_mean) / labels_std
+
+        # Apply weights to prediction data
         for (target, weight) in zip(exp.target_names, exp.target_weights):
             normed_prediction[target] *= weight
             normed_uncertainty[target] *= weight
 
+        # Normalize feature data
         cls._normalize_data(exp)
 
-        if len(exp.apriori_names) > 0:
-            apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
-        else:
-            apriori_values_for_predicted_rows = np.zeros(len(exp.nolabel_index))
+        weighted_apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
@@ -94,10 +94,10 @@ class ExperimentConductor:
         #  For now, work with arrays instead
         # TODO why squeeze?
         if len(exp.target_names) > 1:
-            utility = apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.sum(axis=1) +\
+            utility = weighted_apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.sum(axis=1) +\
                                exp.curiosity * normed_uncertainty.values.sum(axis=1)
         else:
-            utility = apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.squeeze() +\
+            utility = weighted_apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.squeeze() +\
                                exp.curiosity * normed_uncertainty.values.squeeze()
 
         # TODO This can probably be written into a dataframe
@@ -136,13 +136,17 @@ class ExperimentConductor:
         # TODO What about categoricals? => double check
         # TODO X nan
         # replace 0s with 1s for division
-        print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
+        # print()
+        # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
         std = exp.dataframe.std().replace(0, 1)
         exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
-        print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
+        # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
 
     @classmethod
     def apply_weights_to_apriori_values(cls, exp):
+        if len(exp.apriori_names) == 0:
+            return 0
+
         apriori_for_predicted_rows = exp.apriori_df.loc[exp.nolabel_index]
 
         for (col, weight) in zip(exp.apriori_df.columns, exp.apriori_weights):
