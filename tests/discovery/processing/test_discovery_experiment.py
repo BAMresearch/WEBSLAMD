@@ -6,99 +6,74 @@ from slamd.discovery.processing.models.experiment_data import ExperimentData
 
 
 def test_clip_predictions_for_one_target_no_threshold():
-    experiment = DiscoveryExperiment(
-        pd.DataFrame({'x': []}), model="", curiosity=1, features=[], targets=['x'], target_weights=[1],
-        target_thresholds=[None],
-        target_max_or_min=['max'], apriori_thresholds=[], apriori_columns=[], apriori_weights=[],
-        apriori_max_or_min=[]
-    )
-
-    input_prediction = np.arange(10)
-    experiment.prediction = input_prediction
-    clipped_prediction = experiment.clip_predictions()
+    dummy_df = pd.DataFrame()
+    input_prediction = pd.DataFrame({'x': np.arange(10)})
+    experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
+                                target_max_or_min=['max'], target_thresholds=[None])
+    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
 
     assert np.array_equal(clipped_prediction, input_prediction)
 
 
 def test_clip_predictions_for_one_target_min_threshold():
-    experiment = DiscoveryExperiment(
-        pd.DataFrame({'x': []}), model="", curiosity=1, features=[], targets=['x'], target_weights=[1],
-        target_thresholds=[5],
-        target_max_or_min=['min'], apriori_thresholds=[], apriori_columns=[], apriori_weights=[],
-        apriori_max_or_min=[]
-    )
+    dummy_df = pd.DataFrame()
+    input_prediction = pd.DataFrame({'x': np.arange(10)})
+    experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
+                                target_max_or_min=['min'], target_thresholds=[5])
+    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
 
-    input_prediction = np.arange(10)
-    experiment.prediction = input_prediction
-    clipped_prediction = experiment.clip_predictions()
+    expected_output = pd.DataFrame({'x': [5, 5, 5, 5, 5, 5, 6, 7, 8, 9]})
 
-    assert np.array_equal(clipped_prediction, np.array([5, 5, 5, 5, 5, 5, 6, 7, 8, 9]))
+    # Using pd.DataFrame.equals does not work - potentially because of dtypes
+    assert np.array_equal(clipped_prediction.values, expected_output.values)
 
 
 def test_clip_predictions_for_one_target_max_threshold():
-    experiment = DiscoveryExperiment(
-        pd.DataFrame({'x': []}), model="", curiosity=1, features=[], targets=['x'], target_weights=[1],
-        target_thresholds=[5],
-        target_max_or_min=['max'], apriori_thresholds=[], apriori_columns=[], apriori_weights=[],
-        apriori_max_or_min=[]
-    )
+    dummy_df = pd.DataFrame()
+    input_prediction = pd.DataFrame({'x': np.arange(10)})
+    experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
+                                target_max_or_min=['max'], target_thresholds=[5])
+    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
 
-    input_prediction = np.arange(10)
-    experiment.prediction = input_prediction
-    clipped_prediction = experiment.clip_predictions()
+    expected_output = pd.DataFrame({'x': [0, 1, 2, 3, 4, 5, 5, 5, 5, 5]})
 
-    assert np.array_equal(clipped_prediction, np.array([0, 1, 2, 3, 4, 5, 5, 5, 5, 5]))
+    assert np.array_equal(clipped_prediction.values, expected_output.values)
 
 
 def test_clip_predictions_for_two_targets_maxmin_threshold():
-    experiment = DiscoveryExperiment(
-        pd.DataFrame({'x': [], 'y': []}), model="", curiosity=1, features=[], targets=['x', 'y'],
-        target_weights=[1, 1], target_thresholds=[4, 6],
-        target_max_or_min=['max', 'min'], apriori_thresholds=[], apriori_columns=[], apriori_weights=[],
-        apriori_max_or_min=[]
-    )
+    dummy_df = pd.DataFrame()
+    input_prediction = pd.DataFrame({
+        'x': [0, 1, 2, 3, 4, 5, 6, 7],
+        'y': [0, 1, 2, 3, 4, 5, 6, 7],
+    })
+    experiment = ExperimentData(dataframe=dummy_df, target_names=['x', 'y'], prediction=input_prediction,
+                                target_max_or_min=['max', 'min'], target_thresholds=[4, 6])
+    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
 
-    input_prediction = np.array(
-        [
-            [0, 1, 2, 3, 4, 5, 6, 7],
-            [0, 1, 2, 3, 4, 5, 6, 7],
-        ]
-    ).T
-    expected_output = np.array(
-        [
-            [0, 1, 2, 3, 4, 4, 4, 4],
-            [6, 6, 6, 6, 6, 6, 6, 7],
-        ]
-    ).T
-    experiment.prediction = input_prediction
-    clipped_prediction = experiment.clip_predictions()
+    expected_output = pd.DataFrame({
+        'x': [0, 1, 2, 3, 4, 4, 4, 4],
+        'y': [6, 6, 6, 6, 6, 6, 6, 7],
+    })
 
-    assert np.array_equal(expected_output, clipped_prediction)
+    assert np.array_equal(expected_output.values, clipped_prediction.values)
+
 
 def test_clip_predictions_for_two_targets_partial_threshold():
-    experiment = DiscoveryExperiment(
-        pd.DataFrame({'x': [], 'y': []}), model="", curiosity=1, features=[], targets=['x', 'y'],
-        target_weights=[1, 1], target_thresholds=[4, None],
-        target_max_or_min=['max', 'min'], apriori_thresholds=[], apriori_columns=[], apriori_weights=[],
-        apriori_max_or_min=[]
-    )
+    dummy_df = pd.DataFrame()
+    input_prediction = pd.DataFrame({
+        'x': [0, 1, 2, 3, 4, 5, 6, 7],
+        'y': [0, 1, 2, 3, 4, 5, 6, 7],
+    })
+    experiment = ExperimentData(dataframe=dummy_df, target_names=['x', 'y'], prediction=input_prediction,
+                                target_max_or_min=['max', 'min'], target_thresholds=[4, None])
+    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
 
-    input_prediction = np.array(
-        [
-            [0, 1, 2, 3, 4, 5, 6, 7],
-            [0, 1, 2, 3, 4, 5, 6, 7],
-        ]
-    ).T
-    expected_output = np.array(
-        [
-            [0, 1, 2, 3, 4, 4, 4, 4],
-            [0, 1, 2, 3, 4, 5, 6, 7],
-        ]
-    ).T
-    experiment.prediction = input_prediction
-    clipped_prediction = experiment.clip_predictions()
+    expected_output = pd.DataFrame({
+        'x': [0, 1, 2, 3, 4, 4, 4, 4],
+        'y': [0, 1, 2, 3, 4, 5, 6, 7],
+    })
 
-    assert np.array_equal(expected_output, clipped_prediction)
+    assert np.array_equal(expected_output.values, clipped_prediction.values)
 
 
 def test_filter_apriori_thresholds():

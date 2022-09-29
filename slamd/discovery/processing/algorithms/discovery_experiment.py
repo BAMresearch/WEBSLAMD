@@ -219,6 +219,7 @@ class DiscoveryExperiment:
 
     @classmethod
     def clip_prediction(cls, exp):
+        # TODO how does clip_prediction interact with decide_min_or_max?
         clipped_prediction = exp.prediction.copy()
         for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
             if max_or_min not in ['min', 'max']:
@@ -228,9 +229,9 @@ class DiscoveryExperiment:
                 continue
 
             if max_or_min == 'min':
-                clipped_prediction[target].clip(lower=threshold)
+                clipped_prediction[target].clip(lower=threshold, inplace=True)
             elif max_or_min == 'max':
-                clipped_prediction[target].clip(upper=threshold)
+                clipped_prediction[target].clip(upper=threshold, inplace=True)
 
         return clipped_prediction
 
