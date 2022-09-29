@@ -65,27 +65,13 @@ class ExperimentConductor:
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
 
-        # Clip predicted values with thresholds for utility calculation
-        clipped_prediction = cls.clip_prediction(exp)
-
-        # Mean and standard deviation of supplied labels for normalization - use 1 instead of 0 to avoid division by 0
-        labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
-        labels_mean = exp.targets_df.loc[exp.label_index].mean()
-
-        # Normalize prediction data
-        normed_uncertainty = exp.uncertainty / labels_std
-        normed_prediction = (clipped_prediction - labels_mean) / labels_std
-
-        # Apply weights to prediction data
-        for (target, weight) in zip(exp.target_names, exp.target_weights):
-            normed_prediction[target] *= weight
-            normed_uncertainty[target] *= weight
+        normed_prediction, normed_uncertainty = cls.process_predictions(exp)
 
         # Normalize feature data
         cls._normalize_data(exp)
 
         # Apply weights to apriori values
-        weighted_apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
+        weighted_apriori_values_for_predicted_rows = cls.apply_weights_and_maxmin_to_apriori_values(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
@@ -93,6 +79,35 @@ class ExperimentConductor:
                   exp.curiosity * normed_uncertainty.sum(axis=1)
 
         return utility
+
+    @classmethod
+    def process_predictions(cls, exp):
+        # Clip, norm and weigh predictions for utility calculation
+        # Targets which should be minimized instead of maximized are also inverted for the utility calculation
+
+        # Clip
+        clipped_prediction = cls.clip_prediction(exp)
+
+        # Sanity check TODO keep?
+        assert all([x == y for x, y in zip(clipped_prediction, exp.target_names)])
+
+        # Invert
+        # for (column, value) in zip(exp.target_names, exp.target_max_or_min):
+        #     if value == 'min':
+        #         clipped_prediction[column] *= (-1)
+
+        # Norm - use 1 as standard deviation instead of 0 to avoid division by 0 (unlikely)
+        labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
+        labels_mean = exp.targets_df.loc[exp.label_index].mean()
+        normed_uncertainty = exp.uncertainty / labels_std
+        normed_prediction = (clipped_prediction - labels_mean) / labels_std
+
+        # Weigh
+        for (target, weight) in zip(exp.target_names, exp.target_weights):
+            normed_prediction[target] *= weight
+            normed_uncertainty[target] *= weight
+
+        return normed_prediction, normed_uncertainty
 
     @classmethod
     def compute_novelty_factor(cls, exp):
@@ -107,7 +122,6 @@ class ExperimentConductor:
 
     @classmethod
     def clip_prediction(cls, exp):
-        # TODO how does clip_prediction interact with decide_min_or_max? => move decide max or min into fit function
         clipped_prediction = exp.prediction.copy()
         for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
             if max_or_min not in ['min', 'max']:
@@ -117,7 +131,8 @@ class ExperimentConductor:
                 continue
 
             if max_or_min == 'min':
-                clipped_prediction[target].clip(lower=threshold, inplace=True)
+                # clipped_prediction[target].clip(lower=threshold, inplace=True)
+                clipped_prediction[target].clip(upper=threshold, inplace=True)
             elif max_or_min == 'max':
                 clipped_prediction[target].clip(upper=threshold, inplace=True)
 
@@ -135,14 +150,17 @@ class ExperimentConductor:
         # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
 
     @classmethod
-    def apply_weights_to_apriori_values(cls, exp):
+    def apply_weights_and_maxmin_to_apriori_values(cls, exp):
         if len(exp.apriori_names) == 0:
             return 0
 
-        apriori_for_predicted_rows = exp.apriori_df.loc[exp.nolabel_index]
+        apriori_for_predicted_rows = exp.apriori_df.loc[exp.nolabel_index].copy()
 
-        for (col, weight) in zip(exp.apriori_df.columns, exp.apriori_weights):
-            apriori_for_predicted_rows[col] *= weight
+        for (col, weight, maxmin) in zip(exp.apriori_df.columns, exp.apriori_weights, exp.apriori_max_or_min):
+            if maxmin == 'min':
+                apriori_for_predicted_rows[col] *= weight# * (-1)
+            else:
+                apriori_for_predicted_rows[col] *= weight
 
         # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
