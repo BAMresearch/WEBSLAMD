@@ -4,26 +4,51 @@ import plotly
 import plotly.express as px
 from sklearn.manifold import TSNE
 
+UNCERTAINTY_COLUMN_PREFIX = 'Uncertainty ('
+
 
 class PlotGenerator:
 
     @classmethod
     def create_target_scatter_plot(cls, plot_df):
-        dimensions = [col for col in plot_df.columns if col != 'Utility' and col != 'Row number']
+        uncertainties = list(filter(lambda col: col.startswith(UNCERTAINTY_COLUMN_PREFIX), plot_df.columns))
+        dimensions = list(filter(lambda col: col != 'Utility' and col !=
+                          'Row number' and not col.startswith(UNCERTAINTY_COLUMN_PREFIX), plot_df.columns))
+
         if len(dimensions) == 1:
             # Generate a simple scatter plot if there is only one target property.
             # We include the Utility color-coded for aesthetic reasons.
-            fig = px.scatter(plot_df, x=dimensions[0], y='Utility', color='Utility',
-                             custom_data=['Row number'], title='Scatter plot of target properties')
+            fig = px.scatter(
+                plot_df,
+                x=dimensions[0],
+                y='Utility',
+                color='Utility',
+                error_x=cls._select_error_if_available(dimensions[0], uncertainties),
+                custom_data=['Row number'],
+                title='Scatter plot of target properties'
+            )
         elif len(dimensions) == 2:
             # Plotly 5.10 issue: px.scatter_matrix() does not output anything when the matrix is 1x1.
             # We need to handle this case separately and generate a single scatter plot.
-            fig = px.scatter(plot_df, x=dimensions[0], y=dimensions[1], color='Utility',
-                             custom_data=['Row number'], title='Scatter plot of target properties')
+            fig = px.scatter(
+                plot_df,
+                x=dimensions[0],
+                y=dimensions[1],
+                color='Utility',
+                error_x=cls._select_error_if_available(dimensions[0], uncertainties),
+                error_y=cls._select_error_if_available(dimensions[1], uncertainties),
+                custom_data=['Row number'],
+                title='Scatter plot of target properties'
+            )
         else:
             # General case
-            fig = px.scatter_matrix(plot_df, dimensions=dimensions, color='Utility',
-                                    custom_data=['Row number'], title='Scatter matrix of target properties')
+            fig = px.scatter_matrix(
+                plot_df,
+                dimensions=dimensions,
+                color='Utility',
+                custom_data=['Row number'],
+                title='Scatter matrix of target properties'
+            )
             fig.update_traces(diagonal_visible=False, showupperhalf=False)
 
         # Format tooltips for all cases rounding the displayed values to two decimal places.
@@ -67,3 +92,8 @@ class PlotGenerator:
             )
         )
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+    @classmethod
+    def _select_error_if_available(cls, column_name, uncertainties):
+        error_column_name = f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'
+        return error_column_name if error_column_name in uncertainties else None
