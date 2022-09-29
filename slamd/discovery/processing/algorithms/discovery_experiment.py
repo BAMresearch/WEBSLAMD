@@ -1,6 +1,5 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
-import numpy as np
 import pandas as pd
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -57,6 +56,7 @@ class ExperimentConductor:
             predictions[target] = prediction
             uncertainties[target] = uncertainty
 
+        # Keep using old index to ensure compatibility between dataframes
         exp.prediction = pd.DataFrame(predictions, index=exp.nolabel_index)
         exp.uncertainty = pd.DataFrame(uncertainties, index=exp.nolabel_index)
 
@@ -68,7 +68,7 @@ class ExperimentConductor:
         # Clip predicted values with thresholds for utility calculation
         clipped_prediction = cls.clip_prediction(exp)
 
-        # Mean and stdev of supplied labels for normalization - use 1 instead of 0 to avoid division by 0
+        # Mean and standard deviation of supplied labels for normalization - use 1 instead of 0 to avoid division by 0
         labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
         labels_mean = exp.targets_df.loc[exp.label_index].mean()
 
@@ -84,23 +84,14 @@ class ExperimentConductor:
         # Normalize feature data
         cls._normalize_data(exp)
 
+        # Apply weights to apriori values
         weighted_apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
-        # TODO This can probably be turned into a single expression
-        # TODO because prediction is written into a new dataframe instead of exp.dataframe, the indices do not match
-        #  This leads to nans being inserted and the dimension not working out
-        #  For now, work with arrays instead
-        # TODO why squeeze?
-        if len(exp.target_names) > 1:
-            utility = weighted_apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.sum(axis=1) +\
-                               exp.curiosity * normed_uncertainty.values.sum(axis=1)
-        else:
-            utility = weighted_apriori_values_for_predicted_rows.values.squeeze() + normed_prediction.values.squeeze() +\
-                               exp.curiosity * normed_uncertainty.values.squeeze()
+        utility = weighted_apriori_values_for_predicted_rows + normed_prediction.sum(axis=1) + \
+                  exp.curiosity * normed_uncertainty.sum(axis=1)
 
-        # TODO This can probably be written into a dataframe
         return utility
 
     @classmethod
