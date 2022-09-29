@@ -131,8 +131,7 @@ class ExperimentConductor:
                 continue
 
             if max_or_min == 'min':
-                # clipped_prediction[target].clip(lower=threshold, inplace=True)
-                clipped_prediction[target].clip(upper=threshold, inplace=True)
+                clipped_prediction[target].clip(lower=threshold, inplace=True)
             elif max_or_min == 'max':
                 clipped_prediction[target].clip(upper=threshold, inplace=True)
 
