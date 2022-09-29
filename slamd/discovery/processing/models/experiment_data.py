@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class ExperimentData:
-    orig_data: DataFrame = None
+    orig_data: DataFrame = None # TODO still contains dropped apriori
     dataframe: DataFrame = None
     model: str = None # TODO rename
     curiosity: float = None

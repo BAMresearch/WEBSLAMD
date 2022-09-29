@@ -4,7 +4,7 @@ from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
-from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.algorithms.discovery_experiment import ExperimentConductor
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
@@ -69,7 +69,7 @@ class DiscoveryService:
 
         user_input = cls._parse_user_input(request_body)
         experiment = cls._initialize_experiment(dataset.dataframe, user_input)
-        df_with_predictions, scatter_plot, tsne_plot = DiscoveryExperiment.run(experiment)
+        df_with_predictions, scatter_plot, tsne_plot = ExperimentConductor.run(experiment)
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from slamd.discovery.processing.algorithms.discovery_experiment import DiscoveryExperiment
+from slamd.discovery.processing.algorithms.discovery_experiment import ExperimentConductor
 from slamd.discovery.processing.models.experiment_data import ExperimentData
 
 
@@ -10,7 +10,7 @@ def test_clip_predictions_for_one_target_no_threshold():
     input_prediction = pd.DataFrame({'x': np.arange(10)})
     experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
                                 target_max_or_min=['max'], target_thresholds=[None])
-    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
+    clipped_prediction = ExperimentConductor.clip_prediction(experiment)
 
     assert np.array_equal(clipped_prediction, input_prediction)
 
@@ -20,7 +20,7 @@ def test_clip_predictions_for_one_target_min_threshold():
     input_prediction = pd.DataFrame({'x': np.arange(10)})
     experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
                                 target_max_or_min=['min'], target_thresholds=[5])
-    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
+    clipped_prediction = ExperimentConductor.clip_prediction(experiment)
 
     expected_output = pd.DataFrame({'x': [5, 5, 5, 5, 5, 5, 6, 7, 8, 9]})
 
@@ -33,7 +33,7 @@ def test_clip_predictions_for_one_target_max_threshold():
     input_prediction = pd.DataFrame({'x': np.arange(10)})
     experiment = ExperimentData(dataframe=dummy_df, target_names=['x'], prediction=input_prediction,
                                 target_max_or_min=['max'], target_thresholds=[5])
-    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
+    clipped_prediction = ExperimentConductor.clip_prediction(experiment)
 
     expected_output = pd.DataFrame({'x': [0, 1, 2, 3, 4, 5, 5, 5, 5, 5]})
 
@@ -48,7 +48,7 @@ def test_clip_predictions_for_two_targets_maxmin_threshold():
     })
     experiment = ExperimentData(dataframe=dummy_df, target_names=['x', 'y'], prediction=input_prediction,
                                 target_max_or_min=['max', 'min'], target_thresholds=[4, 6])
-    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
+    clipped_prediction = ExperimentConductor.clip_prediction(experiment)
 
     expected_output = pd.DataFrame({
         'x': [0, 1, 2, 3, 4, 4, 4, 4],
@@ -66,7 +66,7 @@ def test_clip_predictions_for_two_targets_partial_threshold():
     })
     experiment = ExperimentData(dataframe=dummy_df, target_names=['x', 'y'], prediction=input_prediction,
                                 target_max_or_min=['max', 'min'], target_thresholds=[4, None])
-    clipped_prediction = DiscoveryExperiment.clip_prediction(experiment)
+    clipped_prediction = ExperimentConductor.clip_prediction(experiment)
 
     expected_output = pd.DataFrame({
         'x': [0, 1, 2, 3, 4, 4, 4, 4],

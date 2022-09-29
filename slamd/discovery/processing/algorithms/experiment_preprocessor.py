@@ -10,6 +10,8 @@ class ExperimentPreprocessor:
         cls._encode_categoricals(exp)
         cls._decide_max_or_min(exp)
 
+    # TODO make these methods public for testing - check coding conventions
+
     @classmethod
     def _validate_experiment(cls, exp):
         # TODO Think of more sensible errors we could throw
@@ -35,9 +37,9 @@ class ExperimentPreprocessor:
         #     previous_count = nan_counts[j]
 
         # Check if a row has either 0 or all targets labelled
-        if not all(x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum()):
-            raise SequentialLearningException(message='Some rows are partially labelled. '
-                                                      'This is currently not supported.')
+        # if not all(x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum()):
+        #     raise SequentialLearningException(message='Some rows are partially labelled. '
+        #                                               'This is currently not supported.')
 
         # TODO Implement the validation checks from this function. Needs to run AFTER filter apriori
         #
@@ -91,6 +93,7 @@ class ExperimentPreprocessor:
         #  -> would simply be exp.dataframe.dropna(inplace=True, subset=exp.feature_names)
         # TODO Technically this is modifying a dataframe as we are iterating over it which is not really clean
         #  not really an issue here but still...
+        # TODO give feedback
         for col in exp.feature_names:
             if exp.dataframe[col].isna().values.any():
                 exp.dataframe.drop(col, axis=1, inplace=True)

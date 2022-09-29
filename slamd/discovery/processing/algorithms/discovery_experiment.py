@@ -10,7 +10,6 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 from slamd.discovery.processing.algorithms.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
-from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
 # Attention - suppressing expected Gaussian Regressor warnings
@@ -19,7 +18,7 @@ from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
-class DiscoveryExperiment:
+class ExperimentConductor:
 
     @classmethod
     def run(cls, exp):
@@ -32,6 +31,7 @@ class DiscoveryExperiment:
 
     @classmethod
     def fit_model(cls, exp):
+        # TODO replace strings with enum? (materialtype)
         if exp.model == 'AI Model (lolo Random Forest)':
             cls.fit_random_forest_with_jack_knife_variance_estimators(exp)
         elif exp.model == 'Statistics-based model (Gaussian Process Regression)':
@@ -61,6 +61,7 @@ class DiscoveryExperiment:
             predictions[target] = prediction
             uncertainties[target] = uncertainty
 
+        # TODO Reindex to match dataframe
         exp.prediction = pd.DataFrame(predictions)
         exp.uncertainty = pd.DataFrame(uncertainties)
 
@@ -77,6 +78,7 @@ class DiscoveryExperiment:
             training_labels = exp.targets_df.loc[exp.label_index, target].values
 
             # Artificially pad data to work with lolopy random forest implementation, if necessary
+            # TODO Remove magic number
             if training_labels.shape[0] < 8:
                 training_rows = np.tile(training_rows, (4, 1))
                 training_labels = np.tile(training_labels, (4, 1))
@@ -90,6 +92,7 @@ class DiscoveryExperiment:
             predictions[target] = prediction
             uncertainties[target] = uncertainty
 
+        # TODO Reindex to match dataframe
         exp.prediction = pd.DataFrame(predictions)
         exp.uncertainty = pd.DataFrame(uncertainties)
 
@@ -100,7 +103,7 @@ class DiscoveryExperiment:
         labelled_rows = exp.targets_df.loc[exp.label_index].copy()
 
         # Normalize the uncertainty of the predicted labels, then clip to given thresholds
-        # TODO What if the standard deviation is 0? also further down
+        # TODO What if the standard deviation is 0? also further down => replace with 1
         normed_uncertainty = exp.uncertainty / labelled_rows.std()
         clipped_prediction = cls.clip_prediction(exp)
 
@@ -147,7 +150,7 @@ class DiscoveryExperiment:
 
     @classmethod
     def clip_prediction(cls, exp):
-        # TODO how does clip_prediction interact with decide_min_or_max?
+        # TODO how does clip_prediction interact with decide_min_or_max? => move decide max or min into fit function
         clipped_prediction = exp.prediction.copy()
         for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
             if max_or_min not in ['min', 'max']:
@@ -165,10 +168,13 @@ class DiscoveryExperiment:
 
     @classmethod
     def _normalize_data(cls, exp):
-        # TODO What about categoricals?
+        # TODO What about categoricals? => double check
+        # TODO X nan
         # replace 0s with 1s for division
+        print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
         std = exp.dataframe.std().replace(0, 1)
         exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
+        print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
 
     @classmethod
     def apply_weights_to_apriori_values(cls, exp):
