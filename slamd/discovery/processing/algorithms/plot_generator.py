@@ -30,7 +30,7 @@ class PlotGenerator:
             fig.update_traces(
                 error_x=dict(
                     type='data',
-                    array=plot_df[cls._select_error_if_available(dimensions[0], uncertainties)],
+                    array=cls._select_error_if_available(dimensions[0], uncertainties, plot_df),
                     color='lightgray',
                     thickness=1,
                 )
@@ -43,8 +43,6 @@ class PlotGenerator:
                 x=dimensions[0],
                 y=dimensions[1],
                 color='Utility',
-                error_x=cls._select_error_if_available(dimensions[0], uncertainties),
-                error_y=cls._select_error_if_available(dimensions[1], uncertainties),
                 custom_data=['Row number'],
                 title='Scatter plot of target properties'
             )
@@ -52,13 +50,13 @@ class PlotGenerator:
             fig.update_traces(
                 error_x=dict(
                     type='data',
-                    array=plot_df[cls._select_error_if_available(dimensions[0], uncertainties)],
+                    array=cls._select_error_if_available(dimensions[0], uncertainties, plot_df),
                     color='lightgray',
                     thickness=1,
                 ),
                 error_y=dict(
                     type='data',
-                    array=plot_df[cls._select_error_if_available(dimensions[1], uncertainties)],
+                    array=cls._select_error_if_available(dimensions[1], uncertainties, plot_df),
                     color='lightgray',
                     thickness=1,
                 )
@@ -81,7 +79,7 @@ class PlotGenerator:
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    @classmethod
+    @ classmethod
     def create_tsne_input_space_plot(cls, plot_df):
         # The perplexity must be less than the number of data points (the length of the dataframe).
         # Handle this edge case by picking the smallest of the two.
@@ -117,6 +115,6 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def _select_error_if_available(cls, column_name, uncertainties):
+    def _select_error_if_available(cls, column_name, uncertainties, df):
         error_column_name = f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'
-        return error_column_name if error_column_name in uncertainties else None
+        return df[error_column_name] if error_column_name in uncertainties else None
