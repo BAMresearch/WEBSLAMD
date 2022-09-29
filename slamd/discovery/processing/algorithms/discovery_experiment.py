@@ -42,7 +42,7 @@ class DiscoveryExperiment:
 
         for target in exp.target_names:
             df[target] = exp.prediction[target].round(6)
-            df[f'Uncertainty({target}'] = exp.uncertainty[target].round(5)
+            df[f'Uncertainty ({target})'] = exp.uncertainty[target].round(5)
 
         df = cls.preprocess_dataframe_for_output_table(df, exp)
         scatter_plot = cls.plot_output_space(df, exp)
