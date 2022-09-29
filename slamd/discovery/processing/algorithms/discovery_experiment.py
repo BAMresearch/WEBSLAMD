@@ -2,7 +2,6 @@
 # https://github.com/BAMresearch/SequentialLearningApp
 import numpy as np
 import pandas as pd
-from lolopy.learners import RandomForestRegressor
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
@@ -10,6 +9,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 from slamd.discovery.processing.algorithms.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.algorithms.slamd_random_forest import SlamdRandomForest
 from slamd.discovery.processing.models.model_type import ModelType
 
 
@@ -68,7 +68,7 @@ class ExperimentConductor:
     @classmethod
     def fit_random_forest_with_jack_knife_variance_estimators(cls, exp):
         # TODO This is very similar to fit_gaussian. Could feasibly be turned into a single function
-        rfr = RandomForestRegressor()
+        rfr = SlamdRandomForest()
 
         predictions = {}
         uncertainties = {}
@@ -76,12 +76,6 @@ class ExperimentConductor:
             # Train the model
             training_rows = exp.features_df.loc[exp.label_index].values
             training_labels = exp.targets_df.loc[exp.label_index, target].values
-
-            # Artificially pad data to work with lolopy random forest implementation, if necessary
-            # TODO Remove magic number
-            if training_labels.shape[0] < 8:
-                training_rows = np.tile(training_rows, (4, 1))
-                training_labels = np.tile(training_labels, (4, 1))
 
             rfr.fit(training_rows, training_labels)
 
