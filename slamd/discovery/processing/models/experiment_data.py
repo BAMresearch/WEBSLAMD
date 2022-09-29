@@ -31,6 +31,7 @@ class ExperimentData:
 
     def __post_init__(self):
         self.orig_data = self.dataframe.copy()
+        self.dataframe = self.dataframe.copy()  # otherwise, dataset object in session gets overwritten
 
     @property
     def features_df(self):
