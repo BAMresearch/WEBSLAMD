@@ -1,4 +1,5 @@
 from slamd.common.error_handling import SequentialLearningException, ValueNotSupportedException
+from slamd.discovery.processing.models.model_type import ModelType
 
 
 class ExperimentPreprocessor:
@@ -14,9 +15,7 @@ class ExperimentPreprocessor:
     def validate_experiment(cls, exp):
         # TODO Think of more sensible errors we could throw
 
-        # TODO We should not be carrying these strings around
-        if exp.model not in ['Statistics-based model (Gaussian Process Regression)',
-                             'AI Model (lolo Random Forest)']:
+        if exp.model not in [ModelType.GAUSSIAN_PROCESS.value, ModelType.RANDOM_FOREST.value]:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         if len(exp.target_names) == 0:
@@ -40,14 +39,14 @@ class ExperimentPreprocessor:
         #                                               'This is currently not supported.')
 
         for target, count in zip(exp.target_names, exp.targets_df.count()):
-            if exp.model == 'AI Model (lolo Random Forest)' and count <= 1:
+            if exp.model == ModelType.RANDOM_FOREST.value and count <= 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Random Forest Regressor '
                             f'requires at least 2 labelled values, but only {count} was/were found. '
                             f'Please ensure that there are at least 2 data points that are not filtered out '
                             f'by the apriori thresholds.'
                 )
-            elif exp.model == 'Statistics-based model (Gaussian Process Regression)' and count < 1:
+            elif exp.model == ModelType.GAUSSIAN_PROCESS.value and count < 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Gaussian Process Regressor '
                             f'requires at least 1 labelled value, but none were found. '

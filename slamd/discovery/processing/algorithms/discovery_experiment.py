@@ -10,6 +10,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 from slamd.discovery.processing.algorithms.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.models.model_type import ModelType
 
 
 # Attention - suppressing expected Gaussian Regressor warnings
@@ -31,10 +32,9 @@ class ExperimentConductor:
 
     @classmethod
     def fit_model(cls, exp):
-        # TODO replace strings with enum? (materialtype)
-        if exp.model == 'AI Model (lolo Random Forest)':
+        if exp.model == ModelType.RANDOM_FOREST.value:
             cls.fit_random_forest_with_jack_knife_variance_estimators(exp)
-        elif exp.model == 'Statistics-based model (Gaussian Process Regression)':
+        elif exp.model == ModelType.GAUSSIAN_PROCESS.value:
             cls.fit_gaussian_process_regression(exp)
         else:
             raise ValueNotSupportedException(f'Model {exp.model} value not supported')
