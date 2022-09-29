@@ -34,20 +34,36 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def create_tsne_input_space_plot(cls, features_df, candidate_or_target):
-        tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300, random_state=1000,
-                    init='random', learning_rate=200)
-        tsne_result = tsne.fit_transform(features_df)
+    def create_tsne_input_space_plot(cls, plot_df):
+        # The perplexity must be less than the number of data points (the length of the dataframe).
+        # Handle this edge case by picking the smallest of the two.
+        tsne = TSNE(n_components=2, verbose=1, perplexity=min(40, len(plot_df) - 1),
+                    n_iter=300, random_state=1000, init='random', learning_rate=200)
+        # Exclude the columns that do not belong to the features
+        tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility', 'is_train_data']))
         tsne_result_df = pd.DataFrame(
-            {'tsne_1': tsne_result[:, 0],
+            {'Row number': plot_df['Row number'],
+             'tsne_1': tsne_result[:, 0],
              'tsne_2': tsne_result[:, 1],
-             'candidate_or_target': candidate_or_target}
+             'Utility': plot_df['Utility'],
+             'is_train_data': plot_df['is_train_data']}
         )
-
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='candidate_or_target',
-                         title='Materials data in t-SNE coordinates: candidates and targets')
+        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility', symbol='is_train_data',
+                         custom_data=['Row number'],
+                         title='Materials data in t-SNE coordinates: train data and targets',
+                         symbol_sequence=['circle', 'cross'])
         fig.update_traces(
-            hovertemplate='X: %{x:.2f}, Y: %{y:.2f}'
+            hovertemplate='Row number: %{customdata}, Utility: %{marker.color:.2f}',
+            marker=dict(size=7)
         )
-        fig.update_layout(height=1000)
+        fig.update_layout(
+            height=1000,
+            legend_title_text="",
+            legend=dict(
+                yanchor="top",
+                y=0.99,
+                xanchor="left",
+                x=0.01
+            )
+        )
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

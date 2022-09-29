@@ -76,31 +76,20 @@ class DiscoveryExperiment:
                 df[self.targets[i]] = self.prediction[:, i]
                 uncertainty_name_column = f'Uncertainty ({self.targets[i]})'
                 df[uncertainty_name_column] = self.uncertainty[:, i].tolist()
-                df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+                df[uncertainty_name_column] = df[uncertainty_name_column].round(5)
         else:
             df[self.targets] = self.prediction.reshape(len(self.prediction), 1)
             uncertainty_name_column = f'Uncertainty ({self.targets[0]})'
             df[uncertainty_name_column] = self.uncertainty.reshape(len(self.uncertainty), 1)
-            df[uncertainty_name_column] = df[uncertainty_name_column].apply(lambda row: round(row, 5))
+            df[uncertainty_name_column] = df[uncertainty_name_column].round(5)
 
-        df[self.targets] = df[self.targets].apply(lambda row: round(row, 6))
-        df['Utility'] = df['Utility'].apply(lambda row: round(row, 6))
-        df['Novelty'] = df['Novelty'].apply(lambda row: round(row, 6))
+        df[self.targets] = df[self.targets].round(6)
+        df['Utility'] = df['Utility'].round(6)
+        df['Novelty'] = df['Novelty'].round(6)
 
-        sorted = df.sort_values(by='Utility', ascending=False)
-        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        sorted.insert(loc=0, column='Row number', value=[i for i in range(1, len(sorted) + 1)])
-
-        columns_for_plot = self.targets.copy()
-        columns_for_plot.extend(['Utility', 'Row number'])
-        if len(self.apriori_columns) > 0:
-            columns_for_plot.extend(self.apriori_columns)
-
-        candidate_or_target = ['candidate' if row in self.sample_index else 'target' for row in self.features_df.index]
-
-        scatter_plot = PlotGenerator.create_target_scatter_plot(sorted[columns_for_plot])
-        tsne_plot = PlotGenerator.create_tsne_input_space_plot(self.features_df, candidate_or_target)
-
+        sorted = self.preprocess_dataframe_for_output_table(df)
+        scatter_plot = self.plot_output_space(sorted)
+        tsne_plot = self.plot_input_space(utility_function)
         return sorted, scatter_plot, tsne_plot
 
     def _update_prediction_index(self):
@@ -120,6 +109,49 @@ class DiscoveryExperiment:
             for feature in non_numeric_features:
                 self.features_df.loc[:, feature] = encoder.fit_transform(self.features_df[[feature]])
         self.features_df = self.features_df.dropna(axis=1)
+
+    def move_after_row_column(self, df, cols_to_move=[]):
+        """
+        Move one or several columns after the column named 'Row number'.
+        """
+        cols = df.columns.tolist()
+        seg1 = cols[:list(cols).index('Row number') + 1]
+        seg2 = cols_to_move
+        # Make sure to remove overlapping elements between the segments
+        seg1 = [i for i in seg1 if i not in seg2]
+        seg3 = [i for i in cols if i not in seg1 + seg2]
+        # Return a new dataset with the columns in the new order to be assigned to the same variable.
+        return df[seg1 + seg2 + seg3]
+
+    def preprocess_dataframe_for_output_table(self, df):
+        """
+        - Sort by Utility in decreasing order
+        - Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        - Move Utility, Novelty, all the target columns and their uncertainties to the left of the dataframe.
+        """
+        df = df.sort_values(by='Utility', ascending=False)
+        df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
+        cols_to_move = ['Utility', 'Novelty'] + self.targets
+        cols_to_move += [f'Uncertainty ({target})' for target in self.targets] + self.apriori_columns
+        return self.move_after_row_column(df, cols_to_move)
+
+    def plot_output_space(self, df):
+        columns_for_plot = self.targets.copy()
+        columns_for_plot.extend(['Utility', 'Row number'])
+        if len(self.apriori_columns) > 0:
+            columns_for_plot.extend(self.apriori_columns)
+        return PlotGenerator.create_target_scatter_plot(df[columns_for_plot])
+
+    def plot_input_space(self, utility_function):
+        plot_df = self.features_df.copy()
+        plot_df['is_train_data'] = 'Predicted'
+        plot_df['is_train_data'].iloc[self.sample_index] = 'Labelled'
+        plot_df['Utility'] = -np.inf
+        plot_df['Utility'].iloc[self.prediction_index] = pd.Series(utility_function).values
+        plot_df = plot_df.sort_values(by='Utility', ascending=False)
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
+        return PlotGenerator.create_tsne_input_space_plot(plot_df)
 
     def normalize_data(self):
         # Subtract the mean and divide by the standard deviation of each column
@@ -330,8 +362,13 @@ class DiscoveryExperiment:
     def apply_weights_to_apriori_values(self):
         apriori_for_predicted_rows = self.apriori_df.iloc[self.prediction_index].to_numpy()
 
-        for w in range(len(self.apriori_weights)):
-            apriori_for_predicted_rows[w] *= self.apriori_weights[w]
+        if len(self.apriori_weights) == 1:
+            for w in range(len(self.apriori_weights)):
+                apriori_for_predicted_rows *= self.apriori_weights[w]
+        else:
+            for w in range(len(self.apriori_weights)):
+                apriori_for_predicted_rows[:, w] *= self.apriori_weights[w]
+
         # Sum the apriori values row-wise for the case that there are several of them
         # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)

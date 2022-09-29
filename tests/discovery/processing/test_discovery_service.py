@@ -16,9 +16,9 @@ from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetFo
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRES_INPUT, \
-    TEST_GAUSS_WITH_THRES_INPUT, TEST_GAUSS_WITHOUT_THRES_PRED, \
-    TEST_GAUSS_WITH_THRES_PRED, TEST_GAUSS_WITHOUT_THRES_CONFIG, TEST_GAUSS_WITH_THRES_CONFIG
+from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRESH_INPUT, \
+    TEST_GAUSS_WITH_THRESH_INPUT, TEST_GAUSS_WITHOUT_THRESH_PRED, \
+    TEST_GAUSS_WITH_THRESH_PRED, TEST_GAUSS_WITHOUT_THRESH_CONFIG, TEST_GAUSS_WITH_THRESH_CONFIG
 
 app = create_app('testing', with_session=False)
 
@@ -120,15 +120,15 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
         return None
 
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRES_INPUT, 'Target: X')
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRESH_INPUT, 'Target: X')
 
     df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
-        'test_data', TEST_GAUSS_WITHOUT_THRES_CONFIG)
+        'test_data', TEST_GAUSS_WITHOUT_THRESH_CONFIG)
 
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRESH_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
-    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRES_CONFIG
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRES_PRED
+    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRESH_CONFIG
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRESH_PRED
     assert scatter_plot == 'Dummy Plot'
     assert tsne_plot == 'Dummy Plot'
 
@@ -142,15 +142,15 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
         return None
 
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
-    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRES_INPUT, 'X')
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRESH_INPUT, 'X')
 
     df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
-        'test_data', TEST_GAUSS_WITH_THRES_CONFIG)
+        'test_data', TEST_GAUSS_WITH_THRESH_CONFIG)
 
-    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
-    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRES_CONFIG
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRES_PRED
+    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRESH_CONFIG
+    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
     assert scatter_plot == 'Dummy Plot'
     assert tsne_plot == 'Dummy Plot'
 
@@ -188,7 +188,7 @@ def _mock_dataset_and_plot(monkeypatch, data, target_name):
         return 'Dummy Plot'
 
      # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_tsne_input_space_plot(features, candidate_or_target):
+    def mock_create_tsne_input_space_plot(features):
         return 'Dummy Plot'
 
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
