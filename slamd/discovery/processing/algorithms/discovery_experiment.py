@@ -96,12 +96,13 @@ class ExperimentConductor:
 
     @classmethod
     def compute_novelty_factor(cls, exp):
-        features_of_predicted_rows = exp.features_df.iloc[exp.nolabel_index]
-        features_of_known_rows = exp.features_df.iloc[exp.label_index]
+        features_of_predicted_rows = exp.features_df.loc[exp.nolabel_index]
+        features_of_known_rows = exp.features_df.loc[exp.label_index]
 
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
+
         return min_distances * (max_of_min_distances ** (-1))
 
     @classmethod
