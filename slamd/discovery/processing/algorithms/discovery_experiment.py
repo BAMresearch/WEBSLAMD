@@ -33,55 +33,26 @@ class ExperimentConductor:
     @classmethod
     def fit_model(cls, exp):
         if exp.model == ModelType.RANDOM_FOREST.value:
-            cls.fit_random_forest_with_jack_knife_variance_estimators(exp)
+            regressor = SlamdRandomForest()
         elif exp.model == ModelType.GAUSSIAN_PROCESS.value:
-            cls.fit_gaussian_process_regression(exp)
+            # Hyperparameters from Christoph
+            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
+            regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
         else:
-            raise ValueNotSupportedException(f'Model {exp.model} value not supported')
-
-    @classmethod
-    def fit_gaussian_process_regression(cls, exp):
-        # Initialize the model with given hyperparameters
-        kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-        gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
+            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         predictions = {}
         uncertainties = {}
         for target in exp.target_names:
-            # Train the GPR model for every target with the corresponding rows and labels
+            # Train the model for every target with the corresponding rows and labels
             training_rows = exp.features_df.loc[exp.label_index].values
             training_labels = exp.targets_df.loc[exp.label_index, target].values
 
-            gpr.fit(training_rows, training_labels)
+            regressor.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
             rows_to_predict = exp.features_df.loc[exp.nolabel_index].values
-            prediction, uncertainty = gpr.predict(rows_to_predict, return_std=True)
-
-            predictions[target] = prediction
-            uncertainties[target] = uncertainty
-
-        # TODO Reindex to match dataframe
-        exp.prediction = pd.DataFrame(predictions)
-        exp.uncertainty = pd.DataFrame(uncertainties)
-
-    @classmethod
-    def fit_random_forest_with_jack_knife_variance_estimators(cls, exp):
-        # TODO This is very similar to fit_gaussian. Could feasibly be turned into a single function
-        rfr = SlamdRandomForest()
-
-        predictions = {}
-        uncertainties = {}
-        for target in exp.target_names:
-            # Train the model
-            training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.label_index, target].values
-
-            rfr.fit(training_rows, training_labels)
-
-            # Predict the label for the remaining rows
-            rows_to_predict = exp.features_df.loc[exp.nolabel_index]
-            prediction, uncertainty = rfr.predict(rows_to_predict, return_std=True)
+            prediction, uncertainty = regressor.predict(rows_to_predict, return_std=True)
 
             predictions[target] = prediction
             uncertainties[target] = uncertainty
