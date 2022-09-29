@@ -1,4 +1,4 @@
-from slamd.common.error_handling import SequentialLearningException
+from slamd.common.error_handling import SequentialLearningException, ValueNotSupportedException
 
 
 class ExperimentPreprocessor:
@@ -13,6 +13,12 @@ class ExperimentPreprocessor:
     @classmethod
     def _validate_experiment(cls, exp):
         # TODO Think of more sensible errors we could throw
+
+        # TODO We should not be carrying these strings around
+        if exp.model not in ['Statistics-based model (Gaussian Process Regression)',
+                             'AI Model (lolo Random Forest)']:
+            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
+
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
         for value in exp.target_max_or_min + exp.apriori_max_or_min:
@@ -27,6 +33,11 @@ class ExperimentPreprocessor:
         #     if nan_counts[1] != previous_count:
         #         raise SequentialLearningException('Targets used are labelled for differing rows.')
         #     previous_count = nan_counts[j]
+
+        # Check if a row has either 0 or all targets labelled
+        if not all(x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum()):
+            raise SequentialLearningException(message='Some rows are partially labelled. '
+                                                      'This is currently not supported.')
 
         # TODO Implement the validation checks from this function. Needs to run AFTER filter apriori
         #
@@ -46,6 +57,23 @@ class ExperimentPreprocessor:
         #                                              f'in column {self.targets[i]}. Please ensure that there are '
         #                                              f'at least 2 data points that are not filtered out by '
         #                                              f'apriori thresholds.')
+        for target, count in zip(exp.target_names, exp.targets_df.count()):
+            if exp.model == 'AI Model (lolo Random Forest)' and count <= 1:
+                raise ValueNotSupportedException(
+                    message=f'Not enough labelled values for target: {target}. The Random Forest Regressor '
+                            f'requires at least 2 labelled values, but only {count} was/were found. '
+                            f'Please ensure that there are at least 2 data points that are not filtered out '
+                            f'by the apriori thresholds.'
+                )
+            elif exp.model == 'Statistics-based model (Gaussian Process Regression)' and count < 1:
+                raise ValueNotSupportedException(
+                    message=f'Not enough labelled values for target: {target}. The Gaussian Process Regressor '
+                            f'requires at least 1 labelled value, but none were found. '
+                            f'Please ensure that there is at least 1 data points that is not filtered out '
+                            f'by the apriori thresholds.'
+                )
+            elif count == len(exp.targets_df.index):
+                raise SequentialLearningException(message='All data is already labelled.')
 
     @classmethod
     def _encode_categoricals(cls, exp):

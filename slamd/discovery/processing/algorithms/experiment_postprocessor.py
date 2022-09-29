@@ -7,7 +7,6 @@ from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 class ExperimentPostprocessor:
     @classmethod
     def postprocess(cls, exp, utility, novelty):
-
         # Construct dataframe for output
         df = exp.orig_data.loc[exp.nolabel_index].copy()
         # Add the columns with utility and novelty values
