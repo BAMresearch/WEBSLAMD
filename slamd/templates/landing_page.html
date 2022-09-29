@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% from 'icons.html' import github_icon, bam_icon, book_icon -%}
+{% from 'icons.html' import github_icon, bam_icon, book_icon, iteratec_icon -%}
 
 <head>
     <title>SLAMD - Sequential Learning App for Materials Discovery</title>
@@ -14,13 +14,12 @@
     </h3>
     <div class="row g-3 ms-3 mt-1">
         <div class="col-sm-5 col-md-5 col-lg-2 ml-sm-auto px-md-2 px-md-2 py-2">
-            <img src="/static/sequential_learning_logo.png"
-                 alt="sequential learning logo">
+            <img src="/static/sequential_learning_logo.png" alt="sequential learning logo">
         </div>
         <div class="col-sm-7 col-md-7 col-lg-10 ml-sm-auto px-md-2 px-md-2 py-2">
             <div class="ms-2">
                 <h6><b>Leverage the Digital Lab and AI optimization to discover exciting new concrete
-                    recipes</b>
+                        recipes</b>
                 </h6>
             </div>
             <p class="ms-2">
@@ -43,8 +42,7 @@
                     </h5>
                     <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-3 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <img src="/static/base.png"
-                                 alt="base materials">
+                            <img src="/static/base.png" alt="base materials">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-9 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
@@ -62,8 +60,7 @@
 
                     <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-3 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <img src="/static/blended.png"
-                                 alt="blended materials">
+                            <img src="/static/blended.png" alt="blended materials">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-9 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
@@ -79,8 +76,7 @@
                     </div>
                     <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-3 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <img src="/static/formulations.png"
-                                 alt="formulations">
+                            <img src="/static/formulations.png" alt="formulations">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-9 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
@@ -108,8 +104,7 @@
 
                     <div class="row g-2 mb-2">
                         <div class="col-sm-5 col-md-5 col-lg-3 ml-sm-auto px-md-2 px-md-2 py-2">
-                            <img src="/static/discovery.png"
-                                 alt="discovery">
+                            <img src="/static/discovery.png" alt="discovery">
                         </div>
                         <div class="col-sm-7 col-md-7 col-lg-9 ml-sm-auto px-md-2 px-md-2 py-2">
                             <div class="ms-2">
@@ -130,31 +125,26 @@
             </div>
         </div>
     </div>
-
     <h4 class="ms-2">
         Links
     </h4>
-    <div class="d-flex flex-row bd-highlight mb-3">
-        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom"
-             title="Visit GitHub repository">
-            <a class="btn btn-secondary text-white" href="https://github.com/BAMresearch/WEBSLAMD" target="_blank">
-                {{ github_icon(20, 20, "currentColor") }}
-                GitHub Repository
-            </a>
-        </div>
-        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit BAM website">
-            <a class="btn btn-danger text-white" href="https://www.bam.de/" target="_blank">
-                {{ bam_icon(20, 20) }}
-                BAM website
-            </a>
-        </div>
-        <div class="p-2 bd-highlight" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Open User Manual">
-            <a class="btn btn-primary" href="/static/SLAMD-UserManual.pdf" target="_blank" aria-controls="manual">
-                {{ book_icon(20, 20, "currentColor") }}
-                User Manual
-            </a>
-        </div>
-
+    <div class="d-flex flex-row align-items-end mb-3">
+        <a class="btn btn-secondary text-white me-2" href="https://github.com/BAMresearch/WEBSLAMD" target="_blank"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit GitHub repository">
+            {{ github_icon(20, 20, "currentColor") }} GitHub Repository
+        </a>
+        <a class="btn btn-danger text-white me-2" href="https://www.bam.de/" target="_blank" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="Visit BAM website">
+            {{ bam_icon(20, 20) }} BAM website
+        </a>
+        <a class="btn btn-primary me-2" href="/static/SLAMD-UserManual.pdf" target="_blank" aria-controls="manual"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Open User Manual">
+            {{ book_icon(20, 20, "currentColor") }} User Manual
+        </a>
+        <a class="btn btn-dark me-2" href="https://www.iteratec.com/" target="_blank" data-bs-toggle="tooltip"
+            data-bs-placement="bottom" title="Visit iteratec website" style="background-color: black;">
+            {{ iteratec_icon(20, 20) }} Powered by iteratec
+        </a>
     </div>
 </main>
 {%endblock%}
