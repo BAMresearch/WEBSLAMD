@@ -41,7 +41,6 @@ class DiscoveryExperiment:
 
     @classmethod
     def fit_gaussian_process_regression(cls, exp):
-        # TODO I am 99% sure you can fit the same gpr object multiple times, verify
         # Initialize the model with given hyperparameters
         kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
         gpr = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
@@ -98,16 +97,15 @@ class DiscoveryExperiment:
     def update_index_MLI(cls, exp):
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
-        # TODO predicted_rows is misleadingly named! not actually predicted!
-        predicted_rows = exp.targets_df.loc[exp.label_index].copy()
+        labelled_rows = exp.targets_df.loc[exp.label_index].copy()
 
         # Normalize the uncertainty of the predicted labels, then clip to given thresholds
         # TODO What if the standard deviation is 0? also further down
-        normed_uncertainty = exp.uncertainty / predicted_rows.std()
+        normed_uncertainty = exp.uncertainty / labelled_rows.std()
         clipped_prediction = cls.clip_prediction(exp)
 
         # Normalize the predicted labels
-        normed_prediction = (clipped_prediction - predicted_rows.mean()) / predicted_rows.std()
+        normed_prediction = (clipped_prediction - labelled_rows.mean()) / labelled_rows.std()
 
         for (target, weight) in zip(exp.target_names, exp.target_weights):
             normed_prediction[target] *= weight
@@ -118,7 +116,7 @@ class DiscoveryExperiment:
         if len(exp.apriori_names) > 0:
             apriori_values_for_predicted_rows = cls.apply_weights_to_apriori_values(exp)
         else:
-            apriori_values_for_predicted_rows = np.zeros(len(exp.nolabel_index)) # TODO which index?
+            apriori_values_for_predicted_rows = np.zeros(len(exp.nolabel_index))
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
@@ -168,7 +166,6 @@ class DiscoveryExperiment:
     @classmethod
     def _normalize_data(cls, exp):
         # TODO What about categoricals?
-        # TODO What happens to the data afterwards? This is a destructive operation
         # replace 0s with 1s for division
         std = exp.dataframe.std().replace(0, 1)
         exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
