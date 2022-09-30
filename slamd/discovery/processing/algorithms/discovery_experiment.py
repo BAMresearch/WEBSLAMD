@@ -68,6 +68,7 @@ class ExperimentConductor:
         normed_prediction, normed_uncertainty = cls.process_predictions(exp)
 
         # Normalize feature data
+        # TODO Discuss this function
         cls._normalize_data(exp)
 
         # Apply weights to apriori values
@@ -124,9 +125,6 @@ class ExperimentConductor:
     def clip_prediction(cls, exp):
         clipped_prediction = exp.prediction.copy()
         for (target, max_or_min, threshold) in zip(exp.target_names, exp.target_max_or_min, exp.target_thresholds):
-            if max_or_min not in ['min', 'max']:
-                raise SequentialLearningException(f'Invalid value for max_or_min, got {max_or_min}')
-
             if threshold is None:
                 continue
 
@@ -140,7 +138,6 @@ class ExperimentConductor:
     @classmethod
     def _normalize_data(cls, exp):
         # TODO What about categoricals? => double check
-        # TODO X nan
         # replace 0s with 1s for division
         # print()
         # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())

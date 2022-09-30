@@ -23,19 +23,10 @@ class ExperimentPreprocessor:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
-        # TODO Implement this validation function formerly called by regressor functions
-        # nan_counts = list(self.target_df.isna().sum())
-        #
-        # previous_count = nan_counts[0]
-        # for j in range(1, len(nan_counts)):
-        #     if nan_counts[1] != previous_count:
-        #         raise SequentialLearningException('Targets used are labelled for differing rows.')
-        #     previous_count = nan_counts[j]
-
-        # Check if a row has either 0 or all targets labelled TODO interferes with unit test?
-        # if not all(x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum()):
-        #     raise SequentialLearningException(message='Some rows are partially labelled. '
-        #                                               'This is currently not supported.')
+        # Check if a row has either 0 or all targets labelled TODO needs a unit test
+        if not all([x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum(axis=1)]):
+            raise SequentialLearningException(message='Some rows are partially labelled. '
+                                                      'This is currently not supported.')
 
         for target, count in zip(exp.target_names, exp.targets_df.count()):
             if exp.model == ModelType.RANDOM_FOREST.value and count <= 1:
@@ -74,6 +65,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def filter_apriori_with_thresholds(cls, exp):
+        # TODO open an issue for this
         # In the future this function could be handled "live" and non-destructively in label_index and nolabel_index
         for (column, value, threshold) in zip(exp.apriori_names, exp.apriori_max_or_min, exp.apriori_thresholds):
             if threshold is None:
