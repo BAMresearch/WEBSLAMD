@@ -45,16 +45,16 @@ class PlotGenerator:
             fig.update_layout(title='Scatter matrix of target properties', showlegend=False)
 
             # Generate possible indices for the lower-triangle of the (n-1) x (n-1) matrix
-            row_indices, col_indices = np.tril_indices(n=matrix_size, k=0)
+            # Iterate column-wise instead of row-wise
+            col_indices, row_indices = np.triu_indices(n=matrix_size, k=0)
             # Increment all indices by one (numpy array operator overload)
             # because the first cell in the subplots is (1, 1)
             row_indices += 1
             col_indices += 1
 
-            # Generate all possible combinations of ordered column names as tuples (x, y)
-            axes = list(combinations(dimensions, 2))
-            x_dimensions, y_dimensions = list(zip(*axes))
-            for (x, y, row, col) in zip(x_dimensions, y_dimensions, row_indices, col_indices):
+            for (row, col) in zip(row_indices, col_indices):
+                x = dimensions[col - 1]
+                y = dimensions[row]
                 scatter_plot = cls._create_scatter_plot(
                     plot_df[x],
                     plot_df[y],
