@@ -1,33 +1,33 @@
 import pandas as pd
 from pandas import DataFrame, Index
 from dataclasses import dataclass, field
+from numpy import ndarray
 
 @dataclass
 class ExperimentData:
+    # TODO Should novelty and utility be written into this?
     orig_data: DataFrame = None # TODO still contains dropped apriori
     dataframe: DataFrame = None
-    model: str = None # TODO rename
+    model: str = None
     curiosity: float = None
 
-    # TODO Defaults: List of empty str or empty list?
-    target_names: list[str] = field(default_factory=lambda: [''])
-    target_weights: list[float] = field(default_factory=lambda: [1])
-    target_thresholds: list[float | None] = field(default_factory=lambda: [None])
-    target_max_or_min: list[str] = field(default_factory=lambda: [''])
+    target_names: list[str] = field(default_factory=lambda: [])
+    target_weights: list[float] = field(default_factory=lambda: [])
+    target_thresholds: list[float | None] = field(default_factory=lambda: [])
+    target_max_or_min: list[str] = field(default_factory=lambda: [])
 
-    apriori_names: list[str] = field(default_factory=lambda: [''])
-    apriori_weights: list[float] = field(default_factory=lambda: [1])
-    apriori_thresholds: list[float | None] = field(default_factory=lambda: [None])
-    apriori_max_or_min: list[str] = field(default_factory=lambda: [''])
+    apriori_names: list[str] = field(default_factory=lambda: [])
+    apriori_weights: list[float] = field(default_factory=lambda: [])
+    apriori_thresholds: list[float | None] = field(default_factory=lambda: [])
+    apriori_max_or_min: list[str] = field(default_factory=lambda: [])
 
-    feature_names: list[str] = field(default_factory=lambda: [''])
+    feature_names: list[str] = field(default_factory=lambda: [])
 
     labelled_index: Index = None
     unlabelled_index: Index = None
 
     uncertainty: DataFrame = None
     prediction: DataFrame = None
-    novelty_factor = None  # TODO Series?
 
     def __post_init__(self):
         self.orig_data = self.dataframe.copy()
