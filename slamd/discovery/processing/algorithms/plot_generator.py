@@ -53,23 +53,23 @@ class PlotGenerator:
             col_indices += 1
 
             for (row, col) in zip(row_indices, col_indices):
-                x = dimensions[col - 1]
-                y = dimensions[row]
+                column_name = dimensions[col - 1]
+                row_name = dimensions[row]
                 scatter_plot = cls._create_scatter_plot(
-                    plot_df[x],
-                    plot_df[y],
+                    plot_df[column_name],
+                    plot_df[row_name],
                     plot_df['Utility'],
                     plot_df['Row number'],
                     # Get error columns if available, otherwise return None
-                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{x})'),
-                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{y})')
+                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'),
+                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{row_name})')
                 )
                 if row == matrix_size:
                     # If on the bottom edge of the matrix
-                    fig.update_xaxes(title_text=x, row=row, col=col)
+                    fig.update_xaxes(title_text=column_name, row=row, col=col)
                 if col == 1:
                     # If on the left edge of the matrix
-                    fig.update_yaxes(title_text=y, row=row, col=col)
+                    fig.update_yaxes(title_text=row_name, row=row, col=col)
                 # Add subplot at given position
                 fig.add_trace(scatter_plot, row=row, col=col)
 
