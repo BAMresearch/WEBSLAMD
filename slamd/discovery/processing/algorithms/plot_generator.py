@@ -79,7 +79,7 @@ class PlotGenerator:
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    @ classmethod
+    @classmethod
     def create_tsne_input_space_plot(cls, plot_df):
         # The perplexity must be less than the number of data points (the length of the dataframe).
         # Handle this edge case by picking the smallest of the two.
