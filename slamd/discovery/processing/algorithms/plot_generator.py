@@ -1,7 +1,11 @@
 import json
+import numpy as np
 import pandas as pd
 import plotly
 import plotly.express as px
+import plotly.graph_objects as go
+from itertools import combinations
+from plotly.subplots import make_subplots
 from sklearn.manifold import TSNE
 
 UNCERTAINTY_COLUMN_PREFIX = 'Uncertainty ('
@@ -26,27 +30,7 @@ class PlotGenerator:
                 custom_data=['Row number'],
                 title='Scatter plot of target properties'
             )
-            # Add light gray error bars
-            fig.update_traces(
-                error_x=dict(
-                    type='data',
-                    array=cls._select_error_if_available(dimensions[0], uncertainties, plot_df),
-                    color='lightgray',
-                    thickness=1,
-                )
-            )
-        elif len(dimensions) == 2:
-            # Plotly 5.10 issue: px.scatter_matrix() does not output anything when the matrix is 1x1.
-            # We need to handle this case separately and generate a single scatter plot.
-            fig = px.scatter(
-                plot_df,
-                x=dimensions[0],
-                y=dimensions[1],
-                color='Utility',
-                custom_data=['Row number'],
-                title='Scatter plot of target properties'
-            )
-            # Add light gray error bars
+            # Add light gray error bars and format tooltips rounding to two decimal places
             fig.update_traces(
                 error_x=dict(
                     type='data',
@@ -54,28 +38,71 @@ class PlotGenerator:
                     color='lightgray',
                     thickness=1,
                 ),
-                error_y=dict(
-                    type='data',
-                    array=cls._select_error_if_available(dimensions[1], uncertainties, plot_df),
-                    color='lightgray',
-                    thickness=1,
-                )
+                hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}'
             )
         else:
             # General case
-            fig = px.scatter_matrix(
-                plot_df,
-                dimensions=dimensions,
-                color='Utility',
-                custom_data=['Row number'],
-                title='Scatter matrix of target properties'
-            )
-            fig.update_traces(diagonal_visible=False, showupperhalf=False)
+            # For n target properties and a priori information columns, we need a (n-1) x (n-1) matrix
+            matrix_size = len(dimensions) - 1
+            fig = make_subplots(rows=matrix_size, cols=matrix_size, start_cell='top-left',
+                                horizontal_spacing=0.01, vertical_spacing=0.01,
+                                shared_xaxes=True, shared_yaxes=True)
+            # Add title and remove the legend on the right that would show 'trace0', 'trace1', ...
+            fig.update_layout(title='Scatter matrix of target properties', showlegend=False)
 
-        # Format tooltips for all cases rounding the displayed values to two decimal places.
-        fig.update_traces(
-            hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}'
-        )
+            # Generate possible indices for the lower-triangle of the (n-1) x (n-1) matrix
+            row_indices, col_indices = np.tril_indices(n=matrix_size, k=0)
+            # Increment all indices by one (numpy array operator overload)
+            # because the first cell in the subplots is (1, 1)
+            row_indices += 1
+            col_indices += 1
+
+            # Generate all possible combinations of ordered column names as tuples (x, y)
+            axes = list(combinations(dimensions, 2))
+            x_dimensions, y_dimensions = list(zip(*axes))
+            for (x, y, row, col) in zip(x_dimensions, y_dimensions, row_indices, col_indices):
+                scatter_plot = go.Scatter(
+                    x=plot_df[x],
+                    y=plot_df[y],
+                    mode='markers',
+                    marker=dict(
+                        size=7,
+                        color=plot_df['Utility'],
+                        colorbar=dict(
+                            title='Utility'
+                        ),
+                        colorscale='Plasma'
+                    ),
+                    customdata=plot_df['Row number'],
+                    # Add light gray error bars for both dimensions
+                    error_x=dict(
+                        type='data',
+                        array=cls._select_error_if_available(x, uncertainties, plot_df),
+                        color='lightgray',
+                        thickness=1,
+                    ),
+                    error_y=dict(
+                        type='data',
+                        array=cls._select_error_if_available(y, uncertainties, plot_df),
+                        color='lightgray',
+                        thickness=1,
+                    ),
+                    # Format tooltips for all cases rounding the displayed values to two decimal places.
+                    hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}',
+                    # Make hover label have a black background
+                    hoverlabel=dict(bgcolor='black'),
+                    # Remove default name 'trace0', 'trace1', ...
+                    name=''
+                )
+                if row == matrix_size:
+                    # If on the bottom edge of the matrix
+                    fig.update_xaxes(title_text=x, row=row, col=col)
+                if col == 1:
+                    # If on the left edge of the matrix
+                    fig.update_yaxes(title_text=y, row=row, col=col)
+                # Add subplot at given position
+                fig.add_trace(scatter_plot, row=row, col=col)
+
         fig.update_layout(height=1000)
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
