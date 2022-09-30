@@ -36,8 +36,11 @@ class ExperimentData:
     labelled_index: Index = None
     unlabelled_index: Index = None
 
-    uncertainty: DataFrame = None
     prediction: DataFrame = None
+    uncertainty: DataFrame = None
+    utility: DataFrame = None
+    novelty: DataFrame = None
+
 
     def __post_init__(self):
         self.orig_data = self.dataframe.copy()

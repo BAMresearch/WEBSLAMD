@@ -24,10 +24,10 @@ class ExperimentConductor:
     def run(cls, exp):
         ExperimentPreprocessor.preprocess(exp)
         cls._fit_model_and_predict(exp)
-        utility = cls._calculate_utility(exp)
-        novelty = cls._calculate_novelty(exp)
+        cls._calculate_utility(exp)
+        cls._calculate_novelty(exp)
 
-        return ExperimentPostprocessor.postprocess(exp, utility, novelty)
+        return ExperimentPostprocessor.postprocess(exp)
 
     @classmethod
     def _fit_model_and_predict(cls, exp):
@@ -76,10 +76,8 @@ class ExperimentConductor:
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
-        utility = weighted_apriori_values_for_predicted_rows + normed_prediction.sum(axis=1) + \
-                  exp.curiosity * normed_uncertainty.sum(axis=1)
-
-        return utility
+        exp.utility = weighted_apriori_values_for_predicted_rows + normed_prediction.sum(axis=1) + \
+                      exp.curiosity * normed_uncertainty.sum(axis=1)
 
     @classmethod
     def _process_predictions(cls, exp):
@@ -119,7 +117,12 @@ class ExperimentConductor:
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
 
-        return min_distances * (max_of_min_distances ** (-1))
+        novelty_as_array = min_distances * (max_of_min_distances ** (-1))
+
+        exp.novelty = pd.DataFrame(
+            {'Novelty': novelty_as_array},
+            index=exp.nolabel_index
+        )
 
     @classmethod
     def clip_prediction(cls, exp):

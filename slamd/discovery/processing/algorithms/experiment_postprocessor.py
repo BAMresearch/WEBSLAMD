@@ -6,13 +6,13 @@ from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 class ExperimentPostprocessor:
     @classmethod
-    def postprocess(cls, exp, utility, novelty):
+    def postprocess(cls, exp):
         # Construct dataframe for output
         df = exp.orig_data.loc[exp.nolabel_index].copy()
         # Add the columns with utility and novelty values
-        df['Utility'] = utility
+        df['Utility'] = exp.utility
         df['Utility'] = df['Utility'].round(6)
-        df['Novelty'] = novelty.round(6)
+        df['Novelty'] = exp.novelty.round(6)
         # df = df.iloc[self.prediction_index].assign(Utility=pd.Series(utility_function).values)
         # df = df.loc[self.prediction_index].assign(Novelty=pd.Series(novelty_factor).values)
 
@@ -25,7 +25,7 @@ class ExperimentPostprocessor:
 
         df = cls.preprocess_dataframe_for_output_table(df, exp)
         scatter_plot = cls.plot_output_space(df, exp)
-        tsne_plot = cls.plot_input_space(utility, exp)
+        tsne_plot = cls.plot_input_space(exp.utility, exp)
         return df, scatter_plot, tsne_plot
 
     @classmethod
