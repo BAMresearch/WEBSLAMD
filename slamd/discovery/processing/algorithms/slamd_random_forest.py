@@ -6,7 +6,7 @@ from lolopy.learners import RandomForestRegressor
 LOLOPY_MINIMUM_DATA_POINTS = 8
 
 
-# Simple Wrapper for LolopyRandomForest implementation that automatically pads input to match the libraries
+# Simple Wrapper for LolopyRandomForest implementation that automatically pads input to match the library's
 # minimum data requirements
 class SlamdRandomForest(RandomForestRegressor):
     def fit(self, x, y, weights=None):

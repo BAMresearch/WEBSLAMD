@@ -73,3 +73,34 @@ def test_encode_categoricals_empty():
     ExperimentPreprocessor.encode_categoricals(experiment)
 
     assert experiment.dataframe.empty
+
+
+def test_filter_missing_inputs_empty():
+    input_df = pd.DataFrame()
+
+    experiment = ExperimentData(
+        dataframe=input_df,
+        feature_names=list(input_df.columns)
+    )
+
+    ExperimentPreprocessor.filter_missing_inputs(experiment)
+
+    assert experiment.dataframe.empty
+
+
+def test_filter_missing_inputs_multiple():
+    input_df = pd.DataFrame({
+        'u': [1, 2, 3],
+        'v': [1.0, np.nan, 4.5],
+        'w': ['a', 'b', 'c'],
+        'x': ['asdf', 'qwer', np.nan]
+    })
+
+    experiment = ExperimentData(
+        dataframe=input_df,
+        feature_names=list(input_df.columns)
+    )
+
+    ExperimentPreprocessor.filter_missing_inputs(experiment)
+
+    assert tuple(experiment.dataframe.columns) == ('u', 'w')
