@@ -117,6 +117,7 @@ class PlotGenerator:
             x=x,
             y=y,
             mode='markers',
+            # Manually configure marker size and legend and use the default colorscale for px
             marker=dict(
                 size=7,
                 color=color,
