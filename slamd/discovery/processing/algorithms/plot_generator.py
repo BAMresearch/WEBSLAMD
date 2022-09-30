@@ -15,7 +15,6 @@ class PlotGenerator:
 
     @classmethod
     def create_target_scatter_plot(cls, plot_df):
-        uncertainties = list(filter(lambda col: col.startswith(UNCERTAINTY_COLUMN_PREFIX), plot_df.columns))
         dimensions = list(filter(lambda col: col != 'Utility' and col !=
                           'Row number' and not col.startswith(UNCERTAINTY_COLUMN_PREFIX), plot_df.columns))
 
@@ -28,7 +27,7 @@ class PlotGenerator:
                 plot_df['Utility'],
                 plot_df['Utility'],
                 plot_df['Row number'],
-                cls._select_error_if_available(dimensions[0], uncertainties, plot_df)
+                cls._select_error_column_if_available(dimensions[0], plot_df)
             )
             fig.add_trace(scatter_plot)
             fig.update_layout(title='Scatter plot of target properties')
@@ -60,8 +59,8 @@ class PlotGenerator:
                     plot_df[y],
                     plot_df['Utility'],
                     plot_df['Row number'],
-                    cls._select_error_if_available(x, uncertainties, plot_df),
-                    cls._select_error_if_available(y, uncertainties, plot_df)
+                    cls._select_error_column_if_available(x, plot_df),
+                    cls._select_error_column_if_available(y, plot_df)
                 )
                 if row == matrix_size:
                     # If on the bottom edge of the matrix
@@ -111,9 +110,9 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def _select_error_if_available(cls, column_name, uncertainties, df):
+    def _select_error_column_if_available(cls, column_name, df):
         error_column_name = f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'
-        return df[error_column_name] if error_column_name in uncertainties else None
+        return df[error_column_name] if error_column_name in df.columns else None
 
     @classmethod
     def _create_scatter_plot(cls, x, y, color=None, customdata=None, error_x=None, error_y=None):
