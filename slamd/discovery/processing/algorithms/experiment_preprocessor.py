@@ -12,18 +12,17 @@ class ExperimentPreprocessor:
 
     @classmethod
     def validate_experiment(cls, exp):
-        # TODO Think of more sensible errors we could throw
-
         if exp.model not in [ModelType.GAUSSIAN_PROCESS.value, ModelType.RANDOM_FOREST.value]:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
+
         for value in exp.target_max_or_min + exp.apriori_max_or_min:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
-        # Check if a row has either 0 or all targets labelled TODO needs a unit test
+        # Check if a row has either 0 or all targets labelled
         if not all([x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum(axis=1)]):
             raise SequentialLearningException(message='Some rows are partially labelled. '
                                                       'This is currently not supported.')
@@ -55,17 +54,12 @@ class ExperimentPreprocessor:
 
     @classmethod
     def filter_missing_inputs(cls, exp):
-        # TODO Confirm that we want to drop columns, not rows
-        #  (Originally, dropping rows was not possible since the operation acted only on features_df)
-        #  -> would simply be exp.dataframe.dropna(inplace=True, subset=exp.feature_names)
-        # TODO give feedback, open new jira issue
         for col in exp.feature_names:
             if exp.dataframe[col].isna().values.any():
                 exp.dataframe.drop(col, axis=1, inplace=True)
 
     @classmethod
     def filter_apriori_with_thresholds(cls, exp):
-        # TODO open an issue for this
         # In the future this function could be handled "live" and non-destructively in label_index and nolabel_index
         for (column, value, threshold) in zip(exp.apriori_names, exp.apriori_max_or_min, exp.apriori_thresholds):
             if threshold is None:

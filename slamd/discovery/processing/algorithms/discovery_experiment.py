@@ -5,7 +5,7 @@ from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
-from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
+from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.algorithms.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
 from slamd.discovery.processing.algorithms.slamd_random_forest import SlamdRandomForest
@@ -23,14 +23,14 @@ class ExperimentConductor:
     @classmethod
     def run(cls, exp):
         ExperimentPreprocessor.preprocess(exp)
-        cls.fit_model(exp)
-        utility = cls.update_index_MLI(exp)
-        novelty = cls.compute_novelty_factor(exp)
+        cls._fit_model_and_predict(exp)
+        utility = cls._calculate_utility(exp)
+        novelty = cls._calculate_novelty(exp)
 
         return ExperimentPostprocessor.postprocess(exp, utility, novelty)
 
     @classmethod
-    def fit_model(cls, exp):
+    def _fit_model_and_predict(cls, exp):
         if exp.model == ModelType.RANDOM_FOREST.value:
             regressor = SlamdRandomForest()
         elif exp.model == ModelType.GAUSSIAN_PROCESS.value:
@@ -61,18 +61,18 @@ class ExperimentConductor:
         exp.uncertainty = pd.DataFrame(uncertainties, index=exp.nolabel_index)
 
     @classmethod
-    def update_index_MLI(cls, exp):
+    def _calculate_utility(cls, exp):
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
 
-        normed_prediction, normed_uncertainty = cls.process_predictions(exp)
+        normed_prediction, normed_uncertainty = cls._process_predictions(exp)
 
         # Normalize feature data
         # TODO Discuss this function
         cls._normalize_data(exp)
 
         # Apply weights to apriori values
-        weighted_apriori_values_for_predicted_rows = cls.apply_weights_and_maxmin_to_apriori_values(exp)
+        weighted_apriori_values_for_predicted_rows = cls._apply_weights_and_maxmin_to_apriori_values(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
@@ -82,8 +82,8 @@ class ExperimentConductor:
         return utility
 
     @classmethod
-    def process_predictions(cls, exp):
-        # Clip, norm and weigh predictions for utility calculation
+    def _process_predictions(cls, exp):
+        # Clip, norm, and weigh predictions for utility calculation
         # Targets which should be minimized instead of maximized are also inverted for the utility calculation
 
         # Clip
@@ -111,7 +111,7 @@ class ExperimentConductor:
         return normed_prediction, normed_uncertainty
 
     @classmethod
-    def compute_novelty_factor(cls, exp):
+    def _calculate_novelty(cls, exp):
         features_of_predicted_rows = exp.features_df.loc[exp.nolabel_index]
         features_of_known_rows = exp.features_df.loc[exp.label_index]
 
@@ -146,7 +146,7 @@ class ExperimentConductor:
         # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
 
     @classmethod
-    def apply_weights_and_maxmin_to_apriori_values(cls, exp):
+    def _apply_weights_and_maxmin_to_apriori_values(cls, exp):
         if len(exp.apriori_names) == 0:
             return 0
 
@@ -158,6 +158,4 @@ class ExperimentConductor:
             else:
                 apriori_for_predicted_rows[col] *= weight
 
-        # Sum the apriori values row-wise for the case that there are several of them
-        # We need to simply add their contributions in that case
         return apriori_for_predicted_rows.sum(axis=1)
