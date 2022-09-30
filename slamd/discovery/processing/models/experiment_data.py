@@ -5,8 +5,10 @@ from dataclasses import dataclass, field
 @dataclass
 class ExperimentData:
     # TODO Should novelty and utility be written into this?
+    #  => Do that, and turn novelty into series
     # TODO Figure out if orig_data should contain dropped apriori or not. It currently *does*.
     # TODO Unit tests for validate_experiment?
+    # TODO (Future -> Jira) Better unit tests for run experiment
     # TODO (Future -> Jira) Think of more sensible errors we could throw
     # TODO (Future -> Jira) Should maxmin be converted to -1, 1?
     # TODO (Future -> Jira) Make calculation of nolabel index more robust / already possible due to validation?
@@ -55,9 +57,11 @@ class ExperimentData:
 
     @property
     def nolabel_index(self):
+        # TODO
         return pd.isnull(self.dataframe[[self.target_names[0]]]).to_numpy().nonzero()[0]
 
     @property
     def label_index(self):
+        # TODO replace difference
         return self.dataframe.index.difference(self.nolabel_index)
 

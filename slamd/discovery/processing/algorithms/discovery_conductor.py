@@ -137,7 +137,7 @@ class ExperimentConductor:
 
     @classmethod
     def _normalize_data(cls, exp):
-        # TODO What about categoricals? => double check
+        # TODO What about categoricals? => double check => jira ticket
         # replace 0s with 1s for division
         # print()
         # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
