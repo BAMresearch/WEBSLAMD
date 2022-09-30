@@ -9,7 +9,6 @@ class ExperimentPreprocessor:
         cls.filter_missing_inputs(exp)
         cls.validate_experiment(exp)
         cls.encode_categoricals(exp)
-        cls.decide_max_or_min(exp)
 
     @classmethod
     def validate_experiment(cls, exp):
@@ -72,15 +71,6 @@ class ExperimentPreprocessor:
         for col in exp.feature_names:
             if exp.dataframe[col].isna().values.any():
                 exp.dataframe.drop(col, axis=1, inplace=True)
-
-    @classmethod
-    def decide_max_or_min(cls, exp):
-        # TODO find a way to do this non-destructively
-        # Multiply the column by -1 if it needs to be minimized
-        for (column, value) in zip(exp.target_names + exp.apriori_names,
-                                   exp.target_max_or_min + exp.apriori_max_or_min):
-            if value == 'min':
-                exp.dataframe[column] *= (-1)
 
     @classmethod
     def filter_apriori_with_thresholds(cls, exp):

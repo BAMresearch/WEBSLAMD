@@ -91,16 +91,16 @@ class ExperimentConductor:
         # Sanity check TODO keep?
         assert all([x == y for x, y in zip(clipped_prediction, exp.target_names)])
 
-        # Invert
-        # for (column, value) in zip(exp.target_names, exp.target_max_or_min):
-        #     if value == 'min':
-        #         clipped_prediction[column] *= (-1)
-
         # Norm - use 1 as standard deviation instead of 0 to avoid division by 0 (unlikely)
         labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
         labels_mean = exp.targets_df.loc[exp.label_index].mean()
         normed_uncertainty = exp.uncertainty / labels_std
         normed_prediction = (clipped_prediction - labels_mean) / labels_std
+
+        # Invert
+        for (column, value) in zip(exp.target_names, exp.target_max_or_min):
+            if value == 'min':
+                normed_prediction[column] *= (-1)
 
         # Weigh
         for (target, weight) in zip(exp.target_names, exp.target_weights):
@@ -157,7 +157,7 @@ class ExperimentConductor:
 
         for (col, weight, maxmin) in zip(exp.apriori_df.columns, exp.apriori_weights, exp.apriori_max_or_min):
             if maxmin == 'min':
-                apriori_for_predicted_rows[col] *= weight# * (-1)
+                apriori_for_predicted_rows[col] *= weight * (-1)
             else:
                 apriori_for_predicted_rows[col] *= weight
 
