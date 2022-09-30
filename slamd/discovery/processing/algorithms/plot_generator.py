@@ -27,7 +27,7 @@ class PlotGenerator:
                 plot_df['Utility'],
                 plot_df['Utility'],
                 plot_df['Row number'],
-                # Get error columns if available, otherwise return None
+                # Get error column if available, otherwise return None
                 plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{dimensions[0]})')
             )
             fig.add_trace(scatter_plot)
