@@ -22,24 +22,18 @@ class PlotGenerator:
         if len(dimensions) == 1:
             # Generate a simple scatter plot if there is only one target property.
             # We include the Utility color-coded for aesthetic reasons.
-            fig = px.scatter(
-                plot_df,
-                x=dimensions[0],
-                y='Utility',
-                color='Utility',
-                custom_data=['Row number'],
-                title='Scatter plot of target properties'
+            fig = go.Figure()
+            scatter_plot = cls._create_scatter_plot(
+                plot_df[dimensions[0]],
+                plot_df['Utility'],
+                plot_df['Utility'],
+                plot_df['Row number'],
+                cls._select_error_if_available(dimensions[0], uncertainties, plot_df)
             )
-            # Add light gray error bars and format tooltips rounding to two decimal places
-            fig.update_traces(
-                error_x=dict(
-                    type='data',
-                    array=cls._select_error_if_available(dimensions[0], uncertainties, plot_df),
-                    color='lightgray',
-                    thickness=1,
-                ),
-                hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}'
-            )
+            fig.add_trace(scatter_plot)
+            fig.update_layout(title='Scatter plot of target properties')
+            fig.update_xaxes(title_text=dimensions[0])
+            fig.update_yaxes(title_text='Utility')
         else:
             # General case
             # For n target properties and a priori information columns, we need a (n-1) x (n-1) matrix
@@ -61,38 +55,13 @@ class PlotGenerator:
             axes = list(combinations(dimensions, 2))
             x_dimensions, y_dimensions = list(zip(*axes))
             for (x, y, row, col) in zip(x_dimensions, y_dimensions, row_indices, col_indices):
-                scatter_plot = go.Scatter(
-                    x=plot_df[x],
-                    y=plot_df[y],
-                    mode='markers',
-                    marker=dict(
-                        size=7,
-                        color=plot_df['Utility'],
-                        colorbar=dict(
-                            title='Utility'
-                        ),
-                        colorscale='Plasma'
-                    ),
-                    customdata=plot_df['Row number'],
-                    # Add light gray error bars for both dimensions
-                    error_x=dict(
-                        type='data',
-                        array=cls._select_error_if_available(x, uncertainties, plot_df),
-                        color='lightgray',
-                        thickness=1,
-                    ),
-                    error_y=dict(
-                        type='data',
-                        array=cls._select_error_if_available(y, uncertainties, plot_df),
-                        color='lightgray',
-                        thickness=1,
-                    ),
-                    # Format tooltips for all cases rounding the displayed values to two decimal places.
-                    hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}',
-                    # Make hover label have a black background
-                    hoverlabel=dict(bgcolor='black'),
-                    # Remove default name 'trace0', 'trace1', ...
-                    name=''
+                scatter_plot = cls._create_scatter_plot(
+                    plot_df[x],
+                    plot_df[y],
+                    plot_df['Utility'],
+                    plot_df['Row number'],
+                    cls._select_error_if_available(x, uncertainties, plot_df),
+                    cls._select_error_if_available(y, uncertainties, plot_df)
                 )
                 if row == matrix_size:
                     # If on the bottom edge of the matrix
@@ -145,3 +114,39 @@ class PlotGenerator:
     def _select_error_if_available(cls, column_name, uncertainties, df):
         error_column_name = f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'
         return df[error_column_name] if error_column_name in uncertainties else None
+
+    @classmethod
+    def _create_scatter_plot(cls, x, y, color=None, customdata=None, error_x=None, error_y=None):
+        return go.Scatter(
+            x=x,
+            y=y,
+            mode='markers',
+            marker=dict(
+                size=7,
+                color=color,
+                colorbar=dict(
+                    title='Utility'
+                ),
+                colorscale='Plasma'
+            ),
+            customdata=customdata,
+            # Add light gray error bars for both dimensions
+            error_x=dict(
+                type='data',
+                array=error_x,
+                color='lightgray',
+                thickness=1,
+            ),
+            error_y=dict(
+                type='data',
+                array=error_y,
+                color='lightgray',
+                thickness=1,
+            ),
+            # Format tooltips for all cases rounding the displayed values to two decimal places.
+            hovertemplate='Row number: %{customdata}, X: %{x:.2f}, Y: %{y:.2f}, Utility: %{marker.color:.2f}',
+            # Make hover label have a black background
+            hoverlabel=dict(bgcolor='black'),
+            # Remove default name 'trace0', 'trace1', ...
+            name=''
+        )
