@@ -45,8 +45,7 @@ class PlotGenerator:
             fig.update_layout(title='Scatter matrix of target properties', showlegend=False)
 
             # Generate possible indices for the lower-triangle of the (n-1) x (n-1) matrix
-            # Iterate column-wise instead of row-wise
-            col_indices, row_indices = np.triu_indices(n=matrix_size, k=0)
+            row_indices, col_indices = np.tril_indices(n=matrix_size, k=0)
             # Increment all indices by one (numpy array operator overload)
             # because the first cell in the subplots is (1, 1)
             row_indices += 1
