@@ -1,4 +1,3 @@
-import pandas as pd
 from pandas import DataFrame, Index
 from dataclasses import dataclass, field
 
@@ -14,7 +13,7 @@ class ExperimentData:
     # TODO (Future -> Jira) Turn filter apriori into part of (no)label_index
     # TODO (Future -> Jira) Decided if NaN should drop rows or columns. Currently drops columns
     #  -> would simply be exp.dataframe.dropna(inplace=True, subset=exp.feature_names)
-    #
+    # TODO categorical data
     orig_data: DataFrame = None
     dataframe: DataFrame = None
     model: str = None

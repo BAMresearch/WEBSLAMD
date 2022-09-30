@@ -67,12 +67,8 @@ class ExperimentConductor:
 
         normed_prediction, normed_uncertainty = cls._process_predictions(exp)
 
-        # Normalize feature data
-        # TODO Discuss this function
-        cls._normalize_data(exp)
-
         # Apply weights to apriori values
-        weighted_apriori_values_for_predicted_rows = cls._apply_weights_and_maxmin_to_apriori_values(exp)
+        weighted_apriori_values_for_predicted_rows = cls._process_apriori(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
@@ -109,9 +105,39 @@ class ExperimentConductor:
         return normed_prediction, normed_uncertainty
 
     @classmethod
+    def _process_apriori(cls, exp):
+        # Norm, weigh and if necessary invert apriori columns for utility calculation
+
+        if len(exp.apriori_names) == 0:
+            return 0
+
+        # Norm - use 1 as standard deviation instead of 0 to avoid division by 0
+        normed_apriori_df = exp.apriori_df.copy()
+        apriori_std = normed_apriori_df.std().replace(0, 1)
+        apriori_mean = normed_apriori_df.mean()
+        normed_apriori_df = (normed_apriori_df - apriori_mean) / apriori_std
+
+        apriori_for_predicted_rows = normed_apriori_df.loc[exp.nolabel_index]
+
+        # Weigh and invert
+        for (col, weight, maxmin) in zip(exp.apriori_df.columns, exp.apriori_weights, exp.apriori_max_or_min):
+            if maxmin == 'min':
+                apriori_for_predicted_rows[col] *= weight * (-1)
+            else:
+                apriori_for_predicted_rows[col] *= weight
+
+        return apriori_for_predicted_rows.sum(axis=1)
+
+    @classmethod
     def _calculate_novelty(cls, exp):
-        features_of_predicted_rows = exp.features_df.loc[exp.nolabel_index]
-        features_of_known_rows = exp.features_df.loc[exp.label_index]
+        # Normalize first
+        norm_features_df = exp.features_df.copy()
+        features_std = norm_features_df.std().replace(0, 1)
+        features_mean = norm_features_df.mean()
+        norm_features_df = (norm_features_df - features_mean) / features_std
+
+        features_of_predicted_rows = norm_features_df.loc[exp.nolabel_index]
+        features_of_known_rows = norm_features_df.loc[exp.label_index]
 
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
@@ -137,28 +163,3 @@ class ExperimentConductor:
                 clipped_prediction[target].clip(upper=threshold, inplace=True)
 
         return clipped_prediction
-
-    @classmethod
-    def _normalize_data(cls, exp):
-        # TODO What about categoricals? => double check => jira ticket
-        # replace 0s with 1s for division
-        # print()
-        # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
-        std = exp.dataframe.std().replace(0, 1)
-        exp.dataframe = (exp.dataframe - exp.dataframe.mean()) / std
-        # print(exp.dataframe[sorted(list(exp.dataframe.columns))].to_string())
-
-    @classmethod
-    def _apply_weights_and_maxmin_to_apriori_values(cls, exp):
-        if len(exp.apriori_names) == 0:
-            return 0
-
-        apriori_for_predicted_rows = exp.apriori_df.loc[exp.nolabel_index].copy()
-
-        for (col, weight, maxmin) in zip(exp.apriori_df.columns, exp.apriori_weights, exp.apriori_max_or_min):
-            if maxmin == 'min':
-                apriori_for_predicted_rows[col] *= weight * (-1)
-            else:
-                apriori_for_predicted_rows[col] *= weight
-
-        return apriori_for_predicted_rows.sum(axis=1)
