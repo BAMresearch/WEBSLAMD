@@ -52,13 +52,14 @@ class ExperimentPostprocessor:
         df = df.sort_values(by='Utility', ascending=False)
         df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
         cols_to_move = ['Utility', 'Novelty'] + exp.target_names
-        cols_to_move += [f'Uncertainty ({target})' for target in exp.target_names] + \
-                        exp.apriori_names
+        cols_to_move += [f'Uncertainty ({target})' for target in exp.target_names] + exp.apriori_names
+
         return cls.move_after_row_column(df, cols_to_move)
 
     @classmethod
     def plot_output_space(cls, df, exp):
         columns_for_plot = exp.target_names.copy()
+        columns_for_plot.extend([f'Uncertainty ({target})' for target in exp.target_names])
         columns_for_plot.extend(['Utility', 'Row number'])
         if len(exp.apriori_names) > 0:
             columns_for_plot.extend(exp.apriori_names)
