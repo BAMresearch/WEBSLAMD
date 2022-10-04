@@ -3,14 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass
 class ExperimentData:
-    # Do:
-    # TODO Unit tests for validate_experiment?
-
-    # Discuss:
-    # TODO categorical data in novelty calculatoin
-
-    # Jira:
-    # TODO (Future -> Jira) Better unit tests for run experiment
     orig_data: DataFrame = None
     dataframe: DataFrame = None
     model: str = None
