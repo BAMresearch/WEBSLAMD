@@ -14,8 +14,9 @@ class PlotGenerator:
 
     @classmethod
     def create_target_scatter_plot(cls, plot_df):
-        dimensions = list(filter(lambda col: col != 'Utility' and col !=
-                          'Row number' and not col.startswith(UNCERTAINTY_COLUMN_PREFIX), plot_df.columns))
+        dimensions = [col for col in plot_df.columns if not col.startswith(UNCERTAINTY_COLUMN_PREFIX)]
+        dimensions.remove('Utility')
+        dimensions.remove('Row number')
 
         if len(dimensions) == 1:
             # Generate a simple scatter plot if there is only one target property.
