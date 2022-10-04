@@ -31,6 +31,10 @@ class CsvStrategy:
         except:
             raise ValueNotSupportedException('The dataset you submitted could not be read.')
 
+        for col in dataset.dataframe.columsn:
+            # errors='ignore' => If no numeric columns can not be converted, they are returned without conversion
+            dataset.dataframe[col] = dataset.dataframe[col].to_numeric(errors='ignore')
+
         return dataset
 
     @classmethod
