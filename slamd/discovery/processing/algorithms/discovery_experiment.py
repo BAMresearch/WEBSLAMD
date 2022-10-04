@@ -136,10 +136,6 @@ class DiscoveryExperiment:
         return self.move_after_row_column(df, cols_to_move)
 
     def plot_output_space(self, df):
-        # We need to copy the entire dataframe because we will modify the uncertainty columns.
-        df = df.copy()
-        for target in self.targets:
-            df[f'Uncertainty ({target})'] /= 2
         columns_for_plot = self.targets.copy()
         columns_for_plot.extend([f'Uncertainty ({target})' for target in self.targets])
         columns_for_plot.extend(['Utility', 'Row number'])

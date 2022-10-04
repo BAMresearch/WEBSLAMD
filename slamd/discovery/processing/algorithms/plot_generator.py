@@ -26,8 +26,7 @@ class PlotGenerator:
                 y=plot_df['Utility'],
                 color=plot_df['Utility'],
                 customdata=plot_df['Row number'],
-                # Get error column if available, otherwise return None
-                error_x=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{dimensions[0]})')
+                error_x=cls._select_error_col_if_available(plot_df, dimensions[0])
             )
             fig.add_trace(scatter_plot)
             fig.update_layout(title='Scatter plot of target properties')
@@ -58,9 +57,8 @@ class PlotGenerator:
                     y=plot_df[row_name],
                     color=plot_df['Utility'],
                     customdata=plot_df['Row number'],
-                    # Get error columns if available, otherwise return None
-                    error_x=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'),
-                    error_y=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{row_name})')
+                    error_x=cls._select_error_col_if_available(plot_df, column_name),
+                    error_y=cls._select_error_col_if_available(plot_df, row_name),
                 )
                 if row == matrix_size:
                     # If on the bottom edge of the matrix
@@ -145,3 +143,13 @@ class PlotGenerator:
             # Remove default name 'trace0', 'trace1', ...
             name=''
         )
+
+    @classmethod
+    def _select_error_col_if_available(cls, plot_df, column_name=None):
+        """
+        Returns the error column corresponding to the string given divided by 2.
+        If the error column is not found, the function returns None.
+        Assumes the error columns contain uncertainties of the form (-std, +std).
+        """
+        error_column = plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})')
+        return error_column / 2 if error_column is not None else None
