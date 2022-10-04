@@ -176,9 +176,9 @@ def test_save_blended_materials_creates_two_powders_from_three_base_materials(mo
         if material_type == 'powder':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0':
+            if material.name == 'test blend 1-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-1':
+            if material.name == 'test blend 1-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -204,9 +204,9 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
         if material_type == 'aggregates':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0':
+            if material.name == 'test blend 1-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-1':
+            if material.name == 'test blend 1-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -232,9 +232,9 @@ def test_save_blended_materials_creates_two_liquids_from_three_base_materials(mo
         if material_type == 'liquid':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0':
+            if material.name == 'test blend 1-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-1':
+            if material.name == 'test blend 1-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
