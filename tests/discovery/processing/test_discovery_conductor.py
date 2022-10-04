@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from slamd.discovery.processing.algorithms.discovery_conductor import ExperimentConductor
+from slamd.discovery.processing.algorithms.experiment_conductor import ExperimentConductor
 from slamd.discovery.processing.models.experiment_data import ExperimentData
 
 

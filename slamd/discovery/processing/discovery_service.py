@@ -4,7 +4,7 @@ from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
-from slamd.discovery.processing.algorithms.discovery_conductor import ExperimentConductor
+from slamd.discovery.processing.algorithms.experiment_conductor import ExperimentConductor
 from slamd.discovery.processing.algorithms.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
