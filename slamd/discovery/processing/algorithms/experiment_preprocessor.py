@@ -1,4 +1,5 @@
-from slamd.common.error_handling import SequentialLearningException, ValueNotSupportedException
+from slamd.common.error_handling import SequentialLearningException, ValueNotSupportedException, \
+    SlamdUnprocessableEntityException
 from slamd.discovery.processing.models.model_type import ModelType
 
 
@@ -17,6 +18,15 @@ class ExperimentPreprocessor:
 
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
+
+        if not (len(exp.target_names) == len(exp.target_weights) == len(exp.target_thresholds) ==
+                len(exp.target_max_or_min)):
+            raise SlamdUnprocessableEntityException(message='Target names, weights, thresholds, and max_or_min '
+                                                            'parameters do not have the same length.')
+        elif not (len(exp.apriori_names) == len(exp.apriori_weights) == len(exp.apriori_thresholds) ==
+                  len(exp.apriori_max_or_min)):
+            raise SlamdUnprocessableEntityException(message='apriori names, weights, thresholds, and max_or_min '
+                                                            'parameters do not have the same length.')
 
         for value in exp.target_max_or_min + exp.apriori_max_or_min:
             if value not in ['min', 'max']:

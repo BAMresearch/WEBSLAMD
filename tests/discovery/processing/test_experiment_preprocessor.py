@@ -2,9 +2,112 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException, \
+    SlamdUnprocessableEntityException
 from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
 from slamd.discovery.processing.models.experiment_data import ExperimentData
+from slamd.discovery.processing.models.model_type import ModelType
+
+
+def create_valid_experimentdata():
+    """
+    Creates a valid ExperimentData object for ExperimentPreprocessor.validate_experiment() tests.
+    Do not use for other tests - the Dataframes are filled with dummy data.
+    """
+    feature_names = ['feature1', 'feature2', 'feature3']
+    target_names = ['target1', 'target2', 'target3']
+    apriori_names = ['apriori1', 'apriori2', 'apriori3']
+
+    df = pd.DataFrame(columns=feature_names + target_names + apriori_names)
+
+    for col in feature_names+apriori_names:
+        df[col] = np.arange(10)
+
+    df.loc[1, target_names] = [1, 2, 3]
+    df.loc[4, target_names] = [4, 5, 6]
+    df.loc[5, target_names] = [6, 7, 8]
+
+    return ExperimentData(
+        dataframe=df,
+        model=str(ModelType.GAUSSIAN_PROCESS.value),
+        curiosity=2,
+
+        target_names=target_names,
+        target_weights=[1, 2, 1],
+        target_thresholds=[None, 5, 6],
+        target_max_or_min=['max', 'max', 'min'],
+
+        apriori_names=apriori_names,
+        apriori_weights=[1, 2, 1],
+        apriori_thresholds=[None, 5, 6],
+        apriori_max_or_min=['max', 'max', 'min'],
+
+        feature_names=feature_names
+    )
+
+
+def test_validate_experiment_valid():
+    exp = create_valid_experimentdata()
+    ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_invalid_model():
+    exp = create_valid_experimentdata()
+    exp.model = 'Invalid model name'
+
+    with pytest.raises(ValueNotSupportedException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_length_mismatch():
+    exp = create_valid_experimentdata()
+    exp.target_weights = exp.target_weights[:-1]
+
+    with pytest.raises(SlamdUnprocessableEntityException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_invalid_maxmin():
+    exp = create_valid_experimentdata()
+    exp.target_max_or_min[0] = 'Invalid value'
+
+    with pytest.raises(SequentialLearningException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_no_targets():
+    exp = create_valid_experimentdata()
+    exp.target_names = []
+    exp.target_weights = []
+    exp.target_max_or_min = []
+
+    with pytest.raises(SequentialLearningException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_partial_labels():
+    exp = create_valid_experimentdata()
+    exp.dataframe.loc[1, 'target1'] = np.nan
+
+    with pytest.raises(SequentialLearningException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_no_labels_gauss():
+    exp = create_valid_experimentdata()
+    exp.dataframe.loc[:, ['target1', 'target2', 'target3']] = np.nan
+
+    with pytest.raises(ValueNotSupportedException):
+        ExperimentPreprocessor.validate_experiment(exp)
+
+
+def test_validate_experiment_no_labels_forest():
+    exp = create_valid_experimentdata()
+    exp.dataframe.loc[[4, 5], ['target1', 'target2', 'target3']] = np.nan
+    exp.model = str(ModelType.RANDOM_FOREST.value)
+
+    with pytest.raises(ValueNotSupportedException):
+        ExperimentPreprocessor.validate_experiment(exp)
 
 
 def test_filter_apriori_thresholds():
