@@ -137,6 +137,7 @@ class DiscoveryExperiment:
 
     def plot_output_space(self, df):
         columns_for_plot = self.targets.copy()
+        columns_for_plot.extend([f'Uncertainty ({target})' for target in self.targets])
         columns_for_plot.extend(['Utility', 'Row number'])
         if len(self.apriori_columns) > 0:
             columns_for_plot.extend(self.apriori_columns)
