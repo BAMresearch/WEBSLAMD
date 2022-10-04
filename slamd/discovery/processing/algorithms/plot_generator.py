@@ -22,12 +22,12 @@ class PlotGenerator:
             # We include the Utility color-coded for aesthetic reasons.
             fig = go.Figure()
             scatter_plot = cls._create_scatter_plot(
-                plot_df[dimensions[0]],
-                plot_df['Utility'],
-                plot_df['Utility'],
-                plot_df['Row number'],
+                x=plot_df[dimensions[0]],
+                y=plot_df['Utility'],
+                color=plot_df['Utility'],
+                customdata=plot_df['Row number'],
                 # Get error column if available, otherwise return None
-                plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{dimensions[0]})')
+                error_x=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{dimensions[0]})')
             )
             fig.add_trace(scatter_plot)
             fig.update_layout(title='Scatter plot of target properties')
@@ -54,13 +54,13 @@ class PlotGenerator:
                 column_name = dimensions[col - 1]
                 row_name = dimensions[row]
                 scatter_plot = cls._create_scatter_plot(
-                    plot_df[column_name],
-                    plot_df[row_name],
-                    plot_df['Utility'],
-                    plot_df['Row number'],
+                    x=plot_df[column_name],
+                    y=plot_df[row_name],
+                    color=plot_df['Utility'],
+                    customdata=plot_df['Row number'],
                     # Get error columns if available, otherwise return None
-                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'),
-                    plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{row_name})')
+                    error_x=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})'),
+                    error_y=plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{row_name})')
                 )
                 if row == matrix_size:
                     # If on the bottom edge of the matrix
@@ -110,7 +110,7 @@ class PlotGenerator:
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod
-    def _create_scatter_plot(cls, x, y, color=None, customdata=None, error_x=None, error_y=None):
+    def _create_scatter_plot(cls, x=None, y=None, color=None, customdata=None, error_x=None, error_y=None):
         return go.Scatter(
             x=x,
             y=y,
