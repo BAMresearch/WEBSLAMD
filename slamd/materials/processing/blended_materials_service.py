@@ -113,7 +113,7 @@ class BlendedMaterialsService(MaterialsService):
                 raise ValueNotSupportedException('Ratios cannot be matched with base materials!')
 
             material_name = submitted_blending_configuration['blended_material_name']
-            blended_material = strategy.create_blended_material(i, material_name, ratio_list, base_materials_as_dict)
+            blended_material = strategy.create_blended_material(RatioParser.ratio_list_to_ratio_string(ratio_list), material_name, ratio_list, base_materials_as_dict)
             strategy.save_model(blended_material)
 
     @classmethod
