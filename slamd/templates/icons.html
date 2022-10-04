@@ -62,6 +62,11 @@
     class="rounded-circle me-2">
 {% endmacro %}
 
+{% macro iteratec_icon(width, height) -%}
+<img src="{{ url_for('static', filename='iteratec_logo.png') }}" alt="iteratec logo" width="{{width}}"
+    height="{{height}}">
+{% endmacro %}
+
 {% macro book_icon(width, height, color) -%}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{width}}" height="{{height}}" fill="{{color}}" class="bi bi-book"
     viewBox="0 0 16 16">
