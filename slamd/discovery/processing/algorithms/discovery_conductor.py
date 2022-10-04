@@ -65,15 +65,13 @@ class ExperimentConductor:
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
 
-        normed_prediction, normed_uncertainty = cls._process_predictions(exp)
-
-        # Apply weights to apriori values
-        weighted_apriori_values_for_predicted_rows = cls._process_apriori(exp)
+        prediction_for_utility, uncertainty_for_utility = cls._process_predictions(exp)
+        apriori_for_utility = cls._process_apriori(exp)
 
         # Compute the value of the utility function
         # See slide 43 of the PowerPoint presentation
-        exp.utility = weighted_apriori_values_for_predicted_rows + normed_prediction.sum(axis=1) + \
-                      exp.curiosity * normed_uncertainty.sum(axis=1)
+        exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
+                      exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
     @classmethod
     def _process_predictions(cls, exp):
@@ -82,9 +80,6 @@ class ExperimentConductor:
 
         # Clip
         clipped_prediction = cls.clip_prediction(exp)
-
-        # Sanity check TODO keep?
-        assert all([x == y for x, y in zip(clipped_prediction, exp.target_names)])
 
         # Norm - use 1 as standard deviation instead of 0 to avoid division by 0 (unlikely)
         labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)

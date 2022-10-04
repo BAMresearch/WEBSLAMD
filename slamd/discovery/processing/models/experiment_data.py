@@ -3,17 +3,14 @@ from dataclasses import dataclass, field
 
 @dataclass
 class ExperimentData:
-    # TODO Figure out if orig_data should contain dropped apriori or not. It currently *does*.
+    # Do:
     # TODO Unit tests for validate_experiment?
+
+    # Discuss:
+    # TODO categorical data in novelty calculatoin
+
+    # Jira:
     # TODO (Future -> Jira) Better unit tests for run experiment
-    # TODO (Future -> Jira) Think of more sensible errors we could throw
-    # TODO (Future -> Jira) Should maxmin be converted to -1, 1?
-    # TODO (Future -> Jira) Make calculation of nolabel index more robust / already possible due to validation?
-    #  => Support partial labels
-    # TODO (Future -> Jira) Turn filter apriori into part of (no)label_index
-    # TODO (Future -> Jira) Decided if NaN should drop rows or columns. Currently drops columns
-    #  -> would simply be exp.dataframe.dropna(inplace=True, subset=exp.feature_names)
-    # TODO categorical data
     orig_data: DataFrame = None
     dataframe: DataFrame = None
     model: str = None
