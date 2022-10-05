@@ -141,7 +141,7 @@ class MaterialStrategy(ABC):
                 'additional_properties' in k and label in k]
 
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_materials_as_dict):
+    def create_blended_material(cls, name, normalized_ratios, base_materials_as_dict):
         pass
 
     @classmethod

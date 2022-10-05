@@ -122,5 +122,4 @@ You may then run each specs file separately and see the tests in action.
 
 ## 3. Documentation (Optional) <a name="documentation"></a>
 
-Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku
-It explains details about the code as well as the usage of the app.
+Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku. It explains details about the code as well as the usage of the app.
