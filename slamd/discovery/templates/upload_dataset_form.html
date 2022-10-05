@@ -13,9 +13,9 @@
     <div class="col-12 mb-3 rounded align-self-center" role="tooltip">
         <h3 class="explanation-header">CSV formatting</h3>
         <div class="explanation-body">
-            The column separator of the CSV file is automatically detected. It is recommended that you use ",".
-            If you want to use "," as decimal point instead you <b>must</b> use ";" as column separator.
-            Otherwise the decimal point character is assumed to be ".".
+            The column separator of the CSV file is automatically detected. You must use either "," or ";".
+            If you use "," as column separator you must use "." as decimal point. If you use ";" as
+            column separator you must use "," as decimal point.
         </div>
     </div>
     {{ show_form_field_errors(upload_dataset_form.dataset) }}

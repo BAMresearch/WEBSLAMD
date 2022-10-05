@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 from pandas import read_csv
 from werkzeug.utils import secure_filename
 from csv import Sniffer
@@ -7,6 +9,9 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
 
+
+NAN_PLACEHOLDERS = ('#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>',
+                    'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null')
 
 class CsvStrategy:
 
@@ -18,18 +23,39 @@ class CsvStrategy:
         # Generate a safe filename for the new dataset
         file_name = secure_filename(file_data.filename)
 
-        delimiter = cls._determine_delimiter(file_data)
-        decimal = '.'
-        if delimiter == ';':
-            decimal = ','
-
         if file_name == 'temporary.csv':
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
         try:
-            dataset = Dataset(name=file_name, dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal))
+            delimiter = cls._determine_delimiter(file_data)
         except:
-            raise ValueNotSupportedException('The dataset you submitted could not be read.')
+            raise SlamdUnprocessableEntityException(message='Could not determine delimiter of given CSV file.')
+
+        if delimiter == ',':
+            decimal = '.'
+        elif delimiter == ';':
+            decimal = ','
+        else:
+            raise ValueNotSupportedException(message=f'Invalid column separator in CSV file: "{delimiter}. '
+                                                     f'Please make sure to use "," as column separator and "." '
+                                                     f'as decimal point, or ";" as column separator and "," as '
+                                                     f'decimal point.')
+
+        try:
+            dataset = Dataset(
+                name=file_name,
+                dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal, on_bad_lines='error')
+            )
+        except:
+            raise ValueNotSupportedException('The dataset you submitted could not be read. Please check that the '
+                                             'CSV file is formatted correctly.')
+
+        for col in dataset.dataframe.select_dtypes(exclude=np.number).columns:
+            dataset.dataframe[col] = dataset.dataframe[col].str.strip()
+            dataset.dataframe[col] = dataset.dataframe[col].replace(NAN_PLACEHOLDERS, np.nan)
+
+            # errors='ignore' => If non-numeric columns can not be converted, they are returned without conversion
+            dataset.dataframe[col] = pd.to_numeric(dataset.dataframe[col], errors='ignore')
 
         return dataset
 

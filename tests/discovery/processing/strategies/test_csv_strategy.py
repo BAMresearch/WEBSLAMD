@@ -37,12 +37,25 @@ def test_create_dataset_filename_error(monkeypatch):
 
 def test_create_dataset_parsing_error(monkeypatch):
     headers = 'column1,column2,column3\n'
-    content = '1,2,3\n,6\n7,'
+    content = '1,2,3\n,6\n7,,,,'
     stream = BytesIO(bytes(headers + content, 'utf-8'))
-    file_data = FileStorage(filename='temporary.csv', stream=stream)
+    file_data = FileStorage(filename='TestDataset.csv', stream=stream)
 
-    with pytest.raises(ValueNotSupportedException):
+    with pytest.raises(SlamdUnprocessableEntityException):
         CsvStrategy.create_dataset(file_data)
+
+
+def test_create_dataset_string_parsing():
+    headers = 'column1,column2,column3\n'
+    content = '"1","2",3\n"4","5",6\n"7","b",9'
+    stream = BytesIO(bytes(headers + content, 'utf-8'))
+    file_data = FileStorage(filename='TestDataset.csv', stream=stream)
+
+    dataset = CsvStrategy.create_dataset(file_data)
+
+    assert dataset.dataframe['column1'].tolist() == [1, 4, 7]
+    assert dataset.dataframe['column2'].tolist() == ['2', '5', 'b']
+    assert dataset.dataframe['column3'].tolist() == [3, 6, 9]
 
 
 def test_save_dataset_calls_discovery_persistence(monkeypatch):
