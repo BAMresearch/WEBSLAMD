@@ -5,6 +5,7 @@ from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
 
 
 class ExperimentPostprocessor:
+
     @classmethod
     def postprocess(cls, exp):
         # Construct dataframe for output
@@ -84,13 +85,3 @@ class ExperimentPostprocessor:
         plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
 
         return PlotGenerator.create_tsne_input_space_plot(plot_df)
-
-
-
-
-
-
-
-
-
-

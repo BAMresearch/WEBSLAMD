@@ -25,7 +25,7 @@ class ExperimentPreprocessor:
                                                             'parameters do not have the same length.')
         elif not (len(exp.apriori_names) == len(exp.apriori_weights) == len(exp.apriori_thresholds) ==
                   len(exp.apriori_max_or_min)):
-            raise SlamdUnprocessableEntityException(message='apriori names, weights, thresholds, and max_or_min '
+            raise SlamdUnprocessableEntityException(message='Apriori names, weights, thresholds, and max_or_min '
                                                             'parameters do not have the same length.')
 
         for value in exp.target_max_or_min + exp.apriori_max_or_min:

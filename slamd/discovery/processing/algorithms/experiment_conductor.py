@@ -34,7 +34,7 @@ class ExperimentConductor:
         if exp.model == ModelType.RANDOM_FOREST.value:
             regressor = SlamdRandomForest()
         elif exp.model == ModelType.GAUSSIAN_PROCESS.value:
-            # Hyperparameters from Christoph
+            # Hyperparameters from previous implementation of the app (jupyter notebook)
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
         else:
@@ -68,8 +68,13 @@ class ExperimentConductor:
         prediction_for_utility, uncertainty_for_utility = cls._process_predictions(exp)
         apriori_for_utility = cls._process_apriori(exp)
 
-        # Compute the value of the utility function
-        # See slide 43 of the PowerPoint presentation
+        # The utility is a measure of "interest" in a given datapoint
+        # It is given by
+        # - The sum of properties that are to be maximized
+        # - The sum of the negative of properties that are to be minimized
+        # - The sum of uncertainties weighted by the curiosity - allowing the user to focus on datapoints that are
+        #   uncertain in order to maximize information gain (explore) or ignore uncertain points altogether to focus
+        #   on safe predictions (exploit)
         exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
                       exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
