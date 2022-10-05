@@ -19,7 +19,11 @@ class CsvStrategy:
         # Generate a safe filename for the new dataset
         file_name = secure_filename(file_data.filename)
 
-        delimiter = cls._determine_delimiter(file_data)
+        try:
+            delimiter = cls._determine_delimiter(file_data)
+        except:
+            raise SlamdUnprocessableEntityException(message='Could not parse the given CSV file.')
+
         decimal = '.'
         if delimiter == ';':
             decimal = ','
@@ -28,13 +32,15 @@ class CsvStrategy:
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
         try:
-            dataset = Dataset(name=file_name, dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal))
+            dataset = Dataset(
+                name=file_name,
+                dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal, on_bad_lines='error')
+            )
         except:
             raise ValueNotSupportedException('The dataset you submitted could not be read.')
 
-        # TODO write some positive tests for this new line
         for col in dataset.dataframe.columns:
-            # errors='ignore' => If no numeric columns can not be converted, they are returned without conversion
+            # errors='ignore' => If non-numeric columns can not be converted, they are returned without conversion
             dataset.dataframe[col] = pd.to_numeric(dataset.dataframe[col], errors='ignore')
 
         return dataset
