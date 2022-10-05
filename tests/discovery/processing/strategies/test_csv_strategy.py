@@ -42,7 +42,7 @@ def test_create_dataset_parsing_error(monkeypatch):
     file_data = FileStorage(filename='TestDataset.csv', stream=stream)
 
     with pytest.raises(SlamdUnprocessableEntityException):
-        test=CsvStrategy.create_dataset(file_data)
+        CsvStrategy.create_dataset(file_data)
 
 
 def test_create_dataset_string_parsing():
