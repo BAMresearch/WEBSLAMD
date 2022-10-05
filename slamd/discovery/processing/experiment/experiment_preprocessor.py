@@ -50,8 +50,8 @@ class ExperimentPreprocessor:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Gaussian Process Regressor '
                             f'requires at least 1 labelled value, but none were found. '
-                            f'Please ensure that there is at least 1 data points that is not filtered out '
-                            f'by the apriori thresholds.'
+                            f'Please ensure that there is at least 1 data point that is not filtered out '
+                            f'by the a priori information thresholds.'
                 )
             elif count == len(exp.targets_df.index):
                 raise SequentialLearningException(message=f'All data is already labelled for target {target}.')

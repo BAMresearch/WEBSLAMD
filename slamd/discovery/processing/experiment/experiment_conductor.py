@@ -38,7 +38,9 @@ class ExperimentConductor:
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
         else:
-            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
+            raise ValueNotSupportedException(message=f'Invalid model in _fit_model_and_predict ({exp.model}). '
+                                                     f'This error should never occur. If you are seeing this, '
+                                                     f'contact a developer.')
 
         predictions = {}
         uncertainties = {}
@@ -62,19 +64,21 @@ class ExperimentConductor:
 
     @classmethod
     def _calculate_utility(cls, exp):
+        """
+        The utility is a measure of "interest" in a given datapoint
+        It is given by
+        - The sum of properties that are to be maximized
+        - The sum of the negative of properties that are to be minimized
+        - The sum of uncertainties weighted by the curiosity - allowing the user to focus on datapoints that are
+          uncertain in order to maximize information gain (explore) or ignore uncertain points altogether to focus
+          on safe predictions (exploit)
+        """
         # The strategy is always 'MLI (explore & exploit)' for this implementation
         # See the original app for other possibilities
 
         prediction_for_utility, uncertainty_for_utility = cls._process_predictions(exp)
         apriori_for_utility = cls._process_apriori(exp)
 
-        # The utility is a measure of "interest" in a given datapoint
-        # It is given by
-        # - The sum of properties that are to be maximized
-        # - The sum of the negative of properties that are to be minimized
-        # - The sum of uncertainties weighted by the curiosity - allowing the user to focus on datapoints that are
-        #   uncertain in order to maximize information gain (explore) or ignore uncertain points altogether to focus
-        #   on safe predictions (exploit)
         exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
                       exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
@@ -109,6 +113,7 @@ class ExperimentConductor:
         # Norm, weigh and if necessary invert apriori columns for utility calculation
 
         if len(exp.apriori_names) == 0:
+            # Return plain 0 instead of array - numpy broadcasting will take care of it
             return 0
 
         # Norm - use 1 as standard deviation instead of 0 to avoid division by 0
@@ -145,7 +150,7 @@ class ExperimentConductor:
         min_distances = distance.min(axis=1)
         max_of_min_distances = min_distances.max()
 
-        novelty_as_array = min_distances * (max_of_min_distances ** (-1))
+        novelty_as_array = min_distances * (1 / max_of_min_distances)
 
         exp.novelty = pd.DataFrame(
             {'Novelty': novelty_as_array},
@@ -161,7 +166,7 @@ class ExperimentConductor:
 
             if max_or_min == 'min':
                 clipped_prediction[target].clip(lower=threshold, inplace=True)
-            elif max_or_min == 'max':
+            else:
                 clipped_prediction[target].clip(upper=threshold, inplace=True)
 
         return clipped_prediction
