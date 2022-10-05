@@ -3,6 +3,7 @@ from itertools import product
 from datetime import datetime
 
 from werkzeug.utils import secure_filename
+from wtforms import DecimalField
 
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
@@ -79,6 +80,10 @@ class FormulationsService:
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
 
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Δw_Z'
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'min(w_Z)'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'max(w_Z)'
+
         if len(admixture_names):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
                                            'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
@@ -89,6 +94,10 @@ class FormulationsService:
 
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                        'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
+
+        # TODO what about the html ids/tags?
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Max (kg)'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Min (kg)'
 
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
@@ -127,6 +136,7 @@ class FormulationsService:
             raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
             full_cartesian_product = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
+
         if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
