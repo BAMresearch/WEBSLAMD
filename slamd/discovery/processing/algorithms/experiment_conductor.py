@@ -45,7 +45,7 @@ class ExperimentConductor:
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
             training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.label_index, target].values
+            training_labels = exp.targets_df.loc[exp.label_index, target].values.reshape(-1, 1)
 
             regressor.fit(training_rows, training_labels)
 
