@@ -26,12 +26,6 @@ class CsvStrategy:
         if file_name == 'temporary.csv':
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
 
-        # TODO replace parsing with cases
-        # sep , , dec .
-        # else sep ; dec ,
-        # then trim whitespace
-        # then convert to numeric and replace nan (see read csv)
-
         try:
             delimiter = cls._determine_delimiter(file_data)
         except:
