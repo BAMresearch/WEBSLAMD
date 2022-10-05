@@ -112,8 +112,10 @@ class BlendedMaterialsService(MaterialsService):
             if len(ratio_list) != len(base_materials_as_dict):
                 raise ValueNotSupportedException('Ratios cannot be matched with base materials!')
 
-            material_name = submitted_blending_configuration['blended_material_name']
-            blended_material = strategy.create_blended_material(i, material_name, ratio_list, base_materials_as_dict)
+            blend_name = submitted_blending_configuration['blended_material_name']
+            blended_material_name = f'{blend_name}-{RatioParser.ratio_list_to_ratio_string(ratio_list)}'
+            blended_material = strategy.create_blended_material(blended_material_name, ratio_list,
+                                                                base_materials_as_dict)
             strategy.save_model(blended_material)
 
     @classmethod
