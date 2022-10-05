@@ -24,7 +24,7 @@ class UserInput:
     # Thresholds for target properties
     target_thresholds: list[float | None] = field(default_factory=lambda: [None])
     # Select for each target property if it should be maximized or minimized
-    target_max_or_min: list[str] = field(default_factory=lambda: ['maximize'])
+    target_max_or_min: list[str] = field(default_factory=lambda: ['max'])
     # A Priori Information
     apriori_columns: list[str] = field(default_factory=lambda: ['CO2 (kg/t) - A-priori Information'])
     # Weights for every fixed target property
@@ -32,4 +32,4 @@ class UserInput:
     # Thresholds for apriori properties
     apriori_thresholds: list[float | None] = field(default_factory=lambda: [None])
     # Select for each fixed target property if it should be maximized or minimized
-    apriori_max_or_min: list[str] = field(default_factory=lambda: ['minimize'])
+    apriori_max_or_min: list[str] = field(default_factory=lambda: ['min'])
