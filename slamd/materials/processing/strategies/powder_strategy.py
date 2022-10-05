@@ -72,14 +72,14 @@ class PowderStrategy(MaterialStrategy):
         return multidict
 
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
+    def create_blended_material(cls, name, normalized_ratios, base_powders_as_dict):
         costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = cls._compute_blended_structure(normalized_ratios, base_powders_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
 
         return Powder(type=base_powders_as_dict[0]['type'],
-                      name=f'{blended_material_name}-{idx}',
+                      name=name,
                       costs=costs,
                       composition=composition,
                       structure=structure,

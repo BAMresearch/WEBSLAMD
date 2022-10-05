@@ -22,12 +22,12 @@ class AdmixtureStrategy(MaterialStrategy):
         return costs_complete and additional_properties_complete
 
     @classmethod
-    def create_blended_material(cls, idx, blended_material_name, normalized_ratios, base_powders_as_dict):
-        costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
-        additional_properties = cls.compute_additional_properties(normalized_ratios, base_powders_as_dict)
+    def create_blended_material(cls, name, normalized_ratios, base_admixtures_as_dict):
+        costs = cls.compute_blended_costs(normalized_ratios, base_admixtures_as_dict)
+        additional_properties = cls.compute_additional_properties(normalized_ratios, base_admixtures_as_dict)
 
-        return Admixture(type=base_powders_as_dict[0]['type'],
-                         name=f'{blended_material_name}-{idx}',
+        return Admixture(type=base_admixtures_as_dict[0]['type'],
+                         name=name,
                          costs=costs,
                          additional_properties=additional_properties,
                          is_blended=True,
