@@ -6,7 +6,7 @@ from slamd.discovery.processing.models.model_type import ModelType
 class ExperimentPreprocessor:
     @classmethod
     def preprocess(cls, exp):
-        cls.filter_apriori_with_thresholds(exp)
+        cls.filter_apriori_with_thresholds_and_update_orig_data(exp)
         cls.filter_missing_inputs(exp)
         cls.validate_experiment(exp)
         cls.encode_categoricals(exp)
@@ -69,7 +69,7 @@ class ExperimentPreprocessor:
                 exp.dataframe.drop(col, axis=1, inplace=True)
 
     @classmethod
-    def filter_apriori_with_thresholds(cls, exp):
+    def filter_apriori_with_thresholds_and_update_orig_data(cls, exp):
         # In the future this function could be handled "live" and non-destructively in label_index and nolabel_index
         for (column, value, threshold) in zip(exp.apriori_names, exp.apriori_max_or_min, exp.apriori_thresholds):
             if threshold is None:
@@ -92,3 +92,4 @@ class ExperimentPreprocessor:
                 )
 
         exp.dataframe.reset_index(drop=True, inplace=True)
+        exp.orig_data = exp.dataframe.copy()

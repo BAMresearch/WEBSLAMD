@@ -120,7 +120,7 @@ def test_filter_apriori_thresholds():
     experiment = ExperimentData(dataframe=df, target_names=['x', 'y'], apriori_names=['u', 'v'],
                                 apriori_thresholds=[4, 5], apriori_max_or_min=['max', 'min'])
 
-    ExperimentPreprocessor.filter_apriori_with_thresholds(experiment)
+    ExperimentPreprocessor.filter_apriori_with_thresholds_and_update_orig_data(experiment)
     result = experiment.dataframe
 
     assert np.array_equal(result['u'].values, np.array([1, 4, 5, 7, 8]))
