@@ -38,9 +38,7 @@ class ExperimentConductor:
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
         else:
-            raise ValueNotSupportedException(message=f'Invalid model in _fit_model_and_predict ({exp.model}). '
-                                                     f'This error should never occur. If you are seeing this, '
-                                                     f'contact a developer.')
+            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         predictions = {}
         uncertainties = {}
