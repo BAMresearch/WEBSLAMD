@@ -119,12 +119,14 @@ class ExperimentConductor:
 
         apriori_for_predicted_rows = normed_apriori_df.loc[exp.nolabel_index]
 
-        # Weigh and invert
-        for (col, weight, maxmin) in zip(exp.apriori_df.columns, exp.apriori_weights, exp.apriori_max_or_min):
-            if maxmin == 'min':
-                apriori_for_predicted_rows[col] *= weight * (-1)
-            else:
-                apriori_for_predicted_rows[col] *= weight
+        # Invert
+        for (column, value) in zip(exp.apriori_names, exp.apriori_max_or_min):
+            if value == 'min':
+                apriori_for_predicted_rows[column] *= (-1)
+
+        # Weigh
+        for (col, weight) in zip(exp.apriori_df.columns, exp.apriori_weights):
+            apriori_for_predicted_rows[col] *= weight
 
         return apriori_for_predicted_rows.sum(axis=1)
 
