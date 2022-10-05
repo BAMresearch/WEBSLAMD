@@ -50,6 +50,8 @@ def test_validate_experiment_valid():
     exp = create_valid_experimentdata()
     ExperimentPreprocessor.validate_experiment(exp)
 
+    # If the experiment is valid and this point is reached, the test completes. No assert necessary.
+
 
 def test_validate_experiment_invalid_model():
     exp = create_valid_experimentdata()

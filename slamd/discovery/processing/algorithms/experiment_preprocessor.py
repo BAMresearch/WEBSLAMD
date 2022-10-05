@@ -4,6 +4,7 @@ from slamd.discovery.processing.models.model_type import ModelType
 
 
 class ExperimentPreprocessor:
+
     @classmethod
     def preprocess(cls, exp):
         cls.filter_apriori_with_thresholds_and_update_orig_data(exp)

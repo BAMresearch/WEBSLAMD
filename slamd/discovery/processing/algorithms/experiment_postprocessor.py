@@ -19,7 +19,7 @@ class ExperimentPostprocessor:
             df.loc[exp.nolabel_index, target] = exp.prediction[target].round(6)
             df[f'Uncertainty ({target})'] = exp.uncertainty[target].round(5)
 
-        df = cls.preprocess_dataframe_for_output_table(df, exp)
+        df = cls.process_dataframe_for_output_table(df, exp)
         scatter_plot = cls.plot_output_space(df, exp)
         tsne_plot = cls.plot_input_space(exp.utility, exp)
 
@@ -46,7 +46,7 @@ class ExperimentPostprocessor:
         return df[seg1 + seg2 + seg3]
 
     @classmethod
-    def preprocess_dataframe_for_output_table(cls, df, exp):
+    def process_dataframe_for_output_table(cls, df, exp):
         """
         - Sort by Utility in decreasing order
         - Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
