@@ -20,6 +20,12 @@ class CsvStrategy:
         # Generate a safe filename for the new dataset
         file_name = secure_filename(file_data.filename)
 
+        # TODO replace parsing with cases
+        # sep , , dec .
+        # else sep ; dec ,
+        # then trim whitespace
+        # then convert to numeric and replace nan (see read csv)
+
         try:
             delimiter = cls._determine_delimiter(file_data)
         except:
