@@ -60,12 +60,12 @@ describe("Test blending powders and blended material deletion", () => {
 
     // Check that the blended powders were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
-    cy.findByText("Example Blended Powder-0").should("exist");
-    cy.findByText("Example Blended Powder-1").should("exist");
-    cy.findByText("Example Blended Powder-2").should("exist");
-    cy.findByText("Example Blended Powder-3").should("exist");
-    cy.findByText("Example Blended Powder-4").should("exist");
-    cy.findByText("Example Blended Powder-5").should("exist");
+    cy.findByText("Example Blended Powder-0.0/1.0").should("exist");
+    cy.findByText("Example Blended Powder-0.2/0.8").should("exist");
+    cy.findByText("Example Blended Powder-0.4/0.6").should("exist");
+    cy.findByText("Example Blended Powder-0.6/0.4").should("exist");
+    cy.findByText("Example Blended Powder-0.8/0.2").should("exist");
+    cy.findByText("Example Blended Powder-1.0/0.0").should("exist");
 
     // Delete all blended powders one by one
     for (let i = 6; i > 0; --i) {
@@ -118,10 +118,10 @@ describe("Test blending liquids and property interpolation", () => {
 
     // Check that the blended liquids were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
-    cy.findByText("Example Blended Liquid-0").should("exist");
-    cy.findByText("Example Blended Liquid-1").should("exist");
-    cy.findByText("Example Blended Liquid-2").should("exist");
-    cy.findByText("Example Blended Liquid-3").should("exist");
+    cy.findByText("Example Blended Liquid-0.2/0.8").should("exist");
+    cy.findByText("Example Blended Liquid-0.4/0.6").should("exist");
+    cy.findByText("Example Blended Liquid-0.6/0.4").should("exist");
+    cy.findByText("Example Blended Liquid-0.8/0.2").should("exist");
 
     // Check that the properties for the first blended liquid were interpolated correctly
     cy.findByText("Na₂SiO₃ (m%): 6.0", { exact: false }).should("exist");
@@ -225,8 +225,8 @@ describe("Test blending aggregates and incomplete data", () => {
 
     // Check that the blended aggregates were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
-    cy.findByText("Example Blended Aggregates-0").should("exist");
-    cy.findByText("Example Blended Aggregates-1").should("exist");
+    cy.findByText("Example Blended Aggregates-0.2/0.8").should("exist");
+    cy.findByText("Example Blended Aggregates-0.6/0.4").should("exist");
 
     // Check that only the properties common to both base materials were interpolated
     cy.findByText("Costs (€/kg for materials, € for processes): 6.0", { exact: false }).should("exist");
@@ -283,10 +283,10 @@ describe("Test blending three custom materials with properties with negative val
 
     // Check that the blended custom materials were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
-    cy.findByText("Example Blended Custom-0").should("exist");
-    cy.findByText("Example Blended Custom-1").should("exist");
-    cy.findByText("Example Blended Custom-2").should("exist");
-    cy.findByText("Example Blended Custom-3").should("exist");
+    cy.findByText("Example Blended Custom-0.2/0.2/0.6").should("exist");
+    cy.findByText("Example Blended Custom-0.2/0.25/0.55").should("exist");
+    cy.findByText("Example Blended Custom-0.7/0.2/0.1").should("exist");
+    cy.findByText("Example Blended Custom-0.7/0.25/0.05").should("exist");
 
     // Check that the properties for the first blend were interpolated correctly
     cy.findByText("Costs (€/kg for materials, € for processes): 15.0", { exact: false }).should("exist");
@@ -359,10 +359,10 @@ describe("Test blending three admixtures with properties with negative values", 
 
     // Check that the blended admixtures were generated correctly
     cy.findByText("All blended materials").scrollIntoView();
-    cy.findByText("Example Blended Admixture-0").should("exist");
-    cy.findByText("Example Blended Admixture-1").should("exist");
-    cy.findByText("Example Blended Admixture-2").should("exist");
-    cy.findByText("Example Blended Admixture-3").should("exist");
+    cy.findByText("Example Blended Admixture-0.2/0.2/0.6").should("exist");
+    cy.findByText("Example Blended Admixture-0.2/0.25/0.55").should("exist");
+    cy.findByText("Example Blended Admixture-0.7/0.2/0.1").should("exist");
+    cy.findByText("Example Blended Admixture-0.7/0.25/0.05").should("exist");
 
     // Check that the properties for the first blend were interpolated correctly
     cy.findByText("Costs (€/kg for materials, € for processes): 15.0", { exact: false }).should("exist");
