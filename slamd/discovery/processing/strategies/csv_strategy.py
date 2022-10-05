@@ -1,3 +1,4 @@
+import pandas as pd
 from pandas import read_csv
 from werkzeug.utils import secure_filename
 from csv import Sniffer
@@ -31,9 +32,10 @@ class CsvStrategy:
         except:
             raise ValueNotSupportedException('The dataset you submitted could not be read.')
 
-        for col in dataset.dataframe.columsn:
+        # TODO write some positive tests for this new line
+        for col in dataset.dataframe.columns:
             # errors='ignore' => If no numeric columns can not be converted, they are returned without conversion
-            dataset.dataframe[col] = dataset.dataframe[col].to_numeric(errors='ignore')
+            dataset.dataframe[col] = pd.to_numeric(dataset.dataframe[col], errors='ignore')
 
         return dataset
 
