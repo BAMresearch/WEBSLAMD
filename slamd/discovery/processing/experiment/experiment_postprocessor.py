@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
+from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 
 
 class ExperimentPostprocessor:

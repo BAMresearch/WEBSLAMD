@@ -6,10 +6,10 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.discovery.processing.algorithms.experiment_postprocessor import ExperimentPostprocessor
-from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
-from slamd.discovery.processing.algorithms.slamd_random_forest import SlamdRandomForest
-from slamd.discovery.processing.models.model_type import ModelType
+from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
+from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
+from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
 
 
 # Attention - suppressing expected Gaussian Regressor warnings
@@ -31,9 +31,9 @@ class ExperimentConductor:
 
     @classmethod
     def _fit_model_and_predict(cls, exp):
-        if exp.model == ModelType.RANDOM_FOREST.value:
+        if exp.model == ExperimentModel.RANDOM_FOREST.value:
             regressor = SlamdRandomForest()
-        elif exp.model == ModelType.GAUSSIAN_PROCESS.value:
+        elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value:
             # Hyperparameters from previous implementation of the app (jupyter notebook)
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)

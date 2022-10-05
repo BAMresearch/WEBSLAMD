@@ -4,12 +4,12 @@ from werkzeug.datastructures import CombinedMultiDict
 
 from slamd.common.error_handling import DatasetNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
-from slamd.discovery.processing.algorithms.experiment_conductor import ExperimentConductor
-from slamd.discovery.processing.algorithms.user_input import UserInput
+from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
+from slamd.discovery.processing.experiment.user_input import UserInput
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
-from slamd.discovery.processing.models.experiment_data import ExperimentData
+from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy

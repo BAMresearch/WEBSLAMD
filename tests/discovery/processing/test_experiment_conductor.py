@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from slamd.discovery.processing.algorithms.experiment_conductor import ExperimentConductor
-from slamd.discovery.processing.models.experiment_data import ExperimentData
+from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
+from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 
 
 def test_clip_predictions_for_one_target_no_threshold():

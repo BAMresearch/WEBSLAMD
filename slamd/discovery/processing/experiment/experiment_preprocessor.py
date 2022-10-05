@@ -1,6 +1,6 @@
 from slamd.common.error_handling import SequentialLearningException, ValueNotSupportedException, \
     SlamdUnprocessableEntityException
-from slamd.discovery.processing.models.model_type import ModelType
+from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
 
 
 class ExperimentPreprocessor:
@@ -14,7 +14,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def validate_experiment(cls, exp):
-        if exp.model not in [ModelType.GAUSSIAN_PROCESS.value, ModelType.RANDOM_FOREST.value]:
+        if exp.model not in [ExperimentModel.GAUSSIAN_PROCESS.value, ExperimentModel.RANDOM_FOREST.value]:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         if len(exp.target_names) == 0:
@@ -39,14 +39,14 @@ class ExperimentPreprocessor:
                                                       'This is currently not supported.')
 
         for target, count in zip(exp.target_names, exp.targets_df.count()):
-            if exp.model == ModelType.RANDOM_FOREST.value and count <= 1:
+            if exp.model == ExperimentModel.RANDOM_FOREST.value and count <= 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Random Forest Regressor '
                             f'requires at least 2 labelled values, but only {count} was/were found. '
                             f'Please ensure that there are at least 2 data points that are not filtered out '
                             f'by the apriori thresholds.'
                 )
-            elif exp.model == ModelType.GAUSSIAN_PROCESS.value and count < 1:
+            elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value and count < 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Gaussian Process Regressor '
                             f'requires at least 1 labelled value, but none were found. '

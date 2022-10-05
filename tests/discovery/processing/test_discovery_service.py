@@ -8,7 +8,7 @@ from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import DatasetNotFoundException
-from slamd.discovery.processing.algorithms.plot_generator import PlotGenerator
+from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService

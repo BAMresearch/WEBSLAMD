@@ -4,9 +4,9 @@ import pytest
 
 from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException, \
     SlamdUnprocessableEntityException
-from slamd.discovery.processing.algorithms.experiment_preprocessor import ExperimentPreprocessor
-from slamd.discovery.processing.models.experiment_data import ExperimentData
-from slamd.discovery.processing.models.model_type import ModelType
+from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.experiment.experiment_data import ExperimentData
+from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
 
 
 def create_valid_experimentdata():
@@ -29,7 +29,7 @@ def create_valid_experimentdata():
 
     return ExperimentData(
         dataframe=df,
-        model=str(ModelType.GAUSSIAN_PROCESS.value),
+        model=str(ExperimentModel.GAUSSIAN_PROCESS.value),
         curiosity=2,
 
         target_names=target_names,
@@ -106,7 +106,7 @@ def test_validate_experiment_no_labels_gauss():
 def test_validate_experiment_no_labels_forest():
     exp = create_valid_experimentdata()
     exp.dataframe.loc[[4, 5], ['target1', 'target2', 'target3']] = np.nan
-    exp.model = str(ModelType.RANDOM_FOREST.value)
+    exp.model = str(ExperimentModel.RANDOM_FOREST.value)
 
     with pytest.raises(ValueNotSupportedException):
         ExperimentPreprocessor.validate_experiment(exp)
