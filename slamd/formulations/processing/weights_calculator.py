@@ -7,7 +7,9 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 class WeightsCalculator:
 
     @classmethod
-    def compute_cartesian_product(cls, all_materials_weights):
+    def compute_independent_weights_product(cls, all_materials_weights):
+        # "independent" is a slight misnomer as the liquid weights are defined in relation to the powder weights
+        # However, they are independent in the sense that they do not depend on the mass constraint
         powder_weights = all_materials_weights[0]
         liquid_weight_ratios = all_materials_weights[1]
 
@@ -30,18 +32,20 @@ class WeightsCalculator:
         return weights_product
 
     @classmethod
-    def compute_full_cartesian_product(cls, all_materials_weights, weight_constraint):
-        cartesian_product_list_of_independent_weights = WeightsCalculator.compute_cartesian_product(
+    def compute_full_weights_product(cls, all_materials_weights, weight_constraint):
+        independent_weights_product = WeightsCalculator.compute_independent_weights_product(
             all_materials_weights)
-        full_cartesian_product = []
-        for item in cartesian_product_list_of_independent_weights:
+
+        full_weights_product = []
+
+        for item in independent_weights_product:
             entry_list = list(item)
             dependent_weight = cls._compute_dependent_weight(entry_list, weight_constraint)
 
             entry_list.append(str(dependent_weight))
-            full_cartesian_product.append(entry_list)
+            full_weights_product.append(entry_list)
 
-        return full_cartesian_product
+        return full_weights_product
 
     @classmethod
     def _find_dependent_material(cls, materials_formulation_configuration):

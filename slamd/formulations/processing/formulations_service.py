@@ -158,7 +158,7 @@ class FormulationsService:
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        return WeightsCalculator.compute_full_cartesian_product(all_materials_weights, weight_constraint)
+        return WeightsCalculator.compute_full_weights_product(all_materials_weights, weight_constraint)
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):
