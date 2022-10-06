@@ -70,6 +70,13 @@ Cypress.Commands.add("createExampleAdmixtures", () => {
   });
 });
 
+Cypress.Commands.add("createExampleProcesses", () => {
+  cy.getCsrfToken().then((csrfToken) => {
+    cy.createBaseMaterial("example_process_1", csrfToken);
+    cy.createBaseMaterial("example_process_2", csrfToken);
+  });
+});
+
 Cypress.Commands.add("expectFloatToEqual", { prevSubject: true }, (subject, expectedValue) => {
   cy.wrap(subject)
     .invoke("text")
