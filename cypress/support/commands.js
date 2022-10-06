@@ -96,6 +96,6 @@ Cypress.Commands.add("clickButtonWaitForAsyncRequest", (buttonText, endpoint) =>
 
 Cypress.Commands.add("selectInputWaitForAsyncRequest", (selectInputLabelText, option, endpoint) => {
   cy.intercept(endpoint).as(endpoint);
-  cy.findByLabelText(selectInputLabelText).select(option).should("have.value", option);
+  cy.findByLabelText(selectInputLabelText).select(option);
   cy.wait(`@${endpoint}`);
 });
