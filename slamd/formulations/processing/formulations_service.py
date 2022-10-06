@@ -78,9 +78,9 @@ class FormulationsService:
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
 
-        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Δw_Z'
-        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'min(w_Z)'
-        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'max(w_Z)'
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
 
         if len(admixture_names):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
