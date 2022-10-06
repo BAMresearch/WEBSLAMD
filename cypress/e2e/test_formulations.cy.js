@@ -136,4 +136,64 @@ describe("Test materials formulations form", () => {
     // Submit dataset with the default dataset name
     cy.findByText("Submit").click();
   });
+
+  it("Delete formulations and create them again", () => {
+    cy.findByLabelText("1.1 - Powders (select one at least)").select("Example Powder 1");
+    cy.findByLabelText("1.2 - Liquids (select one at least)").select("Example Liquid 1");
+    cy.findByLabelText("1.3 - Aggregates (select one at least)").select("Example Aggregates 1");
+    cy.findByLabelText("1.7 - Constraint (Sum of materials used for formulation) (kg) *")
+      .type("100")
+      .should("have.value", "100");
+    cy.findByLabelText("1.8 - Name of the dataset (optional)")
+      .type("Example dataset name")
+      .should("have.value", "Example dataset name");
+
+    cy.intercept("/materials/formulations/add_min_max_entries").as("add_min_max_entries");
+    cy.findByText("4 - Configure weights for each material type").click();
+    // Wait for the modal animation to finish
+    cy.wait(400);
+    cy.findByText("Change Selection").should("exist");
+    cy.findByText("Do you really want to change the chosen selection?").should("exist");
+    cy.findByText("Close").should("exist");
+    cy.findByText("Confirm").click();
+    cy.wait("@add_min_max_entries");
+
+    // Fill in the increment, min, max values
+    cy.findAllByLabelText("Increment (kg)").first().type(10).should("have.value", 10);
+    cy.findAllByLabelText("Min (kg)").first().type(50).should("have.value", 50);
+    cy.findAllByLabelText("Max (kg)").first().type(60).should("have.value", 60);
+    cy.findAllByLabelText("Increment (kg)").eq(1).type(10).should("have.value", 10);
+    cy.findAllByLabelText("Min (kg)").eq(1).type(40).should("have.value", 40);
+    cy.findAllByLabelText("Max (kg)").eq(1).type(40).should("have.value", 40);
+    cy.intercept("/materials/formulations/add_weights").as("add_weights");
+    cy.findByText("5 - Show mixture in terms of base material composition").click().scrollIntoView();
+    cy.wait("@add_weights");
+
+    // Check that the configurations were generated correctly
+    cy.findByDisplayValue("50.0/40.0/10.0").should("exist");
+    cy.findByDisplayValue("60.0/40.0/0.0").should("exist");
+    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.wait("@create_formulations_batch");
+
+    // Delete the last formulation
+    cy.get(".input-group > button").last().click();
+    cy.findByDisplayValue("60.0/40.0/0.0").should("not.exist");
+
+    // Check that the materials formulations were generated correctly
+    cy.findByText("Show / hide formulations").scrollIntoView();
+    cy.findByText("Idx_Sample").should("exist");
+    // Check the only generated row
+    cy.findByText(0).next().expectFloatToEqual(50.0).next().expectFloatToEqual(40.0).next().expectFloatToEqual(10.0);
+    // Delete all rows
+    cy.findByText("Delete Material Formulation").click();
+    cy.findByText("Idx_Sample").should("not.exist");
+
+    // Create the formulation again
+    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.wait("@create_formulations_batch");
+    // Submit dataset with the given name
+    cy.findByText("Submit").click();
+  });
 });
