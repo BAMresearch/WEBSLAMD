@@ -68,9 +68,7 @@ describe("Test creating base materials", () => {
   it("Create process", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Process").should("have.value", "My Process");
-    cy.intercept("/materials/base/process").as("process");
-    cy.findByLabelText("2 - Material type / Process *").select("Process").should("have.value", "Process");
-    cy.wait("@process");
+    cy.selectInputWaitForAsyncRequest("2 - Material type / Process *", "Process", "/materials/base/process");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
@@ -93,9 +91,7 @@ describe("Test creating base materials", () => {
   it("Create custom", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Custom Material").should("have.value", "My Custom Material");
-    cy.intercept("/materials/base/custom").as("custom");
-    cy.findByLabelText("2 - Material type / Process *").select("Custom").should("have.value", "Custom");
-    cy.wait("@custom");
+    cy.selectInputWaitForAsyncRequest("2 - Material type / Process *", "Custom", "/materials/base/custom");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
@@ -144,9 +140,7 @@ describe("Test creating base materials", () => {
   it("Create admixture", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Admixture").should("have.value", "My Admixture");
-    cy.intercept("/materials/base/admixture").as("admixture");
-    cy.findByLabelText("2 - Material type / Process *").select("Admixture").should("have.value", "Admixture");
-    cy.wait("@admixture");
+    cy.selectInputWaitForAsyncRequest("2 - Material type / Process *", "Admixture", "/materials/base/admixture");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
