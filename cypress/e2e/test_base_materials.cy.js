@@ -17,13 +17,10 @@ describe("Test creating base materials", () => {
   it("Create powder", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Powder").should("have.value", "My Powder");
-    cy.findByLabelText("2 - Material type / Process *").select("Powder").should("have.value", "Powder");
 
     // Fill out cost properties
     cy.findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)")
-      .type("12.34")
-      .should("have.value", "12.34");
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
@@ -50,16 +47,13 @@ describe("Test creating base materials", () => {
     cy.findByLabelText("Specific gravity (m%)").type("67.890").should("have.value", "67.890");
 
     // Fill out additional properties
-    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 1);
     cy.findAllByLabelText("Value").should("have.length", 1);
     cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
     cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 2);
     cy.findAllByLabelText("Value").should("have.length", 2);
     cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
@@ -74,13 +68,13 @@ describe("Test creating base materials", () => {
   it("Create process", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Process").should("have.value", "My Process");
+    cy.intercept("/materials/base/process").as("process");
     cy.findByLabelText("2 - Material type / Process *").select("Process").should("have.value", "Process");
+    cy.wait("@process");
 
     // Fill out cost properties
-    cy.wait(500).findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg)")
-      .type("12.34")
-      .should("have.value", "12.34");
+    cy.findByText("3 - Cost").click();
+    cy.findByLabelText("CO₂ footprint (kg)").type("12.34").should("have.value", "12.34");
     cy.findByLabelText("Costs (€)").type("34.56").should("have.value", "34.56");
 
     // Fill out process information properties
@@ -99,13 +93,13 @@ describe("Test creating base materials", () => {
   it("Create custom", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Custom Material").should("have.value", "My Custom Material");
+    cy.intercept("/materials/base/custom").as("custom");
     cy.findByLabelText("2 - Material type / Process *").select("Custom").should("have.value", "Custom");
+    cy.wait("@custom");
 
     // Fill out cost properties
-    cy.wait(500).findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)")
-      .type("12.34")
-      .should("have.value", "12.34");
+    cy.findByText("3 - Cost").click();
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
@@ -113,22 +107,18 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Composition").should("not.exist");
 
     // Fill out additional properties
-    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 1);
     cy.findAllByLabelText("Value").should("have.length", 1);
     cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
     cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 2);
     cy.findAllByLabelText("Value").should("have.length", 2);
     cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
     cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 3);
     cy.findAllByLabelText("Value").should("have.length", 3);
     cy.findAllByLabelText("Name").last().type("Prop 2").should("have.value", "Prop 2");
@@ -154,13 +144,13 @@ describe("Test creating base materials", () => {
   it("Create admixture", () => {
     // Fill out name and material type
     cy.findByLabelText("1 - Name *").type("My Admixture").should("have.value", "My Admixture");
+    cy.intercept("/materials/base/admixture").as("admixture");
     cy.findByLabelText("2 - Material type / Process *").select("Admixture").should("have.value", "Admixture");
+    cy.wait("@admixture");
 
     // Fill out cost properties
-    cy.wait(500).findByText("3 - Cost").click();
-    cy.findByLabelText("CO₂ footprint (kg/ton)")
-      .type("12.34")
-      .should("have.value", "12.34");
+    cy.findByText("3 - Cost").click();
+    cy.findByLabelText("CO₂ footprint (kg/ton)").type("12.34").should("have.value", "12.34");
     cy.findByLabelText("Costs (€/kg)").type("34.56").should("have.value", "34.56");
     cy.findByLabelText("Delivery time (days)").type("56.78").should("have.value", "56.78");
 
@@ -168,14 +158,10 @@ describe("Test creating base materials", () => {
     cy.findByText("4 - Composition").should("not.exist");
 
     // Fill out additional properties
-    cy.intercept("/materials/base/add_property").as("add_property");
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
-    cy.findByText("Add property").click();
-    cy.wait("@add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
+    cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.findAllByLabelText("Name").should("have.length", 3);
     cy.findAllByLabelText("Value").should("have.length", 3);
     cy.findAllByLabelText("Name").eq(0).type("Prop 0").should("have.value", "Prop 0");
