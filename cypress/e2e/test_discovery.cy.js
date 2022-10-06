@@ -72,9 +72,11 @@ describe("Test running experiments with example dataset", () => {
     ]);
 
     // Select target properties
-    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
-    cy.findByLabelText("Target Properties (select one column at least)").select(["fc 28-d - Target (MPa)"]);
-    cy.wait("@create_target_configuration_form");
+    cy.selectInputWaitForAsyncRequest(
+      "Target Properties (select one column at least)",
+      ["fc 28-d - Target (MPa)"],
+      "materials/discovery/create_target_configuration_form"
+    );
 
     // Check that a form appeared
     cy.findAllByLabelText("Maximize").should("have.length", 1);
@@ -83,9 +85,10 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Run the experiment, wait for the request to complete
-    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
-    cy.findByText("Run experiment with given configuration").click();
-    cy.wait("@run_experiment");
+    cy.clickButtonWaitForAsyncRequest(
+      "Run experiment with given configuration",
+      "materials/discovery/MaterialsDiscoveryExampleData.csv"
+    );
     cy.get(".spinner-border").should("not.exist");
 
     // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
@@ -141,9 +144,11 @@ describe("Test running experiments with example dataset", () => {
     ]);
 
     // Select target properties
-    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
-    cy.findByLabelText("Target Properties (select one column at least)").select(["fc 28-d - Target (MPa)"]);
-    cy.wait("@create_target_configuration_form");
+    cy.selectInputWaitForAsyncRequest(
+      "Target Properties (select one column at least)",
+      ["fc 28-d - Target (MPa)"],
+      "materials/discovery/create_target_configuration_form"
+    );
 
     // Check that a form appeared
     cy.findAllByLabelText("Maximize").should("have.length", 1);
@@ -152,11 +157,11 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Select a priori information
-    cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
-      "create_a_priori_information_configuration_form"
+    cy.selectInputWaitForAsyncRequest(
+      "A priori Information (optional)",
+      ["CO2 (kg/t) - A-priori Information"],
+      "materials/discovery/create_a_priori_information_configuration_form"
     );
-    cy.findByLabelText("A priori Information (optional)").select(["CO2 (kg/t) - A-priori Information"]);
-    cy.wait("@create_a_priori_information_configuration_form");
 
     // Check that a second form appeared
     cy.findAllByLabelText("Maximize").should("have.length", 2);
@@ -165,9 +170,10 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Threshold").should("have.length", 2);
 
     // Run the experiment, wait for the request to complete
-    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
-    cy.findByText("Run experiment with given configuration").click();
-    cy.wait("@run_experiment");
+    cy.clickButtonWaitForAsyncRequest(
+      "Run experiment with given configuration",
+      "materials/discovery/MaterialsDiscoveryExampleData.csv"
+    );
     cy.get(".spinner-border").should("not.exist");
 
     // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
@@ -223,9 +229,11 @@ describe("Test running experiments with example dataset", () => {
     ]);
 
     // Select target properties
-    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
-    cy.findByLabelText("Target Properties (select one column at least)").select(["fc 28-d - Target (MPa)"]);
-    cy.wait("@create_target_configuration_form");
+    cy.selectInputWaitForAsyncRequest(
+      "Target Properties (select one column at least)",
+      ["fc 28-d - Target (MPa)"],
+      "materials/discovery/create_target_configuration_form"
+    );
 
     // Check that a form appeared
     cy.findAllByLabelText("Maximize").should("have.length", 1);
@@ -234,11 +242,11 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Threshold").should("have.length", 1);
 
     // Select a priori information
-    cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
-      "create_a_priori_information_configuration_form"
+    cy.selectInputWaitForAsyncRequest(
+      "A priori Information (optional)",
+      ["CO2 (kg/t) - A-priori Information"],
+      "materials/discovery/create_a_priori_information_configuration_form"
     );
-    cy.findByLabelText("A priori Information (optional)").select(["CO2 (kg/t) - A-priori Information"]);
-    cy.wait("@create_a_priori_information_configuration_form");
 
     // Check that a second form appeared
     cy.findAllByLabelText("Maximize").should("have.length", 2);
@@ -250,9 +258,10 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Minimize").eq(1).check();
 
     // Run the experiment, wait for the request to complete
-    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
-    cy.findByText("Run experiment with given configuration").click();
-    cy.wait("@run_experiment");
+    cy.clickButtonWaitForAsyncRequest(
+      "Run experiment with given configuration",
+      "materials/discovery/MaterialsDiscoveryExampleData.csv"
+    );
     cy.get(".spinner-border").should("not.exist");
 
     // Check the first three rows for the columns [Row number, Utility, Novelty, fc 28-d - Target (MPa)]
@@ -309,12 +318,11 @@ describe("Test running experiments with example dataset", () => {
     ]);
 
     // Select target properties
-    cy.intercept("materials/discovery/create_target_configuration_form").as("create_target_configuration_form");
-    cy.findByLabelText("Target Properties (select one column at least)").select([
-      "fc 28-d - Target (MPa)",
-      "Slump - Target (mm)",
-    ]);
-    cy.wait("@create_target_configuration_form");
+    cy.selectInputWaitForAsyncRequest(
+      "Target Properties (select one column at least)",
+      ["fc 28-d - Target (MPa)", "Slump - Target (mm)"],
+      "materials/discovery/create_target_configuration_form"
+    );
 
     // Check that two forms appeared
     cy.findAllByText("Maximize").should("have.length", 2);
@@ -323,11 +331,11 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Threshold").should("have.length", 2);
 
     // Select a priori information
-    cy.intercept("materials/discovery/create_a_priori_information_configuration_form").as(
-      "create_a_priori_information_configuration_form"
+    cy.selectInputWaitForAsyncRequest(
+      "A priori Information (optional)",
+      ["CO2 (kg/t) - A-priori Information"],
+      "materials/discovery/create_a_priori_information_configuration_form"
     );
-    cy.findByLabelText("A priori Information (optional)").select(["CO2 (kg/t) - A-priori Information"]);
-    cy.wait("@create_a_priori_information_configuration_form");
 
     // Check that a third form appeared
     cy.findAllByText("Maximize").should("have.length", 3);
@@ -339,9 +347,10 @@ describe("Test running experiments with example dataset", () => {
     cy.findAllByLabelText("Minimize").eq(2).check();
 
     // Run the experiment, wait for the request to complete
-    cy.intercept("materials/discovery/MaterialsDiscoveryExampleData.csv").as("run_experiment");
-    cy.findByText("Run experiment with given configuration").click();
-    cy.wait("@run_experiment");
+    cy.clickButtonWaitForAsyncRequest(
+      "Run experiment with given configuration",
+      "materials/discovery/MaterialsDiscoveryExampleData.csv"
+    );
     cy.get(".spinner-border").should("not.exist");
 
     // Check the first three rows for the columns [Row number, Utility, Novelty, Slump - Target (mm)]
