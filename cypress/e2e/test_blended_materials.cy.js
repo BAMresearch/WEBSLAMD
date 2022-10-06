@@ -18,8 +18,6 @@ describe("Test blending powders and blended material deletion", () => {
   beforeEach(() => {
     cy.createExamplePowders();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByText("Example Powder 1").should("exist");
-    cy.findByText("Example Powder 2").should("exist");
   });
 
   it("Create blended powder", () => {
@@ -84,8 +82,6 @@ describe("Test blending liquids and property interpolation", () => {
     cy.createExampleLiquids();
     cy.visit("http://localhost:5001/materials/blended");
     cy.findByLabelText("2 - Material type *").select("Liquid").should("have.value", "Liquid");
-    cy.findByText("Example Liquid 1").should("exist");
-    cy.findByText("Example Liquid 2").should("exist");
   });
 
   it("Create blended liquid", () => {
@@ -191,8 +187,6 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.createExampleAggregates();
     cy.visit("http://localhost:5001/materials/blended");
     cy.findByLabelText("2 - Material type *").select("Aggregates").should("have.value", "Aggregates");
-    cy.findByText("Example Aggregates 1").should("exist");
-    cy.findByText("Example Aggregates 2").should("exist");
   });
 
   it("Create blended aggregates with additional properties", () => {
@@ -245,9 +239,6 @@ describe("Test blending three custom materials with properties with negative val
     cy.createExampleCustomMaterials();
     cy.visit("http://localhost:5001/materials/blended");
     cy.findByLabelText("2 - Material type *").select("Custom").should("have.value", "Custom");
-    cy.findByText("Example Custom 1").should("exist");
-    cy.findByText("Example Custom 2").should("exist");
-    cy.findByText("Example Custom 3").should("exist");
   });
 
   it("Create blend from three custom materials", () => {
@@ -315,9 +306,6 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.createExampleAdmixtures();
     cy.visit("http://localhost:5001/materials/blended");
     cy.findByLabelText("2 - Material type *").select("Admixture").should("have.value", "Admixture");
-    cy.findByText("Example Admixture 1").should("exist");
-    cy.findByText("Example Admixture 2").should("exist");
-    cy.findByText("Example Admixture 3").should("exist");
   });
 
   it("Create blend from three admixtures", () => {
@@ -390,8 +378,6 @@ describe("Test autocorrect features", () => {
   beforeEach(() => {
     cy.createExamplePowders();
     cy.visit("http://localhost:5001/materials/blended");
-    cy.findByText("Example Powder 1").should("exist");
-    cy.findByText("Example Powder 2").should("exist");
   });
 
   it("Increment, min and max fields are corrected automatically", () => {

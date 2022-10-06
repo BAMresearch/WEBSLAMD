@@ -4,12 +4,6 @@ describe("Test formulations page", () => {
     cy.createExampleLiquids();
     cy.createExampleAggregates();
     cy.visit("http://localhost:5001/materials/formulations");
-    cy.findByText("Example Powder 1").should("exist");
-    cy.findByText("Example Powder 2").should("exist");
-    cy.findByText("Example Liquid 1").should("exist");
-    cy.findByText("Example Liquid 2").should("exist");
-    cy.findByText("Example Aggregates 1").should("exist");
-    cy.findByText("Example Aggregates 2").should("exist");
   });
 
   it("Create formulations and submit them without a dataset name", () => {
@@ -204,19 +198,6 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.createExampleCustomMaterials();
     cy.createExampleProcesses();
     cy.visit("http://localhost:5001/materials/formulations");
-    cy.findByText("Example Powder 1").should("exist");
-    cy.findByText("Example Powder 2").should("exist");
-    cy.findByText("Example Liquid 1").should("exist");
-    cy.findByText("Example Liquid 2").should("exist");
-    cy.findByText("Example Aggregates 1").should("exist");
-    cy.findByText("Example Aggregates 2").should("exist");
-    cy.findByText("Example Admixture 1").should("exist");
-    cy.findByText("Example Admixture 2").should("exist");
-    cy.findByText("Example Custom 1").should("exist");
-    cy.findByText("Example Custom 2").should("exist");
-    cy.findByText("Example Custom 3").should("exist");
-    cy.findByText("Example Process 1").should("exist");
-    cy.findByText("Example Process 2").should("exist");
   });
 
   it("Create formulations and submit them without a dataset name", () => {

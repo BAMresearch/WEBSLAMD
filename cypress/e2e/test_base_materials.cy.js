@@ -197,11 +197,12 @@ describe("Test deleting base materials", () => {
   beforeEach(() => {
     cy.createExamplePowders();
     cy.visit("http://localhost:5001/materials/base");
-    cy.findByText("Example Powder 1").should("exist");
-    cy.findByText("Example Powder 2").should("exist");
   });
 
   it("Can delete two powders", () => {
+    cy.findByText("Example Powder 1").should("exist");
+    cy.findByText("Example Powder 2").should("exist");
+
     cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
     cy.wait(400);
