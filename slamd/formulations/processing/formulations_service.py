@@ -1,9 +1,7 @@
-from dataclasses import dataclass, field
 from itertools import product
 from datetime import datetime
 
 from werkzeug.utils import secure_filename
-from wtforms import DecimalField
 
 from slamd.common.common_validators import min_max_increment_config_valid
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
@@ -130,19 +128,19 @@ class FormulationsService:
         weight_constraint = weights_request_data['weight_constraint']
 
         # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # various materials used for blending; for example full_cartesian_product =
+        # various materials used for blending; for example weight_combinations =
         # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
         if empty(weight_constraint):
             raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
-            full_cartesian_product = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
+            weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
 
-        if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
+        if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
 
         weights_form = WeightsForm()
-        for i, entry in enumerate(full_cartesian_product):
+        for i, entry in enumerate(weight_combinations):
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
             ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
             ratio_form_entry.idx.data = str(i)
@@ -152,8 +150,11 @@ class FormulationsService:
     def _get_constrained_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not min_max_increment_config_valid(formulation_config, weight_constraint):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
+        # TODO Separate for formulations/blend
+        #  Validate liquid AND powder exist
+        #  turn to dict
+        # if not min_max_increment_config_valid(formulation_config, weight_constraint):
+        #     raise ValueNotSupportedException('Configuration of weights is not valid!')
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 

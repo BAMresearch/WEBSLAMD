@@ -1,7 +1,6 @@
 from functools import reduce
 from itertools import product
 
-from slamd.common.slamd_utils import empty
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
@@ -9,9 +8,26 @@ class WeightsCalculator:
 
     @classmethod
     def compute_cartesian_product(cls, all_materials_weights):
-        cartesian_product_of_independent_weights = product(*all_materials_weights)
-        cartesian_product_list_of_independent_weights = list(cartesian_product_of_independent_weights)
-        return cartesian_product_list_of_independent_weights
+        powder_weights = all_materials_weights[0]
+        liquid_weight_ratios = all_materials_weights[1]
+
+        if len(all_materials_weights) >= 3:
+            remaining_weights = all_materials_weights[2:]
+        else:
+            remaining_weights = None
+
+        weights_product = []
+
+        for pw in powder_weights:
+            # Theyre strings - cast to float for multiplication, round, then cast back to string
+            liquid_weights = [str(round(float(lwr) * float(pw), 2)) for lwr in liquid_weight_ratios]
+
+            if remaining_weights:
+                weights_product += list(product([pw], liquid_weights, *remaining_weights))
+            else:
+                weights_product += list(product([pw], liquid_weights))
+
+        return weights_product
 
     @classmethod
     def compute_full_cartesian_product(cls, all_materials_weights, weight_constraint):
