@@ -17,8 +17,16 @@ class DiscoveryPersistence:
         cls.set_session_prediction(prediction)
 
     @classmethod
+    def save_tsne_plot_data(cls, tsne_plot_data):
+        cls.set_session_tsne_plot_data(tsne_plot_data)
+
+    @classmethod
     def set_session_prediction(cls, prediction):
         session['sequential_learning_predictions'] = prediction
+
+    @classmethod
+    def set_session_tsne_plot_data(cls, tsne_plot_data):
+        session['tsne_plot_data'] = tsne_plot_data
 
     @classmethod
     def delete_dataset_by_name(cls, dataset_name):
@@ -61,9 +69,14 @@ class DiscoveryPersistence:
         return session.get('sequential_learning_predictions', {})
 
     @classmethod
+    def get_session_tsne_plot_data(cls):
+        return session.get('tsne_plot_data', {})
+
+    @classmethod
     def set_session_property(cls, datasets):
         session['datasets'] = datasets
 
     @classmethod
     def extend_session_property(cls, dataset):
         session['datasets'][dataset.name] = dataset
+

@@ -142,7 +142,12 @@ async function runExperiment() {
 
   // The scatter plot data is embedded in the HTML placeholders. Turn the JSON data into actual plots.
   plotJsonDataInPlaceholder("scatter-plot-placeholder");
-  plotJsonDataInPlaceholder("tsne-plot-placeholder");
+  document.getElementById("tsne-plot-button").addEventListener('click', async () => {
+
+    // TODO: toggle, handle None as well as fetching properly
+    await fetchDataAndEmbedTemplateInPlaceholder(DISCOVERY_URL + "/tsne", "tsne-plot-placeholder")
+    plotJsonDataInPlaceholder("tsne-plot-placeholder")
+  })
 }
 
 function plotJsonDataInPlaceholder(placeholderId) {
