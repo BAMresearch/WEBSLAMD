@@ -1,4 +1,4 @@
-describe("Test materials formulations form", () => {
+describe("Test formulations page", () => {
   beforeEach(() => {
     cy.createExamplePowders();
     cy.createExampleLiquids();
@@ -198,7 +198,7 @@ describe("Test materials formulations form", () => {
   });
 });
 
-describe("Test materials formulations form with admixture, process and custom", () => {
+describe("Test formulations with admixture, process and custom", () => {
   beforeEach(() => {
     cy.createExamplePowders();
     cy.createExampleLiquids();
