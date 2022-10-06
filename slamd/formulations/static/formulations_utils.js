@@ -5,6 +5,7 @@
  */
 
 let allWeightFieldsHaveValidInput = false;
+const LIQUID_HTML_ID_INCLUDES = "-1-";
 
 function collectFormulationSelection() {
   const powderPlaceholder = document.getElementById("powder_selection");
@@ -181,7 +182,7 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
   correctInputFieldValue(currentInputField, 0);
 
-  // Empty values => NaN
+  // Empty values => NaN; all others are parsed to float
   let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
 
   // Multiply the liquid value (second in array/index 1) with the powder value (first in array/index 0)
@@ -189,16 +190,13 @@ function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentI
   // The + casts to a number, because toFixed returns strings...
   independentFieldValues[1] = +(independentFieldValues[0] * independentFieldValues[1]).toFixed(2);
 
-  console.log(independentFieldValues);
   let sumOfIndependentFields = independentFieldValues
     .filter((item) => !Number.isNaN(item))
     .reduce((x, y) => x + y, 0);
 
-  console.log(sumOfIndependentFields);
-
   if (sumOfIndependentFields > weightConstraint) {
-    if (currentInputField.id.includes("-1-")) {
-      // "-1-" is part of the ID of the liquid form entries, which need to be update with a ratio instead of a total
+    if (currentInputField.id.includes(LIQUID_HTML_ID_INCLUDES)) {
+      // liquids need to be updated with a ratio instead of a total
       currentInputField.value = (
           (weightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
       ).toFixed(2);
