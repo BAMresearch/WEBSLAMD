@@ -93,10 +93,6 @@ class FormulationsService:
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                        'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
 
-        # TODO what about the html ids/tags?
-        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Max (kg)'
-        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Min (kg)'
-
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
         return min_max_form
@@ -121,6 +117,8 @@ class FormulationsService:
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
             entry.max.render_kw = {'disabled': 'disabled'}
+            entry.min.label.text = 'Max (kg)'
+            entry.max.label.text = 'Min (kg)'
 
     @classmethod
     def create_weights_form(cls, weights_request_data):
