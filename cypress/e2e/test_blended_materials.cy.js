@@ -32,7 +32,7 @@ describe("Test blending powders and blended material deletion", () => {
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/powder/2");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (%)").first().type(20).should("have.value", 20);
@@ -41,7 +41,7 @@ describe("Test blending powders and blended material deletion", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "100.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
+    cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("0/100").should("exist");
@@ -98,7 +98,7 @@ describe("Test blending liquids and property interpolation", () => {
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/liquid/2");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (%)").first().type(20).should("have.value", 20);
@@ -107,7 +107,7 @@ describe("Test blending liquids and property interpolation", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
-    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
+    cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/80").should("exist");
@@ -207,7 +207,7 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/aggregates/2");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (%)").first().type(40).should("have.value", 40);
@@ -216,7 +216,7 @@ describe("Test blending aggregates and incomplete data", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
-    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
+    cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/80").should("exist");
@@ -260,7 +260,7 @@ describe("Test blending three custom materials with properties with negative val
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/custom/3");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (%)").first().type(50).should("have.value", 50);
@@ -272,7 +272,7 @@ describe("Test blending three custom materials with properties with negative val
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
+    cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/20/60").should("exist");
@@ -336,7 +336,7 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/admixture/3");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (%)").first().type(50).should("have.value", 50);
@@ -348,7 +348,7 @@ describe("Test blending three admixtures with properties with negative values", 
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
-    cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
+    cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20/20/60").should("exist");
@@ -404,7 +404,7 @@ describe("Test autocorrect features", () => {
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/powder/2");
 
     // Check that it clips the value to 100 from above
     cy.findAllByLabelText("Increment (%)").first().type("123");
