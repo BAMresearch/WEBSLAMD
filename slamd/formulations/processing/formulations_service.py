@@ -3,7 +3,7 @@ from datetime import datetime
 
 from werkzeug.utils import secure_filename
 
-from slamd.common.common_validators import min_max_increment_config_valid
+from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
 from slamd.common.slamd_utils import not_numeric, empty
@@ -150,15 +150,36 @@ class FormulationsService:
     def _get_constrained_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
-        # TODO Separate for formulations/blend
-        #  Validate liquid AND powder exist
-        #  turn to dict
-        # if not min_max_increment_config_valid(formulation_config, weight_constraint):
-        #     raise ValueNotSupportedException('Configuration of weights is not valid!')
+        if not cls._weight_ranges_valid(formulation_config, weight_constraint):
+            raise ValueNotSupportedException('Configuration of weights is not valid!')
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
         return WeightsCalculator.compute_full_weights_product(all_materials_weights, weight_constraint)
+
+    @classmethod
+    def _weight_ranges_valid(cls, formulation_config, constraint):
+        # TODO Like in weight_input_preprocessor we skip aggregates, but why is it even passed to the backend?
+        for i, conf in enumerate(formulation_config):
+            if i == len(formulation_config) - 1:
+                # aggregate - dependent, dont validate
+                continue
+            elif i == 1:
+                # liquid - ratios, calculate differently
+                min_value = float(conf['min']) * float(formulation_config[0]['min'])
+                max_value = float(conf['max']) * float(formulation_config[0]['max'])
+                # validation checks if increment is negative, 0 or non_numeric - does not need to be multiplied
+                increment = float(conf['increment'])
+            else:
+                # everything else - regular validation
+                min_value = float(conf['min'])
+                max_value = float(conf['max'])
+                increment = float(conf['increment'])
+
+            if validate_ranges(increment, max_value, min_value, float(constraint)):
+                return False
+
+        return True
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):

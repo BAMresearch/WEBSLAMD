@@ -19,7 +19,7 @@ class WeightInputPreprocessor:
         total_number_of_weight_combinations = 1
 
         for i, entry in enumerate(formulation_config):
-            # TODO I assume this skip is for admixture, but why is admixture even passed to the backend?
+            # TODO I assume this skip is for aggregates, but why is admixture even passed to the backend?
             if i == len(formulation_config) - 1:
                 continue
 
