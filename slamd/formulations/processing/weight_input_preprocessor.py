@@ -28,11 +28,6 @@ class WeightInputPreprocessor:
 
             total_number_of_weight_combinations *= len(weights_for_material)
 
-            # TODO I think this check is not necessary; check happens again later
-            if total_number_of_weight_combinations >= MAX_NUMBER_OF_WEIGHTS:
-                raise SlamdRequestTooLargeException(
-                    f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
-
         return all_materials_weights
 
     @classmethod
