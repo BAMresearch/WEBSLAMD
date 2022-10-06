@@ -39,35 +39,17 @@ function collectSelectionForFormulations(placeholder) {
     });
 }
 
-function updateWZRatio(fieldName, independentInputFields) {
-  const powderWeight = independentInputFields
-    .filter((item) => item[fieldName].name === "Powder")
-    .map((item) => parseFloat(item[fieldName].value))[0];
-
-  const liquid = independentInputFields.filter((item) => item[fieldName].name === "Liquid")[0];
-  const liquidWeight = liquid[fieldName].value;
-
-  let wcRatio = "Not available; you need to set the weight of the powders and liquids.";
-  if (liquidWeight && powderWeight) {
-    wcRatio = (liquidWeight / powderWeight).toFixed(2);
-  }
-  document.getElementById(liquid[fieldName].id).setAttribute("title", `W/C Ratio: ${wcRatio}`);
-}
-
 function addListenersToIndependentFields() {
   const independentInputFields = collectInputFields();
-  // TODO update wz ratio function?
   for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
       computeDependentValue("min", item.min, independentInputFields);
-      updateWZRatio("min", independentInputFields);
       toggleConfirmationFormulationsButtons(independentInputFields);
     });
     document.getElementById(item.min.id).setAttribute("title", "");
 
     item.max.addEventListener("keyup", () => {
       computeDependentValue("max", item.max, independentInputFields);
-      updateWZRatio("max", independentInputFields);
       toggleConfirmationFormulationsButtons(independentInputFields);
     });
     document.getElementById(item.max.id).setAttribute("title", "");
