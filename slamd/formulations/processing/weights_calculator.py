@@ -21,7 +21,7 @@ class WeightsCalculator:
         weights_product = []
 
         for pw in powder_weights:
-            # Theyre strings - cast to float for multiplication, round, then cast back to string
+            # They're strings - cast to float for multiplication, round, then cast back to string
             liquid_weights = [str(round(float(lwr) * float(pw), 2)) for lwr in liquid_weight_ratios]
 
             if remaining_weights:
@@ -33,8 +33,7 @@ class WeightsCalculator:
 
     @classmethod
     def compute_full_weights_product(cls, all_materials_weights, weight_constraint):
-        independent_weights_product = WeightsCalculator.compute_independent_weights_product(
-            all_materials_weights)
+        independent_weights_product = WeightsCalculator.compute_independent_weights_product(all_materials_weights)
 
         full_weights_product = []
 

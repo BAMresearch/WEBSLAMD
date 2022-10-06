@@ -56,6 +56,7 @@ function updateWZRatio(fieldName, independentInputFields) {
 
 function addListenersToIndependentFields() {
   const independentInputFields = collectInputFields();
+  // TODO update wz ratio function?
   for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
       computeDependentValue("min", item.min, independentInputFields);
@@ -198,13 +199,30 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
   correctInputFieldValue(currentInputField, 0);
 
-  let sumOfIndependentFields = independentMinMaxInputFields
-    .filter((item) => item[inputFieldName].value !== "")
-    .map((item) => parseFloat(item[inputFieldName].value))
+  // Empty values => NaN
+  let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
+
+  // Multiply the liquid value (second in array/index 1) with the powder value (first in array/index 0)
+  // Since liquid is given as a ratio of powder
+  // The + casts to a number, because toFixed returns strings...
+  independentFieldValues[1] = +(independentFieldValues[0] * independentFieldValues[1]).toFixed(2);
+
+  console.log(independentFieldValues);
+  let sumOfIndependentFields = independentFieldValues
+    .filter((item) => !Number.isNaN(item))
     .reduce((x, y) => x + y, 0);
 
+  console.log(sumOfIndependentFields);
+
   if (sumOfIndependentFields > weightConstraint) {
-    currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
+    if (currentInputField.id.includes("-1-")) {
+      // "-1-" is part of the ID of the liquid form entries, which need to be update with a ratio instead of a total
+      currentInputField.value = (
+          (weightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
+      ).toFixed(2);
+    } else {
+      currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
+    }
     sumOfIndependentFields = weightConstraint;
   }
   return sumOfIndependentFields;
