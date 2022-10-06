@@ -20,15 +20,13 @@ describe("Test formulations page", () => {
       .type("100")
       .should("have.value", "100");
 
-    cy.intercept("/materials/formulations/add_min_max_entries").as("add_min_max_entries");
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
-    cy.wait("@add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (kg)").first().type(30).should("have.value", 30);
@@ -40,9 +38,10 @@ describe("Test formulations page", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "85.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "5.00");
-    cy.intercept("/materials/formulations/add_weights").as("add_weights");
-    cy.findByText("5 - Show mixture in terms of base material composition").click().scrollIntoView();
-    cy.wait("@add_weights");
+    cy.clickButtonWaitForAsyncRequest(
+      "5 - Show mixture in terms of base material composition",
+      "/materials/formulations/add_weights"
+    );
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("10.0/5.0/85.0").should("exist");
@@ -81,15 +80,13 @@ describe("Test formulations page", () => {
       .type("100")
       .should("have.value", "100");
 
-    cy.intercept("/materials/formulations/add_min_max_entries").as("add_min_max_entries");
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
-    cy.wait("@add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (kg)").first().type(40).should("have.value", 40);
@@ -101,9 +98,10 @@ describe("Test formulations page", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "70.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "30.00");
-    cy.intercept("/materials/formulations/add_weights").as("add_weights");
-    cy.findByText("5 - Show mixture in terms of base material composition").click().scrollIntoView();
-    cy.wait("@add_weights");
+    cy.clickButtonWaitForAsyncRequest(
+      "5 - Show mixture in terms of base material composition",
+      "/materials/formulations/add_weights"
+    );
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20.0/10.0/70.0").should("exist");
@@ -148,15 +146,13 @@ describe("Test formulations page", () => {
       .type("Example dataset name")
       .should("have.value", "Example dataset name");
 
-    cy.intercept("/materials/formulations/add_min_max_entries").as("add_min_max_entries");
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
-    cy.wait("@add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (kg)").first().type(10).should("have.value", 10);
@@ -165,9 +161,10 @@ describe("Test formulations page", () => {
     cy.findAllByLabelText("Increment (kg)").eq(1).type(10).should("have.value", 10);
     cy.findAllByLabelText("Min (kg)").eq(1).type(40).should("have.value", 40);
     cy.findAllByLabelText("Max (kg)").eq(1).type(40).should("have.value", 40);
-    cy.intercept("/materials/formulations/add_weights").as("add_weights");
-    cy.findByText("5 - Show mixture in terms of base material composition").click().scrollIntoView();
-    cy.wait("@add_weights");
+    cy.clickButtonWaitForAsyncRequest(
+      "5 - Show mixture in terms of base material composition",
+      "/materials/formulations/add_weights"
+    );
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("50.0/40.0/10.0").should("exist");
@@ -233,15 +230,13 @@ describe("Test formulations with admixture, process and custom", () => {
       .type("100")
       .should("have.value", "100");
 
-    cy.intercept("/materials/formulations/add_min_max_entries").as("add_min_max_entries");
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.findByText("Confirm").click();
-    cy.wait("@add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries");
 
     // Fill in the increment, min, max values
     cy.findAllByLabelText("Increment (kg)").first().type(5).should("have.value", 5);
@@ -259,9 +254,10 @@ describe("Test formulations with admixture, process and custom", () => {
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "20.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "20.00");
-    cy.intercept("/materials/formulations/add_weights").as("add_weights");
-    cy.findByText("5 - Show mixture in terms of base material composition").click().scrollIntoView();
-    cy.wait("@add_weights");
+    cy.clickButtonWaitForAsyncRequest(
+      "5 - Show mixture in terms of base material composition",
+      "/materials/formulations/add_weights"
+    );
 
     // Check that the configurations were generated correctly
     cy.findByDisplayValue("20.0/20.0/20.0/20.0/20.0").should("exist");
