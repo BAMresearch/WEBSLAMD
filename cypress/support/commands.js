@@ -94,6 +94,14 @@ Cypress.Commands.add("clickButtonWaitForAsyncRequest", (buttonText, endpoint) =>
   cy.wait(`@${endpoint}`);
 });
 
+Cypress.Commands.add("fillForm", (formContent) => {
+  // Receive the form content as an object of the form:
+  // { labelText1: inputValue1, labelText2: inputValue2, ...}
+  for (const [labelText, inputValue] of Object.entries(formContent)) {
+    cy.findByLabelText(labelText).type(inputValue).should("have.value", inputValue);
+  }
+});
+
 Cypress.Commands.add("selectInputWaitForAsyncRequest", (selectInputLabelText, option, endpoint) => {
   cy.intercept(endpoint).as(endpoint);
   cy.findByLabelText(selectInputLabelText).select(option);
