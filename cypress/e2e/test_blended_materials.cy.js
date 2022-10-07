@@ -33,9 +33,11 @@ describe("Test blending powders and blended material deletion", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/powder/2");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Min (%)").first().type(0).should("have.value", 0);
-    cy.findAllByLabelText("Max (%)").first().type(100).should("have.value", 100);
+    cy.fillForm({
+      "Increment (%)": [20],
+      "Min (%)": [0],
+      "Max (%)": [100],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "100.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
@@ -97,9 +99,11 @@ describe("Test blending liquids and property interpolation", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/liquid/2");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").first().type(80).should("have.value", 80);
+    cy.fillForm({
+      "Increment (%)": [20],
+      "Min (%)": [20],
+      "Max (%)": [80],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
@@ -204,9 +208,11 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/aggregates/2");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (%)").first().type(40).should("have.value", 40);
-    cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").first().type(80).should("have.value", 80);
+    cy.fillForm({
+      "Increment (%)": [40],
+      "Min (%)": [20],
+      "Max (%)": [80],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
@@ -254,12 +260,11 @@ describe("Test blending three custom materials with properties with negative val
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/custom/3");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (%)").first().type(50).should("have.value", 50);
-    cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").first().type(75).should("have.value", 75);
-    cy.findAllByLabelText("Increment (%)").eq(1).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (%)").eq(1).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").eq(1).type(25).should("have.value", 25);
+    cy.fillForm({
+      "Increment (%)": [50, 5],
+      "Min (%)": [20, 20],
+      "Max (%)": [75, 25],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
@@ -327,12 +332,11 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries/admixture/3");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (%)").first().type(50).should("have.value", 50);
-    cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").first().type(75).should("have.value", 75);
-    cy.findAllByLabelText("Increment (%)").eq(1).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (%)").eq(1).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (%)").eq(1).type(25).should("have.value", 25);
+    cy.fillForm({
+      "Increment (%)": [50, 5],
+      "Min (%)": [20, 20],
+      "Max (%)": [75, 25],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
     cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");

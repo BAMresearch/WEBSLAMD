@@ -98,7 +98,18 @@ Cypress.Commands.add("fillForm", (formContent) => {
   // Receive the form content as an object of the form:
   // { labelText1: inputValue1, labelText2: inputValue2, ...}
   for (const [labelText, inputValue] of Object.entries(formContent)) {
-    cy.findByLabelText(labelText).type(inputValue).should("have.value", inputValue);
+    if (Array.isArray(inputValue)) {
+      cy.fillRepeatedFormElement(labelText, inputValue);
+    } else {
+      cy.findByLabelText(labelText).type(inputValue).should("have.value", inputValue);
+    }
+  }
+});
+
+Cypress.Commands.add("fillRepeatedFormElement", (labelText, inputValues) => {
+  // Fill for every appearance of labelText one value from the inputValues array.
+  for (const [index, inputValue] of inputValues.entries()) {
+    cy.findAllByLabelText(labelText).eq(index).type(inputValue).should("have.value", inputValue);
   }
 });
 
