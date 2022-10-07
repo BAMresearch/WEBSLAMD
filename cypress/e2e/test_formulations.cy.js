@@ -23,12 +23,11 @@ describe("Test formulations page", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (kg)").first().type(30).should("have.value", 30);
-    cy.findAllByLabelText("Min (kg)").first().type(10).should("have.value", 10);
-    cy.findAllByLabelText("Max (kg)").first().type(70).should("have.value", 70);
-    cy.findAllByLabelText("Increment (kg)").eq(1).type(15).should("have.value", 15);
-    cy.findAllByLabelText("Min (kg)").eq(1).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Max (kg)").eq(1).type(25).should("have.value", 25);
+    cy.fillForm({
+      "Increment (kg)": [30, 15],
+      "Min (kg)": [10, 5],
+      "Max (kg)": [70, 25],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "85.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "5.00");
@@ -83,12 +82,11 @@ describe("Test formulations page", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (kg)").first().type(40).should("have.value", 40);
-    cy.findAllByLabelText("Min (kg)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (kg)").first().type(60).should("have.value", 60);
-    cy.findAllByLabelText("Increment (kg)").eq(1).type(10).should("have.value", 10);
-    cy.findAllByLabelText("Min (kg)").eq(1).type(10).should("have.value", 10);
-    cy.findAllByLabelText("Max (kg)").eq(1).type(10).should("have.value", 10);
+    cy.fillForm({
+      "Increment (kg)": [40, 10],
+      "Min (kg)": [20, 10],
+      "Max (kg)": [60, 10],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "70.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "30.00");
@@ -149,12 +147,11 @@ describe("Test formulations page", () => {
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (kg)").first().type(10).should("have.value", 10);
-    cy.findAllByLabelText("Min (kg)").first().type(50).should("have.value", 50);
-    cy.findAllByLabelText("Max (kg)").first().type(60).should("have.value", 60);
-    cy.findAllByLabelText("Increment (kg)").eq(1).type(10).should("have.value", 10);
-    cy.findAllByLabelText("Min (kg)").eq(1).type(40).should("have.value", 40);
-    cy.findAllByLabelText("Max (kg)").eq(1).type(40).should("have.value", 40);
+    cy.fillForm({
+      "Increment (kg)": [10, 10],
+      "Min (kg)": [50, 40],
+      "Max (kg)": [60, 40],
+    });
     cy.clickButtonWaitForAsyncRequest(
       "5 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
@@ -217,21 +214,14 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/blended/add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
     // Fill in the increment, min, max values
-    cy.findAllByLabelText("Increment (kg)").first().type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (kg)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (kg)").first().type(20).should("have.value", 20);
-    cy.findAllByLabelText("Increment (kg)").eq(1).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (kg)").eq(1).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (kg)").eq(1).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Increment (kg)").eq(2).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (kg)").eq(2).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (kg)").eq(2).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Increment (kg)").eq(3).type(5).should("have.value", 5);
-    cy.findAllByLabelText("Min (kg)").eq(3).type(20).should("have.value", 20);
-    cy.findAllByLabelText("Max (kg)").eq(3).type(20).should("have.value", 20);
+    cy.fillForm({
+      "Increment (kg)": [5, 5, 5, 5],
+      "Min (kg)": [20, 20, 20, 20],
+      "Max (kg)": [20, 20, 20, 20],
+    });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "20.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "20.00");
