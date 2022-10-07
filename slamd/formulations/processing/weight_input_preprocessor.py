@@ -19,7 +19,6 @@ class WeightInputPreprocessor:
         total_number_of_weight_combinations = 1
 
         for i, entry in enumerate(formulation_config):
-            # TODO I assume this skip is for aggregates, but why is admixture even passed to the backend?
             if i == len(formulation_config) - 1:
                 continue
 
@@ -39,7 +38,7 @@ class WeightInputPreprocessor:
         else:
             for base_uuid in material.created_from:
                 base_material = MaterialsFacade.get_material(material_type, str(base_uuid))
-                base_names_for_blended_material.append(base_material.name)#
+                base_names_for_blended_material.append(base_material.name)
 
         return '/'.join(base_names_for_blended_material)
 

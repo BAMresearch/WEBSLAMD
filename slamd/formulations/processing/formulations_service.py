@@ -157,7 +157,6 @@ class FormulationsService:
 
     @classmethod
     def _weight_ranges_valid(cls, formulation_config, constraint):
-        # TODO Like in weight_input_preprocessor we skip aggregates, but why is it even passed to the backend?
         for i, conf in enumerate(formulation_config):
             if i == len(formulation_config) - 1:
                 # aggregate - dependent, dont validate
