@@ -55,15 +55,11 @@ describe("Test creating base materials", () => {
     // Fill out additional properties
     cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 1);
-    cy.findAllByLabelText("Value").should("have.length", 1);
-    cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
-    cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 2);
-    cy.findAllByLabelText("Value").should("have.length", 2);
-    cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
-    cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
+    cy.fillForm({
+      Name: ["Prop 0", "Prop 1"],
+      Value: ["Value 0", "Value 1"],
+    });
 
     // Save material and check that it is listed
     cy.findByText("Submit").click();
@@ -117,20 +113,12 @@ describe("Test creating base materials", () => {
     // Fill out additional properties
     cy.findByText("4 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 1);
-    cy.findAllByLabelText("Value").should("have.length", 1);
-    cy.findAllByLabelText("Name").last().type("Prop 0").should("have.value", "Prop 0");
-    cy.findAllByLabelText("Value").last().type("Value 0").should("have.value", "Value 0");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 2);
-    cy.findAllByLabelText("Value").should("have.length", 2);
-    cy.findAllByLabelText("Name").last().type("Prop 1").should("have.value", "Prop 1");
-    cy.findAllByLabelText("Value").last().type("Value 1").should("have.value", "Value 1");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 3);
-    cy.findAllByLabelText("Value").should("have.length", 3);
-    cy.findAllByLabelText("Name").last().type("Prop 2").should("have.value", "Prop 2");
-    cy.findAllByLabelText("Value").last().type("Value 2").should("have.value", "Value 2");
+    cy.fillForm({
+      Name: ["Prop 0", "Prop 1", "Prop 2"],
+      Value: ["Value 0", "Value 1", "Value 2"],
+    });
 
     // Delete additional properties one by one
     cy.findByText("Delete last property").click();
@@ -170,14 +158,10 @@ describe("Test creating base materials", () => {
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
-    cy.findAllByLabelText("Name").should("have.length", 3);
-    cy.findAllByLabelText("Value").should("have.length", 3);
-    cy.findAllByLabelText("Name").eq(0).type("Prop 0").should("have.value", "Prop 0");
-    cy.findAllByLabelText("Value").eq(0).type("Value 0").should("have.value", "Value 0");
-    cy.findAllByLabelText("Name").eq(1).type("Prop 1").should("have.value", "Prop 1");
-    cy.findAllByLabelText("Value").eq(1).type("Value 1").should("have.value", "Value 1");
-    cy.findAllByLabelText("Name").eq(2).type("Prop 2").should("have.value", "Prop 2");
-    cy.findAllByLabelText("Value").eq(2).type("Value 2").should("have.value", "Value 2");
+    cy.fillForm({
+      Name: ["Prop 0", "Prop 1", "Prop 2"],
+      Value: ["Value 0", "Value 1", "Value 2"],
+    });
 
     // Delete additional properties one by one
     cy.findByText("Delete last property").click();

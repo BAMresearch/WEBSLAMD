@@ -107,6 +107,8 @@ Cypress.Commands.add("fillForm", (formContent) => {
 });
 
 Cypress.Commands.add("fillRepeatedFormElement", (labelText, inputValues) => {
+  // REDUCE FLAKINESS: Check first that the label appears the required amount of times.
+  cy.findAllByLabelText(labelText).should("have.length", inputValues.length);
   // Fill for every appearance of labelText one value from the inputValues array.
   for (const [index, inputValue] of inputValues.entries()) {
     cy.findAllByLabelText(labelText).eq(index).type(inputValue).should("have.value", inputValue);
