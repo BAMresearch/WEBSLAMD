@@ -10,9 +10,9 @@ describe("Test formulations page", () => {
     cy.findByLabelText("1.1 - Powders (select one at least)").select("Example Powder 1");
     cy.findByLabelText("1.2 - Liquids (select one at least)").select("Example Liquid 1");
     cy.findByLabelText("1.3 - Aggregates (select one at least)").select("Example Aggregates 1");
-    cy.findByLabelText("1.7 - Constraint (Sum of materials used for formulation) (kg) *")
-      .type("100")
-      .should("have.value", "100");
+    cy.fillForm({
+      "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
+    });
 
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
@@ -69,9 +69,9 @@ describe("Test formulations page", () => {
       "Example Aggregates 1",
       "Example Aggregates 2",
     ]);
-    cy.findByLabelText("1.7 - Constraint (Sum of materials used for formulation) (kg) *")
-      .type("100")
-      .should("have.value", "100");
+    cy.fillForm({
+      "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
+    });
 
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
@@ -131,12 +131,10 @@ describe("Test formulations page", () => {
     cy.findByLabelText("1.1 - Powders (select one at least)").select("Example Powder 1");
     cy.findByLabelText("1.2 - Liquids (select one at least)").select("Example Liquid 1");
     cy.findByLabelText("1.3 - Aggregates (select one at least)").select("Example Aggregates 1");
-    cy.findByLabelText("1.7 - Constraint (Sum of materials used for formulation) (kg) *")
-      .type("100")
-      .should("have.value", "100");
-    cy.findByLabelText("1.8 - Name of the dataset (optional)")
-      .type("Example dataset name")
-      .should("have.value", "Example dataset name");
+    cy.fillForm({
+      "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
+      "1.8 - Name of the dataset (optional)": "Example dataset name",
+    });
 
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
@@ -204,9 +202,9 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findByLabelText("1.4 - Admixture (optional)").select("Example Admixture 1");
     cy.findByLabelText("1.5 - Custom (optional)").select(["Example Custom 1", "Example Custom 2", "Example Custom 3"]);
     cy.findByLabelText("1.6 - Processes (optional)").select(["Example Process 1", "Example Process 2"]);
-    cy.findByLabelText("1.7 - Constraint (Sum of materials used for formulation) (kg) *")
-      .type("100")
-      .should("have.value", "100");
+    cy.fillForm({
+      "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
+    });
 
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish

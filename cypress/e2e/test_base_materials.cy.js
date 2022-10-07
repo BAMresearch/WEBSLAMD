@@ -56,6 +56,7 @@ describe("Test creating base materials", () => {
     cy.findByText("5 - Additional Properties - Leave empty if not needed.").click().scrollIntoView();
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
+    cy.findAllByLabelText("Name").should("have.length", 2);
     cy.fillForm({
       Name: ["Prop 0", "Prop 1"],
       Value: ["Value 0", "Value 1"],
@@ -115,6 +116,7 @@ describe("Test creating base materials", () => {
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
+    cy.findAllByLabelText("Name").should("have.length", 3);
     cy.fillForm({
       Name: ["Prop 0", "Prop 1", "Prop 2"],
       Value: ["Value 0", "Value 1", "Value 2"],
@@ -158,6 +160,7 @@ describe("Test creating base materials", () => {
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
     cy.clickButtonWaitForAsyncRequest("Add property", "/materials/base/add_property");
+    cy.findAllByLabelText("Name").should("have.length", 3);
     cy.fillForm({
       Name: ["Prop 0", "Prop 1", "Prop 2"],
       Value: ["Value 0", "Value 1", "Value 2"],
