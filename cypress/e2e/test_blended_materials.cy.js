@@ -44,12 +44,7 @@ describe("Test blending powders and blended material deletion", () => {
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("0/100").should("exist");
-    cy.findByDisplayValue("20/80").should("exist");
-    cy.findByDisplayValue("40/60").should("exist");
-    cy.findByDisplayValue("60/40").should("exist");
-    cy.findByDisplayValue("80/20").should("exist");
-    cy.findByDisplayValue("100/0").should("exist");
+    cy.checkGeneratedConfigurations(["0/100", "20/80", "40/60", "60/40", "80/20", "100/0"]);
 
     // Delete the last two blends and add them again
     cy.findByText("Delete blending ratio").click().click();
@@ -110,10 +105,7 @@ describe("Test blending liquids and property interpolation", () => {
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20/80").should("exist");
-    cy.findByDisplayValue("40/60").should("exist");
-    cy.findByDisplayValue("60/40").should("exist");
-    cy.findByDisplayValue("80/20").should("exist");
+    cy.checkGeneratedConfigurations(["20/80", "40/60", "60/40", "80/20"]);
     cy.findByText("Submit").click();
 
     // Check that the blended liquids were generated correctly
@@ -219,8 +211,7 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20/80").should("exist");
-    cy.findByDisplayValue("60/40").should("exist");
+    cy.checkGeneratedConfigurations(["20/80", "60/40"]);
     cy.findByText("Submit").click();
 
     // Check that the blended aggregates were generated correctly
@@ -271,10 +262,7 @@ describe("Test blending three custom materials with properties with negative val
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20/20/60").should("exist");
-    cy.findByDisplayValue("20/25/55").should("exist");
-    cy.findByDisplayValue("70/20/10").should("exist");
-    cy.findByDisplayValue("70/25/5").should("exist");
+    cy.checkGeneratedConfigurations(["20/20/60", "20/25/55", "70/20/10", "70/25/5"]);
     cy.findByText("Submit").click();
 
     // Check that the blended custom materials were generated correctly
@@ -343,10 +331,7 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20/20/60").should("exist");
-    cy.findByDisplayValue("20/25/55").should("exist");
-    cy.findByDisplayValue("70/20/10").should("exist");
-    cy.findByDisplayValue("70/25/5").should("exist");
+    cy.checkGeneratedConfigurations(["20/20/60", "20/25/55", "70/20/10", "70/25/5"]);
     cy.findByText("Submit").click();
 
     // Check that the blended admixtures were generated correctly

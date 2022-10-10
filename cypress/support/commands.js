@@ -118,3 +118,10 @@ Cypress.Commands.add("selectInputWaitForAsyncRequest", (selectInputLabelText, op
   cy.findByLabelText(selectInputLabelText).select(option);
   cy.wait(`@${endpoint}`);
 });
+
+Cypress.Commands.add("checkGeneratedConfigurations", (confArray) => {
+  // Check that each element of confArray appears only once as the display value of an input field.
+  for (const conf of confArray) {
+    cy.findByDisplayValue(conf).should("exist");
+  }
+});
