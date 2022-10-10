@@ -237,7 +237,8 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
     DiscoveryService.create_tsne_plot()
 
     assert mock_create_tsne_input_space_plot_called_with.to_dict() == {'Row number': {1: 1, 0: 2},
-                                                                       0: {1: 2, 0: 1},
+                                                                       0: {1: 0.7071067811865475,
+                                                                           0: -0.7071067811865475},
                                                                        'is_train_data': {1: 'Labelled', 0: 'Predicted'},
                                                                        'Utility': {1: 1, 0: 0}}
 
