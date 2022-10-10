@@ -73,6 +73,9 @@ class ExperimentPostprocessor:
     @classmethod
     def plot_input_space(cls, utility_function, exp):
         plot_df = exp.features_df.copy()
+        features_std = plot_df.std().replace(0, 1)
+        features_mean = plot_df.mean()
+        plot_df = (plot_df - features_mean) / features_std
 
         plot_df['is_train_data'] = 'Predicted'
         plot_df.loc[exp.label_index, 'is_train_data'] = 'Labelled'
