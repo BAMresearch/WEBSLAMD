@@ -44,6 +44,7 @@ class ExperimentConductor:
         uncertainties = {}
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
+            # TODO remove dependency on indices/calculate them live. simple change
             training_rows = exp.features_df.loc[exp.label_index].values
             training_labels = exp.targets_df.loc[exp.label_index, target].values.reshape(-1, 1)
 
@@ -53,6 +54,7 @@ class ExperimentConductor:
             rows_to_predict = exp.features_df.loc[exp.nolabel_index].values
             prediction, uncertainty = regressor.predict(rows_to_predict, return_std=True)
 
+            # TODO predictions needs to be a dataframe from the start, to avoid index issues
             predictions[target] = prediction
             uncertainties[target] = uncertainty
 
@@ -77,6 +79,9 @@ class ExperimentConductor:
         prediction_for_utility, uncertainty_for_utility = cls._process_predictions(exp)
         apriori_for_utility = cls._process_apriori(exp)
 
+        # TODO Discuss implications of utility in partially labelled data
+        #  known value should not affect utility - lowering values. makes sense, less information to be gained
+        #  uncertainty for known values should be zero
         exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
                       exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
@@ -89,6 +94,7 @@ class ExperimentConductor:
         clipped_prediction = cls.clip_prediction(exp)
 
         # Norm - use 1 as standard deviation instead of 0 to avoid division by 0 (unlikely)
+        # TODO instead of indices, use non-na values. Indices might not even be necessary
         labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
         labels_mean = exp.targets_df.loc[exp.label_index].mean()
         normed_uncertainty = exp.uncertainty / labels_std
@@ -120,6 +126,7 @@ class ExperimentConductor:
         apriori_mean = normed_apriori_df.mean()
         normed_apriori_df = (normed_apriori_df - apriori_mean) / apriori_std
 
+        # TODO probably not necessary, just return entire dataframe. Selection can happen later
         apriori_for_predicted_rows = normed_apriori_df.loc[exp.nolabel_index]
 
         # Invert
@@ -141,6 +148,7 @@ class ExperimentConductor:
         features_mean = norm_features_df.mean()
         norm_features_df = (norm_features_df - features_mean) / features_std
 
+        # TODO Remove reliance on index. What is the novelty for partially labelled data? Discuss with christoph.
         features_of_predicted_rows = norm_features_df.loc[exp.nolabel_index]
         features_of_known_rows = norm_features_df.loc[exp.label_index]
 

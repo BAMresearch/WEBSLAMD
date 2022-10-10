@@ -34,6 +34,7 @@ class ExperimentPreprocessor:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
         # Check if a row has either 0 or all targets labelled
+        # TODO Remove this check
         if not all([x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum(axis=1)]):
             raise SequentialLearningException(message='Some rows are partially labelled. '
                                                       'This is currently not supported.')
