@@ -127,10 +127,10 @@ async function tsnePlotListener() {
     insertSpinnerInPlaceholder("tsne-plot-placeholder");
 
     const response = await fetch(DISCOVERY_URL + "/tsne");
+    removeSpinnerInPlaceholder("tsne-plot-placeholder");
 
     if (response.ok) {
         const tsnePlotData = await response.json();
-        removeSpinnerInPlaceholder("tsne-plot-placeholder");
         Plotly.plot("tsne-plot-placeholder", tsnePlotData.data, tsnePlotData.layout, {responsive: true});
     } else {
         const error = await response.text();
