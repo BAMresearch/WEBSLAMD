@@ -78,12 +78,8 @@ Cypress.Commands.add("createExampleProcesses", () => {
 });
 
 Cypress.Commands.add("expectFloatToEqual", { prevSubject: true }, (subject, expectedValue) => {
-  cy.wrap(subject)
-    .invoke("text")
-    .then((value) => {
-      // Compare the float values using an epsilon to prevent errors due to rounding
-      expect(parseFloat(value.replace(",", "."))).to.be.closeTo(expectedValue, 0.000002);
-    });
+  // Compare the float values using an epsilon to prevent errors due to rounding
+  expect(parseFloat(subject.text().replace(",", "."))).to.be.closeTo(expectedValue, 0.000002);
   // Yield the DOM element to the next command
   cy.wrap(subject);
 });
