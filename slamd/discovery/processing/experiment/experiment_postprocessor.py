@@ -70,22 +70,3 @@ class ExperimentPostprocessor:
             columns_for_plot.extend(exp.apriori_names)
 
         return PlotGenerator.create_target_scatter_plot(df[columns_for_plot])
-
-    @classmethod
-    def plot_input_space(cls, utility_function, exp):
-        plot_df = exp.features_df.copy()
-        features_std = plot_df.std().replace(0, 1)
-        features_mean = plot_df.mean()
-        plot_df = (plot_df - features_mean) / features_std
-
-        plot_df['is_train_data'] = 'Predicted'
-        plot_df.loc[exp.label_index, 'is_train_data'] = 'Labelled'
-
-        plot_df['Utility'] = -np.inf
-        plot_df.loc[exp.nolabel_index, 'Utility'] = pd.Series(utility_function).values
-        plot_df = plot_df.sort_values(by='Utility', ascending=False)
-
-        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
-
-        return PlotGenerator.create_tsne_input_space_plot(plot_df)

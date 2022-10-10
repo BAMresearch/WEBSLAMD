@@ -135,6 +135,9 @@ class DiscoveryService:
             raise PlotDataNotFoundException("Cannot find data to create TSNE plot!")
 
         plot_df = tsne_plot_data.features_df.copy()
+        features_std = plot_df.std().replace(0, 1)
+        features_mean = plot_df.mean()
+        plot_df = (plot_df - features_mean) / features_std
 
         plot_df['is_train_data'] = 'Predicted'
         plot_df.loc[tsne_plot_data.label_index, 'is_train_data'] = 'Labelled'
