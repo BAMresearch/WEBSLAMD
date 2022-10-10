@@ -72,6 +72,19 @@ def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
     assert '<td>4</td>' in template
 
 
+def test_slamd_generates_tsne_plot(client, monkeypatch):
+    def mock_create_tsne_plot():
+        return json.dumps({'mock tsne': 1})
+
+    monkeypatch.setattr(DiscoveryService, 'create_tsne_plot', mock_create_tsne_plot)
+
+    response = client.get('/materials/discovery/tsne')
+
+    plot_data = json.loads(response.data.decode('utf-8'))
+    assert response.status_code == 200
+    assert plot_data == {'mock tsne': 1}
+
+
 def test_slamd_directs_to_add_targets_page(client, monkeypatch):
     def mock_get_data_for_target_page(dataset_name):
         df_data = {'feature1': [1], 'feature2': [2]}

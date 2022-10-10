@@ -118,7 +118,6 @@ def download_prediction():
 @discovery.route('/tsne', methods=['GET'])
 def create_tsne_plot():
     tsne_plot = DiscoveryService.create_tsne_plot()
-    #body = {'template': render_template('tsne_plot.html', tsne_plot=tsne_plot)}
     return make_response(tsne_plot, 200)
 
 
