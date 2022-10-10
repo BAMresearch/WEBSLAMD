@@ -96,9 +96,8 @@ class ExperimentConductor:
         clipped_prediction = cls.clip_prediction(exp)
 
         # Norm - use 1 as standard deviation instead of 0 to avoid division by 0 (unlikely)
-        # TODO instead of indices, use non-na values. Indices might not even be necessary
-        labels_std = exp.targets_df.loc[exp.label_index].std().replace(0, 1)
-        labels_mean = exp.targets_df.loc[exp.label_index].mean()
+        labels_std = exp.targets_df.std(skipna=True).replace(0, 1)
+        labels_mean = exp.targets_df.mean(skipna=True)
         normed_uncertainty = exp.uncertainty / labels_std
         normed_prediction = (clipped_prediction - labels_mean) / labels_std
 
