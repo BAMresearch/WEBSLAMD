@@ -39,7 +39,7 @@ class DiscoveryForm(Form):
         default=1.00,
         places=2,
         validators=[
-            validators.NumberRange(min=0, max=10, message='The curiosity value should be between 0 and 10')
+            validators.NumberRange(min=-1, max=5, message='The curiosity value should be between 0 and 10')
         ]
     )
 
