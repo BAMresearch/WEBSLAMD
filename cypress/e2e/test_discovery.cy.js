@@ -231,7 +231,6 @@ describe("Test running experiments with example dataset", () => {
     // [Row number, Utility, Novelty, fc 28-d - Target (MPa), Uncertainty (fc 28-d - Target (MPa)), CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
-      .scrollIntoView()
       .within(() => {
         cy.checkGeneratedTable([
           [1, 3.831002, 0.224525, 64.10796, 1.71396, 116.12407],
@@ -290,7 +289,6 @@ describe("Test running experiments with example dataset", () => {
     // [Row number, Utility, Novelty, fc 28-d - Target (MPa), Uncertainty (fc 28-d - Target (MPa)), CO2 (kg/t) - A-priori Information]
     cy.get(".table-responsive")
       .eq(1)
-      .scrollIntoView()
       .within(() => {
         cy.checkGeneratedTable([
           [1, 3.322088, 0.705232, 64.10796, 1.71396, 116.12407],
