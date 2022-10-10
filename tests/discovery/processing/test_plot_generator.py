@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
+from tests.discovery.processing.plotgenerator.scatter_1dim_json import SCATTER_1DIM_JSON
+from tests.discovery.processing.plotgenerator.scatter_2dim_json import SCATTER_2DIM_JSON
+from tests.discovery.processing.plotgenerator.tsne_3dim_json import TSNE_3DIM_JSON
 
 
 def _plot_df_factory():
@@ -34,28 +37,25 @@ def _plot_df_factory():
 def test_create_target_scatter_plot_1dim():
     plot_df = _plot_df_factory().loc[:, ['t1', 'Uncertainty (t1)', 'Utility', 'Row number']]
 
-    with open('plotgenerator/scatter_1dim.json', 'r') as f:
-        expected_output = json.load(f)
-        actual_output = json.loads(PlotGenerator.create_target_scatter_plot(plot_df))
+    expected_output = SCATTER_1DIM_JSON
+    actual_output = json.loads(PlotGenerator.create_target_scatter_plot(plot_df))
 
-        assert expected_output == actual_output
+    assert expected_output == actual_output
 
 
 def test_create_target_scatter_plot_2dim():
     plot_df = _plot_df_factory().loc[:, ['t1', 't2',  'Uncertainty (t1)', 'Uncertainty (t2)', 'Utility', 'Row number']]
 
-    with open('plotgenerator/scatter_2dim.json', 'r') as f:
-        expected_output = json.load(f)
-        actual_output = json.loads(PlotGenerator.create_target_scatter_plot(plot_df))
+    expected_output = SCATTER_2DIM_JSON
+    actual_output = json.loads(PlotGenerator.create_target_scatter_plot(plot_df))
 
-        assert expected_output == actual_output
+    assert expected_output == actual_output
 
 
 def test_create_tsne_input_space_plot():
     plot_df = _plot_df_factory().loc[:, ['f1', 'f2', 'f3', 'Utility', 'Row number', 'is_train_data']]
 
-    with open('plotgenerator/tsne_3dim.json', 'r') as f:
-        expected_output = json.load(f)
-        actual_output = json.loads(PlotGenerator.create_tsne_input_space_plot(plot_df))
+    expected_output = TSNE_3DIM_JSON
+    actual_output = json.loads(PlotGenerator.create_tsne_input_space_plot(plot_df))
 
-        assert expected_output == actual_output
+    assert expected_output == actual_output
