@@ -68,6 +68,7 @@ class ExperimentPreprocessor:
         for col in exp.feature_names:
             if exp.dataframe[col].isna().values.any():
                 exp.dataframe.drop(col, axis=1, inplace=True)
+                exp.feature_names.remove(col)
 
     @classmethod
     def filter_apriori_with_thresholds_and_update_orig_data(cls, exp):
