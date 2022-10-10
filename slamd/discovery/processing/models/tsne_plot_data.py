@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from pandas import DataFrame
+from pandas import DataFrame, Index, Series
 
 
 @dataclass
 class TSNEPlotData:
 
-    utility: DataFrame = None
+    utility: Series = None
     features_df: DataFrame = None
-    label_index: DataFrame = None
-    nolabel_index: DataFrame = None
+    label_index: Index = None
+    nolabel_index: Index = None

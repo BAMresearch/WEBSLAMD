@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.models.tsne_plot_data import TSNEPlotData
 

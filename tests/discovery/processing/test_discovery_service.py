@@ -4,16 +4,18 @@ import numpy as np
 import pandas as pd
 import pytest
 from pandas import DataFrame
+from pandas.core.indexes.numeric import Int64Index
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
-from slamd.common.error_handling import DatasetNotFoundException
+from slamd.common.error_handling import DatasetNotFoundException, PlotDataNotFoundException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
+from slamd.discovery.processing.models.tsne_plot_data import TSNEPlotData
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
 from tests.discovery.processing.test_dataframe_dicts import *
@@ -140,7 +142,8 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
     assert scatter_plot == 'Dummy Plot'
 
     assert mock_save_tsne_plot_data_called_with.utility.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_UTILITY
-    assert mock_save_tsne_plot_data_called_with.features_df.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
+    assert mock_save_tsne_plot_data_called_with.features_df.replace(
+        {np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
     assert list(mock_save_tsne_plot_data_called_with.label_index.values) == [0, 1, 2, 3]
     assert list(mock_save_tsne_plot_data_called_with.nolabel_index.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
 
@@ -199,6 +202,44 @@ def test_download_prediction(monkeypatch):
     assert output == 'Dummy.xslx'
     assert filename.startswith('predictions-test_dataset.csv')
     assert filename.endswith('.xlsx')
+
+
+def test_create_tsne_plot_raises_exception_when_no_plot_data_can_be_found(monkeypatch):
+    def mock_get_session_tsne_plot_data():
+        return {}
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_tsne_plot_data', mock_get_session_tsne_plot_data)
+
+    with pytest.raises(PlotDataNotFoundException):
+        DiscoveryService.create_tsne_plot()
+
+
+def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
+    def mock_get_session_tsne_plot_data():
+        utility = pd.Series((0, 1), (1, 2))
+        features_df = pd.DataFrame([1, 2])
+        label_index = Int64Index([1], dtype='int64')
+        nolabel_index = Int64Index([0, 1], dtype='int64')
+        return TSNEPlotData(utility=utility,
+                            features_df=features_df,
+                            label_index=label_index,
+                            nolabel_index=nolabel_index)
+
+    mock_create_tsne_input_space_plot_called_with = None
+
+    def mock_create_tsne_input_space_plot(plot_df):
+        nonlocal mock_create_tsne_input_space_plot_called_with
+        mock_create_tsne_input_space_plot_called_with = plot_df
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_tsne_plot_data', mock_get_session_tsne_plot_data)
+    monkeypatch.setattr(PlotGenerator, 'create_tsne_input_space_plot', mock_create_tsne_input_space_plot)
+
+    DiscoveryService.create_tsne_plot()
+
+    assert mock_create_tsne_input_space_plot_called_with.to_dict() == {'Row number': {1: 1, 0: 2},
+                                                                       0: {1: 2, 0: 1},
+                                                                       'is_train_data': {1: 'Labelled', 0: 'Predicted'},
+                                                                       'Utility': {1: 1, 0: 0}}
 
 
 def _mock_dataset_and_plot(monkeypatch, data, target_name):
