@@ -286,5 +286,3 @@ TEST_TSNE_PLOT_FEATURES_INDEX = {
     'total delivery_time ': {0: 76.0, 1: 76.0, 2: 76.0, 3: 76.0, 4: 76.0, 5: 76.0, 6: 76.0, 7: 76.0, 8: 76.0, 9: 76.0,
                              10: 76.0, 11: 76.0, 12: 76.0}
 }
-TEST_TSNE_PLOT_LABEL_INDEX = {}
-TEST_TSNE_PLOT_NO_LABEL_INDEX = {}

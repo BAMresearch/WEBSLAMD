@@ -8,18 +8,15 @@ from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
 from slamd.common.error_handling import DatasetNotFoundException
-from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
-from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
+from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
-from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRESH_INPUT, \
-    TEST_GAUSS_WITH_THRESH_INPUT, TEST_GAUSS_WITHOUT_THRESH_PRED, \
-    TEST_GAUSS_WITH_THRESH_PRED, TEST_GAUSS_WITHOUT_THRESH_CONFIG, TEST_GAUSS_WITH_THRESH_CONFIG, \
-    TEST_TSNE_PLOT_UTILITY, TEST_TSNE_PLOT_FEATURES_INDEX
+from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
+from tests.discovery.processing.test_dataframe_dicts import *
 
 app = create_app('testing', with_session=False)
 
@@ -144,6 +141,8 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
 
     assert mock_save_tsne_plot_data_called_with.utility.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_UTILITY
     assert mock_save_tsne_plot_data_called_with.features_df.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
+    assert list(mock_save_tsne_plot_data_called_with.label_index.values) == [0, 1, 2, 3]
+    assert list(mock_save_tsne_plot_data_called_with.nolabel_index.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 # Since we already check for the data of the tsne plot generation in the test above, we restrict this test to the experiment data
