@@ -48,6 +48,13 @@ def string_to_number(input_value):
     return float(input_as_number)
 
 
+def string_to_number_or_string(input_value):
+    if not_numeric(input_value):
+        return input_value
+    else:
+        return string_to_number(input_value)
+
+
 def _pieces_are_numeric(input_value, separator):
     pieces = input_value.split(separator)
     if len(pieces) == 1:
