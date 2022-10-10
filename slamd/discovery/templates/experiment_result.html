@@ -23,7 +23,15 @@
                 Utility in input space (t-SNE plot)
             </button>
         </h2>
-        {% include 'tsne_plot.html' %}
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body">
+                <div id="tsne-plot-placeholder">
+                    {% if tsne_plot is not none %}
+                        {{ tsne_plot | safe }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingThree">

@@ -118,8 +118,8 @@ def download_prediction():
 @discovery.route('/tsne', methods=['GET'])
 def create_tsne_plot():
     tsne_plot = DiscoveryService.create_tsne_plot()
-    body = {'template': render_template('tsne_plot.html', tsne_plot=tsne_plot)}
-    return make_response(jsonify(body), 200)
+    #body = {'template': render_template('tsne_plot.html', tsne_plot=tsne_plot)}
+    return make_response(tsne_plot, 200)
 
 
 @discovery.route('/<dataset>/add_targets', methods=['GET'])

@@ -4,14 +4,14 @@ import numpy as np
 import pandas as pd
 from werkzeug.datastructures import CombinedMultiDict
 
-from slamd.common.error_handling import DatasetNotFoundException
+from slamd.common.error_handling import DatasetNotFoundException, PlotDataNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
-from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
+from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
+from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
-from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
@@ -131,6 +131,9 @@ class DiscoveryService:
     @classmethod
     def create_tsne_plot(cls):
         tsne_plot_data = DiscoveryPersistence.get_session_tsne_plot_data()
+        if not tsne_plot_data:
+            raise PlotDataNotFoundException("Cannot find data to create plot!")
+
         plot_df = tsne_plot_data.features_df.copy()
 
         plot_df['is_train_data'] = 'Predicted'
