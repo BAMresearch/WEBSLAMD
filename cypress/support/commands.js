@@ -125,3 +125,10 @@ Cypress.Commands.add("checkGeneratedConfigurations", (confArray) => {
     cy.findByDisplayValue(conf).should("exist");
   }
 });
+
+Cypress.Commands.add("checkGeneratedContent", (textsToCheck, exactMatch = false) => {
+  // Check that each element of textsToCheck appears only once.
+  for (const text of textsToCheck) {
+    cy.findByText(text, { exact: exactMatch }).should("exist");
+  }
+});
