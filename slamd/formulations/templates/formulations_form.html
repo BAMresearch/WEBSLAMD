@@ -4,38 +4,51 @@
 <form action="" method="post" novalidate>
     {{ materials_and_processes_selection_form.csrf_token }}
 
-    <div class="accordion mb-3" id="accordion-discovery-explanation">
+    <div class="accordion mb-3" id="accordion-formulations-explanation">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button collapsed explanation-header" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" data-bs-parent="#accordion-discovery-explanation">
+                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                        data-bs-parent="#accordion-discovery-explanation">
                     Show / hide formulations explanation
                 </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
                 <div class="accordion-body explanation-body" role="tooltip">
-                    On this page you can create datasets for use in the discovery page. A dataset is built successively from
+                    On this page you can create datasets for use in the discovery page. A dataset is built successively
+                    from
                     <b>formulations</b>. <br>
-                    You must select at least one powder, liquid, and aggregate for a new formulation. You may additionally
-                    select admixtures, custom materials, and processes. Note that only one of each type of material can be
-                    part of a formulation at a time. If you choose e.g. two liquids A and B, the formulations will be created
-                    once with liquid A and once with liquid B. If you want both liquids to be part of the same formulation,
+                    You must select at least one powder, liquid, and aggregate for a new formulation. You may
+                    additionally
+                    select admixtures, custom materials, and processes. Note that only one of each type of material can
+                    be
+                    part of a formulation at a time. If you choose e.g. two liquids A and B, the formulations will be
+                    created
+                    once with liquid A and once with liquid B. If you want to use both liquids as ingredients at the
+                    same time
                     create a new blended liquid on the Blend page. <br>
 
-                    Next, select a constraint. This is the total amount of material that will make up your formulations, in
+                    Next, select a constraint. This is the total amount of material that will make up your formulations,
+                    in
                     kilograms. Optionally, you may also enter a name for the final dataset. <br>
 
                     In the following steps you must choose the ratios of the different materials in your formulation.
                     You can generate these ratios based on constraints, but you may also edit them by hand. Refer to the
                     infoboxes in the sections below for details. <br>
 
-                    Once you have defined the ratios, click the "6 - Create formulations" button to add the new formulations
-                    to the dataset. They will show up in a table at the bottom of the page. At this point you have two options:
+                    Once you have defined the ratios, click the "6 - Create formulations" button to add the new
+                    formulations
+                    to the dataset. They will show up in a table at the bottom of the page. At this point you have two
+                    options:
                     <ul>
-                        <li>You may repeat the process to add different formulations to the dataset. Your previous formulations
-                            will be kept until you delete or submit them, even if you leave the page.</li>
-                        <li>You may submit your dataset. This will write all the formulations from the table into a dataset
-                            with the name specified in the beginning. It can then be used on the discovery page.</li>
+                        <li>You may repeat the process to add different formulations to the dataset. Your previous
+                            formulations
+                            will be kept until you delete or submit them, even if you leave the page.
+                        </li>
+                        <li>You may submit your dataset. This will write all the formulations from the table into a
+                            dataset
+                            with the name specified in the beginning. It can then be used on the discovery page.
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -101,8 +114,8 @@
     <div class="row g-3 mb-3 align-items-end">
         <div class="col-md-6">
             <button class="btn btn-danger col-12 mb-3" type="button" id="delete_formulations_batches_button"
-                data-bs-toggle="tooltip" data-bs-placement="bottom" disabled
-                title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" disabled
+                    title="Deletes all batches created so far. In case you want to save as a dataset, click on Submit Dataset button.">
                 Delete Material Formulation
             </button>
         </div>
