@@ -37,12 +37,14 @@ describe("Test formulations page", () => {
     );
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("10.0/5.0/85.0").should("exist");
-    cy.findByDisplayValue("10.0/20.0/70.0").should("exist");
-    cy.findByDisplayValue("40.0/5.0/55.0").should("exist");
-    cy.findByDisplayValue("40.0/20.0/40.0").should("exist");
-    cy.findByDisplayValue("70.0/5.0/25.0").should("exist");
-    cy.findByDisplayValue("70.0/20.0/10.0").should("exist");
+    cy.checkGeneratedConfigurations([
+      "10.0/5.0/85.0",
+      "10.0/20.0/70.0",
+      "40.0/5.0/55.0",
+      "40.0/20.0/40.0",
+      "70.0/5.0/25.0",
+      "70.0/20.0/10.0",
+    ]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
@@ -96,8 +98,7 @@ describe("Test formulations page", () => {
     );
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20.0/10.0/70.0").should("exist");
-    cy.findByDisplayValue("60.0/10.0/30.0").should("exist");
+    cy.checkGeneratedConfigurations(["20.0/10.0/70.0", "60.0/10.0/30.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
@@ -156,8 +157,7 @@ describe("Test formulations page", () => {
     );
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("50.0/40.0/10.0").should("exist");
-    cy.findByDisplayValue("60.0/40.0/0.0").should("exist");
+    cy.checkGeneratedConfigurations(["50.0/40.0/10.0", "60.0/40.0/0.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
@@ -229,7 +229,7 @@ describe("Test formulations with admixture, process and custom", () => {
     );
 
     // Check that the configurations were generated correctly
-    cy.findByDisplayValue("20.0/20.0/20.0/20.0/20.0").should("exist");
+    cy.checkGeneratedConfigurations(["20.0/20.0/20.0/20.0/20.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
