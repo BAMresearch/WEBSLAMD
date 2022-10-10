@@ -53,12 +53,14 @@ describe("Test formulations page", () => {
     cy.findByText("Show / hide formulations").scrollIntoView();
     cy.findByText("Idx_Sample").should("exist");
     // Check the first 4 columns for every row
-    cy.findByText(0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(5.0).next().expectFloatToEqual(85.0);
-    cy.findByText(1).next().expectFloatToEqual(10.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(70.0);
-    cy.findByText(2).next().expectFloatToEqual(40.0).next().expectFloatToEqual(5.0).next().expectFloatToEqual(55.0);
-    cy.findByText(3).next().expectFloatToEqual(40.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(40.0);
-    cy.findByText(4).next().expectFloatToEqual(70.0).next().expectFloatToEqual(5.0).next().expectFloatToEqual(25.0);
-    cy.findByText(5).next().expectFloatToEqual(70.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0);
+    cy.checkGeneratedTable([
+      [0, 10.0, 5.0, 85.0],
+      [1, 10.0, 20.0, 70.0],
+      [2, 40.0, 5.0, 55.0],
+      [3, 40.0, 20.0, 40.0],
+      [4, 70.0, 5.0, 25.0],
+      [5, 70.0, 20.0, 10.0],
+    ]);
 
     // Submit dataset with the default dataset name
     cy.findByText("Submit").click();
@@ -107,22 +109,24 @@ describe("Test formulations page", () => {
     cy.findByText("Show / hide formulations").scrollIntoView();
     cy.findByText("Idx_Sample").should("exist");
     // Check the first 4 columns for every row
-    cy.findByText(0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(1).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(2).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(3).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(4).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(5).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(6).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(7).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(8).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(9).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(10).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(11).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(12).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(13).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
-    cy.findByText(14).next().expectFloatToEqual(20.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(70.0);
-    cy.findByText(15).next().expectFloatToEqual(60.0).next().expectFloatToEqual(10.0).next().expectFloatToEqual(30.0);
+    cy.checkGeneratedTable([
+      [0, 20.0, 10.0, 70.0],
+      [1, 60.0, 10.0, 30.0],
+      [2, 20.0, 10.0, 70.0],
+      [3, 60.0, 10.0, 30.0],
+      [4, 20.0, 10.0, 70.0],
+      [5, 60.0, 10.0, 30.0],
+      [6, 20.0, 10.0, 70.0],
+      [7, 60.0, 10.0, 30.0],
+      [8, 20.0, 10.0, 70.0],
+      [9, 60.0, 10.0, 30.0],
+      [10, 20.0, 10.0, 70.0],
+      [11, 60.0, 10.0, 30.0],
+      [12, 20.0, 10.0, 70.0],
+      [13, 60.0, 10.0, 30.0],
+      [14, 20.0, 10.0, 70.0],
+      [15, 60.0, 10.0, 30.0],
+    ]);
 
     // Submit dataset with the default dataset name
     cy.findByText("Submit").click();
@@ -170,7 +174,7 @@ describe("Test formulations page", () => {
     cy.findByText("Show / hide formulations").scrollIntoView();
     cy.findByText("Idx_Sample").should("exist");
     // Check the only generated row
-    cy.findByText(0).next().expectFloatToEqual(50.0).next().expectFloatToEqual(40.0).next().expectFloatToEqual(10.0);
+    cy.checkGeneratedTable([[0, 50.0, 40.0, 10.0]]);
     // Delete all rows
     cy.findByText("Delete Material Formulation").click();
     cy.findByText("Idx_Sample").should("not.exist");
@@ -238,12 +242,14 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findByText("Show / hide formulations").scrollIntoView();
     cy.findByText("Idx_Sample").should("exist");
     // Check the first 4 columns for every row
-    cy.findByText(0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
-    cy.findByText(1).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
-    cy.findByText(2).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
-    cy.findByText(3).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
-    cy.findByText(4).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
-    cy.findByText(5).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0).next().expectFloatToEqual(20.0);
+    cy.checkGeneratedTable([
+      [0, 20.0, 20.0, 20.0],
+      [1, 20.0, 20.0, 20.0],
+      [2, 20.0, 20.0, 20.0],
+      [3, 20.0, 20.0, 20.0],
+      [4, 20.0, 20.0, 20.0],
+      [5, 20.0, 20.0, 20.0],
+    ]);
 
     // Submit dataset with the default dataset name
     cy.findByText("Submit").click();

@@ -128,3 +128,18 @@ Cypress.Commands.add("checkGeneratedContent", (textsToCheck, exactMatch = false)
     cy.findByText(text, { exact: exactMatch }).should("exist");
   }
 });
+
+Cypress.Commands.add("checkGeneratedTable", (tableContent) => {
+  // Receive the table content as a two-dimensional array of the form:
+  // [ [col1, col2, col3, ...], [col1, col2, col3, ...], [col1, col2, col3, ...], ... ]
+  for (let rowIndex = 0; rowIndex < tableContent.length; ++rowIndex) {
+    for (let colIndex = 0; colIndex < tableContent[rowIndex].length; ++colIndex) {
+      // Skip the header, add one to the rowIndex
+      cy.get("tr")
+        .eq(rowIndex + 1)
+        .children()
+        .eq(colIndex)
+        .expectFloatToEqual(tableContent[rowIndex][colIndex]);
+    }
+  }
+});
