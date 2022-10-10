@@ -40,27 +40,29 @@ class ExperimentConductor:
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
-        predictions = {}
-        uncertainties = {}
+        predictions = pd.DataFrame(columns=exp.target_names)
+        uncertainties = pd.DataFrame(columns=exp.target_names)
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
-            # TODO remove dependency on indices/calculate them live. simple change
-            training_rows = exp.features_df.loc[exp.label_index].values
-            training_labels = exp.targets_df.loc[exp.label_index, target].values.reshape(-1, 1)
+            index_labelled = exp.targets_df[target].notnull().index
+            index_unlabelled = exp.targets_df[target].isnull().index
+
+            training_rows = exp.features_df.loc[index_labelled].values
+            training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
 
             regressor.fit(training_rows, training_labels)
 
             # Predict the label for the remaining rows
-            rows_to_predict = exp.features_df.loc[exp.nolabel_index].values
+            rows_to_predict = exp.features_df.loc[index_unlabelled].values
             prediction, uncertainty = regressor.predict(rows_to_predict, return_std=True)
 
-            # TODO predictions needs to be a dataframe from the start, to avoid index issues
-            predictions[target] = prediction
-            uncertainties[target] = uncertainty
+            predictions.loc[index_unlabelled, target] = prediction
+            uncertainties.loc[index_unlabelled, target] = uncertainty
 
-        # Keep using old index to ensure compatibility between dataframes
-        exp.prediction = pd.DataFrame(predictions, index=exp.nolabel_index)
-        exp.uncertainty = pd.DataFrame(uncertainties, index=exp.nolabel_index)
+        # TODO For predictions where known values exist, either
+        #  a) Keep predictions, but set uncertainty to zero
+        #  b) overwrite predictions with known values and set uncertainty to zero
+        #  c) Delete predictions
 
     @classmethod
     def _calculate_utility(cls, exp):
