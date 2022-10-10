@@ -44,9 +44,30 @@
                 </ul>
 
                 Finally, you may choose a machine learning model, as well as a curiosity value.
-                Use high curiosity values for exploration and low curiosity values for exploitation
-                (refinement).
-                If you are not sure leave it unchanged. Refer to the manual for more information.
+                <ul>
+                    <li>There are currently two machine learning models available: Gaussian Process Regression
+                        and Random Forest Regression. If you are not sure which one to use choose GPR as it generally
+                        produces better results.
+                    </li>
+                    <li>The curiosity value affects the calculation of the utility function. The uncertainty of
+                        predicted values is added to the utility, weighted by the curiosity. This way, points with
+                        large uncertainties are preferred. They provide more information gain if measured than points
+                        with lower uncertainty.
+                        <ul>
+                            <li>If the curiosity is greater than 1 this effect is amplified. Predictions with
+                                large uncertainty are favored disproportionally.</li>
+                            <li>If the curiosity is between 0 and 1 this effect is lessened. Predictions with large
+                                uncertainty are still favored, but the uncertainty is less important to the utility
+                                overall.</li>
+                            <li>If the curiosity is negative the uncertainty is subtracted instead, providing a
+                                penalty to the utility. This favors predictions with low uncertainty.</li>
+                        </ul>
+                        Use larger curiosity values if you want to explore the parameter space by covering a wide area,
+                        as points at a distance will be less certain in their prediction than nearby points.
+                        Use smaller or negative curiosity if you think you have identified a desirable area of the
+                        parameter space and want to refine ("exploit") your results by finding a nearby optimum.
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -75,9 +96,17 @@
             {{ discovery_form.model(class_="form-control form-select") }}
         </div>
         <div class="col-12 col-md-6">
-            {{ discovery_form.curiosity.label(class_="control-label") }}
-            {{ discovery_form.curiosity(class_="form-range", min=0, max=10, oninput="updateCuriosityValue(value)") }}
-            <output for="curiosity" id="selected-range">{{ discovery_form.curiosity.data }}</output>
+            <div class="col-12">
+                {{ discovery_form.curiosity.label(class_="control-label") }}
+                {{ discovery_form.curiosity(class_="form-range", min=-1, max=5, oninput="updateCuriosityValue(value)") }}
+            </div>
+            <div class="row">
+                <div class="col-4">Exploit</div>
+                <div class="col-4" style="text-align: center">
+                    <output for="curiosity" id="selected-range">{{ discovery_form.curiosity.data }}</output>
+                </div>
+                <div class="col-4" style="text-align: right">Explore</div>
+            </div>
         </div>
     </div>
     <button id="run-experiment-button" class="btn btn-success col-12 mb-3" type="button" data-bs-toggle="tooltip"
