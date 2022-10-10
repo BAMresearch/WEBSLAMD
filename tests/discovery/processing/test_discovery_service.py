@@ -18,7 +18,8 @@ from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from tests.discovery.processing.test_dataframe_dicts import TEST_GAUSS_WITHOUT_THRESH_INPUT, \
     TEST_GAUSS_WITH_THRESH_INPUT, TEST_GAUSS_WITHOUT_THRESH_PRED, \
-    TEST_GAUSS_WITH_THRESH_PRED, TEST_GAUSS_WITHOUT_THRESH_CONFIG, TEST_GAUSS_WITH_THRESH_CONFIG
+    TEST_GAUSS_WITH_THRESH_PRED, TEST_GAUSS_WITHOUT_THRESH_CONFIG, TEST_GAUSS_WITH_THRESH_CONFIG, \
+    TEST_TSNE_PLOT_UTILITY, TEST_TSNE_PLOT_FEATURES_INDEX
 
 app = create_app('testing', with_session=False)
 
@@ -119,20 +120,34 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
         mock_save_prediction_called_with = prediction
         return None
 
+    mock_save_tsne_plot_data_called_with = None
+
+    def mock_save_tsne_plot_data(tsne_plot_data):
+        nonlocal mock_save_tsne_plot_data_called_with
+        mock_save_tsne_plot_data_called_with = tsne_plot_data
+        return None
+
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_tsne_plot_data', mock_save_tsne_plot_data)
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITHOUT_THRESH_INPUT, 'Target: X')
 
-    df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
-        'test_data', TEST_GAUSS_WITHOUT_THRESH_CONFIG)
+    with app.test_request_context('/materials/discovery'):
+        df_with_prediction, scatter_plot = DiscoveryService.run_experiment(
+            'test_data', TEST_GAUSS_WITHOUT_THRESH_CONFIG)
 
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRESH_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITHOUT_THRESH_CONFIG
-    assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRESH_PRED
+    assert mock_save_prediction_called_with.dataframe.replace(
+        {np.nan: None}).to_dict() == TEST_GAUSS_WITHOUT_THRESH_PRED
     assert scatter_plot == 'Dummy Plot'
-    assert tsne_plot == 'Dummy Plot'
+
+    assert mock_save_tsne_plot_data_called_with.utility.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_UTILITY
+    assert mock_save_tsne_plot_data_called_with.features_df.replace({np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
 
 
+# Since we already check for the data of the tsne plot generation in the test above, we restrict this test to the experiment data
+# itself and only make sure that the tsne plot save method was called
 def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     mock_save_prediction_called_with = None
 
@@ -141,18 +156,27 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
+    mock_save_tsne_plot_data_called_with = None
+
+    def mock_save_tsne_plot_data(tsne_plot_data):
+        nonlocal mock_save_tsne_plot_data_called_with
+        mock_save_tsne_plot_data_called_with = "Saving TSNE Plot Data"
+        return None
+
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_tsne_plot_data', mock_save_tsne_plot_data)
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_THRESH_INPUT, 'X')
 
-    df_with_prediction, scatter_plot, tsne_plot = DiscoveryService.run_experiment(
-        'test_data', TEST_GAUSS_WITH_THRESH_CONFIG)
+    with app.test_request_context('/materials/discovery'):
+        df_with_prediction, scatter_plot = DiscoveryService.run_experiment(
+            'test_data', TEST_GAUSS_WITH_THRESH_CONFIG)
 
     assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
     assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
     assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRESH_CONFIG
     assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
     assert scatter_plot == 'Dummy Plot'
-    assert tsne_plot == 'Dummy Plot'
+    assert mock_save_tsne_plot_data_called_with == 'Saving TSNE Plot Data'
 
 
 def test_download_prediction(monkeypatch):
@@ -187,10 +211,5 @@ def _mock_dataset_and_plot(monkeypatch, data, target_name):
     def mock_create_target_scatter_plot(targets):
         return 'Dummy Plot'
 
-     # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
-    def mock_create_tsne_input_space_plot(features):
-        return 'Dummy Plot'
-
     monkeypatch.setattr(DiscoveryPersistence, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(PlotGenerator, 'create_target_scatter_plot', mock_create_target_scatter_plot)
-    monkeypatch.setattr(PlotGenerator, 'create_tsne_input_space_plot', mock_create_tsne_input_space_plot)
