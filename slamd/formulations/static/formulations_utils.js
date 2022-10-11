@@ -5,6 +5,7 @@
  */
 
 let allWeightFieldsHaveValidInput = false;
+const LIQUID_HTML_ID_INCLUDES = "-1-";
 
 function collectFormulationSelection() {
   const powderPlaceholder = document.getElementById("powder_selection");
@@ -39,34 +40,17 @@ function collectSelectionForFormulations(placeholder) {
     });
 }
 
-function updateWZRatio(fieldName, independentInputFields) {
-  const powderWeight = independentInputFields
-    .filter((item) => item[fieldName].name === "Powder")
-    .map((item) => parseFloat(item[fieldName].value))[0];
-
-  const liquid = independentInputFields.filter((item) => item[fieldName].name === "Liquid")[0];
-  const liquidWeight = liquid[fieldName].value;
-
-  let wcRatio = "Not available; you need to set the weight of the powders and liquids.";
-  if (liquidWeight && powderWeight) {
-    wcRatio = (liquidWeight / powderWeight).toFixed(2);
-  }
-  document.getElementById(liquid[fieldName].id).setAttribute("title", `W/C Ratio: ${wcRatio}`);
-}
-
 function addListenersToIndependentFields() {
   const independentInputFields = collectInputFields();
   for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
       computeDependentValue("min", item.min, independentInputFields);
-      updateWZRatio("min", independentInputFields);
       toggleConfirmationFormulationsButtons(independentInputFields);
     });
     document.getElementById(item.min.id).setAttribute("title", "");
 
     item.max.addEventListener("keyup", () => {
       computeDependentValue("max", item.max, independentInputFields);
-      updateWZRatio("max", independentInputFields);
       toggleConfirmationFormulationsButtons(independentInputFields);
     });
     document.getElementById(item.max.id).setAttribute("title", "");
@@ -198,13 +182,27 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
   correctInputFieldValue(currentInputField, 0);
 
-  let sumOfIndependentFields = independentMinMaxInputFields
-    .filter((item) => item[inputFieldName].value !== "")
-    .map((item) => parseFloat(item[inputFieldName].value))
+  // Empty values => NaN; all others are parsed to float
+  let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
+
+  // Multiply the liquid value (second in array/index 1) with the powder value (first in array/index 0)
+  // Since liquid is given as a ratio of powder
+  // The + casts to a number, because toFixed returns strings...
+  independentFieldValues[1] = +(independentFieldValues[0] * independentFieldValues[1]).toFixed(2);
+
+  let sumOfIndependentFields = independentFieldValues
+    .filter((item) => !Number.isNaN(item))
     .reduce((x, y) => x + y, 0);
 
   if (sumOfIndependentFields > weightConstraint) {
-    currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
+    if (currentInputField.id.includes(LIQUID_HTML_ID_INCLUDES)) {
+      // liquids need to be updated with a ratio instead of a total
+      currentInputField.value = (
+          (weightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
+      ).toFixed(2);
+    } else {
+      currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
+    }
     sumOfIndependentFields = weightConstraint;
   }
   return sumOfIndependentFields;

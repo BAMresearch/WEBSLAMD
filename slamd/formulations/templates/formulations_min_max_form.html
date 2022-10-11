@@ -1,3 +1,40 @@
+<div class="accordion mb-3" id="accordion-weights-explanation">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed explanation-header" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" data-bs-parent="#accordion-discovery-explanation">
+                Show / hide ingredient ratio explanation
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+            <div class="accordion-body explanation-body" role="tooltip">
+                <p>
+                    In this section you must define the material ratios to use in the formulations.
+                    In general, you must define the minimum amount of material to use, the maximum to use, and the step size
+                    in between these extremes. The final formulations are given by all possible weight combinations.
+                </p>
+                <p>
+                    For example, if you have ingredient A with range [20, 40] and step size 10 its ratios will be (20, 30, 40).
+                    If you also have ingredient B with range [7, 9] and step size 1 its ratios will be (7, 8, 9), and the final
+                    formulations will have combinations { (20, 7), (20, 8), (20, 9), (30, 7), (30, 8), (30, 9), (40, 7), (40, 8),
+                    (40, 9) }.
+                </p>
+
+                There are two exceptions to this rule:
+                <ul>
+                    <li>The amount of aggregates to use is not specified manually, but computed to "fill up" the weight
+                        constraint. If there had been a constraint of 50 in the example above, the weights would have been
+                        extended to { (20, 7, 23), (20, 8, 22), (20, 9, 21), (30, 7, 13), (30, 8, 12), (30, 9, 11), (40, 7, 3),
+                        (40, 8, 2), (40, 9, 1) }.</li>
+                    <li>Liquids are not specified in kilograms but using the W/C-Ratio, relative to the powder value.
+                        If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
+                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% for entry in formulations_min_max_form.materials_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}

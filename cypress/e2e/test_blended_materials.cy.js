@@ -39,8 +39,8 @@ describe("Test blending powders and blended material deletion", () => {
     cy.findAllByLabelText("Min (%)").first().type(0).should("have.value", 0);
     cy.findAllByLabelText("Max (%)").first().type(100).should("have.value", 100);
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "100.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "100.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
@@ -105,8 +105,8 @@ describe("Test blending liquids and property interpolation", () => {
     cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
     cy.findAllByLabelText("Max (%)").first().type(80).should("have.value", 80);
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "80.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "20.00");
     cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
@@ -214,8 +214,8 @@ describe("Test blending aggregates and incomplete data", () => {
     cy.findAllByLabelText("Min (%)").first().type(20).should("have.value", 20);
     cy.findAllByLabelText("Max (%)").first().type(80).should("have.value", 80);
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "80.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "20.00");
     cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
@@ -270,8 +270,8 @@ describe("Test blending three custom materials with properties with negative val
     cy.findAllByLabelText("Min (%)").eq(1).type(20).should("have.value", 20);
     cy.findAllByLabelText("Max (%)").eq(1).type(25).should("have.value", 25);
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "60.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
@@ -346,8 +346,8 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.findAllByLabelText("Min (%)").eq(1).type(20).should("have.value", 20);
     cy.findAllByLabelText("Max (%)").eq(1).type(25).should("have.value", 25);
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "60.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.findByText("5 - Preview blending ratios").click().scrollIntoView();
 
     // Check that the configurations were generated correctly
