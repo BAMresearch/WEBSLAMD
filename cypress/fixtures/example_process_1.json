@@ -1,0 +1,11 @@
+{
+    "material_name": "Example Process 1",
+    "material_type": "Process",
+    "co2_footprint": "10",
+    "costs": "10",
+    "delivery_time": "10",
+    "duration": "10",
+    "temperature": "10",
+    "relative_humidity": "10",
+    "submit": "6 - Save material"
+}
