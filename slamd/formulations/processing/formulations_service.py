@@ -9,6 +9,8 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
 from slamd.common.slamd_utils import not_numeric, empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.formulations.processing.building_material import BuildingMaterial
+from slamd.formulations.processing.concrete_strategy import ConcreteStrategy
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
     MaterialsAndProcessesSelectionForm
@@ -25,34 +27,6 @@ MAX_DATASET_SIZE = 10000
 
 
 class FormulationsService:
-
-    @classmethod
-    def populate_selection_form(cls):
-        all_materials = MaterialsFacade.find_all()
-
-        form = MaterialsAndProcessesSelectionForm()
-        form.powder_selection.choices = cls._to_selection(all_materials.powders)
-        form.liquid_selection.choices = cls._to_selection(all_materials.liquids)
-        form.aggregates_selection.choices = cls._to_selection(all_materials.aggregates_list)
-        form.admixture_selection.choices = cls._to_selection(all_materials.admixtures)
-        form.custom_selection.choices = cls._to_selection(all_materials.customs)
-        form.process_selection.choices = cls._to_selection(all_materials.processes)
-
-        return form
-
-    @classmethod
-    def get_formulations(cls):
-        dataframe = None
-        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
-        if temporary_dataset:
-            dataframe = temporary_dataset.dataframe
-        return dataframe
-
-    @classmethod
-    def _to_selection(cls, list_of_models):
-        by_name = sorted(list_of_models, key=lambda model: model.name)
-        by_type = sorted(by_name, key=lambda model: model.type)
-        return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
 
     @classmethod
     def create_formulations_min_max_form(cls, formulation_selection):
@@ -287,3 +261,14 @@ class FormulationsService:
         if filename == TEMPORARY_FORMULATION:
             raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
         return filename
+
+    @classmethod
+    def load_formulations_page(cls, building_material):
+        if building_material == BuildingMaterial.CONCRETE.value:
+            form = ConcreteStrategy.populate_selection_form()
+            df = ConcreteStrategy.get_formulations()
+            return form, df
+        elif building_material == BuildingMaterial.CEMENT.value:
+            return MaterialsAndProcessesSelectionForm(), None
+        else:
+            raise ValueNotSupportedException('No such building type!')

@@ -12,15 +12,9 @@ formulations = Blueprint('formulations', __name__,
                          url_prefix='/materials/formulations')
 
 
-@formulations.route('', methods=['GET'])
-def formulations_page():
-    return redirect('/materials/formulations/concrete')
-
-
-@formulations.route('/concrete', methods=['GET'])
-def concrete_page():
-    form = FormulationsService.populate_selection_form()
-    df = FormulationsService.get_formulations()
+@formulations.route('/<building_material>', methods=['GET'])
+def formulations_page(building_material):
+    form, df = FormulationsService.load_formulations_page(building_material)
 
     df_table = None
     if df is not None:
@@ -34,12 +28,29 @@ def concrete_page():
                            df=df_table)
 
 
-@formulations.route('/cement', methods=['GET'])
-def cement_page():
-    return 'Cements'
+# @formulations.route('/concrete', methods=['GET'])
+# def concrete_page():
+#     form = FormulationsService.populate_selection_form()
+#     df = FormulationsService.get_formulations()
+#
+#     df_table = None
+#     if df is not None:
+#         df_table = df.to_html(index=False,
+#                               table_id='formulations_dataframe',
+#                               classes='accordion-body table table-bordered table-striped table-hover topscroll-table')
+#
+#     return render_template('formulations.html',
+#                            materials_and_processes_selection_form=form,
+#                            formulations_min_max_form=FormulationsMinMaxForm(),
+#                            df=df_table)
 
 
-@formulations.route('/concrete/add_min_max_entries', methods=['POST'])
+# @formulations.route('/cement', methods=['GET'])
+# def cement_page():
+#     return 'Cements'
+
+
+@formulations.route('e/add_min_max_entries', methods=['POST'])
 def add_formulations_min_max_entry():
     formulation_selection = json.loads(request.data)
     min_max_form = FormulationsService.create_formulations_min_max_form(formulation_selection)
@@ -47,7 +58,7 @@ def add_formulations_min_max_entry():
     return make_response(jsonify(body), 200)
 
 
-@formulations.route('/concrete/add_weights', methods=['POST'])
+@formulations.route('/add_weights', methods=['POST'])
 def add_weights():
     weights_request_data = json.loads(request.data)
     weights_form = FormulationsService.create_weights_form(weights_request_data)
@@ -55,7 +66,7 @@ def add_weights():
     return make_response(jsonify(body), 200)
 
 
-@formulations.route('/concrete/create_formulations_batch', methods=['POST'])
+@formulations.route('/create_formulations_batch', methods=['POST'])
 def submit_formulation_batch():
     formulations_request_data = json.loads(request.data)
     dataframe = FormulationsService.create_materials_formulations(formulations_request_data)
@@ -67,7 +78,7 @@ def submit_formulation_batch():
     return make_response(jsonify(body), 200)
 
 
-@formulations.route('/concrete', methods=['DELETE'])
+@formulations.route('', methods=['DELETE'])
 def delete_formulation():
     FormulationsService.delete_formulation()
     body = {'template': render_template('formulations_table.html', df=None)}
@@ -75,7 +86,7 @@ def delete_formulation():
     return make_response(jsonify(body), 200)
 
 
-@formulations.route('/concrete', methods=['POST'])
+@formulations.route('', methods=['POST'])
 def submit_dataset():
     FormulationsService.save_dataset(request.form)
 
