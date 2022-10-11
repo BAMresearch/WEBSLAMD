@@ -11,7 +11,8 @@ function toggleBasedOnSelectionAndConstraints() {
   const aggregatesSelected = atLeastOneItemIsSelected(aggregatesPlaceholder);
 
   const validSelectionConfiguration = powderSelected && liquidSelected && aggregatesSelected;
-  const validConstraintConfiguration = weightConstraint !== undefined && weightConstraint !== "";
+  const validConstraintConfiguration = weightConstraint !== undefined && weightConstraint !== "" &&
+      weightConstraint > 0;
 
   const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
   changeSelectionButton.disabled = !(validSelectionConfiguration && validConstraintConfiguration);
