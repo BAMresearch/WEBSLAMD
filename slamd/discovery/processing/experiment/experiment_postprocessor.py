@@ -7,9 +7,8 @@ class ExperimentPostprocessor:
     @classmethod
     def postprocess(cls, exp):
         # Construct dataframe for output
-        # TODO From here on everything should be straightforward. Remove dependence on indices.
 
-        df = exp.orig_data.loc[exp.index_none_labelled].copy()
+        df = exp.orig_data.loc[exp.index_predicted].copy()
         # Add the columns with utility and novelty values
         df['Utility'] = exp.utility.round(6)
         df['Novelty'] = exp.novelty.round(6)

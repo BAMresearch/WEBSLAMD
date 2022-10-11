@@ -57,3 +57,6 @@ class ExperimentData:
     def index_all_labelled(self):
         return self.dataframe.index[self.targets_df.notnull().all(axis=1)]
 
+    @property
+    def index_predicted(self):
+        return self.index_none_labelled.union(self.index_partially_labelled)
