@@ -15,7 +15,10 @@
     </div>
 </main>
 <script src="{{url_for('formulations.static', filename='formulations.js')}}"></script>
-<script src="{{url_for('formulations.static', filename='concrete.js')}}"></script>
-<script src="{{url_for('formulations.static', filename='cement.js')}}"></script>
+{% if context == 'concrete' %}
+    <script src="{{url_for('formulations.static', filename='concrete.js')}}"></script>
+{% else %}
+    <script src="{{url_for('formulations.static', filename='cement.js')}}"></script>
+{% endif %}
 <script src="{{url_for('formulations.static', filename='formulations_utils.js')}}"></script>
 {%endblock%}

@@ -109,12 +109,8 @@ async function deleteFormulations() {
 }
 
 window.addEventListener("load", function () {
-    document
-        .getElementById("confirm_materials_and_processes_selection_button")
-        .addEventListener("click", confirmSelection);
-    document
-        .getElementById("weight_constraint")
-        .addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
+    document.getElementById("weight_constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
     document.getElementById("powder_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
