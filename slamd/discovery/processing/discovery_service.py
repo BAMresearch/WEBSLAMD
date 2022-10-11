@@ -1,14 +1,17 @@
 from datetime import datetime
 
+import numpy as np
+import pandas as pd
 from werkzeug.datastructures import CombinedMultiDict
 
-from slamd.common.error_handling import DatasetNotFoundException
+from slamd.common.error_handling import DatasetNotFoundException, PlotDataNotFoundException
 from slamd.common.slamd_utils import empty, float_if_not_empty
-from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
+from slamd.discovery.processing.experiment.experiment_conductor import ExperimentConductor
+from slamd.discovery.processing.experiment.experiment_data import ExperimentData
+from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
-from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
@@ -67,12 +70,13 @@ class DiscoveryService:
             raise DatasetNotFoundException('Dataset with given name not found')
 
         experiment = cls._initialize_experiment(dataset.dataframe, request_body)
-        df_with_predictions, scatter_plot, tsne_plot = ExperimentConductor.run(experiment)
+        df_with_predictions, scatter_plot, tsne_plot_data = ExperimentConductor.run(experiment)
 
         prediction = Prediction(dataset_name, df_with_predictions, request_body)
         DiscoveryPersistence.save_prediction(prediction)
+        DiscoveryPersistence.save_tsne_plot_data(tsne_plot_data)
 
-        return df_with_predictions, scatter_plot, tsne_plot
+        return df_with_predictions, scatter_plot
 
     @classmethod
     def download_dataset(cls, dataset_name):
@@ -123,3 +127,26 @@ class DiscoveryService:
             apriori_thresholds=apriori_thresholds,
             apriori_max_or_min=apriori_max_or_min,
         )
+
+    @classmethod
+    def create_tsne_plot(cls):
+        tsne_plot_data = DiscoveryPersistence.get_session_tsne_plot_data()
+        if not tsne_plot_data:
+            raise PlotDataNotFoundException("Cannot find data to create TSNE plot!")
+
+        plot_df = tsne_plot_data.features_df.copy()
+        features_std = plot_df.std().replace(0, 1)
+        features_mean = plot_df.mean()
+        plot_df = (plot_df - features_mean) / features_std
+
+        plot_df['is_train_data'] = 'Predicted'
+        plot_df.loc[tsne_plot_data.label_index, 'is_train_data'] = 'Labelled'
+
+        plot_df['Utility'] = -np.inf
+        plot_df.loc[tsne_plot_data.nolabel_index, 'Utility'] = pd.Series(tsne_plot_data.utility).values
+        plot_df = plot_df.sort_values(by='Utility', ascending=False)
+
+        # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
+        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
+
+        return PlotGenerator.create_tsne_input_space_plot(plot_df)

@@ -103,7 +103,8 @@ function insertSpinnerInPlaceholder(placeholderId, append = false) {
 }
 
 function removeSpinnerInPlaceholder(placeholderId) {
-  document.getElementById(placeholderId).innerHTML.replace(SPINNER, "");
+  const placeholder = document.getElementById(placeholderId);
+  placeholder.innerHTML = placeholder.innerHTML.replace(SPINNER, "");
 }
 
 function collectSelection(placeholder) {
