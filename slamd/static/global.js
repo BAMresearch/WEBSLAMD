@@ -103,7 +103,7 @@ function insertSpinnerInPlaceholder(placeholderId, append = false) {
 }
 
 function removeSpinnerInPlaceholder(placeholderId) {
-  let placeholder = document.getElementById(placeholderId);
+  const placeholder = document.getElementById(placeholderId);
   placeholder.innerHTML = placeholder.innerHTML.replace(SPINNER, "");
 }
 
