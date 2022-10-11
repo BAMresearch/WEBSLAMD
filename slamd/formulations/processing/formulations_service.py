@@ -157,11 +157,9 @@ class FormulationsService:
 
     @classmethod
     def _weight_ranges_valid(cls, formulation_config, constraint):
-        for i, conf in enumerate(formulation_config):
-            if i == len(formulation_config) - 1:
-                # aggregate - dependent, dont validate
-                continue
-            elif i == 1:
+        # Skip aggregate (last value)
+        for i, conf in enumerate(formulation_config[:-1]):
+            if i == 1:
                 # liquid - ratios, calculate differently
                 min_value = float(conf['min']) * float(formulation_config[0]['min'])
                 max_value = float(conf['max']) * float(formulation_config[0]['max'])

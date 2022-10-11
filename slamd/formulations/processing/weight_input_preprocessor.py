@@ -18,10 +18,8 @@ class WeightInputPreprocessor:
         all_materials_weights = []
         total_number_of_weight_combinations = 1
 
-        for i, entry in enumerate(formulation_config):
-            if i == len(formulation_config) - 1:
-                continue
-
+        # Skip last entry - dependent aggregate
+        for entry in formulation_config[:-1]:
             weights_for_material = cls._create_weights(entry)
             all_materials_weights.append(weights_for_material)
 
