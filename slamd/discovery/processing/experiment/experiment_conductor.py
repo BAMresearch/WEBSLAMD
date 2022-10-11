@@ -40,6 +40,12 @@ class ExperimentConductor:
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
+        # Note that "~" is the logical NOT operator in pandas indexing logic -
+        # the partially labelled rows are those where not all columns are nan, and not all columns are not nan.
+        index_partially_labelled = exp.targets_df.index[
+            (~exp.targets_df.notnull().all(axis=1)) & (~exp.targets_df.isnull().all(axis=1))
+        ]
+
         predictions = pd.DataFrame(columns=exp.target_names)
         uncertainties = pd.DataFrame(columns=exp.target_names)
         for target in exp.target_names:
@@ -59,10 +65,12 @@ class ExperimentConductor:
             predictions.loc[index_unlabelled, target] = prediction
             uncertainties.loc[index_unlabelled, target] = uncertainty
 
-        # TODO For predictions where known values exist, either
-        #  a) Keep predictions, but set uncertainty to zero
-        #  b) overwrite predictions with known values and set uncertainty to zero
-        #  c) Delete predictions
+            # Determine rows for which the current target is labelled, but others aren't
+            index_only_curr_labelled = index_partially_labelled.intersection(index_labelled)
+
+            # Add these known values to the prediction with uncertainty 0, for the utility calculation
+            predictions.loc[index_only_curr_labelled, target] = exp.targets_df.loc[index_only_curr_labelled, target]
+            uncertainties.loc[index_only_curr_labelled, target] = 0
 
     @classmethod
     def _calculate_utility(cls, exp):
