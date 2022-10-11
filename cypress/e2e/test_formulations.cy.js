@@ -22,6 +22,12 @@ describe("Test formulations page", () => {
     cy.findByText("Close").should("exist");
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
+    // Check that the materials selected appear as input fields
+    cy.checkGeneratedConfigurations([
+      "Powders (Example Powder 1)",
+      "Liquids (Example Liquid 1)",
+      "Aggregates (Example Aggregates 1)",
+    ]);
     // Fill in the increment, min, max values
     cy.fillForm({
       "Increment (kg)": [30],
@@ -88,6 +94,12 @@ describe("Test formulations page", () => {
     cy.findByText("Close").should("exist");
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
+    // Check that the materials selected appear as input fields
+    cy.checkGeneratedConfigurations([
+      "Powders (Example Powder 1, Example Powder 2)",
+      "Liquids (Example Liquid 1, Example Liquid 2)",
+      "Aggregates (Example Aggregates 1, Example Aggregates 2)",
+    ]);
     // Fill in the increment, min, max values
     cy.fillForm({
       "Increment (kg)": [40],
@@ -155,6 +167,12 @@ describe("Test formulations page", () => {
     cy.findByText("Close").should("exist");
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
+    // Check that the materials selected appear as input fields
+    cy.checkGeneratedConfigurations([
+      "Powders (Example Powder 1)",
+      "Liquids (Example Liquid 1)",
+      "Aggregates (Example Aggregates 1)",
+    ]);
     // Fill in the increment, min, max values
     cy.fillForm({
       "Increment (kg)": [10],
@@ -227,6 +245,14 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findByText("Close").should("exist");
     cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
 
+    // Check that the materials selected appear as input fields
+    cy.checkGeneratedConfigurations([
+      "Powders (Example Powder 1)",
+      "Liquids (Example Liquid 1)",
+      "Aggregates (Example Aggregates 1)",
+      "Admixtures (Example Admixture 1)",
+      "Customs (Example Custom 1, Example Custom 2, Example Custom 3)",
+    ]);
     // Fill in the increment, min, max values
     cy.fillForm({
       "Increment (kg)": [5, 5, 5],
