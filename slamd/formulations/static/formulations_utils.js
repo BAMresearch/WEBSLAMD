@@ -56,7 +56,7 @@ function addListenersToIndependentFields() {
     document.getElementById(item.max.id).setAttribute("title", "");
 
     item.increment.addEventListener("keyup", () => {
-      correctInputFieldValue(item.increment, 0, parseFloat(weightConstraint));
+      correctInputFieldValue(item.increment, 0, parseFloat(concreteWeightConstraint));
       toggleConfirmationFormulationsButtons(independentInputFields);
     });
   }
@@ -118,7 +118,7 @@ function collectFormulationsMinMaxRequestData() {
   }
   return {
     materials_formulation_configuration: rowData,
-    weight_constraint: weightConstraint,
+    weight_constraint: concreteWeightConstraint,
   };
 }
 
@@ -175,7 +175,7 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
     const lastMinItem = document.getElementById(
       `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
     );
-    lastMinItem.value = (weightConstraint - sumOfIndependentFields).toFixed(2);
+    lastMinItem.value = (concreteWeightConstraint - sumOfIndependentFields).toFixed(2);
   }
 }
 
@@ -194,16 +194,16 @@ function autocorrectInput(independentMinMaxInputFields, inputFieldName, currentI
     .filter((item) => !Number.isNaN(item))
     .reduce((x, y) => x + y, 0);
 
-  if (sumOfIndependentFields > weightConstraint) {
+  if (sumOfIndependentFields > concreteWeightConstraint) {
     if (currentInputField.id.includes(LIQUID_HTML_ID_INCLUDES)) {
       // liquids need to be updated with a ratio instead of a total
       currentInputField.value = (
-          (weightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
+          (concreteWeightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
       ).toFixed(2);
     } else {
-      currentInputField.value = (weightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
+      currentInputField.value = (concreteWeightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
     }
-    sumOfIndependentFields = weightConstraint;
+    sumOfIndependentFields = concreteWeightConstraint;
   }
   return sumOfIndependentFields;
 }
