@@ -7,7 +7,7 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 class WeightsCalculator:
 
     @classmethod
-    def compute_independent_weights_product(cls, all_materials_weights):
+    def _compute_independent_weights_product(cls, all_materials_weights):
         # "independent" is a slight misnomer as the liquid weights are defined in relation to the powder weights
         # However, they are independent in the sense that they do not depend on the mass constraint
         powder_weights = all_materials_weights[0]

@@ -1,4 +1,3 @@
-from slamd.common.error_handling import SlamdRequestTooLargeException
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 MAX_NUMBER_OF_WEIGHTS = 10000
