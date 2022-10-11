@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
 from itertools import product
 from datetime import datetime
 
 from werkzeug.utils import secure_filename
 
-from slamd.common.common_validators import min_max_increment_config_valid
+from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
 from slamd.common.slamd_utils import not_numeric, empty
@@ -79,6 +78,10 @@ class FormulationsService:
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
 
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
+
         if len(admixture_names):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
                                            'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
@@ -114,6 +117,8 @@ class FormulationsService:
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
             entry.max.render_kw = {'disabled': 'disabled'}
+            entry.min.label.text = 'Max (kg)'
+            entry.max.label.text = 'Min (kg)'
 
     @classmethod
     def create_weights_form(cls, weights_request_data):
@@ -121,18 +126,19 @@ class FormulationsService:
         weight_constraint = weights_request_data['weight_constraint']
 
         # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # various materials used for blending; for example full_cartesian_product =
+        # various materials used for blending; for example weight_combinations =
         # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
         if empty(weight_constraint):
             raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
-            full_cartesian_product = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
-        if len(full_cartesian_product) > MAX_NUMBER_OF_WEIGHTS:
+            weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
+
+        if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
                 f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
 
         weights_form = WeightsForm()
-        for i, entry in enumerate(full_cartesian_product):
+        for i, entry in enumerate(weight_combinations):
             ratio_form_entry = weights_form.all_weights_entries.append_entry()
             ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
             ratio_form_entry.idx.data = str(i)
@@ -142,12 +148,33 @@ class FormulationsService:
     def _get_constrained_weights(cls, formulation_config, weight_constraint):
         if not_numeric(weight_constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not min_max_increment_config_valid(formulation_config, weight_constraint):
+        if not cls._weight_ranges_valid(formulation_config, weight_constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        return WeightsCalculator.compute_full_cartesian_product(all_materials_weights, weight_constraint)
+        return WeightsCalculator.compute_full_weights_product(all_materials_weights, weight_constraint)
+
+    @classmethod
+    def _weight_ranges_valid(cls, formulation_config, constraint):
+        # Skip aggregate (last value)
+        for i, conf in enumerate(formulation_config[:-1]):
+            if i == 1:
+                # liquid - ratios, calculate differently
+                min_value = float(conf['min']) * float(formulation_config[0]['min'])
+                max_value = float(conf['max']) * float(formulation_config[0]['max'])
+                # validation checks if increment is negative, 0 or non_numeric - does not need to be multiplied
+                increment = float(conf['increment'])
+            else:
+                # everything else - regular validation
+                min_value = float(conf['min'])
+                max_value = float(conf['max'])
+                increment = float(conf['increment'])
+
+            if validate_ranges(increment, max_value, min_value, float(constraint)):
+                return False
+
+        return True
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):

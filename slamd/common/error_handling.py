@@ -37,6 +37,13 @@ class MaterialNotFoundException(NotFound):
         super(MaterialNotFoundException, self).__init__()
 
 
+class PlotDataNotFoundException(NotFound):
+
+    def __init__(self, message):
+        self.message = message
+        super(PlotDataNotFoundException, self).__init__()
+
+
 class DatasetNotFoundException(NotFound):
 
     def __init__(self, message):

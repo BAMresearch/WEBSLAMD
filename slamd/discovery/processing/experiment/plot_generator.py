@@ -81,6 +81,7 @@ class PlotGenerator:
                     n_iter=300, random_state=1000, init='random', learning_rate=200)
         # Exclude the columns that do not belong to the features
         tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility', 'is_train_data']))
+
         tsne_result_df = pd.DataFrame(
             {'Row number': plot_df['Row number'],
              'tsne_1': tsne_result[:, 0],
@@ -106,6 +107,7 @@ class PlotGenerator:
                 x=0.01
             )
         )
+
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     @classmethod

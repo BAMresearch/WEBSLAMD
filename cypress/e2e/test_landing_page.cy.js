@@ -37,4 +37,11 @@ describe("Test landing page", () => {
       expect($a.attr("target"), "target").to.equal("_blank");
     });
   });
+
+  it("Link to iteratec website is present", () => {
+    cy.findByText("Powered by iteratec").should(($a) => {
+      expect($a.attr("href"), "href").to.contain("iteratec.com");
+      expect($a.attr("target"), "target").to.equal("_blank");
+    });
+  });
 });

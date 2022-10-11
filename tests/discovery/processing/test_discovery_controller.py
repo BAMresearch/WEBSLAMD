@@ -50,7 +50,7 @@ def test_slamd_creates_new_dataset_when_saving_is_successful(client, monkeypatch
 def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
     def mock_run_experiment(dataset_name, request):
         data = {'feature': [1, 2], 'prediction': [3, 4]}
-        return pd.DataFrame.from_dict(data), None, None
+        return pd.DataFrame.from_dict(data), None
 
     monkeypatch.setattr(DiscoveryService, 'run_experiment', mock_run_experiment)
 
@@ -70,6 +70,19 @@ def test_slamd_runs_experiment_and_shows_result(client, monkeypatch):
 
     assert '<td>2</td>' in template
     assert '<td>4</td>' in template
+
+
+def test_slamd_generates_tsne_plot(client, monkeypatch):
+    def mock_create_tsne_plot():
+        return json.dumps({'mock tsne': 1})
+
+    monkeypatch.setattr(DiscoveryService, 'create_tsne_plot', mock_create_tsne_plot)
+
+    response = client.get('/materials/discovery/tsne')
+
+    plot_data = json.loads(response.data.decode('utf-8'))
+    assert response.status_code == 200
+    assert plot_data == {'mock tsne': 1}
 
 
 def test_slamd_directs_to_add_targets_page(client, monkeypatch):

@@ -106,7 +106,7 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
     assert response.status_code == 200
 
     template = json.loads(response.data.decode('utf-8'))['template']
-    assert 'All weight combinations corresponding to the above configuration.' in template
+    assert 'Here you can see all the weight combinations generated using the configuration above.' in template
     assert 'all_weights_entries-0-weights' in template
     assert 'all_weights_entries-1-weights' in template
     assert '15/10' in template
