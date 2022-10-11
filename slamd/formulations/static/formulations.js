@@ -1,4 +1,4 @@
-const FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations`;
+const CONCRETE_FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations/concrete`;
 let weightConstraint = "";
 
 function toggleBasedOnSelectionAndConstraints() {
@@ -35,7 +35,7 @@ async function confirmSelection() {
   weightConstraint = document.getElementById("weight_constraint").value;
 
   const selectedMaterials = collectFormulationSelection();
-  const url = `${FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
+  const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
   insertSpinnerInPlaceholder("formulations_min_max_placeholder");
   await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
@@ -51,7 +51,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
   button.addEventListener("click", async () => {
     const requestData = collectFormulationsMinMaxRequestData();
-    const url = `${FORMULATIONS_MATERIALS_URL}/add_weights`;
+    const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_weights`;
 
     insertSpinnerInPlaceholder("formulations_weights_placeholder");
     await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
@@ -77,7 +77,7 @@ function assignCreateFormulationsBatchEvent() {
       processes_request_data: processesRequestData,
     };
 
-    const url = `${FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+    const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
 
     insertSpinnerInPlaceholder("formulations-table-placeholder");
     await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
@@ -101,7 +101,7 @@ function assignDeleteWeightEvent() {
 }
 
 async function deleteFormulations() {
-  await deleteDataAndEmbedTemplateInPlaceholder(FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
+  await deleteDataAndEmbedTemplateInPlaceholder(CONCRETE_FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
   document.getElementById("submit").disabled = true;
   document.getElementById("delete_formulations_batches_button").disabled = true;
   // Tooltip needs to be hidden manually to avoid a bug with chrome

@@ -8,6 +8,7 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 py-2 container">
+    {% include 'formulations_navigation.html' %}
     {% include 'formulations_form.html' %}
     <div id="formulations-table-placeholder">
         {% include 'formulations_table.html' %}
