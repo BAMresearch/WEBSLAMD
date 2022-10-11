@@ -126,7 +126,8 @@ class ExperimentConductor:
         apriori_mean = normed_apriori_df.mean()
         normed_apriori_df = (normed_apriori_df - apriori_mean) / apriori_std
 
-        apriori_for_predicted_rows = normed_apriori_df.loc[exp.index_none_labelled]
+        index_predicted = exp.index_none_labelled.union(exp.index_partially_labelled)
+        apriori_for_predicted_rows = normed_apriori_df.loc[index_predicted]
 
         # Invert
         for (column, value) in zip(exp.apriori_names, exp.apriori_max_or_min):
@@ -153,8 +154,8 @@ class ExperimentConductor:
         features_mean = norm_features_df.mean()
         norm_features_df = (norm_features_df - features_mean) / features_std
 
-        # TODO Remove reliance on index. What is the novelty for partially labelled data? Discuss with christoph.
-        features_of_predicted_rows = norm_features_df.loc[exp.index_none_labelled]
+        index_predicted = exp.index_none_labelled.union(exp.index_partially_labelled)
+        features_of_predicted_rows = norm_features_df.loc[index_predicted]
         features_of_known_rows = norm_features_df.loc[exp.index_all_labelled]
 
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
@@ -165,7 +166,7 @@ class ExperimentConductor:
 
         exp.novelty = pd.DataFrame(
             {'Novelty': novelty_as_array},
-            index=exp.index_none_labelled
+            index=index_predicted
         )
 
     @classmethod
