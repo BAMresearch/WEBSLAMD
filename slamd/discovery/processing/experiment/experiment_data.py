@@ -45,10 +45,15 @@ class ExperimentData:
         return self.dataframe[self.apriori_names]
 
     @property
-    def nolabel_index(self):
+    def index_none_labelled(self):
         return self.dataframe.index[self.targets_df.isnull().all(axis=1)]
 
     @property
-    def label_index(self):
+    def index_partially_labelled(self):
+        # Note that "~" is the logical NOT operator in pandas indexing logic
+        return self.dataframe.index[(~self.index_none_labelled) & (~self.index_all_labelled)]
+
+    @property
+    def index_all_labelled(self):
         return self.dataframe.index[self.targets_df.notnull().all(axis=1)]
 

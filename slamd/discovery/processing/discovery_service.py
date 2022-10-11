@@ -140,10 +140,10 @@ class DiscoveryService:
         plot_df = (plot_df - features_mean) / features_std
 
         plot_df['is_train_data'] = 'Predicted'
-        plot_df.loc[tsne_plot_data.label_index, 'is_train_data'] = 'Labelled'
+        plot_df.loc[tsne_plot_data.index_all_labelled, 'is_train_data'] = 'Labelled'
 
         plot_df['Utility'] = -np.inf
-        plot_df.loc[tsne_plot_data.nolabel_index, 'Utility'] = pd.Series(tsne_plot_data.utility).values
+        plot_df.loc[tsne_plot_data.index_none_labelled, 'Utility'] = pd.Series(tsne_plot_data.utility).values
         plot_df = plot_df.sort_values(by='Utility', ascending=False)
 
         # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.

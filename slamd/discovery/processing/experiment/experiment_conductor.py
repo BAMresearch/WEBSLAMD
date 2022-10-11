@@ -40,12 +40,6 @@ class ExperimentConductor:
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
-        # Note that "~" is the logical NOT operator in pandas indexing logic -
-        # the partially labelled rows are those where not all columns are nan, and not all columns are not nan.
-        index_partially_labelled = exp.targets_df.index[
-            (~exp.targets_df.notnull().all(axis=1)) & (~exp.targets_df.isnull().all(axis=1))
-        ]
-
         predictions = pd.DataFrame(columns=exp.target_names)
         uncertainties = pd.DataFrame(columns=exp.target_names)
         for target in exp.target_names:
@@ -66,7 +60,7 @@ class ExperimentConductor:
             uncertainties.loc[index_unlabelled, target] = uncertainty
 
             # Determine rows for which the current target is labelled, but others aren't
-            index_only_curr_labelled = index_partially_labelled.intersection(index_labelled)
+            index_only_curr_labelled = exp.index_partially_labelled.intersection(index_labelled)
 
             # Add these known values to the prediction with uncertainty 0, for the utility calculation
             predictions.loc[index_only_curr_labelled, target] = exp.targets_df.loc[index_only_curr_labelled, target]
@@ -89,9 +83,6 @@ class ExperimentConductor:
         prediction_for_utility, uncertainty_for_utility = cls._process_predictions(exp)
         apriori_for_utility = cls._process_apriori(exp)
 
-        # TODO Discuss implications of utility in partially labelled data
-        #  known value should not affect utility - lowering values. makes sense, less information to be gained
-        #  uncertainty for known values should be zero
         exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
                       exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
@@ -135,8 +126,7 @@ class ExperimentConductor:
         apriori_mean = normed_apriori_df.mean()
         normed_apriori_df = (normed_apriori_df - apriori_mean) / apriori_std
 
-        # TODO probably not necessary, just return entire dataframe. Selection can happen later
-        apriori_for_predicted_rows = normed_apriori_df.loc[exp.nolabel_index]
+        apriori_for_predicted_rows = normed_apriori_df.loc[exp.index_none_labelled]
 
         # Invert
         for (column, value) in zip(exp.apriori_names, exp.apriori_max_or_min):
@@ -151,6 +141,12 @@ class ExperimentConductor:
 
     @classmethod
     def _calculate_novelty(cls, exp):
+        """
+        Calculates the novelty, a measure of how different predicted points are compared to known points.
+
+        For each predicted point, the novelty is given as the distance to the nearest known point.
+        All values are normalized by the largest distance in the end, producing values in [0, 1].
+        """
         # Normalize first
         norm_features_df = exp.features_df.copy()
         features_std = norm_features_df.std().replace(0, 1)
@@ -158,8 +154,8 @@ class ExperimentConductor:
         norm_features_df = (norm_features_df - features_mean) / features_std
 
         # TODO Remove reliance on index. What is the novelty for partially labelled data? Discuss with christoph.
-        features_of_predicted_rows = norm_features_df.loc[exp.nolabel_index]
-        features_of_known_rows = norm_features_df.loc[exp.label_index]
+        features_of_predicted_rows = norm_features_df.loc[exp.index_none_labelled]
+        features_of_known_rows = norm_features_df.loc[exp.index_all_labelled]
 
         distance = distance_matrix(features_of_predicted_rows, features_of_known_rows)
         min_distances = distance.min(axis=1)
@@ -169,7 +165,7 @@ class ExperimentConductor:
 
         exp.novelty = pd.DataFrame(
             {'Novelty': novelty_as_array},
-            index=exp.nolabel_index
+            index=exp.index_none_labelled
         )
 
     @classmethod
