@@ -3,15 +3,15 @@ import json
 import pandas as pd
 from werkzeug.datastructures import ImmutableMultiDict
 
-from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
-    MaterialsAndProcessesSelectionForm
+from slamd.formulations.processing.forms.concrete_selection_form import \
+    ConcreteSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_service import FormulationsService
 
 
 def test_slamd_shows_formulations_page(client, monkeypatch):
     def mock_populate_selection_form():
-        form = MaterialsAndProcessesSelectionForm()
+        form = ConcreteSelectionForm()
         form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
         return form
 

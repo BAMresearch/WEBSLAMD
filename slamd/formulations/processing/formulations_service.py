@@ -1,25 +1,22 @@
-from itertools import product
 from datetime import datetime
+from itertools import product
 
 from werkzeug.utils import secure_filename
 
 from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
+from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import not_numeric, empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
-from slamd.formulations.processing.building_material import BuildingMaterial
-from slamd.formulations.processing.concrete_strategy import ConcreteStrategy
+from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.forms.materials_and_processes_selection_form import \
-    MaterialsAndProcessesSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
-from slamd.common.ml_utils import concat
 
 WEIGHT_FORM_DELIMITER = '/'
 MAX_NUMBER_OF_WEIGHTS = 10000
@@ -264,11 +261,7 @@ class FormulationsService:
 
     @classmethod
     def load_formulations_page(cls, building_material):
-        if building_material == BuildingMaterial.CONCRETE.value:
-            form = ConcreteStrategy.populate_selection_form()
-            df = ConcreteStrategy.get_formulations()
-            return form, df
-        elif building_material == BuildingMaterial.CEMENT.value:
-            return MaterialsAndProcessesSelectionForm(), None
-        else:
-            raise ValueNotSupportedException('No such building type!')
+        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
+        form, context = strategy.populate_selection_form()
+        df = strategy.get_formulations()
+        return form, df, context

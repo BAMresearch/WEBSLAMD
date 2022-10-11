@@ -14,7 +14,7 @@ formulations = Blueprint('formulations', __name__,
 
 @formulations.route('/<building_material>', methods=['GET'])
 def formulations_page(building_material):
-    form, df = FormulationsService.load_formulations_page(building_material)
+    form, df, context = FormulationsService.load_formulations_page(building_material)
 
     df_table = None
     if df is not None:
@@ -23,6 +23,7 @@ def formulations_page(building_material):
                               classes='accordion-body table table-bordered table-striped table-hover topscroll-table')
 
     return render_template('formulations.html',
+                           context=context,
                            materials_and_processes_selection_form=form,
                            formulations_min_max_form=FormulationsMinMaxForm(),
                            df=df_table)
