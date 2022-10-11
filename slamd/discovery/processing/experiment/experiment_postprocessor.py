@@ -21,7 +21,7 @@ class ExperimentPostprocessor:
         scatter_plot = cls.plot_output_space(df, exp)
 
         tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df,
-                                      label_index=exp.index_all_labelled, nolabel_index=exp.index_none_labelled)
+                                      index_all_labelled=exp.index_all_labelled, index_none_labelled=exp.index_none_labelled)
         return df, scatter_plot, tsne_plot_data
 
     @classmethod

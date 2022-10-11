@@ -142,8 +142,8 @@ def test_run_experiment_with_gauss_without_thresholds_and_saves_result(monkeypat
     assert mock_save_tsne_plot_data_called_with.utility.replace({np.nan: None}).to_dict() == TEST_GAUSS_TSNE_PLOT_UTILITY
     assert mock_save_tsne_plot_data_called_with.features_df.replace(
         {np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
-    assert list(mock_save_tsne_plot_data_called_with.label_index.values) == [0, 1, 2, 3]
-    assert list(mock_save_tsne_plot_data_called_with.nolabel_index.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
+    assert list(mock_save_tsne_plot_data_called_with.index_all_labelled.values) == [0, 1, 2, 3]
+    assert list(mock_save_tsne_plot_data_called_with.index_none_labelled.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def test_run_experiment_with_random_forest_without_thresholds_and_saves_result(monkeypatch):
@@ -177,8 +177,8 @@ def test_run_experiment_with_random_forest_without_thresholds_and_saves_result(m
     assert mock_save_tsne_plot_data_called_with.utility.replace({np.nan: None}).to_dict() == TEST_RF_TSNE_PLOT_UTILITY
     assert mock_save_tsne_plot_data_called_with.features_df.replace(
         {np.nan: None}).to_dict() == TEST_TSNE_PLOT_FEATURES_INDEX
-    assert list(mock_save_tsne_plot_data_called_with.label_index.values) == [0, 1, 2, 3]
-    assert list(mock_save_tsne_plot_data_called_with.nolabel_index.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
+    assert list(mock_save_tsne_plot_data_called_with.index_all_labelled.values) == [0, 1, 2, 3]
+    assert list(mock_save_tsne_plot_data_called_with.index_none_labelled.values) == [4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 # Since we already check for the data of the tsne plot generation in the tests above,
@@ -253,8 +253,8 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
         nolabel_index = Int64Index([0, 1], dtype='int64')
         return TSNEPlotData(utility=utility,
                             features_df=features_df,
-                            label_index=label_index,
-                            nolabel_index=nolabel_index)
+                            index_all_labelled=label_index,
+                            index_none_labelled=nolabel_index)
 
     mock_create_tsne_input_space_plot_called_with = None
 

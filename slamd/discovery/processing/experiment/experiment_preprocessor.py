@@ -67,7 +67,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def filter_apriori_with_thresholds_and_update_orig_data(cls, exp):
-        # In the future this function could be handled "live" and non-destructively in label_index and nolabel_index
+        # In the future this function could be handled "live" and non-destructively in index_all_labelled and index_none_labelled
         for (column, value, threshold) in zip(exp.apriori_names, exp.apriori_max_or_min, exp.apriori_thresholds):
             if threshold is None:
                 continue
