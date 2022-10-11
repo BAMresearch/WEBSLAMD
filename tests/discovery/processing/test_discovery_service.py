@@ -212,6 +212,37 @@ def test_run_experiment_with_thresholds_and_gauss_and_saves_result(monkeypatch):
     assert mock_save_tsne_plot_data_called_with == 'Saving TSNE Plot Data'
 
 
+def test_run_experiment_with_partially_labelled_data(monkeypatch):
+    mock_save_prediction_called_with = None
+
+    def mock_save_prediction(prediction):
+        nonlocal mock_save_prediction_called_with
+        mock_save_prediction_called_with = prediction
+        return None
+
+    mock_save_tsne_plot_data_called_with = None
+
+    def mock_save_tsne_plot_data(tsne_plot_data):
+        nonlocal mock_save_tsne_plot_data_called_with
+        mock_save_tsne_plot_data_called_with = "Saving TSNE Plot Data"
+        return None
+
+    monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
+    monkeypatch.setattr(DiscoveryPersistence, 'save_tsne_plot_data', mock_save_tsne_plot_data)
+    _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_PART_LABELS_INPUT, ['targ1', 'targ2'])
+
+    df_with_prediction, scatter_plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_PART_LABELS_CONFIG)
+    print()
+    print(df_with_prediction.to_string())
+
+    # assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
+    # assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
+    # assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRESH_CONFIG
+    # assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
+    # assert scatter_plot == 'Dummy Plot'
+    # assert mock_save_tsne_plot_data_called_with == 'Saving TSNE Plot Data'
+
+
 def test_download_prediction(monkeypatch):
     def mock_query_prediction():
         return Prediction('test_dataset.csv', pd.DataFrame())
@@ -274,10 +305,13 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
                                                                        'Utility': {1: 1, 0: 0}}
 
 
-def _mock_dataset_and_plot(monkeypatch, data, target_name):
+def _mock_dataset_and_plot(monkeypatch, data, target_names):
     def mock_query_dataset_by_name(dataset_name):
         test_df = pd.DataFrame.from_dict(data)
-        return Dataset('test_data', [target_name], test_df)
+        if type(target_names) == str:
+            return Dataset('test_data', [target_names], test_df)
+        else:
+            return Dataset('test_data', target_names, test_df)
 
     # We do not want to test the creation of the actual plot but rather that the PlotGenerator is called
     def mock_create_target_scatter_plot(targets):
