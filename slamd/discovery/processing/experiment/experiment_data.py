@@ -50,8 +50,7 @@ class ExperimentData:
 
     @property
     def index_partially_labelled(self):
-        # Note that "~" is the logical NOT operator in pandas indexing logic
-        return self.dataframe.index[(~self.index_none_labelled) & (~self.index_all_labelled)]
+        return self.dataframe.index.difference(self.index_all_labelled).difference(self.index_none_labelled)
 
     @property
     def index_all_labelled(self):
