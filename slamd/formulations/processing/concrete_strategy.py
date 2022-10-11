@@ -1,4 +1,4 @@
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
@@ -17,7 +17,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     @classmethod
     def get_formulations(cls):
         dataframe = None
-        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
+        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
         return dataframe

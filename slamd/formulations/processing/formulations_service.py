@@ -8,7 +8,7 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
     MaterialNotFoundException
 from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import not_numeric, empty
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_FORMULATION
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
@@ -24,6 +24,13 @@ MAX_DATASET_SIZE = 10000
 
 
 class FormulationsService:
+
+    @classmethod
+    def load_formulations_page(cls, building_material):
+        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
+        form, context = strategy.populate_selection_form()
+        df = strategy.get_formulations()
+        return form, df, context
 
     @classmethod
     def create_formulations_min_max_form(cls, formulation_selection):
@@ -149,7 +156,7 @@ class FormulationsService:
 
     @classmethod
     def create_materials_formulations(cls, formulations_data):
-        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
+        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
 
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
@@ -178,8 +185,8 @@ class FormulationsService:
         dataframe['Idx_Sample'] = range(0, len(dataframe))
         dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
 
-        temporary_dataset = Dataset(name=TEMPORARY_FORMULATION, dataframe=dataframe)
-        DiscoveryFacade.save_temporary_dataset(temporary_dataset)
+        temporary_dataset = Dataset(name=TEMPORARY_CONCRETE_FORMULATION, dataframe=dataframe)
+        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_CONCRETE_FORMULATION)
 
         return dataframe
 
@@ -231,13 +238,13 @@ class FormulationsService:
 
     @classmethod
     def delete_formulation(cls):
-        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
 
     @classmethod
     def save_dataset(cls, form):
         filename = cls._sanitize_filename(form['dataset_name'])
-        formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_FORMULATION)
-        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
+        formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
+        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
         formulation_to_be_saved_as_dataset.name = filename
         if formulation_to_be_saved_as_dataset:
             DiscoveryFacade.save_dataset(formulation_to_be_saved_as_dataset)
@@ -255,13 +262,6 @@ class FormulationsService:
             user_input = user_input + '.csv'
 
         filename = secure_filename(user_input)
-        if filename == TEMPORARY_FORMULATION:
-            raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
+        if filename.startswith('temporary'):
+            raise ValueNotSupportedException('The name of the file cannot start with temporary!')
         return filename
-
-    @classmethod
-    def load_formulations_page(cls, building_material):
-        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        form, context = strategy.populate_selection_form()
-        df = strategy.get_formulations()
-        return form, df, context
