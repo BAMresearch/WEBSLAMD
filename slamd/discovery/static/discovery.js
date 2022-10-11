@@ -55,8 +55,8 @@ function onChangeAPrioriInformation(event) {
 }
 
 /**
- * In order to be consistent with Plotly's plot function, we use the fetch api slightly different as compared to
- * our other usecases where we use fetchDataAndEmbedTemplateInPlaceholder defined in global.js
+ * In order to be consistent with Plotly's plot function, we use the fetch API slightly different as compared to
+ * our other use cases where we use fetchDataAndEmbedTemplateInPlaceholder defined in global.js
  */
 async function tsnePlotListener() {
     const alreadyFetched = document.getElementById("tsne-plot-placeholder").innerHTML.trim() !== ""
