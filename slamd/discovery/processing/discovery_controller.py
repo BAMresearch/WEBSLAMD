@@ -88,13 +88,12 @@ def create_a_priori_information_configuration_form():
 @discovery.route('/<dataset>', methods=['POST'])
 def run_experiment(dataset):
     request_body = json.loads(request.data)
-    dataframe, scatter_plot, tsne_plot = DiscoveryService.run_experiment(dataset, request_body)
+    dataframe, scatter_plot = DiscoveryService.run_experiment(dataset, request_body)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover topscroll-table')
 
-    body = {'template': render_template('experiment_result.html', df=html_dataframe,
-                                        scatter_plot=scatter_plot, tsne_plot=tsne_plot)}
+    body = {'template': render_template('experiment_result.html', df=html_dataframe, scatter_plot=scatter_plot)}
     return make_response(jsonify(body), 200)
 
 
@@ -113,6 +112,12 @@ def download_prediction():
     return send_file(dataset_content,
                      attachment_filename=filename,
                      as_attachment=True)
+
+
+@discovery.route('/tsne', methods=['GET'])
+def create_tsne_plot():
+    tsne_plot = DiscoveryService.create_tsne_plot()
+    return make_response(tsne_plot, 200)
 
 
 @discovery.route('/<dataset>/add_targets', methods=['GET'])
