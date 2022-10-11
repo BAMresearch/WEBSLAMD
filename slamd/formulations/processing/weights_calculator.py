@@ -25,7 +25,7 @@ class WeightsCalculator:
 
     @classmethod
     def compute_full_weights_product(cls, all_materials_weights, weight_constraint):
-        independent_weights_product = WeightsCalculator.compute_independent_weights_product(all_materials_weights)
+        independent_weights_product = WeightsCalculator._compute_independent_weights_product(all_materials_weights)
 
         full_weights_product = []
 
