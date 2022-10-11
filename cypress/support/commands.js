@@ -93,6 +93,8 @@ Cypress.Commands.add("clickButtonWaitForAsyncRequest", (buttonText, endpoint) =>
 Cypress.Commands.add("fillForm", (formContent) => {
   // Receive the form content as an object of the form:
   // { labelText1: inputValue1, labelText2: inputValue2, ...}
+  // If inputValue is an array, the label is interpreted as appearing several times on the page,
+  // then for every occurrence it fills out the input field with the n-th value of the array.
   for (const [labelText, inputValue] of Object.entries(formContent)) {
     if (Array.isArray(inputValue)) {
       cy.fillRepeatedFormElement(labelText, inputValue);
