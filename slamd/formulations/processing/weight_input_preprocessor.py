@@ -48,6 +48,8 @@ class WeightInputPreprocessor:
 
         while current_value <= max:
             values_for_given_material.append(str(round(current_value, 2)))
-            current_value += increment
+
+            # Round to prevent floating point errors - everything happens with 2 decimals of precision anyway
+            current_value = round(current_value + increment, 2)
 
         return values_for_given_material
