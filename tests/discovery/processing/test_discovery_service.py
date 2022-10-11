@@ -232,15 +232,9 @@ def test_run_experiment_with_partially_labelled_data(monkeypatch):
     _mock_dataset_and_plot(monkeypatch, TEST_GAUSS_WITH_PART_LABELS_INPUT, ['targ1', 'targ2'])
 
     df_with_prediction, scatter_plot = DiscoveryService.run_experiment('test_data', TEST_GAUSS_WITH_PART_LABELS_CONFIG)
-    print()
-    print(df_with_prediction.to_string())
 
-    # assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
-    # assert mock_save_prediction_called_with.dataset_used_for_prediction == 'test_data'
-    # assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_THRESH_CONFIG
-    # assert mock_save_prediction_called_with.dataframe.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_THRESH_PRED
-    # assert scatter_plot == 'Dummy Plot'
-    # assert mock_save_tsne_plot_data_called_with == 'Saving TSNE Plot Data'
+    assert df_with_prediction.replace({np.nan: None}).to_dict() == TEST_GAUSS_WITH_PART_LABELS_PRED
+    assert mock_save_prediction_called_with.metadata == TEST_GAUSS_WITH_PART_LABELS_CONFIG
 
 
 def test_download_prediction(monkeypatch):
