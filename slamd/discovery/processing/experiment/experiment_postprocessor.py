@@ -14,7 +14,7 @@ class ExperimentPostprocessor:
         df['Novelty'] = exp.novelty.round(6)
 
         for target in exp.target_names:
-            df.loc[exp.index_predicted, target] = exp.prediction[target].round(6)
+            df[target] = exp.prediction[target].round(6)
             df[f'Uncertainty ({target})'] = exp.uncertainty[target].round(5)
 
         df = cls.process_dataframe_for_output_table(df, exp)

@@ -40,12 +40,12 @@ class ExperimentConductor:
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
-        predictions = pd.DataFrame(columns=exp.target_names)
-        uncertainties = pd.DataFrame(columns=exp.target_names)
+        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted)
+        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted)
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
-            index_labelled = exp.targets_df[target].notnull().index
-            index_unlabelled = exp.targets_df[target].isnull().index
+            index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
+            index_unlabelled = exp.targets_df.index[exp.targets_df[target].isnull()]
 
             training_rows = exp.features_df.loc[index_labelled].values
             training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
@@ -65,6 +65,9 @@ class ExperimentConductor:
             # Add these known values to the prediction with uncertainty 0, for the utility calculation
             predictions.loc[index_only_curr_labelled, target] = exp.targets_df.loc[index_only_curr_labelled, target]
             uncertainties.loc[index_only_curr_labelled, target] = 0
+
+        exp.prediction = predictions
+        exp.uncertainty = uncertainties
 
     @classmethod
     def _calculate_utility(cls, exp):
