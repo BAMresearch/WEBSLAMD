@@ -229,9 +229,12 @@ describe("Test formulations with admixture, process and custom", () => {
 
     // Fill in the increment, min, max values
     cy.fillForm({
-      "Increment (kg)": [5, 5, 5, 5],
-      "Min (kg)": [20, 20, 20, 20],
-      "Max (kg)": [20, 20, 20, 20],
+      "Increment (kg)": [5, 5, 5],
+      "Min (kg)": [20, 20, 20],
+      "Max (kg)": [20, 20, 20],
+      "Increment (W/C-ratio)": 0.1,
+      "Min (W/C-ratio)": 1,
+      "Max (W/C-ratio)": 1,
     });
     // Check the autocompletion feature
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "20.00");
