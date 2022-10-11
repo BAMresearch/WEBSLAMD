@@ -16,19 +16,19 @@
                 <p>
                     For example, if you have ingredient A with range [20, 40] and step size 10 its ratios will be (20, 30, 40).
                     If you also have ingredient B with range [7, 9] and step size 1 its ratios will be (7, 8, 9), and the final
-                    formulations will have combinations ((20, 7), (20, 8), (20, 9), (30, 7), (30, 8), (30, 9), (40, 7), (40, 8),
-                    (40, 9)).
+                    formulations will have combinations { (20, 7), (20, 8), (20, 9), (30, 7), (30, 8), (30, 9), (40, 7), (40, 8),
+                    (40, 9) }.
                 </p>
 
                 There are two exceptions to this rule:
                 <ul>
                     <li>The amount of aggregates to use is not specified manually, but computed to "fill up" the weight
                         constraint. If there had been a constraint of 50 in the example above, the weights would have been
-                        extended to ((20, 7, 23), (20, 8, 22), (20, 9, 21), (30, 7, 13), (30, 8, 12), (30, 9, 11), (40, 7, 3),
-                        (40, 8, 2), (40, 9, 1)).</li>
+                        extended to { (20, 7, 23), (20, 8, 22), (20, 9, 21), (30, 7, 13), (30, 8, 12), (30, 9, 11), (40, 7, 3),
+                        (40, 8, 2), (40, 9, 1) }.</li>
                     <li>Liquids are not specified in kilograms but using the W/C-Ratio, relative to the powder value.
                         If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
-                        the combinations would have been ((20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30)).</li>
+                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.</li>
                 </ul>
             </div>
         </div>
