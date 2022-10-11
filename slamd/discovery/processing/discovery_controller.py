@@ -93,8 +93,7 @@ def run_experiment(dataset):
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover topscroll-table')
 
-    body = {'template': render_template('experiment_result.html', df=html_dataframe,
-                                        scatter_plot=scatter_plot, tsne_plot=None)}
+    body = {'template': render_template('experiment_result.html', df=html_dataframe, scatter_plot=scatter_plot)}
     return make_response(jsonify(body), 200)
 
 
