@@ -24,13 +24,16 @@ describe("Test formulations page", () => {
 
     // Fill in the increment, min, max values
     cy.fillForm({
-      "Increment (kg)": [30, 15],
-      "Min (kg)": [10, 5],
-      "Max (kg)": [70, 25],
+      "Increment (kg)": [30],
+      "Min (kg)": [10],
+      "Max (kg)": [60],
+      "Increment (W/C-ratio)": 0.05,
+      "Min (W/C-ratio)": 0.2,
+      "Max (W/C-ratio)": 0.3,
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (kg)").last().should("have.value", "85.00");
-    cy.findAllByLabelText("Max (kg)").last().should("have.value", "5.00");
+    cy.findAllByLabelText("Max (kg)").last().should("have.value", "88.00");
+    cy.findAllByLabelText("Min (kg)").last().should("have.value", "22.00");
     cy.clickButtonWaitForAsyncRequest(
       "5 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
@@ -38,12 +41,12 @@ describe("Test formulations page", () => {
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations([
-      "10.0/5.0/85.0",
-      "10.0/20.0/70.0",
-      "40.0/5.0/55.0",
-      "40.0/20.0/40.0",
-      "70.0/5.0/25.0",
-      "70.0/20.0/10.0",
+      "10.0/2.0/88.0",
+      "10.0/2.5/87.5",
+      "10.0/3.0/87.0",
+      "40.0/8.0/52.0",
+      "40.0/10.0/50.0",
+      "40.0/12.0/48.0",
     ]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
@@ -54,12 +57,12 @@ describe("Test formulations page", () => {
     cy.findByText("Idx_Sample").should("exist");
     // Check the first 4 columns for every row
     cy.checkGeneratedTable([
-      [0, 10.0, 5.0, 85.0],
-      [1, 10.0, 20.0, 70.0],
-      [2, 40.0, 5.0, 55.0],
-      [3, 40.0, 20.0, 40.0],
-      [4, 70.0, 5.0, 25.0],
-      [5, 70.0, 20.0, 10.0],
+      [0, 10.0, 2.0, 88.0],
+      [1, 10.0, 2.5, 87.5],
+      [2, 10.0, 3.0, 87.0],
+      [3, 40.0, 8.0, 52.0],
+      [4, 40.0, 10.0, 50.0],
+      [5, 40.0, 12.0, 48.0],
     ]);
 
     // Submit dataset with the default dataset name
@@ -87,20 +90,23 @@ describe("Test formulations page", () => {
 
     // Fill in the increment, min, max values
     cy.fillForm({
-      "Increment (kg)": [40, 10],
-      "Min (kg)": [20, 10],
-      "Max (kg)": [60, 10],
+      "Increment (kg)": [40],
+      "Min (kg)": [20],
+      "Max (kg)": [60],
+      "Increment (W/C-ratio)": 0.1,
+      "Min (W/C-ratio)": 0.5,
+      "Max (W/C-ratio)": 0.5,
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (kg)").last().should("have.value", "70.00");
-    cy.findAllByLabelText("Max (kg)").last().should("have.value", "30.00");
+    cy.findAllByLabelText("Max (kg)").last().should("have.value", "70.00");
+    cy.findAllByLabelText("Min (kg)").last().should("have.value", "10.00");
     cy.clickButtonWaitForAsyncRequest(
       "5 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
     );
 
     // Check that the configurations were generated correctly
-    cy.checkGeneratedConfigurations(["20.0/10.0/70.0", "60.0/10.0/30.0"]);
+    cy.checkGeneratedConfigurations(["20.0/10.0/70.0", "60.0/30.0/10.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
@@ -111,21 +117,21 @@ describe("Test formulations page", () => {
     // Check the first 4 columns for every row
     cy.checkGeneratedTable([
       [0, 20.0, 10.0, 70.0],
-      [1, 60.0, 10.0, 30.0],
+      [1, 60.0, 30.0, 10.0],
       [2, 20.0, 10.0, 70.0],
-      [3, 60.0, 10.0, 30.0],
+      [3, 60.0, 30.0, 10.0],
       [4, 20.0, 10.0, 70.0],
-      [5, 60.0, 10.0, 30.0],
+      [5, 60.0, 30.0, 10.0],
       [6, 20.0, 10.0, 70.0],
-      [7, 60.0, 10.0, 30.0],
+      [7, 60.0, 30.0, 10.0],
       [8, 20.0, 10.0, 70.0],
-      [9, 60.0, 10.0, 30.0],
+      [9, 60.0, 30.0, 10.0],
       [10, 20.0, 10.0, 70.0],
-      [11, 60.0, 10.0, 30.0],
+      [11, 60.0, 30.0, 10.0],
       [12, 20.0, 10.0, 70.0],
-      [13, 60.0, 10.0, 30.0],
+      [13, 60.0, 30.0, 10.0],
       [14, 20.0, 10.0, 70.0],
-      [15, 60.0, 10.0, 30.0],
+      [15, 60.0, 30.0, 10.0],
     ]);
 
     // Submit dataset with the default dataset name
@@ -151,9 +157,12 @@ describe("Test formulations page", () => {
 
     // Fill in the increment, min, max values
     cy.fillForm({
-      "Increment (kg)": [10, 10],
-      "Min (kg)": [50, 40],
-      "Max (kg)": [60, 40],
+      "Increment (kg)": [10],
+      "Min (kg)": [50],
+      "Max (kg)": [60],
+      "Increment (W/C-ratio)": 0.1,
+      "Min (W/C-ratio)": 0.5,
+      "Max (W/C-ratio)": 0.5,
     });
     cy.clickButtonWaitForAsyncRequest(
       "5 - Show mixture in terms of base material composition",
@@ -161,20 +170,20 @@ describe("Test formulations page", () => {
     );
 
     // Check that the configurations were generated correctly
-    cy.checkGeneratedConfigurations(["50.0/40.0/10.0", "60.0/40.0/0.0"]);
+    cy.checkGeneratedConfigurations(["50.0/25.0/25.0", "60.0/30.0/10.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("6 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
     // Delete the last formulation
     cy.get(".input-group > button").last().click();
-    cy.findByDisplayValue("60.0/40.0/0.0").should("not.exist");
+    cy.findByDisplayValue("60.0/30.0/10.0").should("not.exist");
 
     // Check that the materials formulations were generated correctly
     cy.findByText("Show / hide formulations").scrollIntoView();
     cy.findByText("Idx_Sample").should("exist");
     // Check the only generated row
-    cy.checkGeneratedTable([[0, 50.0, 40.0, 10.0]]);
+    cy.checkGeneratedTable([[0, 50.0, 25.0, 25.0]]);
     // Delete all rows
     cy.findByText("Delete Material Formulation").click();
     cy.findByText("Idx_Sample").should("not.exist");
