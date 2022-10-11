@@ -1,5 +1,6 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
+import numpy as np
 import pandas as pd
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -40,8 +41,8 @@ class ExperimentConductor:
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
-        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted)
-        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted)
+        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
+        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
             index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
