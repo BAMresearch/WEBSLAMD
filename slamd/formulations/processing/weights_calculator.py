@@ -12,22 +12,14 @@ class WeightsCalculator:
         # However, they are independent in the sense that they do not depend on the mass constraint
         powder_weights = all_materials_weights[0]
         liquid_weight_ratios = all_materials_weights[1]
-
-        if len(all_materials_weights) >= 3:
-            remaining_weights = all_materials_weights[2:]
-        else:
-            remaining_weights = None
+        remaining_weights = all_materials_weights[2:]
 
         weights_product = []
 
         for pw in powder_weights:
             # They're strings - cast to float for multiplication, round, then cast back to string
             liquid_weights = [str(round(float(lwr) * float(pw), 2)) for lwr in liquid_weight_ratios]
-
-            if remaining_weights:
-                weights_product += list(product([pw], liquid_weights, *remaining_weights))
-            else:
-                weights_product += list(product([pw], liquid_weights))
+            weights_product += list(product([pw], liquid_weights, *remaining_weights))
 
         return weights_product
 
