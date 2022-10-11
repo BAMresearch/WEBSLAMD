@@ -62,6 +62,11 @@ class BlendedMaterialsService(MaterialsService):
         min_max_form = MinMaxForm()
         for i in range(count):
             min_max_form.all_min_max_entries.append_entry()
+
+        # Min/Max of the last entry are calculated from the previous entries, and the labels need to be switched
+        min_max_form.all_min_max_entries[-1].min.label.text = 'Max (%)'
+        min_max_form.all_min_max_entries[-1].max.label.text = 'Min (%)'
+
         return min_max_form, complete
 
     @classmethod

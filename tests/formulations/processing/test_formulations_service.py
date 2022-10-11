@@ -19,8 +19,8 @@ from tests.materials.materials_test_data import prepare_test_base_powders_for_bl
 
 MATERIALS_CONFIG = [
     {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 0.1},
-    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 0.2},
-    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}
+    {'uuid': '2', 'type': 'Liquid', 'min': 0.1, 'max': 0.9, 'increment': 0.01},
+    {'uuid': '3', 'type': 'Aggregates', 'min': 67.6, 'max': 35, 'increment': None}
 ]
 
 app = create_app('testing', with_session=False)
@@ -63,19 +63,19 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
             {
                 'materials_formulation_configuration': [
                     {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 10.5},
-                    {'uuid': '2', 'type': 'Aggregates', 'min': 15.2, 'max': 25, 'increment': 5.1},
-                    {'uuid': '3', 'type': 'Custom', 'min': 67.6, 'max': 35, 'increment': None}],
+                    {'uuid': '2', 'type': 'Liquid', 'min': 0.5, 'max': 0.6, 'increment': 0.1},
+                    {'uuid': '3', 'type': 'Aggregates', 'min': 67.6, 'max': 35, 'increment': None}],
                 'weight_constraint': '100'
             }
 
         form = FormulationsService.create_weights_form(weight_request_data)
 
-        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2/15.2/66.6'},
-                                                 {'idx': '1', 'weights': '18.2/20.3/61.5'},
-                                                 {'idx': '2', 'weights': '28.7/15.2/56.1'},
-                                                 {'idx': '3', 'weights': '28.7/20.3/51.0'},
-                                                 {'idx': '4', 'weights': '39.2/15.2/45.6'},
-                                                 {'idx': '5', 'weights': '39.2/20.3/40.5'}]
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2/9.1/72.7'},
+                                                 {'idx': '1', 'weights': '18.2/10.92/70.88'},
+                                                 {'idx': '2', 'weights': '28.7/14.35/56.95'},
+                                                 {'idx': '3', 'weights': '28.7/17.22/54.08'},
+                                                 {'idx': '4', 'weights': '39.2/19.6/41.2'},
+                                                 {'idx': '5', 'weights': '39.2/23.52/37.28'}]
 
 
 def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):

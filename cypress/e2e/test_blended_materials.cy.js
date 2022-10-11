@@ -39,8 +39,8 @@ describe("Test blending powders and blended material deletion", () => {
       "Max (%)": [100],
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "100.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "100.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
@@ -102,8 +102,8 @@ describe("Test blending liquids and property interpolation", () => {
       "Max (%)": [80],
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "80.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "20.00");
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
@@ -230,8 +230,8 @@ describe("Test blending aggregates and incomplete data", () => {
       "Max (%)": [80],
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "80.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "20.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "80.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "20.00");
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
@@ -287,8 +287,8 @@ describe("Test blending three custom materials with properties with negative val
       "Max (%)": [75, 25],
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "60.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
@@ -361,8 +361,8 @@ describe("Test blending three admixtures with properties with negative values", 
       "Max (%)": [75, 25],
     });
     // Check the autocompletion feature
-    cy.findAllByLabelText("Min (%)").last().should("have.value", "60.00");
-    cy.findAllByLabelText("Max (%)").last().should("have.value", "0.00");
+    cy.findAllByLabelText("Max (%)").last().should("have.value", "60.00");
+    cy.findAllByLabelText("Min (%)").last().should("have.value", "0.00");
     cy.clickButtonWaitForAsyncRequest("5 - Preview blending ratios", "/materials/blended/add_ratios");
 
     // Check that the configurations were generated correctly
