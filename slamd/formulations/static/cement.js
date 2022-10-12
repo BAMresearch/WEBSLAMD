@@ -21,7 +21,19 @@ async function confirmSelection() {
 window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
 
-    document.getElementById("change_materials_and_processes_selection_button").disabled = false;
-    document.getElementById("submit").disabled = false;
-    document.getElementById("delete_formulations_batches_button").disabled = false;
+    document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
+    document.getElementById("weight_constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("powder_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
+    document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
+
+    // document.getElementById("change_materials_and_processes_selection_button").disabled = false;
+    // document.getElementById("submit").disabled = false;
+    // document.getElementById("delete_formulations_batches_button").disabled = false;
+
+    const formulations = document.getElementById("formulations_dataframe");
+    if (formulations) {
+        document.getElementById("submit").disabled = false;
+        document.getElementById("delete_formulations_batches_button").disabled = false;
+    }
 });
