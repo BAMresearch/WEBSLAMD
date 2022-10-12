@@ -1,3 +1,5 @@
+{% from 'action_buttons.html' import create_change_selection_button -%}
+
 <div class="row g-3 mb-3 align-items-end">
     <div class="col-md-6">
         {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
@@ -44,3 +46,7 @@
         {{ materials_and_processes_selection_form.dataset_name(class_="form-control") }}
     </div>
 </div>
+{{ create_change_selection_button("2 - Configure weights for each material type",
+"change_materials_and_processes_selection_button",
+"confirm_materials_and_processes_selection_button",
+"Specify at least one powder, one liquid, one aggregate, and a constraint to create materials formulations for concrete") }}

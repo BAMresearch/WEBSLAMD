@@ -7,7 +7,7 @@
 let allWeightFieldsHaveValidInput = false;
 const LIQUID_HTML_ID_INCLUDES = "-1-";
 
-function collectFormulationSelection() {
+function collectConcreteFormulationSelection() {
   const powderPlaceholder = document.getElementById("powder_selection");
   const liquidPlaceholder = document.getElementById("liquid_selection");
   const aggregatesPlaceholder = document.getElementById("aggregates_selection");
@@ -19,6 +19,22 @@ function collectFormulationSelection() {
   selectedMaterials.push(...collectSelectionForFormulations(powderPlaceholder));
   selectedMaterials.push(...collectSelectionForFormulations(liquidPlaceholder));
   selectedMaterials.push(...collectSelectionForFormulations(aggregatesPlaceholder));
+  selectedMaterials.push(...collectSelectionForFormulations(admixturePlaceholder));
+  selectedMaterials.push(...collectSelectionForFormulations(customPlaceholder));
+  selectedMaterials.push(...collectSelectionForFormulations(processesPlaceholder));
+  return selectedMaterials;
+}
+
+function collectCementFormulationSelection() {
+  const powderPlaceholder = document.getElementById("powder_selection");
+  const liquidPlaceholder = document.getElementById("liquid_selection");
+  const admixturePlaceholder = document.getElementById("admixture_selection");
+  const customPlaceholder = document.getElementById("custom_selection");
+  const processesPlaceholder = document.getElementById("process_selection");
+
+  const selectedMaterials = [];
+  selectedMaterials.push(...collectSelectionForFormulations(powderPlaceholder));
+  selectedMaterials.push(...collectSelectionForFormulations(liquidPlaceholder));
   selectedMaterials.push(...collectSelectionForFormulations(admixturePlaceholder));
   selectedMaterials.push(...collectSelectionForFormulations(customPlaceholder));
   selectedMaterials.push(...collectSelectionForFormulations(processesPlaceholder));

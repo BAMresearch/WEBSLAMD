@@ -41,7 +41,7 @@ describe("Test formulations page", () => {
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "88.00");
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "22.00");
     cy.clickButtonWaitForAsyncRequest(
-      "5 - Show mixture in terms of base material composition",
+      "3 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
     );
 
@@ -55,7 +55,7 @@ describe("Test formulations page", () => {
       "40.0/12.0/48.0",
     ]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
-    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
     // Check that the materials formulations were generated correctly
@@ -113,14 +113,14 @@ describe("Test formulations page", () => {
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "70.00");
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "10.00");
     cy.clickButtonWaitForAsyncRequest(
-      "5 - Show mixture in terms of base material composition",
+      "3 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["20.0/10.0/70.0", "60.0/30.0/10.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
-    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
     // Check that the materials formulations were generated correctly
@@ -183,14 +183,14 @@ describe("Test formulations page", () => {
       "Max (W/C-ratio)": 0.5,
     });
     cy.clickButtonWaitForAsyncRequest(
-      "5 - Show mixture in terms of base material composition",
+      "3 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["50.0/25.0/25.0", "60.0/30.0/10.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
-    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
     // Delete the last formulation
@@ -208,7 +208,7 @@ describe("Test formulations page", () => {
 
     // Create the formulation again
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
-    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
     // Submit dataset with the given name
     cy.findByText("Submit").click();
@@ -266,14 +266,14 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "20.00");
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "20.00");
     cy.clickButtonWaitForAsyncRequest(
-      "5 - Show mixture in terms of base material composition",
+      "3 - Show mixture in terms of base material composition",
       "/materials/formulations/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["20.0/20.0/20.0/20.0/20.0"]);
     cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
-    cy.findByText("6 - Create material formulations for given configuration").click();
+    cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
     // Check that the materials formulations were generated correctly

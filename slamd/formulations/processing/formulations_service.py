@@ -10,6 +10,7 @@ from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import not_numeric, empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
@@ -33,7 +34,11 @@ class FormulationsService:
         return form, df, context
 
     @classmethod
-    def create_formulations_min_max_form(cls, formulation_selection):
+    def create_formulations_min_max_form(cls, formulation_selection, building_material):
+        if building_material == BuildingMaterial.CEMENT.value:
+            min_max_form = FormulationsMinMaxForm()
+            min_max_form.materials_min_max_entries.append_entry()
+            return min_max_form
         powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
         liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
         aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
