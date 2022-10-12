@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% from 'icons.html' import list_icon, question_mark_icon -%}
+{% from 'icons.html' import list_icon, question_mark_icon, download_icon, upload_icon -%}
 <html lang="en">
 
 <head>
@@ -49,8 +49,16 @@
                     </li>
                 </ul>
             </div>
+            <a class="btn btn-default text-white" href="/static/save-session"
+                aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">
+                {{ download_icon(30, 30, "white") }}
+            </a>
+            <a class="btn btn-default text-white" href="/static/load-session"
+                aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
+                {{ upload_icon(30, 30, "white") }}
+            </a>
             <a class="btn btn-default text-white" href="/static/SLAMD-UserManual.pdf" target="_blank"
-                aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="left" title="User Manual">
+                aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User Manual">
                 {{ question_mark_icon(30, 30, "white") }}
             </a>
         </div>
