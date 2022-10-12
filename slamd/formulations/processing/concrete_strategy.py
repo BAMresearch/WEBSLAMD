@@ -66,11 +66,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         return min_max_form
 
-    @classmethod
-    def _create_non_editable_entries(cls, formulation_selection, min_max_form, type):
-        selection_for_type = [item for item in formulation_selection if item['type'] == type]
-        for item in selection_for_type:
-            cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['uuid'], item['name'], type)
 
     @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):

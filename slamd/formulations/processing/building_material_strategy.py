@@ -9,6 +9,11 @@ class BuildingMaterialStrategy(ABC):
         pass
 
     @classmethod
+    @abstractmethod
+    def _create_min_max_form_entry(cls, entries, uuids, name, type):
+        pass
+
+    @classmethod
     def _populate_common_ingredient_selection(cls, form, all_materials):
         form.powder_selection.choices = cls._to_selection(all_materials.powders)
         form.liquid_selection.choices = cls._to_selection(all_materials.liquids)
@@ -30,3 +35,9 @@ class BuildingMaterialStrategy(ABC):
             if len(name) == 0:
                 return True
         return False
+
+    @classmethod
+    def _create_non_editable_entries(cls, formulation_selection, min_max_form, type):
+        selection_for_type = [item for item in formulation_selection if item['type'] == type]
+        for item in selection_for_type:
+            cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['uuid'], item['name'], type)

@@ -40,3 +40,48 @@ class CementStrategy(BuildingMaterialStrategy):
 
         if cls._invalid_material_combination(liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify powders and liquids')
+
+        min_max_form = FormulationsMinMaxForm()
+
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
+                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
+                                       'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
+
+        if len(aggregates_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
+                                           'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
+
+        if len(admixture_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
+                                           'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
+
+        if len(custom_names):
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
+                                           'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+
+        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
+
+        return min_max_form
+
+    @classmethod
+    def _create_min_max_form_entry(cls, entries, uuids, name, type):
+        entry = entries.append_entry()
+        entry.materials_entry_name.data = name
+        entry.uuid_field.data = uuids
+        entry.type_field.data = type
+        if type == 'Powder' or type == 'Liquid':
+            entry.increment.name = type
+            entry.min.name = type
+            entry.max.name = type
+        # TODO: proper labelling of input fields
+        if type == 'Powder':
+            entry.increment.render_kw = {'disabled': 'disabled'}
+            entry.min.render_kw = {'disabled': 'disabled'}
+            entry.max.render_kw = {'disabled': 'disabled'}
+            entry.min.label.text = 'Max (kg)'
+            entry.max.label.text = 'Min (kg)'
