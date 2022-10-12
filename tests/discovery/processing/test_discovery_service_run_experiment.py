@@ -117,11 +117,7 @@ def test_run_experiment_with_partially_labelled_data(monkeypatch):
         mock_save_prediction_called_with = prediction
         return None
 
-    mock_save_tsne_plot_data_called_with = None
-
     def mock_save_tsne_plot_data(tsne_plot_data):
-        nonlocal mock_save_tsne_plot_data_called_with
-        mock_save_tsne_plot_data_called_with = "Saving TSNE Plot Data"
         return None
 
     monkeypatch.setattr(DiscoveryPersistence, 'save_prediction', mock_save_prediction)
