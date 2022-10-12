@@ -11,7 +11,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     def populate_selection_form(cls):
         all_materials = MaterialsFacade.find_all()
         form = cls._populate_common_ingredient_selection(ConcreteSelectionForm(), all_materials)
-        form.aggregates_selection.choices = cls._to_selection(all_materials.aggregates_list)
         return form, BuildingMaterial.CONCRETE.value
 
     @classmethod
