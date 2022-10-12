@@ -1,6 +1,31 @@
 const CEMENT_FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations/cement`;
 let cementWeightConstraint = "";
 
+/**
+ * Despite the fact that some functions in cement.js and concrete.js look rather similar, we choose not to
+ * extract too many common methods as the internal logic for the two cases might diverge. In order not to create
+ * too much coupling between usecase which are different we explicitly prefer duplicating some parts of the code here.
+ */
+function toggleBasedOnSelectionAndConstraints() {
+    const powderPlaceholder = document.getElementById("powder_selection");
+    const liquidPlaceholder = document.getElementById("liquid_selection");
+
+    const powderSelected = atLeastOneItemIsSelected(powderPlaceholder);
+    const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder);
+
+    const validSelectionConfiguration = powderSelected && liquidSelected;
+    const validConstraintConfiguration = cementWeightConstraint !== undefined && cementWeightConstraint !== "" &&
+        cementWeightConstraint > 0;
+
+    const changeSelectionButton = document.getElementById("change_materials_and_processes_selection_button");
+    changeSelectionButton.disabled = !(validSelectionConfiguration && validConstraintConfiguration);
+}
+
+function toggleSelectionConfirmationButtonAfterConstraintChange() {
+    cementWeightConstraint = document.getElementById("weight_constraint").value;
+    toggleBasedOnSelectionAndConstraints();
+}
+
 async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
     removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
