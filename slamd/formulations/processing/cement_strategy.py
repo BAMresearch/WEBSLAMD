@@ -1,3 +1,4 @@
+from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION, \
     TEMPORARY_CEMENT_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
@@ -25,6 +26,17 @@ class CementStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def create_min_max_form(cls, formulation_selection):
-        min_max_form = FormulationsMinMaxForm()
-        min_max_form.materials_min_max_entries.append_entry()
-        return min_max_form
+        powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
+        liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
+        aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_names = [item['name'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_names = [item['name'] for item in formulation_selection if item['type'] == 'Custom']
+
+        powder_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Powder']
+        liquid_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Liquid']
+        aggregates_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Aggregates']
+        admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
+        custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
+
+        if cls._invalid_material_combination(liquid_names, powder_names):
+            raise ValueNotSupportedException('You need to specify powders and liquids')

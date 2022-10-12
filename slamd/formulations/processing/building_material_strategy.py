@@ -23,3 +23,10 @@ class BuildingMaterialStrategy(ABC):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
         return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
+
+    @classmethod
+    def _invalid_material_combination(cls, *names):
+        for name in names:
+            if len(name) == 0:
+                return True
+        return False

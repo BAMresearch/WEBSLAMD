@@ -37,7 +37,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
         custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
-        if len(powder_names) == 0 or len(liquid_names) == 0 or len(aggregates_names) == 0:
+        if cls._invalid_material_combination(aggregates_names, liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
 
         min_max_form = FormulationsMinMaxForm()
