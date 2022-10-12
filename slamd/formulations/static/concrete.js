@@ -34,7 +34,7 @@ async function confirmSelection() {
     document.getElementById("submit").disabled = true;
     concreteWeightConstraint = document.getElementById("weight_constraint").value;
 
-    const selectedMaterials = collectConcreteFormulationSelection();
+    const selectedMaterials = collectBuildingMaterialFormulationSelection();
     const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
     insertSpinnerInPlaceholder("formulations_min_max_placeholder");
