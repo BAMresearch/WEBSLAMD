@@ -1,7 +1,12 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class BuildingMaterialStrategy(ABC):
+
+    @classmethod
+    @abstractmethod
+    def create_min_max_form(cls, formulation_selection):
+        pass
 
     @classmethod
     def _populate_common_ingredient_selection(cls, form, all_materials):

@@ -3,6 +3,7 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORA
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
+from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
@@ -21,3 +22,9 @@ class CementStrategy(BuildingMaterialStrategy):
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
         return dataframe
+
+    @classmethod
+    def create_min_max_form(cls, formulation_selection):
+        min_max_form = FormulationsMinMaxForm()
+        min_max_form.materials_min_max_entries.append_entry()
+        return min_max_form
