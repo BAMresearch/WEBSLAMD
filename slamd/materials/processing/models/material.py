@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from uuid import UUID, uuid1
 
 from slamd.materials.processing.models.additional_property import AdditionalProperty
@@ -27,9 +27,9 @@ class Material:
         out = self.__dict__.copy()
         out['uuid'] = str(self.uuid)
         if self.costs:
-            out['costs'] = self.costs.__dict__.copy()
+            out['costs'] = asdict(self.costs)
         if self.additional_properties:
-            out['additional_properties'] = [prop.__dict__.copy() for prop in self.additional_properties]
+            out['additional_properties'] = [asdict(prop) for prop in self.additional_properties]
         if self.created_from:
             out['created_from'] = [str(uuid) for uuid in self.created_from]
 

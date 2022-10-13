@@ -1,4 +1,3 @@
-import uuid
 from dataclasses import fields
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.powder import Powder, Composition, Structure

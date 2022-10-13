@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from slamd.materials.processing.models.material import Material
 
 
@@ -17,6 +17,6 @@ class Aggregates(Material):
 
     def to_dict(self):
         out = super().to_dict()
-        out['composition'] = self.composition.__dict__.copy()
+        out['composition'] = asdict(self.composition)
 
         return out
