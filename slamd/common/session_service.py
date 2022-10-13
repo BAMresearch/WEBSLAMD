@@ -41,7 +41,7 @@ class SessionService:
             full_json['Datasets'].append(ds.to_dict())
 
         full_string = json.dumps(full_json)
-        cls.load_session(full_string)
+        return full_string
 
     @classmethod
     def load_session(cls, session_data_json):
