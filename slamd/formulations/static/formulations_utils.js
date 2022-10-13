@@ -233,7 +233,7 @@ function autocorrectCementInput(independentMinMaxInputFields, inputFieldName, cu
     let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
 
     // By construction liquid always occurs in the first row
-    let nonLiquidValues =  independentFieldValues.slice(1, independentFieldValues.length)
+    let nonLiquidValues = independentFieldValues.slice(1, independentFieldValues.length)
 
     let sumOfNonLiquidWeights = nonLiquidValues
         .filter((item) => !Number.isNaN(item))
@@ -241,13 +241,12 @@ function autocorrectCementInput(independentMinMaxInputFields, inputFieldName, cu
 
     let liquidValue = independentFieldValues[0]
 
-    if (sumOfNonLiquidWeights > cementWeightConstraint){
+    if (sumOfNonLiquidWeights >= cementWeightConstraint) {
         if (!currentInputField.id.includes(CEMENT_LIQUID_HTML_ID_INCLUDES)) {
-            currentInputField.value = 0
-            liquidValue = 0
             currentInputField.value = (cementWeightConstraint - (sumOfNonLiquidWeights - currentInputField.value)).toFixed(2);
         }
     }
+
     return [sumOfNonLiquidWeights, liquidValue]
 }
 
