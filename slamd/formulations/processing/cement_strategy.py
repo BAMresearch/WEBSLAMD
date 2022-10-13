@@ -43,8 +43,6 @@ class CementStrategy(BuildingMaterialStrategy):
 
         min_max_form = FormulationsMinMaxForm()
 
-        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
-                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
 
@@ -63,6 +61,9 @@ class CementStrategy(BuildingMaterialStrategy):
         if len(custom_names):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
                                            'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+
+        cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
+                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
 
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
@@ -83,5 +84,3 @@ class CementStrategy(BuildingMaterialStrategy):
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
             entry.max.render_kw = {'disabled': 'disabled'}
-            entry.min.label.text = 'Max (kg)'
-            entry.max.label.text = 'Min (kg)'

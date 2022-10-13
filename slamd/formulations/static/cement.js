@@ -39,8 +39,8 @@ async function confirmSelection() {
     await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
     removeSpinnerInPlaceholder("formulations_min_max_placeholder");
 
-    addListenersToIndependentFields();
-    assignConfirmFormulationsConfigurationEvent();
+    addListenersToIndependentFields("CEMENT");
+    // assignConfirmFormulationsConfigurationEvent();
 }
 
 window.addEventListener("load", function () {
