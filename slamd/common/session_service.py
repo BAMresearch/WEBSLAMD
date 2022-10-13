@@ -4,6 +4,7 @@ from flask import session
 
 from slamd.common.error_handling import MaterialNotFoundException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.admixture import Admixture
@@ -47,6 +48,7 @@ class SessionService:
         session_data = json.loads(session_data_json)
 
         loaded_materials = [] # Collect all first in case of issues
+        loaded_datasets = []
 
         # TODO add comment - no facade
         for dictionary in session_data[cls.JSON_MAT_PROC_KEY]:
@@ -69,10 +71,16 @@ class SessionService:
             material.from_dict(dictionary)
             loaded_materials.append((material_type, material))
 
+        for dictionary in session_data[cls.JSON_DATA_KEY]:
+            dataset = Dataset()
+            dataset.from_dict(dictionary)
+            loaded_datasets.append(dataset)
+
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
 
-
+        for dataset in loaded_datasets:
+            DiscoveryPersistence.save_dataset(dataset)
 
 
 

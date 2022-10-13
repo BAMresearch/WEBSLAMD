@@ -24,3 +24,4 @@ class Dataset:
         self.name = dictionary['name']
         self.target_columns = dictionary['target_columns']
         self.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
+        self.dataframe = self.dataframe.reset_index(drop=True)

@@ -37,6 +37,7 @@ class Material:
         return out
 
     def from_dict(self, dictionary):
+        # TODO turn into classmethod/factory?
         for key in self.__dict__.keys():
             if key not in dictionary:
                 raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
