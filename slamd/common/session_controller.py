@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template
+from flask import Blueprint
 
-session = Blueprint('session', __name__, url_prefix='/session')
+from slamd.common.session_service import SessionService
+
+session_bp = Blueprint('session', __name__, url_prefix='/session')
 
 
-@session.route('/save', methods=['GET'])
+@session_bp.route('/save', methods=['GET'])
 def save_session():
-    pass
+    SessionService.save_session()
+    return ""
