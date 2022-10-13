@@ -1,4 +1,6 @@
 from dataclasses import dataclass, asdict
+
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.materials.processing.models.material import Material
 
 
@@ -25,3 +27,17 @@ class Liquid(Material):
         out['composition'] = asdict(self.composition)
 
         return out
+
+    def from_dict(self, dictionary):
+        super().from_dict(dictionary)
+
+        new_composition = Composition()
+
+        for key in new_composition.__dict__.keys():
+            if key not in dictionary['composition']:
+                raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
+                                                                f'{key}, got keys {list(dictionary.keys())}3')
+
+            new_composition.__dict__[key] = dictionary['composition'][key]
+
+        self.composition = new_composition

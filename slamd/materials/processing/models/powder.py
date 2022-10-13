@@ -1,4 +1,6 @@
 from dataclasses import dataclass, asdict
+
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.materials.processing.models.material import Material
 
 
@@ -33,6 +35,29 @@ class Powder(Material):
     def to_dict(self):
         out = super().to_dict()
         out['composition'] = asdict(self.composition)
-        out['structure'] = asdict(self.composition)
+        out['structure'] = asdict(self.structure)
 
         return out
+
+    def from_dict(self, dictionary):
+        super().from_dict(dictionary)
+
+        new_composition = Composition()
+        new_structure = Structure()
+
+        for key in new_composition.__dict__.keys():
+            if key not in dictionary['composition']: # TODO Check for!
+                raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
+                                                                f'{key}, got keys {list(dictionary.keys())}5')
+
+            new_composition.__dict__[key] = dictionary['composition'][key]
+
+        for key in new_structure.__dict__.keys():
+            if key not in dictionary['structure']:
+                raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
+                                                                f'{key}, got keys {list(dictionary.keys())}6')
+
+            new_structure.__dict__[key] = dictionary['structure'][key]
+
+        self.composition = new_composition
+        self.structure = new_structure
