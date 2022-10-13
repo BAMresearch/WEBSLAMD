@@ -10,13 +10,6 @@ class Costs:
     costs: float = None
     delivery_time: float = None
 
-    def to_dict(self):
-        return {
-            'co2_footprint': self.co2_footprint,
-            'costs': self.costs,
-            'delivery_time': self.delivery_time
-        }
-
 
 @dataclass
 class Material:
@@ -31,12 +24,13 @@ class Material:
     created_from: list[UUID] = None
 
     def to_dict(self):
-        out = vars(self)
+        out = self.__dict__.copy()
         out['uuid'] = str(self.uuid)
-
-        if self.costs is not None:
-            out['costs'] = self.costs.to_dict()
-        else:
-            out['costs'] = None
+        if self.costs:
+            out['costs'] = self.costs.__dict__.copy()
+        if self.additional_properties:
+            out['additional_properties'] = [prop.__dict__.copy() for prop in self.additional_properties]
+        if self.created_from:
+            out['created_from'] = [str(uuid) for uuid in self.created_from]
 
         return out

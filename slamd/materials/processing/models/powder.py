@@ -29,3 +29,10 @@ class Structure:
 class Powder(Material):
     composition: Composition = None
     structure: Structure = None
+
+    def to_dict(self):
+        out = super().to_dict()
+        out['composition'] = self.composition.__dict__.copy()
+        out['structure'] = self.composition.__dict__.copy()
+
+        return out

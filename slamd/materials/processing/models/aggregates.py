@@ -14,3 +14,9 @@ class Composition:
 @dataclass
 class Aggregates(Material):
     composition: Composition = None
+
+    def to_dict(self):
+        out = super().to_dict()
+        out['composition'] = self.composition.__dict__.copy()
+
+        return out
