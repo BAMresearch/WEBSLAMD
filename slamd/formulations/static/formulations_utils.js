@@ -268,6 +268,42 @@ function assignKeyboardEventsToWeightForm(initialCreationOfForm = false) {
     toggleSubmitButtonBasedOnWeights();
 }
 
+function assignDeleteWeightEvent() {
+    const numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
+
+    for (let i = 0; i < numberOfWeightEntries; i++) {
+        const deleteButton = document.getElementById(`delete_weight_button___${i}`);
+        deleteButton.addEventListener("click", () => {
+            document.getElementById(`all_weights_entries-${i}-weights`).remove();
+            deleteButton.remove();
+        });
+    }
+}
+
+function assignCreateFormulationsBatchEvent(url) {
+    const button = document.getElementById("create_formulations_batch_button");
+    enableTooltip(button);
+
+    button.addEventListener("click", async () => {
+        const materialsRequestData = collectMaterialRequestData();
+        const weightsRequestData = collectWeights();
+        const processesRequestData = collectProcessesRequestData();
+
+        const formulationsRequest = {
+            materials_request_data: materialsRequestData,
+            weights_request_data: weightsRequestData,
+            processes_request_data: processesRequestData,
+        };
+
+        insertSpinnerInPlaceholder("formulations-table-placeholder");
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
+        removeSpinnerInPlaceholder("formulations-table-placeholder");
+
+        document.getElementById("submit").disabled = false;
+        document.getElementById("delete_formulations_batches_button").disabled = false;
+    });
+}
+
 function toggleSubmitButtonBasedOnWeights() {
     const weightFields = collectWeightFields();
     const numberOfMaterials = document.querySelectorAll('[id$="-min"]').length - 1;

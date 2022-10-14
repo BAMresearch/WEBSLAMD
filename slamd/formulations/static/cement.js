@@ -56,8 +56,16 @@ async function assignConfirmFormulationsConfigurationEvent() {
         removeSpinnerInPlaceholder("formulations_weights_placeholder");
         assignKeyboardEventsToWeightForm(true);
         assignDeleteWeightEvent();
-        assignCreateFormulationsBatchEvent();
+        assignCreateFormulationsBatchEvent(`${CEMENT_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
     });
+}
+
+async function deleteFormulations() {
+    await deleteDataAndEmbedTemplateInPlaceholder(CEMENT_FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
+    document.getElementById("submit").disabled = true;
+    document.getElementById("delete_formulations_batches_button").disabled = true;
+    // Tooltip needs to be hidden manually to avoid a bug with chrome
+    bootstrap.Tooltip.getInstance("#delete_formulations_batches_button").hide()
 }
 
 window.addEventListener("load", function () {

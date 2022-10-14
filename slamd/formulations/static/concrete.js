@@ -58,46 +58,8 @@ async function assignConfirmFormulationsConfigurationEvent() {
         removeSpinnerInPlaceholder("formulations_weights_placeholder");
         assignKeyboardEventsToWeightForm(true);
         assignDeleteWeightEvent();
-        assignCreateFormulationsBatchEvent();
+        assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
     });
-}
-
-function assignCreateFormulationsBatchEvent() {
-    const button = document.getElementById("create_formulations_batch_button");
-    enableTooltip(button);
-
-    button.addEventListener("click", async () => {
-        const materialsRequestData = collectMaterialRequestData();
-        const weightsRequestData = collectWeights();
-        const processesRequestData = collectProcessesRequestData();
-
-        const formulationsRequest = {
-            materials_request_data: materialsRequestData,
-            weights_request_data: weightsRequestData,
-            processes_request_data: processesRequestData,
-        };
-
-        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
-
-        insertSpinnerInPlaceholder("formulations-table-placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
-        removeSpinnerInPlaceholder("formulations-table-placeholder");
-
-        document.getElementById("submit").disabled = false;
-        document.getElementById("delete_formulations_batches_button").disabled = false;
-    });
-}
-
-function assignDeleteWeightEvent() {
-    const numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
-
-    for (let i = 0; i < numberOfWeightEntries; i++) {
-        const deleteButton = document.getElementById(`delete_weight_button___${i}`);
-        deleteButton.addEventListener("click", () => {
-            document.getElementById(`all_weights_entries-${i}-weights`).remove();
-            deleteButton.remove();
-        });
-    }
 }
 
 async function deleteFormulations() {
