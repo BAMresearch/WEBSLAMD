@@ -102,6 +102,33 @@ TEST_GAUSS_WITH_THRESH_INPUT = {
     'X': {0: 5.0, 1: None, 2: 2.0, 3: None, 4: None, 5: 7.0, 6: None, 7: 4.0, 8: None, 9: None}
 }
 
+
+TEST_GAUSS_WITH_PART_LABELS_INPUT = {
+    'feat1': {1: 2, 2: 5, 3: 0, 4: 7, 5: 0, 6: 8, 7: 6, 8: 5, 9: 1, 10: 6},
+    'feat2': {1: 9, 2: 7, 3: 8, 4: 1, 5: 6, 6: 9, 7: 1, 8: 2, 9: 7, 10: 3},
+    'feat3': {1: 8, 2: 6, 3: 4, 4: 6, 5: 7, 6: 0, 7: 8, 8: 1, 9: 8, 10: 7},
+    'ap1': {1: 15, 2: 16, 3: 12, 4: 10, 5: 14, 6: 14, 7: 12, 8: 13, 9: 13, 10: 10},
+    'ap2': {1: 12, 2: 14, 3: 14, 4: 13, 5: 11, 6: 13, 7: 14, 8: 12, 9: 12, 10: 16},
+    'targ1': {1: 13, 2: 10, 3: None, 4: None, 5: None, 6: None, 7: 12, 8: 13, 9: 11, 10: None},
+    'targ2': {1: 7, 2: 0, 3: None, 4: None, 5: 9, 6: 1, 7: None, 8: None, 9: 7, 10: None}
+}
+
+
+TEST_GAUSS_WITH_PART_LABELS_PRED = {
+    'Row number': {9: 1, 3: 2, 6: 3, 7: 4, 2: 5, 5: 6, 4: 7},
+    'Utility': {9: 3.741835, 3: 3.578053, 6: 3.104644, 7: 2.790681, 2: 2.302518, 5: 1.172096, 4: -2.652341},
+    'Novelty': {9: 0.559167, 3: 0.831538, 6: 0.845632, 7: 0.973166, 2: 0.609335, 5: 1.0, 4: 0.240547},
+    'targ1': {9: 11.19986, 3: 12.865308, 6: 12.0, 7: 13.0, 2: 9.653954, 5: 4.89134, 4: 9.409356},
+    'targ2': {9: -1.717224, 3: -0.947162, 6: -0.845782, 7: 0.073919, 2: 8.09186, 5: 1.0, 4: 9.0},
+    'Uncertainty (targ1)': {9: 1.14653, 3: 1.94287, 6: 0.0, 7: 0.0, 2: 4.71516, 5: 6.56755, 4: 1.45409},
+    'Uncertainty (targ2)': {9: 4.72945, 3: 5.57318, 6: 5.5726, 7: 5.65264, 2: 3.96836, 5: 0.0, 4: 0.0},
+    'ap1': {9: 10, 3: 10, 6: 12, 7: 13, 2: 12, 5: 14, 4: 14}, 'ap2': {9: 16, 3: 13, 6: 14, 7: 12, 2: 14, 5: 13, 4: 11},
+    'feat1': {9: 6, 3: 7, 6: 6, 7: 5, 2: 0, 5: 8, 4: 0}, 'feat2': {9: 3, 3: 1, 6: 1, 7: 2, 2: 8, 5: 9, 4: 6},
+    'feat3': {9: 7, 3: 6, 6: 8, 7: 1, 2: 4, 5: 0, 4: 7}
+}
+
+
+
 TEST_GAUSS_WITHOUT_THRESH_PRED = {
     'Row number': {8: 1, 9: 2, 10: 3, 11: 4, 12: 5, 4: 6, 5: 7, 6: 8, 7: 9},
     'Utility': {8: 2.33421, 9: 2.33421, 10: 2.004382, 11: 2.004382, 12: -1.623728,
@@ -286,6 +313,16 @@ TEST_GAUSS_WITH_THRESH_CONFIG = {
     'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.0',
     'target_configurations': [{'max_or_min': 'min', 'weight': '1.00', 'threshold': '5.0'}],
     'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': '27.0'}]}
+
+TEST_GAUSS_WITH_PART_LABELS_CONFIG = {
+    'materials_data_input': ['feat1', 'feat2', 'feat3'],
+    'target_properties': ['targ1', 'targ2'],
+    'a_priori_information': ['ap1', 'ap2'],
+    'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.0',
+    'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''},
+                              {'max_or_min': 'min', 'weight': '1.00', 'threshold': ''}],
+    'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''},
+                                            {'max_or_min': 'max', 'weight': '1.00', 'threshold': ''}]}
 
 TEST_GAUSS_TSNE_PLOT_UTILITY = {4: -1.6567106642869276,
                                 5: -1.6567106642869276,

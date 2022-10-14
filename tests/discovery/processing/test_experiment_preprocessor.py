@@ -87,14 +87,6 @@ def test_validate_experiment_no_targets():
         ExperimentPreprocessor.validate_experiment(exp)
 
 
-def test_validate_experiment_partial_labels():
-    exp = create_valid_experimentdata()
-    exp.dataframe.loc[1, 'target1'] = np.nan
-
-    with pytest.raises(SequentialLearningException):
-        ExperimentPreprocessor.validate_experiment(exp)
-
-
 def test_validate_experiment_no_labels_gauss():
     exp = create_valid_experimentdata()
     exp.dataframe.loc[:, ['target1', 'target2', 'target3']] = np.nan

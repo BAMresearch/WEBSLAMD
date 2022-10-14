@@ -1,6 +1,3 @@
-import numpy as np
-import pandas as pd
-
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.models.tsne_plot_data import TSNEPlotData
 
@@ -11,19 +8,21 @@ class ExperimentPostprocessor:
     def postprocess(cls, exp):
         # Construct dataframe for output
 
-        df = exp.orig_data.loc[exp.nolabel_index].copy()
+        df = exp.orig_data.loc[exp.index_predicted].copy()
         # Add the columns with utility and novelty values
         df['Utility'] = exp.utility.round(6)
-        df['Novelty'] = exp.novelty.round(6)
+        if exp.novelty is not None:
+            df['Novelty'] = exp.novelty.round(6)
 
         for target in exp.target_names:
-            df.loc[exp.nolabel_index, target] = exp.prediction[target].round(6)
+            df[target] = exp.prediction[target].round(6)
             df[f'Uncertainty ({target})'] = exp.uncertainty[target].round(5)
 
         df = cls.process_dataframe_for_output_table(df, exp)
         scatter_plot = cls.plot_output_space(df, exp)
 
-        tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df, label_index=exp.label_index, nolabel_index=exp.nolabel_index)
+        tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df,
+                                      index_all_labelled=exp.index_all_labelled, index_none_labelled=exp.index_none_labelled)
         return df, scatter_plot, tsne_plot_data
 
     @classmethod
@@ -55,7 +54,12 @@ class ExperimentPostprocessor:
         """
         df = df.sort_values(by='Utility', ascending=False)
         df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
-        cols_to_move = ['Utility', 'Novelty'] + exp.target_names
+
+        if exp.novelty is not None:
+            cols_to_move = ['Utility', 'Novelty'] + exp.target_names
+        else:
+            cols_to_move = ['Utility'] + exp.target_names
+
         cols_to_move += [f'Uncertainty ({target})' for target in exp.target_names] + exp.apriori_names
 
         return cls.move_after_row_column(df, cols_to_move)
