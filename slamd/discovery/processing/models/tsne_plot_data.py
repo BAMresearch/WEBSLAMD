@@ -8,5 +8,5 @@ class TSNEPlotData:
 
     utility: Series = None
     features_df: DataFrame = None
-    label_index: Index = None
-    nolabel_index: Index = None
+    index_all_labelled: Index = None
+    index_none_labelled: Index = None

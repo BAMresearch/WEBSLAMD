@@ -33,11 +33,6 @@ class ExperimentPreprocessor:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
-        # Check if a row has either 0 or all targets labelled
-        if not all([x in (0, len(exp.target_names)) for x in exp.targets_df.isna().sum(axis=1)]):
-            raise SequentialLearningException(message='Some rows are partially labelled. '
-                                                      'This is currently not supported.')
-
         for target, count in zip(exp.target_names, exp.targets_df.count()):
             if exp.model == ExperimentModel.RANDOM_FOREST.value and count <= 1:
                 raise ValueNotSupportedException(
@@ -72,7 +67,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def filter_apriori_with_thresholds_and_update_orig_data(cls, exp):
-        # In the future this function could be handled "live" and non-destructively in label_index and nolabel_index
+        # In the future this function could be handled "live" and non-destructively in index_all_labelled and index_none_labelled
         for (column, value, threshold) in zip(exp.apriori_names, exp.apriori_max_or_min, exp.apriori_thresholds):
             if threshold is None:
                 continue
