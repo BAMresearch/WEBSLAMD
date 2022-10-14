@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% from 'icons.html' import list_icon, question_mark_icon, download_icon, upload_icon -%}
+{% from 'icons.html' import list_icon, question_mark_icon, download_icon, upload_icon, trash3_icon -%}
 <html lang="en">
 
 <head>
@@ -60,12 +60,38 @@
                     {{ upload_icon(30, 30, "white") }}
                 </a>
             </form>
+            <div data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clear session">
+                <button type="button" class="btn btn-default text-white" data-bs-target="#clear-session-dialogue"
+                    aria-controls="clear" data-bs-toggle="modal">
+                    {{ trash3_icon(30, 30, "white") }}
+                </button>
+            </div>
             <a class="btn btn-default text-white" href="/static/SLAMD-UserManual.pdf" target="_blank"
                 aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User Manual">
                 {{ question_mark_icon(30, 30, "white") }}
             </a>
         </div>
     </nav>
+
+    <div class="modal fade" id="clear-session-dialogue" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Clear Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you really want to clear the entire session?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="button-confirm-clear-session" class="btn btn-primary"
+                            data-bs-dismiss="modal">Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'navigation.html' %}
     {% block content %}
