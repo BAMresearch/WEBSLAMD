@@ -41,7 +41,7 @@ async function confirmSelection() {
     await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
     removeSpinnerInPlaceholder("formulations_min_max_placeholder");
 
-    addListenersToIndependentFields("CONCRETE");
+    addListenersToIndependentFields(CONCRETE);
     assignConfirmFormulationsConfigurationEvent();
 }
 
@@ -50,7 +50,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
     enableTooltip(button);
 
     button.addEventListener("click", async () => {
-        const requestData = collectFormulationsMinMaxRequestData();
+        const requestData = collectFormulationsMinMaxRequestData(CONCRETE);
         const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_weights`;
 
         insertSpinnerInPlaceholder("formulations_weights_placeholder");

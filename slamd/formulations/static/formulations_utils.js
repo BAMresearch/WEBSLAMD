@@ -7,6 +7,8 @@
 let allWeightFieldsHaveValidInput = false;
 const CONCRETE_LIQUID_HTML_ID_INCLUDES = "-1-";
 const CEMENT_LIQUID_HTML_ID_INCLUDES = "-0-";
+const CONCRETE = "CONCRETE"
+const CEMENT = "CEMENT"
 
 function collectBuildingMaterialFormulationSelection() {
     const powderPlaceholder = document.getElementById("powder_selection");
@@ -57,7 +59,7 @@ function addListenersToIndependentFields(context) {
         document.getElementById(item.max.id).setAttribute("title", "");
 
         item.increment.addEventListener("keyup", () => {
-            const constraint = context === "CONCRETE" ? concreteWeightConstraint : cementWeightConstraint
+            const constraint = context === CONCRETE ? concreteWeightConstraint : cementWeightConstraint
             correctInputFieldValue(item.increment, 0, parseFloat(constraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
@@ -100,7 +102,7 @@ function collectInputFields(only_independent = true) {
     return inputFields;
 }
 
-function collectFormulationsMinMaxRequestData() {
+function collectFormulationsMinMaxRequestData(context) {
     const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
 
     const rowData = [];
@@ -118,9 +120,11 @@ function collectFormulationsMinMaxRequestData() {
             increment: parseFloat(increment.value),
         });
     }
+
+    const constraint = context === CONCRETE ? concreteWeightConstraint : cementWeightConstraint;
     return {
         materials_formulation_configuration: rowData,
-        weight_constraint: concreteWeightConstraint,
+        weight_constraint: constraint,
     };
 }
 
@@ -180,20 +184,12 @@ function computeAggregateValue(independentMinMaxInputFields, inputFieldName, cur
     }
 }
 
+
 function computeDependentValue(inputFieldName, currentInputField, independentMinMaxInputFields, context) {
-    if (context === "CONCRETE") {
+    if (context === CONCRETE) {
         computeAggregateValue(independentMinMaxInputFields, inputFieldName, currentInputField);
     } else {
-        const sumOfNonLiquidsAndLiquid = autocorrectCementInput(independentMinMaxInputFields, inputFieldName, currentInputField, context);
-        const sumOfNonLiquids = sumOfNonLiquidsAndLiquid[0]
-        const liquidWCValue = sumOfNonLiquidsAndLiquid[1]
-        const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
-        if (unfilledFields.length === 0) {
-            const lastMinItem = document.getElementById(
-                `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
-            );
-            lastMinItem.value = ((cementWeightConstraint - sumOfNonLiquids) / (1 + liquidWCValue)).toFixed(2)
-        }
+        computePowderValue(independentMinMaxInputFields, inputFieldName, currentInputField, context);
     }
 
 }
@@ -225,6 +221,19 @@ function autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, 
         sumOfIndependentFields = concreteWeightConstraint;
     }
     return sumOfIndependentFields;
+}
+
+function computePowderValue(independentMinMaxInputFields, inputFieldName, currentInputField, context) {
+    const sumOfNonLiquidsAndLiquid = autocorrectCementInput(independentMinMaxInputFields, inputFieldName, currentInputField, context);
+    const sumOfNonLiquids = sumOfNonLiquidsAndLiquid[0]
+    const liquidWCValue = sumOfNonLiquidsAndLiquid[1]
+    const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
+    if (unfilledFields.length === 0) {
+        const lastMinItem = document.getElementById(
+            `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
+        );
+        lastMinItem.value = ((cementWeightConstraint - sumOfNonLiquids) / (1 + liquidWCValue)).toFixed(2)
+    }
 }
 
 function autocorrectCementInput(independentMinMaxInputFields, inputFieldName, currentInputField) {

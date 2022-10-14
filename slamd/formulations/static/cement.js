@@ -39,8 +39,25 @@ async function confirmSelection() {
     await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
     removeSpinnerInPlaceholder("formulations_min_max_placeholder");
 
-    addListenersToIndependentFields("CEMENT");
-    // assignConfirmFormulationsConfigurationEvent();
+    addListenersToIndependentFields(CEMENT);
+    assignConfirmFormulationsConfigurationEvent();
+}
+
+async function assignConfirmFormulationsConfigurationEvent() {
+    const button = document.getElementById("confirm_formulations_configuration_button");
+    enableTooltip(button);
+
+    button.addEventListener("click", async () => {
+        const requestData = collectFormulationsMinMaxRequestData(CEMENT);
+        const url = `${CEMENT_FORMULATIONS_MATERIALS_URL}/add_weights`;
+
+        insertSpinnerInPlaceholder("formulations_weights_placeholder");
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
+        removeSpinnerInPlaceholder("formulations_weights_placeholder");
+        assignKeyboardEventsToWeightForm(true);
+        assignDeleteWeightEvent();
+        assignCreateFormulationsBatchEvent();
+    });
 }
 
 window.addEventListener("load", function () {
