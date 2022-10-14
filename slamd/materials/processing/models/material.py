@@ -4,6 +4,7 @@ from uuid import UUID, uuid1
 from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 
+KEY_COSTS = 'costs'
 
 @dataclass
 class Costs:
@@ -37,25 +38,27 @@ class Material:
         return out
 
     def from_dict(self, dictionary):
-        # TODO turn into classmethod/factory?
-        for key in self.__dict__.keys():
-            if key not in dictionary:
-                raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
-                                                                f'{key}, got keys {list(dictionary.keys())}1')
-
-            self.__dict__[key] = dictionary[key]
+        self._fill_object_from_dict(dictionary, self)
 
         new_costs = Costs()
-
-        for key in new_costs.__dict__.keys():
-            if key not in dictionary['costs']:
-                raise SlamdUnprocessableEntityException(message=f'Error while processing dictionary: Expected key '
-                                                                f'{key}, got keys {list(dictionary.keys())}2')
-
-            new_costs.__dict__[key] = dictionary['costs'][key]
-
+        self._fill_object_from_dict(dictionary[KEY_COSTS], new_costs)
         self.costs = new_costs
-        # TODO check for existence
-        self.uuid = UUID(dictionary['uuid'])
+
+        if 'uuid' in dictionary:
+            self.uuid = UUID(dictionary['uuid'])
+        else:
+            raise SlamdUnprocessableEntityException(message='Error while attempting to construct Material from dict: '
+                                                            'No UUID')
+
         if dictionary['created_from']:
             self.created_from = [UUID(uuid_str) for uuid_str in dictionary['created_from']]
+
+    @classmethod
+    def _fill_object_from_dict(cls, dictionary, target_object):
+        for key in target_object.__dict__.keys():
+            if key not in dictionary:
+                raise SlamdUnprocessableEntityException(message=f'Error while attempting to write values into '
+                                                                f'object: Expected key {key}, got '
+                                                                f'keys {list(dictionary.keys())}')
+
+            target_object.__dict__[key] = dictionary[key]
