@@ -77,10 +77,6 @@ window.addEventListener("load", function () {
     document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
 
-    // document.getElementById("change_materials_and_processes_selection_button").disabled = false;
-    // document.getElementById("submit").disabled = false;
-    // document.getElementById("delete_formulations_batches_button").disabled = false;
-
     const formulations = document.getElementById("formulations_dataframe");
     if (formulations) {
         document.getElementById("submit").disabled = false;

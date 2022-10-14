@@ -58,10 +58,13 @@ class FormulationsService:
         DiscoveryFacade.delete_dataset_by_name(name)
 
     @classmethod
-    def save_dataset(cls, form):
+    def save_dataset(cls, form, building_material):
         filename = cls._sanitize_filename(form['dataset_name'])
-        formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
-        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
+        temporary_filename = TEMPORARY_CONCRETE_FORMULATION
+        if building_material == BuildingMaterial.CEMENT.value:
+            temporary_filename = TEMPORARY_CEMENT_FORMULATION
+        formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(temporary_filename)
+        DiscoveryFacade.delete_dataset_by_name(temporary_filename)
         formulation_to_be_saved_as_dataset.name = filename
         if formulation_to_be_saved_as_dataset:
             DiscoveryFacade.save_dataset(formulation_to_be_saved_as_dataset)

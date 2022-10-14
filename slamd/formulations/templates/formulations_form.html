@@ -1,5 +1,5 @@
 <h3 class="mt-3">Materials formulations</h3>
-<form action="" method="post" novalidate>
+<form action="{{ url_for('formulations.submit_dataset', building_material=context) }}" method="post" novalidate>
     {{ materials_and_processes_selection_form.csrf_token }}
 
     <div class="accordion mb-3" id="accordion-formulations-explanation">
