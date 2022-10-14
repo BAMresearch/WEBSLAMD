@@ -57,7 +57,8 @@ function addListenersToIndependentFields(context) {
         document.getElementById(item.max.id).setAttribute("title", "");
 
         item.increment.addEventListener("keyup", () => {
-            correctInputFieldValue(item.increment, 0, parseFloat(concreteWeightConstraint));
+            const constraint = context === "CONCRETE" ? concreteWeightConstraint : cementWeightConstraint
+            correctInputFieldValue(item.increment, 0, parseFloat(constraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
     }
