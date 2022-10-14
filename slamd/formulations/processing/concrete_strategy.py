@@ -1,17 +1,14 @@
-from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
-from slamd.common.slamd_utils import not_numeric, empty
+from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
-from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy
+from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy, WEIGHT_FORM_DELIMITER
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
-from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor, MAX_NUMBER_OF_WEIGHTS
+from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
-
-WEIGHT_FORM_DELIMITER = '/'
 
 
 class ConcreteStrategy(BuildingMaterialStrategy):
@@ -98,38 +95,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return weights_form
 
     @classmethod
-    def _get_constrained_weights(cls, formulation_config, weight_constraint):
-        if not_numeric(weight_constraint):
-            raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not cls._weight_ranges_valid(formulation_config, weight_constraint):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
-
-        all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
-
-        return WeightsCalculator.compute_full_weights_product(all_materials_weights, weight_constraint)
-
-    @classmethod
-    def _weight_ranges_valid(cls, formulation_config, constraint):
-        # Skip aggregate (last value)
-        for i, conf in enumerate(formulation_config[:-1]):
-            if i == 1:
-                # liquid - ratios, calculate differently
-                min_value = float(conf['min']) * float(formulation_config[0]['min'])
-                max_value = float(conf['max']) * float(formulation_config[0]['max'])
-                # validation checks if increment is negative, 0 or non_numeric - does not need to be multiplied
-                increment = float(conf['increment'])
-            else:
-                # everything else - regular validation
-                min_value = float(conf['min'])
-                max_value = float(conf['max'])
-                increment = float(conf['increment'])
-
-            if validate_ranges(increment, max_value, min_value, float(constraint)):
-                return False
-
-        return True
-
-    @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):
         entry = entries.append_entry()
         entry.materials_entry_name.data = name
@@ -145,3 +110,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             entry.max.render_kw = {'disabled': 'disabled'}
             entry.min.label.text = 'Max (kg)'
             entry.max.label.text = 'Min (kg)'
+
+    @classmethod
+    def _compute_weigths_product(cls, all_materials_weights, weight_constraint):
+        return WeightsCalculator.compute_full_concrete_weights_product(all_materials_weights, weight_constraint)
