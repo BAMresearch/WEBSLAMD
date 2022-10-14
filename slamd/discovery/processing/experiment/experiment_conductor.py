@@ -151,6 +151,10 @@ class ExperimentConductor:
         For each predicted point, the novelty is given as the distance to the nearest known point.
         All values are normalized by the largest distance in the end, producing values in [0, 1].
         """
+        if exp.index_all_labelled.empty:
+            # Novelty can only be calculated if there are points that are fully labelled
+            return
+
         # Normalize first
         norm_features_df = exp.features_df.copy()
         features_std = norm_features_df.std().replace(0, 1)

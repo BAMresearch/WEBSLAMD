@@ -11,7 +11,8 @@ class ExperimentPostprocessor:
         df = exp.orig_data.loc[exp.index_predicted].copy()
         # Add the columns with utility and novelty values
         df['Utility'] = exp.utility.round(6)
-        df['Novelty'] = exp.novelty.round(6)
+        if exp.novelty is not None:
+            df['Novelty'] = exp.novelty.round(6)
 
         for target in exp.target_names:
             df[target] = exp.prediction[target].round(6)
@@ -53,7 +54,12 @@ class ExperimentPostprocessor:
         """
         df = df.sort_values(by='Utility', ascending=False)
         df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
-        cols_to_move = ['Utility', 'Novelty'] + exp.target_names
+
+        if exp.novelty is not None:
+            cols_to_move = ['Utility', 'Novelty'] + exp.target_names
+        else:
+            cols_to_move = ['Utility'] + exp.target_names
+
         cols_to_move += [f'Uncertainty ({target})' for target in exp.target_names] + exp.apriori_names
 
         return cls.move_after_row_column(df, cols_to_move)
