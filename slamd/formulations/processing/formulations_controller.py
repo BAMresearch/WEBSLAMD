@@ -59,7 +59,7 @@ def submit_formulation_batch(building_material):
 
 @formulations.route('/<building_material>', methods=['DELETE'])
 def delete_formulation(building_material):
-    FormulationsService.delete_formulation()
+    FormulationsService.delete_formulation(building_material)
     body = {'template': render_template('formulations_table.html', df=None)}
 
     return make_response(jsonify(body), 200)

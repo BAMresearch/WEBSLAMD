@@ -3,7 +3,9 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION, \
+    TEMPORARY_CEMENT_FORMULATION
+from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 
 
@@ -49,8 +51,11 @@ class FormulationsService:
         return targets_as_dto
 
     @classmethod
-    def delete_formulation(cls):
-        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
+    def delete_formulation(cls, building_material):
+        name = TEMPORARY_CONCRETE_FORMULATION
+        if building_material == BuildingMaterial.CEMENT.value:
+            name = TEMPORARY_CEMENT_FORMULATION
+        DiscoveryFacade.delete_dataset_by_name(name)
 
     @classmethod
     def save_dataset(cls, form):
