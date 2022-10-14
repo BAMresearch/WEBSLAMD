@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response
+from flask import Blueprint, make_response, request
 
 from slamd.common.session_service import SessionService
 
@@ -12,4 +12,12 @@ def save_session():
     response.headers['Content-Disposition'] = f'attachment; filename=session.json'
     response.mimetype = 'text/json'
     return response
+
+
+@session_bp.route('/restore', methods=['POST'])
+def restore_session():
+    length_of_file = int(request.headers['CONTENT_LENGTH'])
+    file_as_string = request.files['file'].read(length_of_file).decode()
+    SessionService.load_session(file_as_string)
+    return ""
 

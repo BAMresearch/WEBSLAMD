@@ -53,10 +53,13 @@
                 aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">
                 {{ download_icon(30, 30, "white") }}
             </a>
-            <a class="btn btn-default text-white" href="/session/load"
-                aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
-                {{ upload_icon(30, 30, "white") }}
-            </a>
+            <form id="session-restore-form" method="POST" enctype="multipart/form-data" action="/session/restore">
+                <input type="file" id="session-restore-upload" style="display: none" accept=".json">
+                <a type="button" class="btn btn-default text-white" id="session-restore-button"
+                   aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
+                    {{ upload_icon(30, 30, "white") }}
+                </a>
+            </form>
             <a class="btn btn-default text-white" href="/static/SLAMD-UserManual.pdf" target="_blank"
                 aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User Manual">
                 {{ question_mark_icon(30, 30, "white") }}

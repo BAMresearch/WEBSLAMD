@@ -142,6 +142,44 @@ function setNavBarHomeToActive() {
   }
 }
 
+function passClickToFileInput() {
+  document.getElementById("session-restore-upload").click()
+}
+
+async function autoUploadSessionFile() {
+  console.log("Uploading");
+  console.log(document.getElementById("session-restore-upload"));
+  console.log(document.getElementById("session-restore-upload").files[0]);
+  console.log(0);
+  const token = document.getElementById("csrf_token").value;
+  console.log(1);
+  const selectedFile = document.getElementById("session-restore-upload").files[0];
+  console.log(2);
+  const submitURL = `${window.location.protocol}//${window.location.host}/session/restore`;
+  console.log(3);
+
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  formData.append("name", "test");
+
+  const response = await fetch(submitURL, {
+    method: "POST",
+    body: formData,
+    files: selectedFile,
+    headers: {
+      "X-CSRF-TOKEN": token,
+      // "Content-type": "multipart/form-data",
+    },
+  });
+  if (response.ok) {
+    alert("File uploaded successfully");
+  } else {
+    alert("Error while uploading file");
+  }
+}
+
 window.addEventListener("load", function () {
   setNavBarHomeToActive();
+  document.getElementById("session-restore-button").addEventListener("click", passClickToFileInput);
+  document.getElementById("session-restore-upload").addEventListener("change", autoUploadSessionFile);
 });
