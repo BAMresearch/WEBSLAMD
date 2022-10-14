@@ -1,6 +1,5 @@
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION, \
-    TEMPORARY_CEMENT_FORMULATION
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CEMENT_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
@@ -68,6 +67,10 @@ class CementStrategy(BuildingMaterialStrategy):
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
         return min_max_form
+
+    @classmethod
+    def populate_weigths_form(cls, weights_request_data):
+        pass
 
     @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):

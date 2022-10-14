@@ -40,7 +40,7 @@ def add_formulations_min_max_entry(building_material):
 @formulations.route('/<building_material>/add_weights', methods=['POST'])
 def add_weights(building_material):
     weights_request_data = json.loads(request.data)
-    weights_form = FormulationsService.create_weights_form(weights_request_data)
+    weights_form = FormulationsService.create_weights_form(weights_request_data, building_material)
     body = {'template': render_template('weights_form.html', weights_form=weights_form)}
     return make_response(jsonify(body), 200)
 

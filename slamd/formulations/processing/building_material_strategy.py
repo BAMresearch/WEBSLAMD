@@ -10,6 +10,11 @@ class BuildingMaterialStrategy(ABC):
 
     @classmethod
     @abstractmethod
+    def populate_weigths_form(cls, weights_request_data):
+        pass
+
+    @classmethod
+    @abstractmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):
         pass
 
