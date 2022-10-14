@@ -1,14 +1,21 @@
+from itertools import product
+
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CEMENT_FORMULATION
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy, WEIGHT_FORM_DELIMITER
 from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
+from slamd.formulations.processing.formulations_converter import FormulationsConverter
 from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
+
+MAX_DATASET_SIZE = 10000
 
 
 class CementStrategy(BuildingMaterialStrategy):
@@ -97,6 +104,42 @@ class CementStrategy(BuildingMaterialStrategy):
         return weights_form
 
     @classmethod
+    def create_formulation_batch(cls, formulations_data):
+        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CEMENT_FORMULATION)
+
+        materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
+        processes_data = formulations_data['processes_request_data']['processes']
+        weights_data = formulations_data['weights_request_data']['all_weights']
+
+        materials = cls._prepare_materials_for_taking_direct_product(materials_data)
+
+        processes = []
+        for process in processes_data:
+            processes.append(MaterialsFacade.get_process(process['uuid']))
+
+        if len(processes) > 0:
+            materials.append(processes)
+
+        combinations_for_formulations = list(product(*materials))
+
+        dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
+
+        if previous_batch_df:
+            dataframe = concat(previous_batch_df.dataframe, dataframe)
+
+        if len(dataframe.index) > MAX_DATASET_SIZE:
+            raise SlamdRequestTooLargeException(
+                f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
+
+        dataframe['Idx_Sample'] = range(0, len(dataframe))
+        dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
+
+        temporary_dataset = Dataset(name=TEMPORARY_CEMENT_FORMULATION, dataframe=dataframe)
+        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_CEMENT_FORMULATION)
+
+        return dataframe
+
+    @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):
         entry = entries.append_entry()
         entry.materials_entry_name.data = name
@@ -116,3 +159,7 @@ class CementStrategy(BuildingMaterialStrategy):
     @classmethod
     def _compute_weigths_product(cls, all_materials_weights, weight_constraint):
         return WeightsCalculator.compute_full_cement_weights_product(all_materials_weights, weight_constraint)
+
+    @classmethod
+    def _sort_materials(cls, materials_for_formulation):
+        return MaterialsFacade.sort_for_cement_formulation(materials_for_formulation)

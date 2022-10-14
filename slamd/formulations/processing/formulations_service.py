@@ -1,18 +1,10 @@
 from datetime import datetime
-from itertools import product
 
 from werkzeug.utils import secure_filename
 
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
-    MaterialNotFoundException
-from slamd.common.ml_utils import concat
+from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
-from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-from slamd.formulations.processing.formulations_converter import FormulationsConverter
-from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
-
-MAX_DATASET_SIZE = 10000
 
 
 class FormulationsService:
@@ -35,69 +27,9 @@ class FormulationsService:
         return strategy.populate_weigths_form(weights_request_data)
 
     @classmethod
-    def create_materials_formulations(cls, formulations_data):
-        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
-
-        materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
-        processes_data = formulations_data['processes_request_data']['processes']
-        weights_data = formulations_data['weights_request_data']['all_weights']
-
-        materials = cls._prepare_materials_for_taking_direct_product(materials_data)
-
-        processes = []
-        for process in processes_data:
-            processes.append(MaterialsFacade.get_process(process['uuid']))
-
-        if len(processes) > 0:
-            materials.append(processes)
-
-        combinations_for_formulations = list(product(*materials))
-
-        dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
-
-        if previous_batch_df:
-            dataframe = concat(previous_batch_df.dataframe, dataframe)
-
-        if len(dataframe.index) > MAX_DATASET_SIZE:
-            raise SlamdRequestTooLargeException(
-                f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
-
-        dataframe['Idx_Sample'] = range(0, len(dataframe))
-        dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
-
-        temporary_dataset = Dataset(name=TEMPORARY_CONCRETE_FORMULATION, dataframe=dataframe)
-        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_CONCRETE_FORMULATION)
-
-        return dataframe
-
-    @classmethod
-    def _prepare_materials_for_taking_direct_product(cls, materials_data):
-        powders = []
-        liquids = []
-        aggregates = []
-        admixtures = []
-        customs = []
-        for materials_for_type_data in materials_data:
-            uuids = materials_for_type_data['uuids'].split(',')
-            for uuid in uuids:
-                material_type = materials_for_type_data['type']
-                if material_type.lower() == MaterialsFacade.POWDER:
-                    powders.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.LIQUID:
-                    liquids.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.AGGREGATES:
-                    aggregates.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.ADMIXTURE:
-                    admixtures.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.CUSTOM:
-                    customs.append(MaterialsFacade.get_material(material_type, uuid))
-                else:
-                    raise MaterialNotFoundException('Cannot process the requested material!')
-
-        # We sort the materials according to a) the fact that for concrete, aggregates is always the dependent material
-        # in terms of the weight constraint thus appearing last and b) the order of appearance in the formulation UI
-        materials_for_formulation = MaterialsForFormulations(powders, aggregates, liquids, admixtures, customs)
-        return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
+    def create_materials_formulations(cls, formulations_data, building_material):
+        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
+        return strategy.create_formulation_batch(formulations_data)
 
     @classmethod
     def _create_properties(cls, inner_dict):

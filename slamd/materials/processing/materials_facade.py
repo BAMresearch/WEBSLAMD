@@ -69,6 +69,21 @@ class MaterialsFacade:
         return list(sorted_materials.values())
 
     @classmethod
+    def sort_for_cement_formulation(cls, materials_for_formulation):
+        sorted_materials = {0: materials_for_formulation.liquids,
+                            4: materials_for_formulation.powders}
+
+        if len(materials_for_formulation.aggregates_list) > 0:
+            sorted_materials[1] = materials_for_formulation.aggregates_list
+        if len(materials_for_formulation.admixtures) > 0:
+            sorted_materials[2] = materials_for_formulation.admixtures
+        if len(materials_for_formulation.customs) > 0:
+            sorted_materials[3] = materials_for_formulation.customs
+
+        sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
+        return list(sorted_materials.values())
+
+    @classmethod
     def materials_formulation_as_dict(cls, materials):
         full_dict = {}
         types = []

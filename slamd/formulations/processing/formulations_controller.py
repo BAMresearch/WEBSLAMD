@@ -48,7 +48,7 @@ def add_weights(building_material):
 @formulations.route('/<building_material>/create_formulations_batch', methods=['POST'])
 def submit_formulation_batch(building_material):
     formulations_request_data = json.loads(request.data)
-    dataframe = FormulationsService.create_materials_formulations(formulations_request_data)
+    dataframe = FormulationsService.create_materials_formulations(formulations_request_data, building_material)
 
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',

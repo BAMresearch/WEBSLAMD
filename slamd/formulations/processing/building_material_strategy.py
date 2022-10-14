@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 
 from slamd.common.common_validators import validate_ranges
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
+    MaterialNotFoundException
 from slamd.common.slamd_utils import empty, not_numeric
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS, WeightInputPreprocessor
+from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 
 WEIGHT_FORM_DELIMITER = '/'
 
@@ -110,3 +112,37 @@ class BuildingMaterialStrategy(ABC):
                 return False
 
         return True
+
+    @classmethod
+    def _prepare_materials_for_taking_direct_product(cls, materials_data):
+        powders = []
+        liquids = []
+        aggregates = []
+        admixtures = []
+        customs = []
+        for materials_for_type_data in materials_data:
+            uuids = materials_for_type_data['uuids'].split(',')
+            for uuid in uuids:
+                material_type = materials_for_type_data['type']
+                if material_type.lower() == MaterialsFacade.POWDER:
+                    powders.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.LIQUID:
+                    liquids.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.AGGREGATES:
+                    aggregates.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.ADMIXTURE:
+                    admixtures.append(MaterialsFacade.get_material(material_type, uuid))
+                elif material_type.lower() == MaterialsFacade.CUSTOM:
+                    customs.append(MaterialsFacade.get_material(material_type, uuid))
+                else:
+                    raise MaterialNotFoundException('Cannot process the requested material!')
+
+        # We sort the materials according to a) the fact that for concrete, aggregates is always the dependent material
+        # in terms of the weight constraint thus appearing last and b) the order of appearance in the formulation UI
+        materials_for_formulation = MaterialsForFormulations(powders, aggregates, liquids, admixtures, customs)
+        return cls._sort_materials(materials_for_formulation)
+
+    @classmethod
+    @abstractmethod
+    def _sort_materials(cls, materials_for_formulation):
+        pass
