@@ -69,4 +69,4 @@ def delete_formulation(building_material):
 def submit_dataset(building_material):
     FormulationsService.save_dataset(request.form, building_material)
 
-    return redirect('/materials/formulations/concrete')
+    return redirect(f'/materials/formulations/{building_material}')
