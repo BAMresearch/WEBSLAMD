@@ -24,7 +24,7 @@ class MaterialsPersistence:
 
         if not before:
             cls.set_session_property(material_type, [material])
-        else:
+        elif not cls.query_by_type_and_uuid(material_type, str(material.uuid)):
             cls.extend_session_property(material_type, material)
 
     @classmethod
