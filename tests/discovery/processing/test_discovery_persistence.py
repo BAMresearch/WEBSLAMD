@@ -25,6 +25,9 @@ def test_save_dataset_appends_dataset_to_existing_ones(monkeypatch):
     def mock_get_session_property():
         return [Dataset('test dataset')]
 
+    def mock_get_session_property_exists(dataset_name):
+        return dataset_name in ['test dataset']
+
     mock_extend_session_property_called_with = None
 
     def mock_extend_session_property(dataset):
@@ -33,6 +36,7 @@ def test_save_dataset_appends_dataset_to_existing_ones(monkeypatch):
         return None
 
     monkeypatch.setattr(DiscoveryPersistence, 'get_session_property', mock_get_session_property)
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_property_exists', mock_get_session_property_exists)
     monkeypatch.setattr(DiscoveryPersistence, 'extend_session_property', mock_extend_session_property)
 
     dataset = Dataset(name='test new dataset')

@@ -47,7 +47,7 @@ def test_convert_session_to_json_string(monkeypatch):
 
     session_as_json = SessionService.convert_session_to_json_string()
 
-    with open('session/test_session.json') as f:
+    with open('tests/common/session/test_session.json') as f:
         # JSON file is assumed to only contain one long line. splitlines removes newline.
         assert session_as_json == f.readline().splitlines()[0]
 
@@ -74,7 +74,7 @@ def test_load_session_from_json_string(monkeypatch):
     monkeypatch.setattr(Process, 'from_dict', _mock_material_from_dict)
     monkeypatch.setattr(Dataset, 'from_dict', _mock_material_from_dict)
 
-    with open('session/test_session.json') as f:
+    with open('tests/common/session/test_session.json') as f:
         # JSON file is assumed to only contain one long line. splitlines removes newline.
         session_data_string = f.readline()
 
