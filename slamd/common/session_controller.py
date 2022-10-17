@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, request, redirect, url_for
+from flask import Blueprint, make_response, request, redirect
 
 from slamd.common.session_service import SessionService
 
@@ -19,6 +19,10 @@ def restore_session():
     length_of_file = int(request.headers['CONTENT_LENGTH'])
     file_as_string = request.files['file'].read(length_of_file).decode()
     SessionService.load_session_from_json_string(file_as_string)
+
+    # In the frontend, Javascript will reload the page automatically if it receives an OK response
+    # Actual content of response does not matter
+    # Return empty string, OK is attached automatically
     return ''
 
 

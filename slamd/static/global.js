@@ -166,6 +166,8 @@ async function autoUploadSessionFile() {
   });
   if (response.ok) {
     window.location.reload();
+  } else {
+    alert("ERror");
   }
 }
 

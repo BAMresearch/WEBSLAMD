@@ -57,23 +57,24 @@ class SessionService:
             material_type = dictionary['type'].lower()
 
             if material_type == MaterialType.POWDER.value:
-                material = Powder()
+                material = Powder
             elif material_type == MaterialType.LIQUID.value:
-                material = Liquid()
+                material = Liquid
             elif material_type == MaterialType.AGGREGATES.value:
-                material = Aggregates()
+                material = Aggregates
             elif material_type == MaterialType.PROCESS.value:
                 # Processes are handled like every other material (including in MaterialPersistence)
-                material = Process()
+                material = Process
             elif material_type == MaterialType.ADMIXTURE.value:
-                material = Admixture()
+                material = Admixture
             elif material_type == MaterialType.CUSTOM.value:
-                material = Custom()
+                material = Custom
             else:
                 raise MaterialNotFoundException(f'The requested type {material_type} is not supported!')
 
-            material.from_dict(dictionary)
-            loaded_materials.append((material_type, material))
+            loaded_materials.append(
+                (material_type, material.from_dict(dictionary))
+            )
 
         for dictionary in session_data[JSON_DATA_KEY]:
             dataset = Dataset()

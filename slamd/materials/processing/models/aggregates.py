@@ -25,9 +25,12 @@ class Aggregates(Material):
 
         return out
 
-    def from_dict(self, dictionary):
-        super().from_dict(dictionary)
+    @classmethod
+    def from_dict(cls, dictionary):
+        agg = super().from_dict(dictionary)
 
         new_composition = Composition()
-        self._fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
-        self.composition = new_composition
+        agg.fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
+        agg.composition = new_composition
+
+        return agg

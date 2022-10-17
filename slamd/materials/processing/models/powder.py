@@ -41,13 +41,17 @@ class Powder(Material):
 
         return out
 
-    def from_dict(self, dictionary):
-        super().from_dict(dictionary)
+    @classmethod
+    def from_dict(cls, dictionary):
+        powder = super().from_dict(dictionary)
 
         new_composition = Composition()
-        self._fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
-        self.composition = new_composition
+        powder.fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
+        powder.composition = new_composition
 
         new_structure = Structure()
-        self._fill_object_from_dict(dictionary[KEY_STRUCTURE], new_structure)
-        self.structure = new_structure
+        powder.fill_object_from_dict(dictionary[KEY_STRUCTURE], new_structure)
+        powder.structure = new_structure
+
+        return powder
+
