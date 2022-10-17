@@ -247,7 +247,8 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch, context):
     assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
 
 
-def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'cement'])
+def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
     mock_query_dataset_by_name_called_with = None
     mock_save_dataset_called_with = None
@@ -273,10 +274,10 @@ def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(mon
 
     form = ImmutableMultiDict([('dataset_name', 'dataset_name')])
 
-    FormulationsService.save_dataset(form)
+    FormulationsService.save_dataset(form, context)
 
-    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
-    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_query_dataset_by_name_called_with == f'temporary_{context}.csv'
+    assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
     assert mock_save_dataset_called_with.name == 'dataset_name.csv'
 
 
