@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint, make_response, request, redirect
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
@@ -8,9 +10,10 @@ session_bp = Blueprint('session', __name__, url_prefix='/session')
 
 @session_bp.route('/save', methods=['GET'])
 def save_session():
+    time_string = datetime.now().strftime('%Y-%m-%d_%H%M%S')
     json_string = SessionService.convert_session_to_json_string()
     response = make_response(json_string.encode())
-    response.headers['Content-Disposition'] = f'attachment; filename=session.json'
+    response.headers['Content-Disposition'] = f'attachment; filename=session_{time_string}.json'
     response.mimetype = 'text/json'
     return response
 
