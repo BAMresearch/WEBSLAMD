@@ -19,7 +19,7 @@ def restore_session():
     length_of_file = int(request.headers['CONTENT_LENGTH'])
     file_as_string = request.files['file'].read(length_of_file).decode()
     SessionService.load_session_from_json_string(file_as_string)
-    return ""
+    return ''
 
 
 @session_bp.route('/clear', methods=['GET'])

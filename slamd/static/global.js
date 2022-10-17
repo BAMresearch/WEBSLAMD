@@ -165,9 +165,7 @@ async function autoUploadSessionFile() {
     },
   });
   if (response.ok) {
-    alert("File uploaded successfully");
-  } else {
-    alert("Error while uploading file");
+    window.location.reload();
   }
 }
 
