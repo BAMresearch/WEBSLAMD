@@ -4,6 +4,7 @@ from slamd.materials.processing.models.material import Material
 
 KEY_COMPOSITION = 'composition'
 
+
 @dataclass
 class Composition:
     na2_si_o3: float = None

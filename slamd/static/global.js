@@ -143,20 +143,13 @@ function setNavBarHomeToActive() {
 }
 
 function passClickToFileInput() {
-  document.getElementById("session-restore-upload").click()
+  document.getElementById("session-button-upload").click()
 }
 
 async function autoUploadSessionFile() {
-  console.log("Uploading");
-  console.log(document.getElementById("session-restore-upload"));
-  console.log(document.getElementById("session-restore-upload").files[0]);
-  console.log(0);
   const token = document.getElementById("csrf_token").value;
-  console.log(1);
-  const selectedFile = document.getElementById("session-restore-upload").files[0];
-  console.log(2);
+  const selectedFile = document.getElementById("session-button-upload").files[0];
   const submitURL = `${window.location.protocol}//${window.location.host}/session/restore`;
-  console.log(3);
 
   const formData = new FormData();
   formData.append("file", selectedFile);
@@ -180,6 +173,6 @@ async function autoUploadSessionFile() {
 
 window.addEventListener("load", function () {
   setNavBarHomeToActive();
-  document.getElementById("session-restore-button").addEventListener("click", passClickToFileInput);
-  document.getElementById("session-restore-upload").addEventListener("change", autoUploadSessionFile);
+  document.getElementById("session-button-save").addEventListener("click", passClickToFileInput);
+  document.getElementById("session-button-upload").addEventListener("change", autoUploadSessionFile);
 });

@@ -5,6 +5,7 @@ from slamd.materials.processing.models.material import Material
 KEY_COMPOSITION = 'composition'
 KEY_STRUCTURE = 'structure'
 
+
 @dataclass
 class Composition:
     fe3_o2: float = None

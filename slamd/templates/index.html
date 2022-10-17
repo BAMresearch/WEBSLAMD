@@ -54,15 +54,15 @@
                 {{ download_icon(30, 30, "white") }}
             </a>
             <form id="session-restore-form" method="POST" enctype="multipart/form-data" action="/session/restore">
-                <input type="file" id="session-restore-upload" style="display: none" accept=".json">
-                <a type="button" class="btn btn-default text-white" id="session-restore-button"
+                <input type="file" id="session-button-upload" style="display: none" accept=".json">
+                <a type="button" class="btn btn-default text-white" id="session-button-save"
                    aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
                     {{ upload_icon(30, 30, "white") }}
                 </a>
             </form>
             <div data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clear session">
                 <button type="button" class="btn btn-default text-white" data-bs-target="#clear-session-dialogue"
-                    aria-controls="clear" data-bs-toggle="modal">
+                    aria-controls="clear" data-bs-toggle="modal" id="session-button-clear">
                     {{ trash3_icon(30, 30, "white") }}
                 </button>
             </div>

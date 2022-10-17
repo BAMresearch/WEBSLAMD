@@ -63,6 +63,7 @@ class SessionService:
             elif material_type == MaterialType.AGGREGATES.value:
                 material = Aggregates()
             elif material_type == MaterialType.PROCESS.value:
+                # Processes are handled like every other material (including in MaterialPersistence)
                 material = Process()
             elif material_type == MaterialType.ADMIXTURE.value:
                 material = Admixture()
