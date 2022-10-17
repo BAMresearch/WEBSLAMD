@@ -231,7 +231,8 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_cem
     assert batch == 'batch'
 
 
-def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'cement'])
+def test_delete_formulation_deletes_tempary_dataset(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
 
     def mock_delete_dataset_by_name(input):
@@ -241,9 +242,9 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
 
     monkeypatch.setattr(DiscoveryFacade, 'delete_dataset_by_name', mock_delete_dataset_by_name)
 
-    FormulationsService.delete_formulation()
+    FormulationsService.delete_formulation(context)
 
-    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
 
 
 def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch):
