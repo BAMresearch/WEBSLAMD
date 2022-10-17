@@ -20,8 +20,13 @@ class Dataset:
             'dataframe': self.dataframe.to_dict()
         }
 
-    def from_dict(self, dictionary):
-        self.name = dictionary['name']
-        self.target_columns = dictionary['target_columns']
-        self.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
-        self.dataframe = self.dataframe.reset_index(drop=True)
+    @classmethod
+    def from_dict(cls, dictionary):
+        dataset = cls(
+            name=dictionary['name'],
+            target_columns=dictionary['target_columns'],
+        )
+        dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
+        dataset.dataframe = dataset.dataframe.reset_index(drop=True)
+
+        return dataset

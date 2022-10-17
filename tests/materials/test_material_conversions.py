@@ -181,7 +181,6 @@ def test_powder_from_dict():
         assert getattr(powder_from_dict, k) == v
 
 
-
 def test_liquid_to_dict():
     liquid, liquid_as_dict = _create_liquid_material()
 

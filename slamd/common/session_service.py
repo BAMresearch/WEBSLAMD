@@ -80,9 +80,7 @@ class SessionService:
             )
 
         for dictionary in session_data[JSON_DATA_KEY]:
-            dataset = Dataset()
-            dataset.from_dict(dictionary)
-            loaded_datasets.append(dataset)
+            loaded_datasets.append(Dataset.from_dict(dictionary))
 
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
