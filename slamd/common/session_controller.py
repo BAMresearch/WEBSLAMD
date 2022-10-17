@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, request
+from flask import Blueprint, make_response, request, redirect, url_for
 
 from slamd.common.session_service import SessionService
 
@@ -20,4 +20,10 @@ def restore_session():
     file_as_string = request.files['file'].read(length_of_file).decode()
     SessionService.load_session_from_json_string(file_as_string)
     return ""
+
+
+@session_bp.route('/clear', methods=['GET'])
+def clear_session():
+    SessionService.clear_session()
+    return redirect(request.referrer)
 

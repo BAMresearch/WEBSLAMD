@@ -85,3 +85,20 @@ class SessionService:
 
         for dataset in loaded_datasets:
             DiscoveryPersistence.save_dataset(dataset)
+
+    @classmethod
+    def clear_session(cls):
+        all_materials = MaterialsPersistence.find_all_materials()
+        all_processes = MaterialsPersistence.find_all_processes()
+        all_datasets = DiscoveryPersistence.find_all_datasets()
+
+        for mat_list in all_materials:
+            for mat in mat_list:
+                MaterialsPersistence.delete_by_type_and_uuid(mat.type, str(mat.uuid))
+
+        for proc in all_processes:
+            MaterialsPersistence.delete_by_type_and_uuid(proc.type, str(proc.uuid))
+
+        for ds in all_datasets:
+            DiscoveryPersistence.delete_dataset_by_name(ds.name)
+
