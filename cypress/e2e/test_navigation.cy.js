@@ -21,7 +21,7 @@ describe("Test navigation bar", () => {
     cy.get("nav").within(() => {
       cy.findByText("Formulations").click();
     });
-    cy.url().should("eq", "http://localhost:5001/materials/formulations");
+    cy.url().should("eq", "http://localhost:5001/materials/formulations/concrete");
   });
 
   it("Go to discovery page", () => {
@@ -58,7 +58,7 @@ describe("Test navigation sidebar", () => {
       cy.get("a > .bi-list").click();
     });
     cy.findAllByText("Formulations").last().click();
-    cy.url().should("eq", "http://localhost:5001/materials/formulations");
+    cy.url().should("eq", "http://localhost:5001/materials/formulations/concrete");
   });
 
   it("Go to discovery page", () => {
