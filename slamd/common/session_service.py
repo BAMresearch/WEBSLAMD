@@ -1,6 +1,6 @@
 import json
 
-from slamd.common.error_handling import MaterialNotFoundException
+from slamd.common.error_handling import MaterialNotFoundException, SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.materials.processing.material_type import MaterialType
@@ -44,7 +44,10 @@ class SessionService:
 
     @classmethod
     def load_session_from_json_string(cls, session_data_string):
-        session_data = json.loads(session_data_string)
+        try:
+            session_data = json.loads(session_data_string)
+        except ValueError:
+            raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
 
         # Collect all data first, then write into session, in case there is a problem while loading
         loaded_materials = []

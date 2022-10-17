@@ -167,7 +167,8 @@ async function autoUploadSessionFile() {
   if (response.ok) {
     window.location.reload();
   } else {
-    alert("ERror");
+    const error = await response.text();
+    document.write(error);
   }
 }
 

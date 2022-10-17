@@ -1,5 +1,6 @@
 from flask import Blueprint, make_response, request, redirect
 
+from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.common.session_service import SessionService
 
 session_bp = Blueprint('session', __name__, url_prefix='/session')
@@ -15,9 +16,20 @@ def save_session():
 
 
 @session_bp.route('/restore', methods=['POST'])
-def restore_session():
+def load_session():
+    if 'file' not in request.files:
+        raise SlamdUnprocessableEntityException(message='Request did not contain a file')
+
+    file_ending = request.files['file'].filename.lower().split('.')[-1]
+    if file_ending != 'json':
+        raise ValueNotSupportedException(message=f'Invalid file type: {file_ending}')
+
     length_of_file = int(request.headers['CONTENT_LENGTH'])
-    file_as_string = request.files['file'].read(length_of_file).decode()
+    try:
+        file_as_string = request.files['file'].read(length_of_file).decode()
+    except UnicodeDecodeError:
+        raise SlamdUnprocessableEntityException(message='Error while attempting to decode JSON file')
+
     SessionService.load_session_from_json_string(file_as_string)
 
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
