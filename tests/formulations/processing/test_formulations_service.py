@@ -7,6 +7,8 @@ from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
+from slamd.formulations.processing.cement_strategy import CementStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -202,6 +204,31 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
     assert mock_query_dataset_by_name_called_with == 'temporary_concrete.csv'
     assert mock_save_temporary_dataset_called_with[0].name == 'temporary_concrete.csv'
     assert mock_save_temporary_dataset_called_with[1] == 'temporary_concrete.csv'
+
+
+# As we already tested details of the creation of a batch for concrete we choose to only check the basic data flow here
+def test_create_materials_formulations_creates_initial_formulation_batch_for_cement(monkeypatch):
+    mock_create_building_material_strategy_called_with = None
+    mock_create_formulation_batch_called_with = None
+
+    def mock_create_building_material_strategy(building_material):
+        nonlocal mock_create_building_material_strategy_called_with
+        mock_create_building_material_strategy_called_with = building_material
+        return CementStrategy
+
+    def mock_create_formulation_batch(request_data):
+        nonlocal mock_create_formulation_batch_called_with
+        mock_create_formulation_batch_called_with = 'dummy formulations request data'
+        return 'batch'
+
+    monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy', mock_create_building_material_strategy)
+    monkeypatch.setattr(CementStrategy, 'create_formulation_batch', mock_create_formulation_batch)
+
+    batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'cement')
+
+    assert mock_create_building_material_strategy_called_with == 'cement'
+    assert mock_create_formulation_batch_called_with == 'dummy formulations request data'
+    assert batch == 'batch'
 
 
 def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
