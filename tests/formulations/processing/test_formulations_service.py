@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
@@ -26,7 +27,8 @@ MATERIALS_CONFIG = [
 app = create_app('testing', with_session=False)
 
 
-def test_populate_selection_form_creates_entries_for_all_materials_and_processes(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'cement'])
+def test_load_formulations_page_loads_form_and_dataframe(monkeypatch, context):
     def mock_find_all():
         powder = Powder(name='test powder', type='powder')
         powder.uuid = '1'
@@ -43,16 +45,28 @@ def test_populate_selection_form_creates_entries_for_all_materials_and_processes
                                         customs=[],
                                         processes=[process])
 
-    monkeypatch.setattr(MaterialsFacade, 'find_all', mock_find_all)
+    tmp_df = pd.DataFrame({'a': [1, 2], 'b': [2, 3]})
 
-    with app.test_request_context('/materials/formulations'):
-        form = FormulationsService.populate_selection_form()
+    def mock_query_dataset_by_name(filename):
+        dataframe = tmp_df
+        return Dataset(name=f'temporary_{context}.csv', dataframe=dataframe)
+
+    monkeypatch.setattr(MaterialsFacade, 'find_all', mock_find_all)
+    monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
+
+    with app.test_request_context(f'/materials/formulations/{context}'):
+        form, df, resulting_context = FormulationsService.load_formulations_page(context)
+
+    assert resulting_context == context
+
     assert form.powder_selection.choices == [('powder|1', 'test powder')]
     assert form.liquid_selection.choices == [('liquid|2', 'test liquid 1'), ('liquid|3', 'test liquid 2')]
     assert form.aggregates_selection.choices == []
     assert form.admixture_selection.choices == []
     assert form.custom_selection.choices == []
     assert form.process_selection.choices == [('process|4', 'test process')]
+
+    assert df.to_dict() == tmp_df.to_dict()
 
 
 def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatch):
