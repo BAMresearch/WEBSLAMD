@@ -129,11 +129,12 @@ function collectFormulationsMinMaxRequestData(context) {
 }
 
 // there are two elements for each process, one hidden and one visible. Therefore we divide by 2
+// Further, by construction, liquid appears as last element of the non-editables; thus we subtract 1
 function collectProcessesRequestData() {
-    const numberOfIndependentRows = document.querySelectorAll('[id^="non_editable_entries-"]').length / 2;
+    const numberProcessRows = document.querySelectorAll('[id^="non_editable_entries-"]').length / 2 - 1;
 
     const rowData = [];
-    for (let i = 0; i < numberOfIndependentRows; i++) {
+    for (let i = 0; i < numberProcessRows; i++) {
         const uuid = document.getElementById(`non_editable_entries-${i}-uuid_field`).value;
         rowData.push({
             uuid: uuid,

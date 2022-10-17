@@ -54,7 +54,7 @@ class CementStrategy(BuildingMaterialStrategy):
         min_max_form = FormulationsMinMaxForm()
 
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
-                                       'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+                                       'W/C Ratio', 'Liquid')
 
         min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
         min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
@@ -75,7 +75,9 @@ class CementStrategy(BuildingMaterialStrategy):
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
                                        'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
 
-        cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
+        cls._create_process_fields(formulation_selection, min_max_form)
+        cls._create_liquid_info_field(min_max_form.non_editable_entries,
+                                      'Liquids ({0})'.format(', '.join(liquid_names)))
 
         return min_max_form
 
