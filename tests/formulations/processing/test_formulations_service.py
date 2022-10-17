@@ -113,10 +113,11 @@ def test_create_weights_form_computes_all_weights_for_cement(monkeypatch):
                                                  {'idx': '3', 'weights': '16.16/30.0/53.85'}]
 
 
-def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'cement'])
+def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch, context):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
-    with app.test_request_context('/materials/formulations/add_weights'):
+    with app.test_request_context(f'/materials/formulations/{context}/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
@@ -124,11 +125,12 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
             }
 
         with pytest.raises(SlamdRequestTooLargeException):
-            FormulationsService.create_weights_form(weight_request_data)
+            FormulationsService.create_weights_form(weight_request_data, context)
 
 
-def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch):
-    with app.test_request_context('/materials/formulations/add_weights'):
+@pytest.mark.parametrize("context", ['concrete', 'cement'])
+def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch, context):
+    with app.test_request_context(f'/materials/formulations/{context}/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
@@ -136,10 +138,11 @@ def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set
             }
 
         with pytest.raises(ValueNotSupportedException):
-            FormulationsService.create_weights_form(weight_request_data)
+            FormulationsService.create_weights_form(weight_request_data, context)
 
 
-def test_create_materials_formulations_creates_initial_formulation_batch(monkeypatch):
+# noinspection PyUnresolvedReferences
+def test_create_materials_formulations_creates_initial_formulation_batch_for_concrete(monkeypatch):
     mock_query_dataset_by_name_called_with = None
     mock_save_temporary_dataset_called_with = None
 
@@ -164,9 +167,9 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
             return prepare_test_admixture()
         return None
 
-    def mock_save_temporary_dataset(input):
+    def mock_save_temporary_dataset(input, filename):
         nonlocal mock_save_temporary_dataset_called_with
-        mock_save_temporary_dataset_called_with = input
+        mock_save_temporary_dataset_called_with = input, filename
         return None
 
     monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
@@ -193,11 +196,12 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
 
     expected_df = _create_expected_df_as_dict()
 
-    df = FormulationsService.create_materials_formulations(formulations_data)
+    df = FormulationsService.create_materials_formulations(formulations_data, 'concrete')
 
     assert df.replace({np.nan: None}).to_dict() == expected_df
-    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
-    assert mock_save_temporary_dataset_called_with.name == 'temporary.csv'
+    assert mock_query_dataset_by_name_called_with == 'temporary_concrete.csv'
+    assert mock_save_temporary_dataset_called_with[0].name == 'temporary_concrete.csv'
+    assert mock_save_temporary_dataset_called_with[1] == 'temporary_concrete.csv'
 
 
 def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
