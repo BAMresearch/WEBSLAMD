@@ -91,7 +91,7 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
             {'uuid': 'fe6af2c7-22a8-11ed-8e81-2079188bdeea', 'type': 'Process', 'name': 'Process 1'}
         ]
     )
-    response = client.post('/materials/formulations/add_min_max_entries', data=request)
+    response = client.post('/materials/formulations/concrete/add_min_max_entries', data=request)
 
     assert response.status_code == 200
 
@@ -134,7 +134,7 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
 
 
 def test_slamd_shows_weights_of_formulations(client, monkeypatch):
-    def mock_create_weights_form(data):
+    def mock_create_weights_form(data, building_material):
         form = WeightsForm()
         entry1 = form.all_weights_entries.append_entry()
         entry1.idx.data = '0'
@@ -147,7 +147,7 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
     monkeypatch.setattr(FormulationsService, 'create_weights_form', mock_create_weights_form)
 
     # We mock processing of the request body, so it does not matter which data we pass. The simplest option is empty
-    response = client.post('/materials/formulations/add_weights', data=b'{}')
+    response = client.post('/materials/formulations/concrete/add_weights', data=b'{}')
 
     assert response.status_code == 200
 
@@ -160,13 +160,13 @@ def test_slamd_shows_weights_of_formulations(client, monkeypatch):
 
 
 def test_slamd_creates_formulation_batch(client, monkeypatch):
-    def mock_create_materials_formulations(input):
+    def mock_create_materials_formulations(request_data, building_material):
         data = {'col_1': [3, 2, 1, 0], 'col_2': ['a', 'b', 'c', 'd']}
         return pd.DataFrame.from_dict(data)
 
     monkeypatch.setattr(FormulationsService, 'create_materials_formulations', mock_create_materials_formulations)
 
-    response = client.post('/materials/formulations/create_formulations_batch', data=b'{}')
+    response = client.post('/materials/formulations/concrte/create_formulations_batch', data=b'{}')
 
     assert response.status_code == 200
 
@@ -192,14 +192,14 @@ def test_slamd_creates_formulation_batch(client, monkeypatch):
 def test_slamd_submits_dataset_after_creating_a_formulation(client, monkeypatch):
     mock_save_dataset_called_with = None
 
-    def mock_save_dataset(input):
+    def mock_save_dataset(request, building_material):
         nonlocal mock_save_dataset_called_with
-        mock_save_dataset_called_with = input
+        mock_save_dataset_called_with = request, building_material
         return None
 
     monkeypatch.setattr(FormulationsService, 'save_dataset', mock_save_dataset)
 
-    response = client.post('/materials/formulations', data=b'{}')
+    response = client.post('/materials/formulations/concrete', data=b'{}')
 
     assert response.status_code == 302
-    assert mock_save_dataset_called_with == ImmutableMultiDict([])
+    assert mock_save_dataset_called_with == (ImmutableMultiDict([]), 'concrete')
