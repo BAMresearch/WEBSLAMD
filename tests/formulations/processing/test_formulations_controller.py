@@ -1,36 +1,82 @@
 import json
 
+import numpy as np
 import pandas as pd
 from werkzeug.datastructures import ImmutableMultiDict
 
+from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
 from slamd.formulations.processing.forms.concrete_selection_form import \
     ConcreteSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_service import FormulationsService
 
 
-def test_slamd_shows_formulations_page(client, monkeypatch):
-    def mock_populate_selection_form():
+def test_slamd_shows_concrete_formulations_page(client, monkeypatch):
+    def mock_load_formulations_page(building_material):
         form = ConcreteSelectionForm()
         form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
-        return form
+        df = pd.DataFrame({'a': np.array([1, 2]), 'b': np.array([3, 4])})
+        return form, df, 'concrete'
 
-    monkeypatch.setattr(FormulationsService, 'populate_selection_form', mock_populate_selection_form)
+    monkeypatch.setattr(FormulationsService, 'load_formulations_page', mock_load_formulations_page)
 
-    response = client.get('/materials/formulations')
+    response = client.get('/materials/formulations/concrete')
     html = response.data.decode('utf-8')
 
     assert response.status_code == 200
 
-    assert 'Materials Formulations' in html
+    assert 'Concrete formulations' in html
+    assert 'Cement formulations' not in html
     assert 'Powders' in html
-    assert 'Aggregates' in html
+    assert 'Aggregates (select one at least)' in html
     assert 'Liquids' in html
     assert 'Admixture' in html
     assert 'Custom' in html
     assert 'Processes' in html
     assert 'Constraint' in html
     assert 'Configure weights for each material type' in html
+
+    assert '<th>a</th>' in html
+    assert '<th>b</th>' in html
+    assert '<td>1</td>' in html
+    assert '<td>2</td>' in html
+    assert '<td>3</td>' in html
+    assert '<td>4</td>' in html
+
+    assert 'Test Aggregate' in html
+
+
+def test_slamd_shows_cement_formulations_page(client, monkeypatch):
+    def mock_load_formulations_page(building_material):
+        form = CementSelectionForm()
+        form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
+        df = pd.DataFrame({'a': np.array([1, 2]), 'b': np.array([3, 4])})
+        return form, df, 'cement'
+
+    monkeypatch.setattr(FormulationsService, 'load_formulations_page', mock_load_formulations_page)
+
+    response = client.get('/materials/formulations/cement')
+    html = response.data.decode('utf-8')
+
+    assert response.status_code == 200
+
+    assert 'Concrete formulations' not in html
+    assert 'Cement formulations' in html
+    assert 'Powders' in html
+    assert 'Aggregates (optional)' in html
+    assert 'Liquids' in html
+    assert 'Admixture' in html
+    assert 'Custom' in html
+    assert 'Processes' in html
+    assert 'Constraint' in html
+    assert 'Configure weights for each material type' in html
+
+    assert '<th>a</th>' in html
+    assert '<th>b</th>' in html
+    assert '<td>1</td>' in html
+    assert '<td>2</td>' in html
+    assert '<td>3</td>' in html
+    assert '<td>4</td>' in html
 
     assert 'Test Aggregate' in html
 

@@ -1,4 +1,8 @@
-<h3 class="mt-3">Materials formulations</h3>
+{% if context == 'concrete' %}
+    <h3 class="mt-3">Concrete formulations</h3>
+{% else %}
+    <h3 class="mt-3">Cement formulations</h3>
+{% endif %}
 <form action="{{ url_for('formulations.submit_dataset', building_material=context) }}" method="post" novalidate>
     {{ materials_and_processes_selection_form.csrf_token }}
 
