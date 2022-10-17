@@ -69,10 +69,10 @@ def test_load_formulations_page_loads_form_and_dataframe(monkeypatch, context):
     assert df.to_dict() == tmp_df.to_dict()
 
 
-def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatch):
+def test_create_weights_form_computes_all_weights_for_concrete(monkeypatch):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
-    with app.test_request_context('/materials/formulations/add_weights'):
+    with app.test_request_context('/materials/formulations/concrete/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': [
@@ -82,7 +82,7 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
                 'weight_constraint': '100'
             }
 
-        form = FormulationsService.create_weights_form(weight_request_data)
+        form = FormulationsService.create_weights_form(weight_request_data, 'concrete')
 
         assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2/9.1/72.7'},
                                                  {'idx': '1', 'weights': '18.2/10.92/70.88'},
@@ -90,6 +90,27 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
                                                  {'idx': '3', 'weights': '28.7/17.22/54.08'},
                                                  {'idx': '4', 'weights': '39.2/19.6/41.2'},
                                                  {'idx': '5', 'weights': '39.2/23.52/37.28'}]
+
+
+def test_create_weights_form_computes_all_weights_for_cement(monkeypatch):
+    monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
+
+    with app.test_request_context('/materials/formulations/cement/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration': [
+                    {'uuid': '1', 'type': 'Liquid', 'min': 0.2, 'max': 0.3, 'increment': 0.1},
+                    {'uuid': '2', 'type': 'Aggregates', 'min': 20, 'max': 30, 'increment': 10},
+                    {'uuid': '3', 'type': 'Powder', 'min': 66.67, 'max': 53.85, 'increment': None}],
+                'weight_constraint': '100'
+            }
+
+        form = FormulationsService.create_weights_form(weight_request_data, 'cement')
+
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '13.33/20.0/66.67'},
+                                                 {'idx': '1', 'weights': '11.67/30.0/58.33'},
+                                                 {'idx': '2', 'weights': '18.46/20.0/61.54'},
+                                                 {'idx': '3', 'weights': '16.16/30.0/53.85'}]
 
 
 def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):
