@@ -50,19 +50,6 @@ class MaterialsPersistence:
         remaining_materials = list(filter(lambda material: str(material.uuid) != uuid_as_str, materials))
         cls.set_session_property(material_type, remaining_materials)
 
-    @classmethod
-    def query_by_type_and_uuid(cls, material_type, uuid):
-        """
-        Return the first element matching the given uuid and material_type.
-        Return None if no matching element was found.
-        """
-        materials = MaterialsPersistence.get_session_property(material_type)
-        for material in materials:
-            if str(material.uuid) == uuid:
-                return material
-        # Nothing found
-        return None
-
     """
     Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
     context and session. Check test_materials_persistence for examples.
