@@ -45,10 +45,17 @@ class ExperimentData:
         return self.dataframe[self.apriori_names]
 
     @property
-    def nolabel_index(self):
+    def index_none_labelled(self):
         return self.dataframe.index[self.targets_df.isnull().all(axis=1)]
 
     @property
-    def label_index(self):
+    def index_partially_labelled(self):
+        return self.dataframe.index.difference(self.index_all_labelled).difference(self.index_none_labelled)
+
+    @property
+    def index_all_labelled(self):
         return self.dataframe.index[self.targets_df.notnull().all(axis=1)]
 
+    @property
+    def index_predicted(self):
+        return self.index_none_labelled.union(self.index_partially_labelled)
