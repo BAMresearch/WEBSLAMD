@@ -55,6 +55,10 @@ class Material:
         if dictionary['created_from']:
             mat.created_from = [UUID(uuid_str) for uuid_str in dictionary['created_from']]
 
+        if dictionary['additional_properties']:
+            mat.additional_properties = [AdditionalProperty(name=p['name'], value=p['value'])
+                                         for p in dictionary['additional_properties']]
+
         return mat
 
     @classmethod
