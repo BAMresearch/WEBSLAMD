@@ -16,18 +16,24 @@ def test_create_min_max_form(monkeypatch):
         {'uuid': '6', 'type': 'Process', 'name': 'Heating'}]
 
     expected_materials_min_max_entries = [{'uuid_field': '3,4',
-                                           'type_field': 'Liquid', 'materials_entry_name': 'W/C Ratio',
-                                           'increment': None, 'min': None,
+                                           'type_field': 'Liquid',
+                                           'materials_entry_name': 'W/C Ratio',
+                                           'increment': None,
+                                           'min': None,
                                            'max': None},
-                                          {'uuid_field': '5', 'type_field': 'Admixture',
-                                           'materials_entry_name': 'Admixtures (Admixture 1)', 'increment': None,
-                                           'min': None, 'max': None},
+                                          {'uuid_field': '5',
+                                           'type_field': 'Admixture',
+                                           'materials_entry_name': 'Admixtures (Admixture 1)',
+                                           'increment': None,
+                                           'min': None,
+                                           'max': None},
                                           {'uuid_field': '1,2',
                                            'type_field': 'Powder',
                                            'materials_entry_name': 'Powders (Blended Powder-0.3/0.7, '
                                                                    'Blended Powder-0.5/0.5)',
                                            'increment': None,
-                                           'min': None, 'max': None}]
+                                           'min': None,
+                                           'max': None}]
 
     expected_process_entries = [{'uuid_field': '6',
                                  'type_field': 'Process',
