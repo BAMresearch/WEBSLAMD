@@ -2,6 +2,10 @@ from slamd import create_app
 from slamd.formulations.processing.cement_strategy import CementStrategy
 
 
+"""
+Most of the logic is already tested within test_formulations_service. Thus, we only test the functions which are not
+yet properly covered in here.
+"""
 def test_create_min_max_form(monkeypatch):
     formulation_selection = [
         {'uuid': '1', 'type': 'Powder', 'name': 'Blended Powder-0.3/0.7'},
@@ -20,7 +24,8 @@ def test_create_min_max_form(monkeypatch):
                                            'min': None, 'max': None},
                                           {'uuid_field': '1,2',
                                            'type_field': 'Powder',
-                                           'materials_entry_name': 'Powders (Blended Powder-0.3/0.7, Blended Powder-0.5/0.5)',
+                                           'materials_entry_name': 'Powders (Blended Powder-0.3/0.7, '
+                                                                   'Blended Powder-0.5/0.5)',
                                            'increment': None,
                                            'min': None, 'max': None}]
 
