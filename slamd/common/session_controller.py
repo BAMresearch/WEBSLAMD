@@ -37,8 +37,7 @@ def load_session():
 
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
     # Actual content of response does not matter
-    # Return empty string, OK is attached automatically
-    return ''
+    return redirect(request.referrer)
 
 
 @session_blueprint.route('/clear', methods=['GET'])
