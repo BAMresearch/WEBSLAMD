@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask import Blueprint, make_response, request, redirect
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
@@ -14,6 +12,7 @@ session_blueprint = Blueprint('session', __name__, url_prefix='/session')
     the landing page.
     These pages require the manual addition of CSRF token fields.
 """
+
 
 @session_blueprint.route('/', methods=['GET'])
 def save_session():

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from slamd.materials.processing.models.material import Material
 
@@ -33,25 +33,3 @@ class Structure:
 class Powder(Material):
     composition: Composition = None
     structure: Structure = None
-
-    def to_dict(self):
-        out = super().to_dict()
-        out[KEY_COMPOSITION] = asdict(self.composition)
-        out[KEY_STRUCTURE] = asdict(self.structure)
-
-        return out
-
-    @classmethod
-    def from_dict(cls, dictionary):
-        powder = super().from_dict(dictionary)
-
-        new_composition = Composition()
-        powder.fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
-        powder.composition = new_composition
-
-        new_structure = Structure()
-        powder.fill_object_from_dict(dictionary[KEY_STRUCTURE], new_structure)
-        powder.structure = new_structure
-
-        return powder
-

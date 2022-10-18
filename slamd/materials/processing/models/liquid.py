@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from slamd.materials.processing.models.material import Material
 
@@ -22,19 +22,3 @@ class Composition:
 @dataclass
 class Liquid(Material):
     composition: Composition = None
-
-    def to_dict(self):
-        out = super().to_dict()
-        out[KEY_COMPOSITION] = asdict(self.composition)
-
-        return out
-
-    @classmethod
-    def from_dict(cls, dictionary):
-        liq = super().from_dict(dictionary)
-
-        new_composition = Composition()
-        liq.fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
-        liq.composition = new_composition
-
-        return liq

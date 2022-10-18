@@ -1,18 +1,11 @@
 import json
 from datetime import datetime
 
-from slamd.common.error_handling import MaterialNotFoundException, SlamdUnprocessableEntityException
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.materials.processing.material_factory import MaterialFactory
-from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
-from slamd.materials.processing.models.admixture import Admixture
-from slamd.materials.processing.models.aggregates import Aggregates
-from slamd.materials.processing.models.custom import Custom
-from slamd.materials.processing.models.liquid import Liquid
-from slamd.materials.processing.models.powder import Powder
-from slamd.materials.processing.models.process import Process
 from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 JSON_MAT_PROC_KEY = 'Materials_and_Processes'
@@ -66,25 +59,10 @@ class SessionService:
         # between this and materials is not part of the domain logic
         for dictionary in session_data[JSON_MAT_PROC_KEY]:
             material_type = dictionary['type'].lower()
-
-            if material_type == MaterialType.POWDER.value:
-                material = Powder
-            elif material_type == MaterialType.LIQUID.value:
-                material = Liquid
-            elif material_type == MaterialType.AGGREGATES.value:
-                material = Aggregates
-            elif material_type == MaterialType.PROCESS.value:
-                # Processes are handled like every other material (including in MaterialPersistence)
-                material = Process
-            elif material_type == MaterialType.ADMIXTURE.value:
-                material = Admixture
-            elif material_type == MaterialType.CUSTOM.value:
-                material = Custom
-            else:
-                raise MaterialNotFoundException(f'The requested type {material_type} is not supported!')
+            strategy = MaterialFactory.create_strategy(material_type)
 
             loaded_materials.append(
-                (material_type, material.from_dict(dictionary))
+                (material_type, strategy.create_material_from_dict(dictionary))
             )
 
         for dictionary in session_data[JSON_DATA_KEY]:

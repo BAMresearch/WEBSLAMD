@@ -1,4 +1,4 @@
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdUnprocessableEntityException
 
 
 def empty(input):
@@ -70,3 +70,13 @@ def float_if_not_empty(input_value):
 
 def str_if_not_none(input_value):
     return str(input_value) if input_value is not None else ''
+
+
+def write_dict_into_object(dictionary, target_object):
+    for key in target_object.__dict__.keys():
+        if key not in dictionary:
+            raise SlamdUnprocessableEntityException(message=f'Error while attempting to write values into '
+                                                            f'object: Expected key {key}, got '
+                                                            f'keys {list(dictionary.keys())}')
+
+        target_object.__dict__[key] = dictionary[key]

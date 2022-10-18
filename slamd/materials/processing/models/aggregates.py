@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 
 from slamd.materials.processing.models.material import Material
 
@@ -18,13 +18,3 @@ class Composition:
 @dataclass
 class Aggregates(Material):
     composition: Composition = None
-
-    @classmethod
-    def from_dict(cls, dictionary):
-        agg = super().from_dict(dictionary)
-
-        new_composition = Composition()
-        agg.fill_object_from_dict(dictionary[KEY_COMPOSITION], new_composition)
-        agg.composition = new_composition
-
-        return agg

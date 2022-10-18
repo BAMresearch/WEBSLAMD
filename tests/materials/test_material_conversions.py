@@ -117,7 +117,7 @@ def test_generic_material_to_dict():
 
 def test_generic_material_from_dict():
     material, material_as_dict = _create_generic_material()
-    mat_from_dict = Material.from_dict(material_as_dict)
+    mat_from_dict = MaterialStrategy.create_material_from_dict(material_as_dict)
 
     costs = material_as_dict.pop('costs')
     assert mat_from_dict.costs.co2_footprint == costs['co2_footprint']
@@ -147,7 +147,7 @@ def test_aggregates_from_dict():
 
     full_aggregates_as_dict = gen_mat_as_dict | aggregates_as_dict
 
-    aggregates_from_dict = Aggregates.from_dict(full_aggregates_as_dict)
+    aggregates_from_dict = AggregatesStrategy.create_material_from_dict(full_aggregates_as_dict)
 
     comp_as_dict = aggregates_as_dict.pop('composition')
     assert aggregates_from_dict.composition.fine_aggregates == comp_as_dict['fine_aggregates']
@@ -171,7 +171,7 @@ def test_powder_from_dict():
 
     full_powder_as_dict = gen_mat_as_dict | powder_as_dict
 
-    powder_from_dict = Powder.from_dict(full_powder_as_dict)
+    powder_from_dict = PowderStrategy.create_material_from_dict(full_powder_as_dict)
 
     comp_as_dict = powder_as_dict.pop('composition')
     assert powder_from_dict.composition.fe3_o2 == comp_as_dict['fe3_o2']
@@ -199,7 +199,7 @@ def test_liquid_from_dict():
 
     full_liquid_as_dict = gen_mat_as_dict | liquid_as_dict
 
-    liquid_from_dict = Liquid.from_dict(full_liquid_as_dict)
+    liquid_from_dict = LiquidStrategy.create_material_from_dict(full_liquid_as_dict)
 
     comp_as_dict = liquid_as_dict.pop('composition')
     assert liquid_from_dict.composition.na2_si_o3 == comp_as_dict['na2_si_o3']

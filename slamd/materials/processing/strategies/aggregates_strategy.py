@@ -1,6 +1,6 @@
 from dataclasses import fields, asdict
 
-from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none, write_dict_into_object
 from slamd.materials.processing.models.aggregates import Aggregates, Composition
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
@@ -19,6 +19,18 @@ class AggregatesStrategy(MaterialStrategy):
             out[KEY_COMPOSITION] = asdict(material.composition)
 
         return out
+
+    @classmethod
+    def create_material_from_dict(cls, dictionary):
+        aggregates = Aggregates()
+        cls.fill_material_object_with_basic_info_from_dict(aggregates, dictionary)
+
+        if dictionary[KEY_COMPOSITION]:
+            new_composition = Composition()
+            write_dict_into_object(dictionary[KEY_COMPOSITION], new_composition)
+            aggregates.composition = new_composition
+
+        return aggregates
 
     @classmethod
     def create_model(cls, submitted_material):
