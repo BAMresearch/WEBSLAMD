@@ -3,7 +3,7 @@ describe("Test formulations page", () => {
     cy.createExamplePowders();
     cy.createExampleLiquids();
     cy.createExampleAggregates();
-    cy.visit("http://localhost:5001/materials/formulations");
+    cy.visit("http://localhost:5001/materials/formulations/concrete");
   });
 
   it("Create formulations and submit them without a dataset name", () => {
@@ -14,18 +14,18 @@ describe("Test formulations page", () => {
       "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
     });
 
-    cy.findByText("4 - Configure weights for each material type").click();
+    cy.findByText("2 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/concrete/add_min_max_entries");
 
     // Check that the materials selected appear as input fields
     cy.checkGeneratedConfigurations([
       "Powders (Example Powder 1)",
-      "Liquids (Example Liquid 1)",
+      "W/C Ratio",
       "Aggregates (Example Aggregates 1)",
     ]);
     // Fill in the increment, min, max values
@@ -42,7 +42,7 @@ describe("Test formulations page", () => {
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "22.00");
     cy.clickButtonWaitForAsyncRequest(
       "3 - Show mixture in terms of base material composition",
-      "/materials/formulations/add_weights"
+      "/materials/formulations/concrete/add_weights"
     );
 
     // Check that the configurations were generated correctly
@@ -54,7 +54,7 @@ describe("Test formulations page", () => {
       "40.0/10.0/50.0",
       "40.0/12.0/48.0",
     ]);
-    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.intercept("/materials/formulations/concrete/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
@@ -86,18 +86,18 @@ describe("Test formulations page", () => {
       "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
     });
 
-    cy.findByText("4 - Configure weights for each material type").click();
+    cy.findByText("2 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/concrete/add_min_max_entries");
 
     // Check that the materials selected appear as input fields
     cy.checkGeneratedConfigurations([
       "Powders (Example Powder 1, Example Powder 2)",
-      "Liquids (Example Liquid 1, Example Liquid 2)",
+      "W/C Ratio",
       "Aggregates (Example Aggregates 1, Example Aggregates 2)",
     ]);
     // Fill in the increment, min, max values
@@ -114,12 +114,12 @@ describe("Test formulations page", () => {
     cy.findAllByLabelText("Min (kg)").last().should("have.value", "10.00");
     cy.clickButtonWaitForAsyncRequest(
       "3 - Show mixture in terms of base material composition",
-      "/materials/formulations/add_weights"
+      "/materials/formulations/concrete/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["20.0/10.0/70.0", "60.0/30.0/10.0"]);
-    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.intercept("/materials/formulations/concrete/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
@@ -159,18 +159,18 @@ describe("Test formulations page", () => {
       "1.8 - Name of the dataset (optional)": "Example dataset name",
     });
 
-    cy.findByText("4 - Configure weights for each material type").click();
+    cy.findByText("2 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/concrete/add_min_max_entries");
 
     // Check that the materials selected appear as input fields
     cy.checkGeneratedConfigurations([
       "Powders (Example Powder 1)",
-      "Liquids (Example Liquid 1)",
+      "W/C Ratio",
       "Aggregates (Example Aggregates 1)",
     ]);
     // Fill in the increment, min, max values
@@ -184,12 +184,12 @@ describe("Test formulations page", () => {
     });
     cy.clickButtonWaitForAsyncRequest(
       "3 - Show mixture in terms of base material composition",
-      "/materials/formulations/add_weights"
+      "/materials/formulations/concrete/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["50.0/25.0/25.0", "60.0/30.0/10.0"]);
-    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.intercept("/materials/formulations/concrete/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
@@ -207,7 +207,7 @@ describe("Test formulations page", () => {
     cy.findByText("Idx_Sample").should("not.exist");
 
     // Create the formulation again
-    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.intercept("/materials/formulations/concrete/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
     // Submit dataset with the given name
@@ -223,7 +223,7 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.createExampleAdmixtures();
     cy.createExampleCustomMaterials();
     cy.createExampleProcesses();
-    cy.visit("http://localhost:5001/materials/formulations");
+    cy.visit("http://localhost:5001/materials/formulations/concrete");
   });
 
   it("Create formulations and submit them without a dataset name", () => {
@@ -237,13 +237,13 @@ describe("Test formulations with admixture, process and custom", () => {
       "1.7 - Constraint (Sum of materials used for formulation) (kg) *": 100,
     });
 
-    cy.findByText("4 - Configure weights for each material type").click();
+    cy.findByText("2 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
     cy.wait(400);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
-    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/add_min_max_entries");
+    cy.clickButtonWaitForAsyncRequest("Confirm", "/materials/formulations/concrete/add_min_max_entries");
 
     // Check that the materials selected appear as input fields
     cy.checkGeneratedConfigurations([
@@ -267,12 +267,12 @@ describe("Test formulations with admixture, process and custom", () => {
     cy.findAllByLabelText("Max (kg)").last().should("have.value", "20.00");
     cy.clickButtonWaitForAsyncRequest(
       "3 - Show mixture in terms of base material composition",
-      "/materials/formulations/add_weights"
+      "/materials/formulations/concrete/add_weights"
     );
 
     // Check that the configurations were generated correctly
     cy.checkGeneratedConfigurations(["20.0/20.0/20.0/20.0/20.0"]);
-    cy.intercept("/materials/formulations/create_formulations_batch").as("create_formulations_batch");
+    cy.intercept("/materials/formulations/concrete/create_formulations_batch").as("create_formulations_batch");
     cy.findByText("4 - Create material formulations for given configuration").click();
     cy.wait("@create_formulations_batch");
 
