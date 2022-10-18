@@ -20,15 +20,20 @@
                     (40, 9) }.
                 </p>
 
-                There are two exceptions to this rule:
+                There are some important exceptions to this rule:
                 <ul>
-                    <li>The amount of aggregates to use is not specified manually, but computed to "fill up" the weight
+                    <li>Liquids masses are not specified in kilograms but using the W/C-Ratio relative to the powder value.
+                        If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
+                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.
+                    </li>
+                    <li>For concrete the amount of aggregates to use is not specified manually, but computed to "fill up" the weight
                         constraint. If there had been a constraint of 50 in the example above, the weights would have been
                         extended to { (20, 7, 23), (20, 8, 22), (20, 9, 21), (30, 7, 13), (30, 8, 12), (30, 9, 11), (40, 7, 3),
                         (40, 8, 2), (40, 9, 1) }.</li>
-                    <li>Liquids are not specified in kilograms but using the W/C-Ratio, relative to the powder value.
-                        If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
-                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.</li>
+                    <li>For cement the amount of powder to use is not specified manually, but computed to "fill up" the weight
+                        constraint. For that purpose, its mass is computed in terms of the W/C ratio and the fact that
+                        the total mass of all materials equals the constraint. I.e. depending on the mass of all materials
+                        except for the powder and liquid, the latter masses are completely determined by W/C-Ratio and constraint.
                 </ul>
             </div>
         </div>
