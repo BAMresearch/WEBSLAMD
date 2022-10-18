@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from slamd.common.error_handling import MaterialNotFoundException, SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
@@ -17,6 +18,10 @@ JSON_DATA_KEY = 'Datasets'
 
 
 class SessionService:
+
+    @classmethod
+    def create_default_filename(cls):
+        return datetime.now().strftime('session_%Y-%m-%d_%H%M%S.json')
 
     @classmethod
     def convert_session_to_json_string(cls):

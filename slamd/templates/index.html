@@ -49,11 +49,14 @@
                     </li>
                 </ul>
             </div>
-            <a class="btn btn-default text-white" href="/session/save"
+            <a class="btn btn-default text-white" href="/session"
                 aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">
                 {{ download_icon(30, 30, "white") }}
             </a>
-            <form id="session-load-form" method="POST" enctype="multipart/form-data" action="/session/load">
+            <form id="session-load-form" method="POST" enctype="multipart/form-data" action="/session">
+<!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
+<!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
+<!-- forms, such as the landing page, it needs to be manually added. -->
                 <input type="file" id="session-button-upload" style="display: none" accept=".json">
                 <a type="button" class="btn btn-default text-white" id="session-button-save"
                    aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
@@ -90,8 +93,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a id="session-button-clear-confirm" class="btn btn-primary" href="/session/clear">Confirm
-                    </a>
+                    <button id="session-button-clear-confirm" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
         </div>
