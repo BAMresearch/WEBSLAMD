@@ -19,12 +19,6 @@ class Composition:
 class Aggregates(Material):
     composition: Composition = None
 
-    def to_dict(self):
-        out = super().to_dict()
-        out[KEY_COMPOSITION] = asdict(self.composition)
-
-        return out
-
     @classmethod
     def from_dict(cls, dictionary):
         agg = super().from_dict(dictionary)

@@ -1,4 +1,4 @@
-from dataclasses import fields
+from dataclasses import fields, asdict
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
@@ -6,8 +6,22 @@ from slamd.materials.processing.strategies.material_strategy import MaterialStra
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
+KEY_COMPOSITION = 'composition'
+KEY_STRUCTURE = 'structure'
+
 
 class PowderStrategy(MaterialStrategy):
+
+    @classmethod
+    def convert_material_to_dict(cls, material):
+        out = super().convert_material_to_dict(material)
+
+        if material.composition:
+            out[KEY_COMPOSITION] = asdict(material.composition)
+        if material.structure:
+            out[KEY_STRUCTURE] = asdict(material.structure)
+
+        return out
 
     @classmethod
     def create_model(cls, submitted_material):

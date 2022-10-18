@@ -3,47 +3,37 @@ from dataclasses import dataclass
 from slamd.common.session_service import SessionService
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.models.admixture import Admixture
+from slamd.materials.processing.models.aggregates import Aggregates
+from slamd.materials.processing.models.custom import Custom
+from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
 
 
-@dataclass
-class MockMaterial:
-    type: str = 'powder'
-    prop1: float = None
-    prop2: str = None
-
-    def to_dict(self):
-        return {
-            'type': self.type,
-            'prop1': self.prop1,
-            'prop2': self.prop2
-        }
-
-    @classmethod
-    def from_dict(cls, dictionary):
-        out = cls(**dictionary)
-        return out
-
-
 def _mock_find_all_materials():
-    return [2 * [MockMaterial('powder', 1.1 * i, f'val{i}') for i in range(3)]]
+    return [[Powder(uuid=1, type=str(MaterialType.POWDER.value))],
+            [Liquid(uuid=2, type=str(MaterialType.LIQUID.value))],
+            [Aggregates(uuid=3, type=str(MaterialType.AGGREGATES.value))],
+            [Admixture(uuid=3, type=str(MaterialType.ADMIXTURE.value))],
+            [Custom(uuid=5, type=str(MaterialType.CUSTOM.value))]]
 
 
 def _mock_find_all_processes():
-    return [MockMaterial('process', 1.1 * i, f'val{i}') for i in range(2)]
+    return [Process(uuid=6, type='process')]
 
 
 def _mock_find_all_datasets():
     # Use MockMaterial to also mock datasets - they have the same interface
-    return [MockMaterial('not-a-material', 1.1 * i, f'val{i}') for i in range(2)]
+    return []
 
 
 def test_convert_session_to_json_string(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'find_all_materials', _mock_find_all_materials)
     monkeypatch.setattr(MaterialsPersistence, 'find_all_processes', _mock_find_all_processes)
-    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', _mock_find_all_processes)
+    monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', _mock_find_all_datasets)
 
     session_as_json = SessionService.convert_session_to_json_string()
 

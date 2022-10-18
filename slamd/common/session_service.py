@@ -4,6 +4,7 @@ from datetime import datetime
 from slamd.common.error_handling import MaterialNotFoundException, SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.admixture import Admixture
@@ -12,6 +13,7 @@ from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
+from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 JSON_MAT_PROC_KEY = 'Materials_and_Processes'
 JSON_DATA_KEY = 'Datasets'
@@ -35,11 +37,12 @@ class SessionService:
         }
 
         for mat_list in all_materials:
+            mat_strat = MaterialFactory.create_strategy(mat_list[0].type)
             for mat in mat_list:
-                full_json['Materials_and_Processes'].append(mat.to_dict())
+                full_json['Materials_and_Processes'].append(mat_strat.convert_material_to_dict(mat))
 
         for proc in all_processes:
-            full_json['Materials_and_Processes'].append(proc.to_dict())
+            full_json['Materials_and_Processes'].append(ProcessStrategy.convert_material_to_dict(proc))
 
         for ds in all_datasets:
             full_json['Datasets'].append(ds.to_dict())

@@ -25,18 +25,6 @@ class Material:
     blending_ratios: str = ''
     created_from: list[UUID] = None
 
-    def to_dict(self):
-        out = asdict(self)
-        out['uuid'] = str(self.uuid)
-        if self.costs:
-            out['costs'] = asdict(self.costs)
-        if self.additional_properties:
-            out['additional_properties'] = [asdict(prop) for prop in self.additional_properties]
-        if self.created_from:
-            out['created_from'] = [str(uuid) for uuid in self.created_from]
-
-        return out
-
     @classmethod
     def from_dict(cls, dictionary):
         mat = cls()

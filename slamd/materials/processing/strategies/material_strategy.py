@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dataclasses import asdict
 
 from werkzeug.datastructures import MultiDict
 
@@ -26,6 +27,19 @@ class MaterialStrategy(ABC):
     @abstractmethod
     def gather_composition_information(cls, material):
         pass
+
+    @classmethod
+    def convert_material_to_dict(cls, material):
+        out = asdict(material)
+        out['uuid'] = str(material.uuid)
+        if material.costs:
+            out['costs'] = asdict(material.costs)
+        if material.additional_properties:
+            out['additional_properties'] = [asdict(prop) for prop in material.additional_properties]
+        if material.created_from:
+            out['created_from'] = [str(uuid) for uuid in material.created_from]
+
+        return out
 
     @classmethod
     def for_formulation(cls, material):

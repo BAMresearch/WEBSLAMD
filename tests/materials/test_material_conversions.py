@@ -8,6 +8,10 @@ from slamd.materials.processing.models.liquid import Composition as LiqCompositi
 from slamd.materials.processing.models.material import Material, Costs
 from slamd.materials.processing.models.powder import Powder, Structure
 from slamd.materials.processing.models.powder import Composition as PowComposition
+from slamd.materials.processing.strategies.aggregates_strategy import AggregatesStrategy
+from slamd.materials.processing.strategies.liquid_strategy import LiquidStrategy
+from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
+from slamd.materials.processing.strategies.powder_strategy import PowderStrategy
 
 
 def _create_generic_material():
@@ -108,7 +112,7 @@ def _create_liquid_material():
 def test_generic_material_to_dict():
     material, material_as_dict = _create_generic_material()
 
-    assert material_as_dict == material.to_dict()
+    assert material_as_dict == MaterialStrategy.convert_material_to_dict(material)
 
 
 def test_generic_material_from_dict():
@@ -132,7 +136,7 @@ def test_generic_material_from_dict():
 def test_aggregates_to_dict():
     aggregates, aggregates_as_dict = _create_aggregates_material()
 
-    for k, v in aggregates.to_dict().items():
+    for k, v in AggregatesStrategy.convert_material_to_dict(aggregates).items():
         if k in aggregates_as_dict.keys():
             assert aggregates_as_dict[k] == v
 
@@ -156,7 +160,7 @@ def test_aggregates_from_dict():
 def test_powder_to_dict():
     powder, powder_as_dict = _create_powder_material()
 
-    for k, v in powder.to_dict().items():
+    for k, v in PowderStrategy.convert_material_to_dict(powder).items():
         if k in powder_as_dict.keys():
             assert powder_as_dict[k] == v
 
@@ -184,7 +188,7 @@ def test_powder_from_dict():
 def test_liquid_to_dict():
     liquid, liquid_as_dict = _create_liquid_material()
 
-    for k, v in liquid.to_dict().items():
+    for k, v in LiquidStrategy.convert_material_to_dict(liquid).items():
         if k in liquid_as_dict.keys():
             assert liquid_as_dict[k] == v
 

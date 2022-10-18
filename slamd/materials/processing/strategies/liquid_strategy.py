@@ -1,4 +1,4 @@
-from dataclasses import fields
+from dataclasses import fields, asdict
 
 from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
 from slamd.materials.processing.models.liquid import Liquid, Composition
@@ -7,8 +7,18 @@ from slamd.materials.processing.strategies.blending_properties_calculator import
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
+KEY_COMPOSITION = 'composition'
+
 
 class LiquidStrategy(MaterialStrategy):
+
+    @classmethod
+    def convert_material_to_dict(cls, material):
+        out = super().convert_material_to_dict(material)
+        if material.composition:
+            out[KEY_COMPOSITION] = asdict(material.composition)
+
+        return out
 
     @classmethod
     def create_model(cls, submitted_material):
