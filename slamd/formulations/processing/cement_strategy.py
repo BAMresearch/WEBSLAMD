@@ -76,8 +76,8 @@ class CementStrategy(BuildingMaterialStrategy):
                                        'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
 
         cls._create_process_fields(formulation_selection, min_max_form)
-        cls._create_liquid_info_field(min_max_form.non_editable_entries,
-                                      'Liquids ({0})'.format(', '.join(liquid_names)))
+
+        min_max_form.liquid_info_entry.data = 'Liquids ({0})'.format(', '.join(liquid_names))
 
         return min_max_form
 

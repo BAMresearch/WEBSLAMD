@@ -74,7 +74,7 @@ class BuildingMaterialStrategy(ABC):
     def _create_process_fields(cls, formulation_selection, min_max_form):
         selection_for_type = [item for item in formulation_selection if item['type'] == 'Process']
         for item in selection_for_type:
-            cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['uuid'], item['name'], 'Process')
+            cls._create_min_max_form_entry(min_max_form.process_entries, item['uuid'], item['name'], 'Process')
 
     @classmethod
     def _get_constrained_weights(cls, formulation_config, weight_constraint):
@@ -146,8 +146,3 @@ class BuildingMaterialStrategy(ABC):
     @abstractmethod
     def _sort_materials(cls, materials_for_formulation):
         pass
-
-    @classmethod
-    def _create_liquid_info_field(cls, entries, name):
-        entry = entries.append_entry()
-        entry.materials_entry_name.data = name

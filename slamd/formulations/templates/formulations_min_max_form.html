@@ -60,7 +60,7 @@
 </div>
 {% endfor %}
 
-{% for entry in formulations_min_max_form.non_editable_entries %}
+{% for entry in formulations_min_max_form.process_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
@@ -70,6 +70,11 @@
     </div>
 </div>
 {% endfor %}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ formulations_min_max_form.liquid_info_entry(class_="form-control", disabled=True) }}
+    </div>
+</div>
 <button class="btn btn-success col-12 mb-3" type="button" id="confirm_formulations_configuration_button"
     data-bs-toggle="tooltip" data-bs-placement="bottom"
     title="Preview the chosen formulations in terms of their base material composition" disabled>

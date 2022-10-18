@@ -96,10 +96,10 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     assert response.status_code == 200
 
     template = json.loads(response.data.decode('utf-8'))['template']
-    assert 'non_editable_entries-0-materials_entry_name' in template
-    assert 'non_editable_entries-0-increment' not in template
-    assert 'non_editable_entries-0-min' not in template
-    assert 'non_editable_entries-0-max' not in template
+    assert 'process_entries-0-materials_entry_name' in template
+    assert 'process_entries-0-increment' not in template
+    assert 'process_entries-0-min' not in template
+    assert 'process_entries-0-max' not in template
     assert 'Process 1' in template
 
     # liquid info entry
