@@ -53,7 +53,7 @@
                 aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">
                 {{ download_icon(30, 30, "white") }}
             </a>
-            <form id="session-restore-form" method="POST" enctype="multipart/form-data" action="/session/restore">
+            <form id="session-load-form" method="POST" enctype="multipart/form-data" action="/session/load">
                 <input type="file" id="session-button-upload" style="display: none" accept=".json">
                 <a type="button" class="btn btn-default text-white" id="session-button-save"
                    aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">

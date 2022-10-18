@@ -5,10 +5,10 @@ from flask import Blueprint, make_response, request, redirect
 from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.common.session_service import SessionService
 
-session_bp = Blueprint('session', __name__, url_prefix='/session')
+session_blueprint = Blueprint('session', __name__, url_prefix='/session')
 
 
-@session_bp.route('/save', methods=['GET'])
+@session_blueprint.route('/save', methods=['GET'])
 def save_session():
     time_string = datetime.now().strftime('%Y-%m-%d_%H%M%S')
     json_string = SessionService.convert_session_to_json_string()
@@ -18,14 +18,14 @@ def save_session():
     return response
 
 
-@session_bp.route('/restore', methods=['POST'])
+@session_blueprint.route('/load', methods=['POST'])
 def load_session():
     if 'file' not in request.files:
         raise SlamdUnprocessableEntityException(message='Request did not contain a file')
 
-    file_ending = request.files['file'].filename.lower().split('.')[-1]
-    if file_ending != 'json':
-        raise ValueNotSupportedException(message=f'Invalid file type: {file_ending}')
+    file_extension = request.files['file'].filename.lower().split('.')[-1]
+    if file_extension != 'json':
+        raise ValueNotSupportedException(message=f'Invalid file type: {file_extension}')
 
     length_of_file = int(request.headers['CONTENT_LENGTH'])
     try:
@@ -41,7 +41,7 @@ def load_session():
     return ''
 
 
-@session_bp.route('/clear', methods=['GET'])
+@session_blueprint.route('/clear', methods=['GET'])
 def clear_session():
     SessionService.clear_session()
     return redirect(request.referrer)

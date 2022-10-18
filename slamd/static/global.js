@@ -149,7 +149,7 @@ function passClickToFileInput() {
 async function autoUploadSessionFile() {
   const token = document.getElementById("csrf_token").value;
   const selectedFile = document.getElementById("session-button-upload").files[0];
-  const submitURL = `${window.location.protocol}//${window.location.host}/session/restore`;
+  const submitURL = `${window.location.protocol}//${window.location.host}/session/load`;
 
   const formData = new FormData();
   formData.append("file", selectedFile);
