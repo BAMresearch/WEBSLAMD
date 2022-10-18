@@ -103,13 +103,13 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     assert 'Process 1' in template
 
     # liquid info entry
-    assert 'non_editable_entries-1-materials_entry_name' in template
+    assert 'liquid_info_entry' in template
     assert 'Liquids (Blended Liquid 1-1)' in template
 
-    assert 'non_editable_entries-2-materials_entry_name' not in template
-    assert 'non_editable_entries-2-increment' not in template
-    assert 'non_editable_entries-2-min' not in template
-    assert 'non_editable_entries-2-max' not in template
+    assert 'process_entries-1-materials_entry_name' not in template
+    assert 'process_entries-1-increment' not in template
+    assert 'process_entries-1-min' not in template
+    assert 'process_entries-1-max' not in template
 
     assert 'materials_min_max_entries-0-materials_entry_name' in template
     assert 'materials_min_max_entries-0-increment' in template
