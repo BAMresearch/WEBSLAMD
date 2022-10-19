@@ -50,7 +50,7 @@ class ExperimentConductor:
             training_rows = exp.features_df.loc[index_labelled].values
             training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
 
-            regressor = TunedGaussianProcessRegressor(training_rows, training_labels)
+            regressor = TunedGaussianProcessRegressor.find_best_model(training_rows, training_labels)
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
