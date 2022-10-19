@@ -11,7 +11,7 @@ from slamd.discovery.processing.experiment.experiment_postprocessor import Exper
 from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
 from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
 from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
-
+from slamd.discovery.processing.experiment.models.tuned_gaussian_process_regressor import TunedGaussianProcessRegressor
 
 # Attention - suppressing expected Gaussian Regressor warnings
 import warnings
@@ -38,6 +38,19 @@ class ExperimentConductor:
             # Hyperparameters from previous implementation of the app (jupyter notebook)
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
+        elif exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
+            if len(exp.target_names) > 1:
+                raise ValueNotSupportedException(
+                    message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
+
+            target = exp.target_names[0]
+            index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
+            index_unlabelled = exp.targets_df.index[exp.targets_df[target].isnull()]
+
+            training_rows = exp.features_df.loc[index_labelled].values
+            training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
+
+            regressor = TunedGaussianProcessRegressor(training_rows, training_labels)
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
