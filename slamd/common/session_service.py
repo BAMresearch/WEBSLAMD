@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+import pandas as pd
+
 from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
@@ -38,7 +40,7 @@ class SessionService:
             full_json['Materials_and_Processes'].append(ProcessStrategy.convert_material_to_dict(proc))
 
         for ds in all_datasets:
-            full_json['Datasets'].append(ds.to_dict())
+            full_json['Datasets'].append(cls._convert_dataset_to_dict(ds))
 
         full_string = json.dumps(full_json)
         return full_string
@@ -66,7 +68,7 @@ class SessionService:
             )
 
         for dictionary in session_data[JSON_DATA_KEY]:
-            loaded_datasets.append(Dataset.from_dict(dictionary))
+            loaded_datasets.append(cls._create_dataset_from_dict(dictionary))
 
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
@@ -89,4 +91,22 @@ class SessionService:
 
         for ds in all_datasets:
             DiscoveryPersistence.delete_dataset_by_name(ds.name)
+
+    @classmethod
+    def _convert_dataset_to_dict(cls, dataset):
+        return {
+            'name': dataset.name,
+            'target_columns': dataset.target_columns,
+            'dataframe': dataset.dataframe.to_dict()
+        }
+
+    @classmethod
+    def _create_dataset_from_dict(cls, dictionary):
+        dataset = Dataset(
+            name=dictionary['name'],
+            target_columns=dictionary['target_columns'],
+        )
+        dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
+        dataset.dataframe = dataset.dataframe.reset_index()
+
 
