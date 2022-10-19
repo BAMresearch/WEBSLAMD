@@ -193,3 +193,20 @@ class BuildingMaterialStrategy(ABC):
         DiscoveryFacade.save_and_overwrite_dataset(temporary_dataset, filename)
 
         return dataframe
+
+    @classmethod
+    def _create_min_max_form_entry_internal(cls, entries, uuids, name, type, req_types, disabled_type):
+        entry = entries.append_entry()
+        entry.materials_entry_name.data = name
+        entry.uuid_field.data = uuids
+        entry.type_field.data = type
+        if type in req_types:
+            entry.increment.name = type
+            entry.min.name = type
+            entry.max.name = type
+        if type == disabled_type:
+            entry.increment.render_kw = {'disabled': 'disabled'}
+            entry.min.render_kw = {'disabled': 'disabled'}
+            entry.max.render_kw = {'disabled': 'disabled'}
+            entry.min.label.text = 'Max (kg)'
+            entry.max.label.text = 'Min (kg)'

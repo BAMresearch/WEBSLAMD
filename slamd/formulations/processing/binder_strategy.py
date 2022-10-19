@@ -76,20 +76,7 @@ class BinderStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):
-        entry = entries.append_entry()
-        entry.materials_entry_name.data = name
-        entry.uuid_field.data = uuids
-        entry.type_field.data = type
-        if type == 'Powder' or type == 'Liquid':
-            entry.increment.name = type
-            entry.min.name = type
-            entry.max.name = type
-        if type == 'Powder':
-            entry.increment.render_kw = {'disabled': 'disabled'}
-            entry.min.render_kw = {'disabled': 'disabled'}
-            entry.max.render_kw = {'disabled': 'disabled'}
-            entry.min.label.text = 'Max (kg)'
-            entry.max.label.text = 'Min (kg)'
+        cls._create_min_max_form_entry_internal(entries, uuids, name, type, ['Powder', 'Liquid'], 'Powder')
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, weight_constraint):
