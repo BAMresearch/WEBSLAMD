@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 
 
 class ExperimentModel(Enum):
@@ -11,4 +12,11 @@ class ExperimentModel(Enum):
 
     @classmethod
     def get_all_models(cls):
-        return [e.value for e in ExperimentModel]
+        if os.getenv('FLASK_ENV') != 'demo':
+            return [e.value for e in ExperimentModel]
+        else:
+            return [e.value for e in ExperimentModel if e.value not in cls.get_tuned_models()]
+
+    @ classmethod
+    def get_tuned_models(cls):
+        return ['Tuned Gaussian Process', 'Tuned Random Forest']
