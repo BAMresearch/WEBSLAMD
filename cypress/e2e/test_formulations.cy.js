@@ -88,7 +88,7 @@ describe("Test formulations page", () => {
 
     cy.findByText("4 - Configure weights for each material type").click();
     // Wait for the modal animation to finish
-    cy.wait(400);
+    cy.wait(500);
     cy.findByText("Change Selection").should("exist");
     cy.findByText("Do you really want to change the chosen selection?").should("exist");
     cy.findByText("Close").should("exist");
