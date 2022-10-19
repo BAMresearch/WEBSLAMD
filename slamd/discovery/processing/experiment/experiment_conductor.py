@@ -6,7 +6,7 @@ from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
 from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
@@ -51,7 +51,12 @@ class ExperimentConductor:
             training_rows = exp.features_df.loc[index_labelled].values
             training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
 
-            regressor.fit(training_rows, training_labels)
+            try:
+                regressor.fit(training_rows, training_labels)
+            except:
+                raise SequentialLearningException(message=f'There was an unknown error while trying to fit '
+                                                          f'the regressor using {exp.model}. Please verify '
+                                                          f'your dataset.')
 
             # Predict the label for the remaining rows
             rows_to_predict = exp.features_df.loc[index_unlabelled].values
