@@ -52,5 +52,6 @@ def clear_session():
 
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
     # Actual content of response does not matter
-    return redirect(request.referrer)
+    # Using a redirect like above leads to a 404 HTML error
+    return ''
 
