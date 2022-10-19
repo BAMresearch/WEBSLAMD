@@ -48,7 +48,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
         custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
-        if cls._invalid_material_combination(liquid_names, powder_names):
+        if cls._check_for_invalid_material_lists(liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify at least one powder and one liquid')
 
         min_max_form = FormulationsMinMaxForm()

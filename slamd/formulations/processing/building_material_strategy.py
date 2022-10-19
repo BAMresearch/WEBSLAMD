@@ -64,9 +64,9 @@ class BuildingMaterialStrategy(ABC):
         return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
 
     @classmethod
-    def _invalid_material_combination(cls, *names):
-        for name in names:
-            if len(name) == 0:
+    def _check_for_invalid_material_lists(cls, *material_lists):
+        for material_list in material_lists:
+            if len(material_list) == 0:
                 return True
         return False
 
