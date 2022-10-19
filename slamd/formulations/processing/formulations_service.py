@@ -14,9 +14,9 @@ class FormulationsService:
     @classmethod
     def load_formulations_page(cls, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        form, context = strategy.populate_selection_form()
+        form = strategy.populate_selection_form()
         df = strategy.get_formulations()
-        return form, df, context
+        return form, df
 
     @classmethod
     def create_formulations_min_max_form(cls, formulation_selection, building_material):

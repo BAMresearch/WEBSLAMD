@@ -57,9 +57,7 @@ def test_load_formulations_page_loads_form_and_dataframe(monkeypatch, context):
     monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
 
     with app.test_request_context(f'/materials/formulations/{context}'):
-        form, df, resulting_context = FormulationsService.load_formulations_page(context)
-
-    assert resulting_context == context
+        form, df = FormulationsService.load_formulations_page(context)
 
     assert form.powder_selection.choices == [('powder|1', 'test powder')]
     assert form.liquid_selection.choices == [('liquid|2', 'test liquid 1'), ('liquid|3', 'test liquid 2')]

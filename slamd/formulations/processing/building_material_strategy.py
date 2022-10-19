@@ -19,6 +19,11 @@ class BuildingMaterialStrategy(ABC):
         pass
 
     @classmethod
+    @abstractmethod
+    def populate_selection_form(cls):
+        pass
+
+    @classmethod
     def populate_weights_form(cls, weights_request_data):
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']

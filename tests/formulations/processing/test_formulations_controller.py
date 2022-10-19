@@ -16,7 +16,7 @@ def test_slamd_shows_concrete_formulations_page(client, monkeypatch):
         form = ConcreteSelectionForm()
         form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
         df = pd.DataFrame({'a': np.array([1, 2]), 'b': np.array([3, 4])})
-        return form, df, 'concrete'
+        return form, df
 
     monkeypatch.setattr(FormulationsService, 'load_formulations_page', mock_load_formulations_page)
 
@@ -51,7 +51,7 @@ def test_slamd_shows_binder_formulations_page(client, monkeypatch):
         form = BinderSelectionForm()
         form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
         df = pd.DataFrame({'a': np.array([1, 2]), 'b': np.array([3, 4])})
-        return form, df, 'binder'
+        return form, df
 
     monkeypatch.setattr(FormulationsService, 'load_formulations_page', mock_load_formulations_page)
 

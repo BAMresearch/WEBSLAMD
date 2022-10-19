@@ -24,7 +24,7 @@ class BinderStrategy(BuildingMaterialStrategy):
     def populate_selection_form(cls):
         all_materials = MaterialsFacade.find_all()
         form = cls._populate_common_ingredient_selection(BinderSelectionForm(), all_materials)
-        return form, BuildingMaterial.BINDER.value
+        return form
 
     @classmethod
     def get_formulations(cls):
