@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, request, redirect
+from flask import Blueprint, make_response, request
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.common.session_backup.session_service import SessionService
@@ -45,7 +45,7 @@ def load_session():
 
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
     # Actual content of response does not matter
-    return redirect(request.referrer)
+    return ''
 
 
 @session_blueprint.route('/', methods=['DELETE'])
@@ -54,6 +54,5 @@ def clear_session():
 
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
     # Actual content of response does not matter
-    # Using a redirect like above leads to a 404 HTML error
     return ''
 
