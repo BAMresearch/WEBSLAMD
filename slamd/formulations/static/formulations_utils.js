@@ -288,11 +288,13 @@ function assignCreateFormulationsBatchEvent(url) {
         const materialsRequestData = collectMaterialRequestData();
         const weightsRequestData = collectWeights();
         const processesRequestData = collectProcessesRequestData();
+        const samplingSize = document.getElementById("sampling_size_slider").value
 
         const formulationsRequest = {
             materials_request_data: materialsRequestData,
             weights_request_data: weightsRequestData,
             processes_request_data: processesRequestData,
+            sampling_size: samplingSize
         };
 
         insertSpinnerInPlaceholder("formulations-table-placeholder");

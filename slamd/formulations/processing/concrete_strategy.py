@@ -2,7 +2,7 @@ from itertools import product
 
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.ml_utils import concat
-from slamd.common.slamd_utils import empty
+from slamd.common.slamd_utils import empty, float_if_not_empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_material import BuildingMaterial
@@ -110,6 +110,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['weights_request_data']['all_weights']
+        sampling_size = formulations_data['sampling_size']
 
         materials = cls._prepare_materials_for_taking_direct_product(materials_data)
 
@@ -120,9 +121,11 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         if len(processes) > 0:
             materials.append(processes)
 
+
         combinations_for_formulations = list(product(*materials))
 
         dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
+        dataframe = dataframe.sample(frac=float_if_not_empty(sampling_size))
 
         if previous_batch_df:
             dataframe = concat(previous_batch_df.dataframe, dataframe)
