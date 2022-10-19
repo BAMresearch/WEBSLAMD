@@ -146,7 +146,7 @@ def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set
 # noinspection PyUnresolvedReferences
 def test_create_materials_formulations_creates_initial_formulation_batch_for_concrete(monkeypatch):
     mock_query_dataset_by_name_called_with = None
-    mock_save_temporary_dataset_called_with = None
+    mock_save_and_overwrite_dataset_called_with = None
 
     def mock_query_dataset_by_name(input):
         nonlocal mock_query_dataset_by_name_called_with
@@ -169,15 +169,15 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
             return prepare_test_admixture()
         return None
 
-    def mock_save_temporary_dataset(input, filename):
-        nonlocal mock_save_temporary_dataset_called_with
-        mock_save_temporary_dataset_called_with = input, filename
+    def mock_save_and_overwrite_dataset(input, filename):
+        nonlocal mock_save_and_overwrite_dataset_called_with
+        mock_save_and_overwrite_dataset_called_with = input, filename
         return None
 
     monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
     monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
-    monkeypatch.setattr(DiscoveryFacade, 'save_temporary_dataset', mock_save_temporary_dataset)
+    monkeypatch.setattr(DiscoveryFacade, 'save_and_overwrite_dataset', mock_save_and_overwrite_dataset)
 
     formulations_data = {
         'materials_request_data': {
@@ -202,8 +202,8 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
 
     assert df.replace({np.nan: None}).to_dict() == expected_df
     assert mock_query_dataset_by_name_called_with == 'temporary_concrete.csv'
-    assert mock_save_temporary_dataset_called_with[0].name == 'temporary_concrete.csv'
-    assert mock_save_temporary_dataset_called_with[1] == 'temporary_concrete.csv'
+    assert mock_save_and_overwrite_dataset_called_with[0].name == 'temporary_concrete.csv'
+    assert mock_save_and_overwrite_dataset_called_with[1] == 'temporary_concrete.csv'
 
 
 # As we already tested details of the creation of a batch for concrete we choose to only check the basic data flow here

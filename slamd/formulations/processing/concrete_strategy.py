@@ -135,7 +135,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
 
         temporary_dataset = Dataset(name=TEMPORARY_CONCRETE_FORMULATION, dataframe=dataframe)
-        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_CONCRETE_FORMULATION)
+        DiscoveryFacade.save_and_overwrite_dataset(temporary_dataset, TEMPORARY_CONCRETE_FORMULATION)
 
         return dataframe
 

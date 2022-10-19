@@ -23,6 +23,6 @@ class DiscoveryFacade:
         return DiscoveryPersistence.find_all_datasets()
 
     @classmethod
-    def save_temporary_dataset(cls, dataset, filename):
+    def save_and_overwrite_dataset(cls, dataset, filename):
         DiscoveryFacade.delete_dataset_by_name(filename)
         DiscoveryFacade.save_dataset(dataset)
