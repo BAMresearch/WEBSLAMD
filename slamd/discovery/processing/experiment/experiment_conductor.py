@@ -5,6 +5,8 @@ import pandas as pd
 from scipy.spatial import distance_matrix
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
 
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
@@ -35,9 +37,16 @@ class ExperimentConductor:
         if exp.model == ExperimentModel.RANDOM_FOREST.value:
             regressor = SlamdRandomForest()
         elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value:
-            # Hyperparameters from previous implementation of the app (jupyter notebook)
+            # Hyperparameters from previous implementation of the app (Jupyter notebook)
             kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
+        elif exp.model == ExperimentModel.PCA_GAUSSIAN_PROCESS.value:
+            # Hyperparameters from previous implementation of the app (Jupyter notebook)
+            predictor = GaussianProcessRegressor(n_restarts_optimizer=3)
+            # Select principal components to preserve 99% of the variance
+            pca = PCA(n_components=0.99)
+            # Treat the pipeline as a single regressor to fit the training data and predict the labels.
+            regressor = Pipeline([('pca', pca), ('pred', predictor)])
         elif exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
             if len(exp.target_names) > 1:
                 raise ValueNotSupportedException(
