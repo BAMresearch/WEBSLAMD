@@ -63,12 +63,19 @@ class FormulationsService:
     @classmethod
     def save_dataset(cls, form, building_material):
         filename = cls._sanitize_filename(form['dataset_name'])
-        temporary_filename = TEMPORARY_CONCRETE_FORMULATION
+
         if building_material == BuildingMaterial.BINDER.value:
             temporary_filename = TEMPORARY_BINDER_FORMULATION
+        elif building_material == BuildingMaterial.CONCRETE.value:
+            temporary_filename = TEMPORARY_CONCRETE_FORMULATION
+        else:
+            raise ValueNotSupportedException(message=f'Could not save dataset. Invalid building_material: '
+                                                     f'{building_material}')
+
         formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(temporary_filename)
         DiscoveryFacade.delete_dataset_by_name(temporary_filename)
         formulation_to_be_saved_as_dataset.name = filename
+
         if formulation_to_be_saved_as_dataset:
             DiscoveryFacade.save_dataset(formulation_to_be_saved_as_dataset)
 
