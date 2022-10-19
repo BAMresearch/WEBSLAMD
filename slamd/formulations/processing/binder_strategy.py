@@ -82,30 +82,6 @@ class BinderStrategy(BuildingMaterialStrategy):
         return min_max_form
 
     @classmethod
-    def populate_weights_form(cls, weights_request_data):
-        materials_formulation_config = weights_request_data['materials_formulation_configuration']
-        weight_constraint = weights_request_data['weight_constraint']
-
-        # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # various materials used for blending; for example weight_combinations =
-        # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
-        if empty(weight_constraint):
-            raise ValueNotSupportedException('You must set a non-empty weight constraint!')
-        else:
-            weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
-
-        if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
-            raise SlamdRequestTooLargeException(
-                f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
-
-        weights_form = WeightsForm()
-        for i, entry in enumerate(weight_combinations):
-            ratio_form_entry = weights_form.all_weights_entries.append_entry()
-            ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
-            ratio_form_entry.idx.data = str(i)
-        return weights_form
-
-    @classmethod
     def create_formulation_batch(cls, formulations_data):
         previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_BINDER_FORMULATION)
 
