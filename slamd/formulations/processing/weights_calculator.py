@@ -22,14 +22,14 @@ class WeightsCalculator:
         return full_weights_product
 
     @classmethod
-    def compute_full_cement_weights_product(cls, all_materials_weights, weight_constraint):
-        independent_weights_product = cls._compute_independent_weights_data_product_for_cement(all_materials_weights)
+    def compute_full_binder_weights_product(cls, all_materials_weights, weight_constraint):
+        independent_weights_product = cls._compute_independent_weights_data_product_for_binder(all_materials_weights)
 
         full_weights_product = []
 
         for item in independent_weights_product:
             entry_list = list(item)
-            dependent_weight = cls._compute_dependent_cement_weight(entry_list, weight_constraint)
+            dependent_weight = cls._compute_dependent_binder_weight(entry_list, weight_constraint)
 
             entry_list[0] = str(round(float(entry_list[0]) * dependent_weight, 2))
 
@@ -56,7 +56,7 @@ class WeightsCalculator:
         return weights_product
 
     @classmethod
-    def _compute_independent_weights_data_product_for_cement(cls, all_materials_weights):
+    def _compute_independent_weights_data_product_for_binder(cls, all_materials_weights):
         liquid_weight_ratios = all_materials_weights[0]
         remaining_weights = all_materials_weights[1:len(all_materials_weights)]
 
@@ -84,7 +84,7 @@ class WeightsCalculator:
         return dependent_weight
 
     @classmethod
-    def _compute_dependent_cement_weight(cls, entry_list, weight_constraint):
+    def _compute_dependent_binder_weight(cls, entry_list, weight_constraint):
         non_powder_or_liquid_masses = list(map(lambda w: float(w), entry_list[1:]))
         powder_mass = (float(weight_constraint) - sum(non_powder_or_liquid_masses)) / (1 + float(entry_list[0]))
         return round(powder_mass, 2)

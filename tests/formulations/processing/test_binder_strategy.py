@@ -1,5 +1,5 @@
 from slamd import create_app
-from slamd.formulations.processing.cement_strategy import CementStrategy
+from slamd.formulations.processing.binder_strategy import BinderStrategy
 
 
 """
@@ -42,8 +42,8 @@ def test_create_min_max_form(monkeypatch):
     expected_liquid_entry = 'Liquids (Chemical, Water)'
 
     app = create_app('testing', with_session=False)
-    with app.test_request_context('/materials/formulations/cement'):
-        result = CementStrategy.create_min_max_form(formulation_selection)
+    with app.test_request_context('/materials/formulations/binder'):
+        result = BinderStrategy.create_min_max_form(formulation_selection)
 
     assert result.data['materials_min_max_entries'] == expected_materials_min_max_entries
     assert result.data['process_entries'] == expected_process_entries

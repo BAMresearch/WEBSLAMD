@@ -6,9 +6,9 @@
 
 let allWeightFieldsHaveValidInput = false;
 const CONCRETE_LIQUID_HTML_ID_INCLUDES = "-1-";
-const CEMENT_LIQUID_HTML_ID_INCLUDES = "-0-";
+const BINDER_LIQUID_HTML_ID_INCLUDES = "-0-";
 const CONCRETE = "CONCRETE"
-const CEMENT = "CEMENT"
+const BINDER = "BINDER"
 
 function collectBuildingMaterialFormulationSelection() {
     const powderPlaceholder = document.getElementById("powder_selection");
@@ -59,7 +59,7 @@ function addListenersToIndependentFields(context) {
         document.getElementById(item.max.id).setAttribute("title", "");
 
         item.increment.addEventListener("keyup", () => {
-            const constraint = context === CONCRETE ? concreteWeightConstraint : cementWeightConstraint
+            const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint
             correctInputFieldValue(item.increment, 0, parseFloat(constraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
@@ -121,7 +121,7 @@ function collectFormulationsMinMaxRequestData(context) {
         });
     }
 
-    const constraint = context === CONCRETE ? concreteWeightConstraint : cementWeightConstraint;
+    const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint;
     return {
         materials_formulation_configuration: rowData,
         weight_constraint: constraint,
@@ -224,7 +224,7 @@ function autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, 
 }
 
 function computePowderValue(independentMinMaxInputFields, inputFieldName, currentInputField, context) {
-    const sumOfNonLiquidsAndLiquid = autocorrectCementInput(independentMinMaxInputFields, inputFieldName, currentInputField, context);
+    const sumOfNonLiquidsAndLiquid = autocorrectBinderInput(independentMinMaxInputFields, inputFieldName, currentInputField, context);
     const sumOfNonLiquids = sumOfNonLiquidsAndLiquid[0]
     const liquidWCValue = sumOfNonLiquidsAndLiquid[1]
     const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
@@ -232,11 +232,11 @@ function computePowderValue(independentMinMaxInputFields, inputFieldName, curren
         const lastMinItem = document.getElementById(
             `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
         );
-        lastMinItem.value = ((cementWeightConstraint - sumOfNonLiquids) / (1 + liquidWCValue)).toFixed(2)
+        lastMinItem.value = ((binderWeightConstraint - sumOfNonLiquids) / (1 + liquidWCValue)).toFixed(2)
     }
 }
 
-function autocorrectCementInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
+function autocorrectBinderInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
     correctInputFieldValue(currentInputField, 0);
 
     // Empty values => NaN; all others are parsed to float
@@ -251,9 +251,9 @@ function autocorrectCementInput(independentMinMaxInputFields, inputFieldName, cu
 
     let liquidValue = independentFieldValues[0]
 
-    if (sumOfNonLiquidWeights > cementWeightConstraint) {
-        if (!currentInputField.id.includes(CEMENT_LIQUID_HTML_ID_INCLUDES)) {
-            currentInputField.value = (cementWeightConstraint - (sumOfNonLiquidWeights - currentInputField.value)).toFixed(2);
+    if (sumOfNonLiquidWeights > binderWeightConstraint) {
+        if (!currentInputField.id.includes(BINDER_LIQUID_HTML_ID_INCLUDES)) {
+            currentInputField.value = (binderWeightConstraint - (sumOfNonLiquidWeights - currentInputField.value)).toFixed(2);
         }
     }
 

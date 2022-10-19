@@ -68,7 +68,7 @@ class MaterialsFacade:
         return list(sorted_materials.values())
 
     @classmethod
-    def sort_for_cement_formulation(cls, materials_for_formulation):
+    def sort_for_binder_formulation(cls, materials_for_formulation):
         sorted_materials = {0: materials_for_formulation.liquids,
                             4: materials_for_formulation.powders}
 

@@ -8,7 +8,7 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-from slamd.formulations.processing.cement_strategy import CementStrategy
+from slamd.formulations.processing.binder_strategy import BinderStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -29,7 +29,7 @@ MATERIALS_CONFIG = [
 app = create_app('testing', with_session=False)
 
 
-@pytest.mark.parametrize("context", ['concrete', 'cement'])
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
 def test_load_formulations_page_loads_form_and_dataframe(monkeypatch, context):
     def mock_find_all():
         powder = Powder(name='test powder', type='powder')
@@ -94,10 +94,10 @@ def test_create_weights_form_computes_all_weights_for_concrete(monkeypatch):
                                                  {'idx': '5', 'weights': '39.2/23.52/37.28'}]
 
 
-def test_create_weights_form_computes_all_weights_for_cement(monkeypatch):
+def test_create_weights_form_computes_all_weights_for_binder(monkeypatch):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
-    with app.test_request_context('/materials/formulations/cement/add_weights'):
+    with app.test_request_context('/materials/formulations/binder/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': [
@@ -107,7 +107,7 @@ def test_create_weights_form_computes_all_weights_for_cement(monkeypatch):
                 'weight_constraint': '100'
             }
 
-        form = FormulationsService.create_weights_form(weight_request_data, 'cement')
+        form = FormulationsService.create_weights_form(weight_request_data, 'binder')
 
         assert form.all_weights_entries.data == [{'idx': '0', 'weights': '13.33/20.0/66.67'},
                                                  {'idx': '1', 'weights': '11.67/30.0/58.33'},
@@ -115,7 +115,7 @@ def test_create_weights_form_computes_all_weights_for_cement(monkeypatch):
                                                  {'idx': '3', 'weights': '16.16/30.0/53.85'}]
 
 
-@pytest.mark.parametrize("context", ['concrete', 'cement'])
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
 def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch, context):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
@@ -130,7 +130,7 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
             FormulationsService.create_weights_form(weight_request_data, context)
 
 
-@pytest.mark.parametrize("context", ['concrete', 'cement'])
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
 def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch, context):
     with app.test_request_context(f'/materials/formulations/{context}/add_weights'):
         weight_request_data = \
@@ -207,14 +207,14 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
 
 
 # As we already tested details of the creation of a batch for concrete we choose to only check the basic data flow here
-def test_create_materials_formulations_creates_initial_formulation_batch_for_cement(monkeypatch):
+def test_create_materials_formulations_creates_initial_formulation_batch_for_binder(monkeypatch):
     mock_create_building_material_strategy_called_with = None
     mock_create_formulation_batch_called_with = None
 
     def mock_create_building_material_strategy(building_material):
         nonlocal mock_create_building_material_strategy_called_with
         mock_create_building_material_strategy_called_with = building_material
-        return CementStrategy
+        return BinderStrategy
 
     def mock_create_formulation_batch(request_data):
         nonlocal mock_create_formulation_batch_called_with
@@ -222,16 +222,16 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_cem
         return 'batch'
 
     monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy', mock_create_building_material_strategy)
-    monkeypatch.setattr(CementStrategy, 'create_formulation_batch', mock_create_formulation_batch)
+    monkeypatch.setattr(BinderStrategy, 'create_formulation_batch', mock_create_formulation_batch)
 
-    batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'cement')
+    batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'binder')
 
-    assert mock_create_building_material_strategy_called_with == 'cement'
+    assert mock_create_building_material_strategy_called_with == 'binder'
     assert mock_create_formulation_batch_called_with == 'dummy formulations request data'
     assert batch == 'batch'
 
 
-@pytest.mark.parametrize("context", ['concrete', 'cement'])
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
 def test_delete_formulation_deletes_tempary_dataset(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
 
@@ -247,7 +247,7 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch, context):
     assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
 
 
-@pytest.mark.parametrize("context", ['concrete', 'cement'])
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
 def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
     mock_query_dataset_by_name_called_with = None

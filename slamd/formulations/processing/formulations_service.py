@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION, \
-    TEMPORARY_CEMENT_FORMULATION
+    TEMPORARY_BINDER_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 
@@ -53,16 +53,16 @@ class FormulationsService:
     @classmethod
     def delete_formulation(cls, building_material):
         name = TEMPORARY_CONCRETE_FORMULATION
-        if building_material == BuildingMaterial.CEMENT.value:
-            name = TEMPORARY_CEMENT_FORMULATION
+        if building_material == BuildingMaterial.BINDER.value:
+            name = TEMPORARY_BINDER_FORMULATION
         DiscoveryFacade.delete_dataset_by_name(name)
 
     @classmethod
     def save_dataset(cls, form, building_material):
         filename = cls._sanitize_filename(form['dataset_name'])
         temporary_filename = TEMPORARY_CONCRETE_FORMULATION
-        if building_material == BuildingMaterial.CEMENT.value:
-            temporary_filename = TEMPORARY_CEMENT_FORMULATION
+        if building_material == BuildingMaterial.BINDER.value:
+            temporary_filename = TEMPORARY_BINDER_FORMULATION
         formulation_to_be_saved_as_dataset = DiscoveryFacade.query_dataset_by_name(temporary_filename)
         DiscoveryFacade.delete_dataset_by_name(temporary_filename)
         formulation_to_be_saved_as_dataset.name = filename

@@ -3,11 +3,11 @@ from itertools import product
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import empty
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CEMENT_FORMULATION
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_BINDER_FORMULATION
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy, WEIGHT_FORM_DELIMITER
-from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
+from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
@@ -18,18 +18,18 @@ from slamd.materials.processing.materials_facade import MaterialsFacade
 MAX_DATASET_SIZE = 10000
 
 
-class CementStrategy(BuildingMaterialStrategy):
+class BinderStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def populate_selection_form(cls):
         all_materials = MaterialsFacade.find_all()
-        form = cls._populate_common_ingredient_selection(CementSelectionForm(), all_materials)
-        return form, BuildingMaterial.CEMENT.value
+        form = cls._populate_common_ingredient_selection(BinderSelectionForm(), all_materials)
+        return form, BuildingMaterial.BINDER.value
 
     @classmethod
     def get_formulations(cls):
         dataframe = None
-        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CEMENT_FORMULATION)
+        temporary_dataset = DiscoveryFacade.query_dataset_by_name(TEMPORARY_BINDER_FORMULATION)
         if temporary_dataset:
             dataframe = temporary_dataset.dataframe
         return dataframe
@@ -107,7 +107,7 @@ class CementStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def create_formulation_batch(cls, formulations_data):
-        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_CEMENT_FORMULATION)
+        previous_batch_df = DiscoveryFacade.query_dataset_by_name(TEMPORARY_BINDER_FORMULATION)
 
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
@@ -136,8 +136,8 @@ class CementStrategy(BuildingMaterialStrategy):
         dataframe['Idx_Sample'] = range(0, len(dataframe))
         dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
 
-        temporary_dataset = Dataset(name=TEMPORARY_CEMENT_FORMULATION, dataframe=dataframe)
-        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_CEMENT_FORMULATION)
+        temporary_dataset = Dataset(name=TEMPORARY_BINDER_FORMULATION, dataframe=dataframe)
+        DiscoveryFacade.save_temporary_dataset(temporary_dataset, TEMPORARY_BINDER_FORMULATION)
 
         return dataframe
 
@@ -160,8 +160,8 @@ class CementStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, weight_constraint):
-        return WeightsCalculator.compute_full_cement_weights_product(all_materials_weights, weight_constraint)
+        return WeightsCalculator.compute_full_binder_weights_product(all_materials_weights, weight_constraint)
 
     @classmethod
     def _sort_materials(cls, materials_for_formulation):
-        return MaterialsFacade.sort_for_cement_formulation(materials_for_formulation)
+        return MaterialsFacade.sort_for_binder_formulation(materials_for_formulation)

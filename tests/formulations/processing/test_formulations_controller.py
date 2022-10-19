@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from werkzeug.datastructures import ImmutableMultiDict
 
-from slamd.formulations.processing.forms.cement_selection_form import CementSelectionForm
+from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
 from slamd.formulations.processing.forms.concrete_selection_form import \
     ConcreteSelectionForm
 from slamd.formulations.processing.forms.weights_form import WeightsForm
@@ -26,7 +26,7 @@ def test_slamd_shows_concrete_formulations_page(client, monkeypatch):
     assert response.status_code == 200
 
     assert 'Concrete formulations' in html
-    assert 'Cement formulations' not in html
+    assert 'Binder formulations' not in html
     assert 'Powders' in html
     assert 'Aggregates (select one at least)' in html
     assert 'Liquids' in html
@@ -46,22 +46,22 @@ def test_slamd_shows_concrete_formulations_page(client, monkeypatch):
     assert 'Test Aggregate' in html
 
 
-def test_slamd_shows_cement_formulations_page(client, monkeypatch):
+def test_slamd_shows_binder_formulations_page(client, monkeypatch):
     def mock_load_formulations_page(building_material):
-        form = CementSelectionForm()
+        form = BinderSelectionForm()
         form.aggregates_selection.choices = [('Aggregates|uuid 1', 'Test Aggregate')]
         df = pd.DataFrame({'a': np.array([1, 2]), 'b': np.array([3, 4])})
-        return form, df, 'cement'
+        return form, df, 'binder'
 
     monkeypatch.setattr(FormulationsService, 'load_formulations_page', mock_load_formulations_page)
 
-    response = client.get('/materials/formulations/cement')
+    response = client.get('/materials/formulations/binder')
     html = response.data.decode('utf-8')
 
     assert response.status_code == 200
 
     assert 'Concrete formulations' not in html
-    assert 'Cement formulations' in html
+    assert 'Binder formulations' in html
     assert 'Powders' in html
     assert 'Aggregates (optional)' in html
     assert 'Liquids' in html

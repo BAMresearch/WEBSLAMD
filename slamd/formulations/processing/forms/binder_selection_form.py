@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField, SelectField, StringField
+from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField
 
 
 """
@@ -8,7 +8,7 @@ However, we do not want to create a tight coupling between different usecases wh
 more in case we are adding more and more types of bulding materials, dedicated forms (and corresponding html files)
 lead too much more flexibility and extensibility.
 """
-class CementSelectionForm(Form):
+class BinderSelectionForm(Form):
 
     powder_selection = SelectMultipleField(
         label='1.1 - Powders (select one at least)',

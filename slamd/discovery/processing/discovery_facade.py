@@ -1,7 +1,7 @@
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 
 TEMPORARY_CONCRETE_FORMULATION = 'temporary_concrete.csv'
-TEMPORARY_CEMENT_FORMULATION = 'temporary_cement.csv'
+TEMPORARY_BINDER_FORMULATION = 'temporary_binder.csv'
 
 
 class DiscoveryFacade:

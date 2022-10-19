@@ -2,7 +2,7 @@ const CONCRETE_FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${wind
 let concreteWeightConstraint = "";
 
 /**
- * Despite the fact that some functions in cement.js and concrete.js look rather similar, we choose not to
+ * Despite the fact that some functions in binder.js and concrete.js look rather similar, we choose not to
  * extract too many common methods as the internal logic for the two cases might diverge. In order not to create
  * too much coupling between usecase which are different we explicitly prefer duplicating some parts of the code here.
  */
