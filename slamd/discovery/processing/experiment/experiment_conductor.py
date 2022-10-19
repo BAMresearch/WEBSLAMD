@@ -11,9 +11,10 @@ from sklearn.pipeline import Pipeline
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.experiment.models.tuned_gaussian_process_regressor import TunedGaussianProcessRegressor
+from slamd.discovery.processing.experiment.models.tuned_random_forest import TunedRandomForest
 from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
 from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
-from slamd.discovery.processing.experiment.models.tuned_gaussian_process_regressor import TunedGaussianProcessRegressor
 
 # Attention - suppressing expected Gaussian Regressor warnings
 import warnings
@@ -53,7 +54,7 @@ class ExperimentConductor:
             pca = PCA(n_components=0.99)
             # Treat the pipeline as a single regressor to fit the training data and predict the labels.
             regressor = Pipeline([('pca', pca), ('pred', predictor)])
-        elif exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
+        elif exp.model in [ExperimentModel.TUNED_GAUSSIAN_PROCESS.value, ExperimentModel.TUNED_RANDOM_FOREST.value]:
             if len(exp.target_names) > 1:
                 raise ValueNotSupportedException(
                     message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
@@ -65,7 +66,10 @@ class ExperimentConductor:
             training_rows = exp.features_df.loc[index_labelled].values
             training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
 
-            regressor = TunedGaussianProcessRegressor.find_best_model(training_rows, training_labels)
+            if exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
+                regressor = TunedGaussianProcessRegressor.find_best_model(training_rows, training_labels)
+            else:
+                regressor = TunedRandomForest.find_best_model(training_rows, training_labels)
         else:
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
