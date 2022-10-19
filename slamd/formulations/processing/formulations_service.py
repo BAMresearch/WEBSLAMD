@@ -52,10 +52,13 @@ class FormulationsService:
 
     @classmethod
     def delete_formulation(cls, building_material):
-        name = TEMPORARY_CONCRETE_FORMULATION
         if building_material == BuildingMaterial.BINDER.value:
-            name = TEMPORARY_BINDER_FORMULATION
-        DiscoveryFacade.delete_dataset_by_name(name)
+            DiscoveryFacade.delete_dataset_by_name(TEMPORARY_BINDER_FORMULATION)
+        elif building_material == BuildingMaterial.CONCRETE.value:
+            DiscoveryFacade.delete_dataset_by_name(TEMPORARY_CONCRETE_FORMULATION)
+        else:
+            raise ValueNotSupportedException(message=f'Can not delete formulation. Invalid building_material: '
+                                                     f'{building_material}')
 
     @classmethod
     def save_dataset(cls, form, building_material):
