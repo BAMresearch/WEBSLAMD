@@ -14,7 +14,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def validate_experiment(cls, exp):
-        if exp.model not in [ExperimentModel.GAUSSIAN_PROCESS.value, ExperimentModel.RANDOM_FOREST.value]:
+        if exp.model not in ExperimentModel.get_all_models():
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
         if len(exp.target_names) == 0:
