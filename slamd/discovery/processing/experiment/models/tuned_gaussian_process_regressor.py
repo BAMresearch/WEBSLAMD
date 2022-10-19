@@ -33,6 +33,7 @@ class TunedGaussianProcessRegressor:
         """
         Return a regressor with hyperparameters normalize_y=True, n_restarts_optimizer=3
         These hyperparameters were found in previous experiments to works best.
+        n_restarts_optimizer=3 is a compromise between speed and predictive power.
         """
         return GaussianProcessRegressor(normalize_y=True, n_restarts_optimizer=3)
 
