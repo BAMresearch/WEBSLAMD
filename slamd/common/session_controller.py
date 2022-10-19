@@ -33,6 +33,8 @@ def load_session():
     if file_extension != 'json':
         raise ValueNotSupportedException(message=f'Invalid file type: {file_extension}')
 
+    # Flask checks that the 'Content-Length' header is present.
+    # Otherwise, it rejects the request and returns a status code 400 - Bad Request.
     length_of_file = int(request.headers['CONTENT_LENGTH'])
     try:
         file_as_string = request.files['file'].read(length_of_file).decode()
