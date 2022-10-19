@@ -4,7 +4,7 @@ describe("Test upload dataset form", () => {
   });
 
   it("File upload works", () => {
-    cy.get("input[type=file]").selectFile("examples/MaterialsDiscoveryExampleData.csv");
+    cy.get("input[type=file]").last().selectFile("examples/MaterialsDiscoveryExampleData.csv");
     cy.findByText("Upload dataset").click();
     cy.checkGeneratedContent(
       [
@@ -32,17 +32,17 @@ describe("Test upload dataset form", () => {
   });
 
   it("Delete dataset works", () => {
-    cy.get("input[type=file]").selectFile("examples/MaterialsDiscoveryExampleData.csv");
+    cy.get("input[type=file]").last().selectFile("examples/MaterialsDiscoveryExampleData.csv");
     cy.findByText("Upload dataset").click();
     cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
     cy.wait(400);
-    cy.findAllByText("Confirm").first().click();
+    cy.findAllByText("Confirm").filter(':visible').click();
     cy.findByText("MaterialsDiscoveryExampleData.csv").should("not.exist");
   });
 
   it("Select dataset works", () => {
-    cy.get("input[type=file]").selectFile("examples/MaterialsDiscoveryExampleData.csv");
+    cy.get("input[type=file]").last().selectFile("examples/MaterialsDiscoveryExampleData.csv");
     cy.findByText("Upload dataset").click();
     cy.get(".btn-group > div > a").eq(0).click();
     cy.url().should("eq", "http://localhost:5001/materials/discovery/MaterialsDiscoveryExampleData.csv");
@@ -52,7 +52,7 @@ describe("Test upload dataset form", () => {
 describe("Test running experiments with example dataset", () => {
   beforeEach(() => {
     cy.visit("http://localhost:5001/materials/discovery");
-    cy.get("input[type=file]").selectFile("examples/MaterialsDiscoveryExampleData.csv");
+    cy.get("input[type=file]").last().selectFile("examples/MaterialsDiscoveryExampleData.csv");
     cy.findByText("Upload dataset").click();
     cy.get(".btn-group > div > a").eq(0).click();
     cy.url().should("eq", "http://localhost:5001/materials/discovery/MaterialsDiscoveryExampleData.csv");

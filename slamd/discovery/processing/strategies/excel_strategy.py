@@ -13,9 +13,9 @@ class ExcelStrategy:
 
         output = BytesIO()
         writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        original_data.to_excel(writer, sheet_name="Original Data")
-        prediction_df.to_excel(writer, sheet_name="Predictions")
-        metadata_df.to_excel(writer, sheet_name="Metadata")
+        original_data.to_excel(writer, sheet_name='Original Data')
+        prediction_df.to_excel(writer, sheet_name='Predictions')
+        metadata_df.to_excel(writer, sheet_name='Metadata')
         writer.close()
         output.seek(0)
         return output

@@ -3,6 +3,7 @@ from uuid import UUID, uuid1
 
 from slamd.materials.processing.models.additional_property import AdditionalProperty
 
+KEY_COSTS = 'costs'
 
 @dataclass
 class Costs:

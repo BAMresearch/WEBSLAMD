@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
+from dataclasses import asdict
+from uuid import UUID
 
 from werkzeug.datastructures import MultiDict
 
-from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import empty, not_empty, numeric, string_to_number_or_string
+from slamd.common.error_handling import ValueNotSupportedException, SlamdUnprocessableEntityException
+from slamd.common.slamd_utils import empty, not_empty, numeric, string_to_number_or_string, write_dict_into_object
 from slamd.common.slamd_utils import join_all, float_if_not_empty, str_if_not_none
 from slamd.materials.processing.material_dto import MaterialDto
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
 from slamd.materials.processing.models.additional_property import AdditionalProperty
-from slamd.materials.processing.models.material import Costs
+from slamd.materials.processing.models.material import Costs, Material
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
@@ -26,6 +28,48 @@ class MaterialStrategy(ABC):
     @abstractmethod
     def gather_composition_information(cls, material):
         pass
+
+    @classmethod
+    def convert_material_to_dict(cls, material):
+        out = asdict(material)
+        out['uuid'] = str(material.uuid)
+        if material.costs:
+            out['costs'] = asdict(material.costs)
+        if material.additional_properties:
+            out['additional_properties'] = [asdict(prop) for prop in material.additional_properties]
+        if material.created_from:
+            out['created_from'] = [str(uuid) for uuid in material.created_from]
+
+        return out
+
+    @classmethod
+    def create_material_from_dict(cls, dictionary):
+        mat = Material()
+        cls.fill_material_object_with_basic_info_from_dict(mat, dictionary)
+        return mat
+
+    @classmethod
+    def fill_material_object_with_basic_info_from_dict(cls, mat, dictionary):
+        write_dict_into_object(dictionary, mat)
+
+        if dictionary['uuid']:
+            mat.uuid = UUID(dictionary['uuid'])
+        else:
+            raise SlamdUnprocessableEntityException(message='Error while attempting to construct Material from dict: '
+                                                            'No UUID')
+
+        if dictionary['costs']:
+            new_costs = Costs()
+            write_dict_into_object(dictionary['costs'], new_costs)
+            mat.costs = new_costs
+
+        if dictionary['created_from']:
+            mat.created_from = [UUID(uuid_str) for uuid_str in dictionary['created_from']]
+
+        if dictionary['additional_properties']:
+            mat.additional_properties = [AdditionalProperty(name=p['name'], value=p['value'])
+                                         for p in dictionary['additional_properties']]
+
 
     @classmethod
     def for_formulation(cls, material):

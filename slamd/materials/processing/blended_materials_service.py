@@ -26,8 +26,9 @@ class BlendedMaterialsService(MaterialsService):
 
     @classmethod
     def list_base_material_selection_by_type(cls, material_type):
+        material_type = material_type.lower()
         if material_type not in MaterialType.get_all_types():
-            raise MaterialNotFoundException('The requested type is not supported!')
+            raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
 
         materials_by_type = MaterialsPersistence.query_by_type(material_type)
         base_materials = list(filter(lambda m: m.is_blended is False, materials_by_type))

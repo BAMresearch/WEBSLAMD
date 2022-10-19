@@ -6,6 +6,7 @@ from flask_wtf import CSRFProtect
 import config
 from slamd.common.error_handling import handle_404, handle_400, handle_413, handle_422
 from slamd.common.landing_controller import landing
+from slamd.common.session_backup.session_controller import session_blueprint
 from slamd.formulations.processing.formulations_controller import formulations
 from slamd.discovery.processing.discovery_controller import discovery
 from slamd.materials.processing.base_materials_controller import base_materials
@@ -23,6 +24,7 @@ def create_app(env=None, with_session=True):
         csrf.init_app(app)
 
     app.register_blueprint(landing)
+    app.register_blueprint(session_blueprint)
     app.register_blueprint(base_materials)
     app.register_blueprint(blended_materials)
     app.register_blueprint(formulations)

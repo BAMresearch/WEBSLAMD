@@ -132,7 +132,7 @@ class DiscoveryService:
     def create_tsne_plot(cls):
         tsne_plot_data = DiscoveryPersistence.get_session_tsne_plot_data()
         if not tsne_plot_data:
-            raise PlotDataNotFoundException("Cannot find data to create TSNE plot!")
+            raise PlotDataNotFoundException('Cannot find data to create TSNE plot!')
 
         plot_df = tsne_plot_data.features_df.copy()
         features_std = plot_df.std().replace(0, 1)

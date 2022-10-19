@@ -1,14 +1,45 @@
-import uuid
-from dataclasses import fields
-from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none
+from dataclasses import fields, asdict
+from slamd.common.slamd_utils import float_if_not_empty, str_if_not_none, write_dict_into_object
 from slamd.materials.processing.models.powder import Powder, Composition, Structure
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
 
+KEY_COMPOSITION = 'composition'
+KEY_STRUCTURE = 'structure'
+
 
 class PowderStrategy(MaterialStrategy):
+
+    @classmethod
+    def convert_material_to_dict(cls, material):
+        out = super().convert_material_to_dict(material)
+
+        if material.composition:
+            out[KEY_COMPOSITION] = asdict(material.composition)
+        if material.structure:
+            out[KEY_STRUCTURE] = asdict(material.structure)
+
+        return out
+
+    @classmethod
+    def create_material_from_dict(cls, dictionary):
+        powder = Powder()
+        cls.fill_material_object_with_basic_info_from_dict(powder, dictionary)
+
+        if dictionary[KEY_COMPOSITION]:
+            new_composition = Composition()
+            write_dict_into_object(dictionary[KEY_COMPOSITION], new_composition)
+            powder.composition = new_composition
+
+        if dictionary[KEY_STRUCTURE]:
+            new_structure = Structure()
+            write_dict_into_object(dictionary[KEY_STRUCTURE], new_structure)
+            powder.structure = new_structure
+
+        return powder
+
 
     @classmethod
     def create_model(cls, submitted_material):

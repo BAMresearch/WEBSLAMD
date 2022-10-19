@@ -142,6 +142,56 @@ function setNavBarHomeToActive() {
   }
 }
 
+function passClickToFileInput() {
+  document.getElementById("session-button-upload").click()
+}
+
+async function autoUploadSessionFile() {
+  const token = document.getElementById("csrf_token").value;
+  const selectedFile = document.getElementById("session-button-upload").files[0];
+  const submitURL = `${window.location.protocol}//${window.location.host}/session`;
+
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  formData.append("name", "test");
+
+  const response = await fetch(submitURL, {
+    method: "POST",
+    body: formData,
+    files: selectedFile,
+    headers: {
+      "X-CSRF-TOKEN": token,
+    },
+  });
+  if (response.ok) {
+    window.location.reload();
+  } else {
+    const error = await response.text();
+    document.write(error);
+  }
+}
+
+async function deleteCurrentSession() {
+  const token = document.getElementById("csrf_token").value;
+  const url = `${window.location.protocol}//${window.location.host}/session/`;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      "X-CSRF-TOKEN": token,
+    },
+  });
+  if (response.ok) {
+    window.location.reload();
+  } else {
+    const error = await response.text();
+    document.write(error);
+  }
+}
+
 window.addEventListener("load", function () {
   setNavBarHomeToActive();
+  document.getElementById("session-button-save").addEventListener("click", passClickToFileInput);
+  document.getElementById("session-button-upload").addEventListener("change", autoUploadSessionFile);
+  document.getElementById("session-button-clear-confirm").addEventListener("click", deleteCurrentSession);
 });

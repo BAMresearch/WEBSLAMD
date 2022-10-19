@@ -44,7 +44,7 @@ def test_saves_sets_new_material_for_type(monkeypatch):
 def test_adds_material_to_existing_ones_of_same_type(monkeypatch):
     def mock_get_session_property(input):
         if input == 'powder':
-            return [{'name': 'test name'}]
+            return [Powder(name='test name')]
         return []
 
     mock_extend_session_property_called_with = None
