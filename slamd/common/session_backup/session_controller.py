@@ -1,7 +1,7 @@
 from flask import Blueprint, make_response, request, redirect
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
-from slamd.common.session_service import SessionService
+from slamd.common.session_backup.session_service import SessionService
 
 session_blueprint = Blueprint('session', __name__, url_prefix='/session')
 

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from slamd.common.session_service import SessionService
+from slamd.common.session_backup.session_service import SessionService
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
