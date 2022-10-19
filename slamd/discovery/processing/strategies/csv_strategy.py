@@ -24,7 +24,7 @@ class CsvStrategy:
         file_name = secure_filename(file_data.filename)
 
         if file_name.startswith('temporary'):
-            raise ValueNotSupportedException('The name of the file cannot start with temporary!')
+            raise ValueNotSupportedException('The name of the file cannot start with "temporary"!')
 
         try:
             delimiter = cls._determine_delimiter(file_data)

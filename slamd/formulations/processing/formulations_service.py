@@ -26,7 +26,7 @@ class FormulationsService:
     @classmethod
     def create_weights_form(cls, weights_request_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.populate_weigths_form(weights_request_data)
+        return strategy.populate_weights_form(weights_request_data)
 
     @classmethod
     def create_materials_formulations(cls, formulations_data, building_material):
@@ -83,5 +83,5 @@ class FormulationsService:
 
         filename = secure_filename(user_input)
         if filename.startswith('temporary'):
-            raise ValueNotSupportedException('The name of the file cannot start with temporary!')
+            raise ValueNotSupportedException('The name of the file cannot start with "temporary"!')
         return filename

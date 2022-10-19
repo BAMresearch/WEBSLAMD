@@ -49,7 +49,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
 
         if cls._invalid_material_combination(aggregates_names, liquid_names, powder_names):
-            raise ValueNotSupportedException('You need to specify powders, liquids and aggregates')
+            raise ValueNotSupportedException('You need to specify at least one powder, liquid and aggregate')
 
         min_max_form = FormulationsMinMaxForm()
 
@@ -80,7 +80,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return min_max_form
 
     @classmethod
-    def populate_weigths_form(cls, weights_request_data):
+    def populate_weights_form(cls, weights_request_data):
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']
 
@@ -157,7 +157,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             entry.max.label.text = 'Min (kg)'
 
     @classmethod
-    def _compute_weigths_product(cls, all_materials_weights, weight_constraint):
+    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
         return WeightsCalculator.compute_full_concrete_weights_product(all_materials_weights, weight_constraint)
 
     @classmethod

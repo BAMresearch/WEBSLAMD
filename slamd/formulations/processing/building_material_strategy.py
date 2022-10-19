@@ -19,7 +19,7 @@ class BuildingMaterialStrategy(ABC):
         pass
 
     @classmethod
-    def populate_weigths_form(cls, weights_request_data):
+    def populate_weights_form(cls, weights_request_data):
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']
 
@@ -85,11 +85,11 @@ class BuildingMaterialStrategy(ABC):
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        return cls._compute_weigths_product(all_materials_weights, weight_constraint)
+        return cls._compute_weights_product(all_materials_weights, weight_constraint)
 
     @classmethod
     @abstractmethod
-    def _compute_weigths_product(cls, all_materials_weights, weight_constraint):
+    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
         pass
 
     @classmethod
