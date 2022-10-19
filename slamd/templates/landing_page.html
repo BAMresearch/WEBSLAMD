@@ -9,6 +9,9 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 py-2 container">
+<!-- Landing page does not contain any forms. In order to make navbar work anyway, manually add CSRF token. -->
+    <input type="hidden" id="csrf_token" value="{{ csrf_token() }}"/>
+
     <h3 class="ms-2 mt-3">
         SLAMD - Sequential Learning App for Materials Discovery
     </h3>

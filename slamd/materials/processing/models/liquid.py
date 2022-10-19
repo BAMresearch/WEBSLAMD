@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+
 from slamd.materials.processing.models.material import Material
+
+KEY_COMPOSITION = 'composition'
 
 
 @dataclass

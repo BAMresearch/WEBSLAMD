@@ -6,6 +6,12 @@ from slamd.materials.processing.strategies.material_strategy import MaterialStra
 class AdmixtureStrategy(MaterialStrategy):
 
     @classmethod
+    def create_material_from_dict(cls, dictionary):
+        mat = Admixture()
+        cls.fill_material_object_with_basic_info_from_dict(mat, dictionary)
+        return mat
+
+    @classmethod
     def create_model(cls, submitted_material):
         return Admixture(
             name=submitted_material['material_name'],

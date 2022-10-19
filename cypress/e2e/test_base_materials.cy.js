@@ -206,13 +206,13 @@ describe("Test deleting base materials", () => {
 
     cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
-    cy.wait(400);
-    cy.findAllByText("Confirm").first().click();
+    cy.wait(500);
+    cy.findAllByText("Confirm").filter(':visible').click();
     // Check that the table entry was deleted
     cy.get(".btn-group > div > button").should("have.length", 1);
     cy.get(".btn-group > div > button").eq(0).click();
     // Wait for the modal animation to finish
     cy.wait(400);
-    cy.findAllByText("Confirm").first().click();
+    cy.findAllByText("Confirm").filter(':visible').click();
   });
 });

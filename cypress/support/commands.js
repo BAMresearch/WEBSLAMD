@@ -86,7 +86,7 @@ Cypress.Commands.add("expectFloatToEqual", { prevSubject: true }, (subject, expe
 
 Cypress.Commands.add("clickButtonWaitForAsyncRequest", (buttonText, endpoint) => {
   cy.intercept(endpoint).as(endpoint);
-  cy.findByText(buttonText).click();
+  cy.findAllByText(buttonText).filter(':visible').click();
   cy.wait(`@${endpoint}`);
 });
 

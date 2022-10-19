@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% from 'icons.html' import list_icon, question_mark_icon -%}
+{% from 'icons.html' import list_icon, question_mark_icon, download_icon, upload_icon, trash3_icon -%}
 <html lang="en">
 
 <head>
@@ -49,12 +49,55 @@
                     </li>
                 </ul>
             </div>
+            <a class="btn btn-default text-white" href="/session"
+                aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">
+                {{ download_icon(30, 30, "white") }}
+            </a>
+            <form id="session-load-form" method="POST" enctype="multipart/form-data" action="/session">
+<!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
+<!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
+<!-- forms, such as the landing page, it needs to be manually added. -->
+                <input type="file" id="session-button-upload" style="display: none" accept=".json">
+                <a type="button" class="btn btn-default text-white" id="session-button-save"
+                   aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">
+                    {{ upload_icon(30, 30, "white") }}
+                </a>
+            </form>
+            <div data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clear session">
+                <button type="button" class="btn btn-default text-white" data-bs-target="#clear-session-dialogue"
+                    aria-controls="clear" data-bs-toggle="modal" id="session-button-clear">
+                    {{ trash3_icon(30, 30, "white") }}
+                </button>
+            </div>
             <a class="btn btn-default text-white" href="/static/SLAMD-UserManual.pdf" target="_blank"
-                aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="left" title="User Manual">
+                aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User Manual">
                 {{ question_mark_icon(30, 30, "white") }}
             </a>
         </div>
     </nav>
+
+    <div class="modal fade" id="clear-session-dialogue" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Clear Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Do you really want to clear the entire session?
+                    </p>
+                    <p style="color:red">
+                        This will <b>delete all data</b> in your current session.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="session-button-clear-confirm" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'navigation.html' %}
     {% block content %}

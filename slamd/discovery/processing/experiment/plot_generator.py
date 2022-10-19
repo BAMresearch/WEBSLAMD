@@ -99,11 +99,11 @@ class PlotGenerator:
         )
         fig.update_layout(
             height=1000,
-            legend_title_text="",
+            legend_title_text='',
             legend=dict(
-                yanchor="top",
+                yanchor='top',
                 y=0.99,
-                xanchor="left",
+                xanchor='left',
                 x=0.01
             )
         )

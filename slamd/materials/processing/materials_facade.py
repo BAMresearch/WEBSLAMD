@@ -10,7 +10,6 @@ from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
 from slamd.materials.processing.models.process import Process
-from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 
 @dataclass
