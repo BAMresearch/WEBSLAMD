@@ -32,6 +32,9 @@ class SessionService:
         }
 
         for mat_list in all_materials:
+            if not mat_list:
+                continue
+
             mat_strat = MaterialFactory.create_strategy(mat_list[0].type)
             for mat in mat_list:
                 full_json['Materials_and_Processes'].append(mat_strat.convert_material_to_dict(mat))
@@ -108,5 +111,7 @@ class SessionService:
         )
         dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
         dataset.dataframe = dataset.dataframe.reset_index()
+
+        return dataset
 
 

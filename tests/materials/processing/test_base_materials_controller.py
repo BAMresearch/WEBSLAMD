@@ -129,7 +129,7 @@ def test_slamd_selects_invalid_type_and_shows_error_page(client):
     html = response.data.decode('utf-8')
     assert response.status_code == 404
 
-    assert 'Resource not found: The requested type is not supported!' in html
+    assert 'Resource not found: The requested type' in html
 
 
 def test_slamd_creates_new_powder_when_saving_is_successful(client, monkeypatch):

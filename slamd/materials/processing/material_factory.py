@@ -34,7 +34,7 @@ class MaterialFactory:
         elif type == MaterialType.CUSTOM.value:
             cls = CustomForm
         else:
-            raise MaterialNotFoundException('The requested type is not supported!')
+            raise MaterialNotFoundException(f'The requested type "{type}" is not supported!')
 
         if submitted_material is None:
             # Create an empty form, assigning the type in the correct format for the user
@@ -45,6 +45,7 @@ class MaterialFactory:
 
     @classmethod
     def create_strategy(cls, type):
+        type = type.lower()
         if type == MaterialType.POWDER.value:
             return PowderStrategy
         if type == MaterialType.LIQUID.value:
@@ -58,4 +59,4 @@ class MaterialFactory:
         if type == MaterialType.CUSTOM.value:
             return CustomStrategy
         else:
-            raise MaterialNotFoundException('The requested type is not supported!')
+            raise MaterialNotFoundException(f'The requested type "{type}" is not supported!')
