@@ -11,9 +11,9 @@ from sklearn.pipeline import Pipeline
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
+from slamd.discovery.processing.experiment.models.slamd_random_forest import SlamdRandomForest
 from slamd.discovery.processing.experiment.models.tuned_gaussian_process_regressor import TunedGaussianProcessRegressor
 from slamd.discovery.processing.experiment.models.tuned_random_forest import TunedRandomForest
-from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
 from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
 
 # Attention - suppressing expected Gaussian Regressor warnings
