@@ -16,7 +16,7 @@ from slamd.discovery.processing.experiment.experiment_model import ExperimentMod
 # Attention - suppressing expected Gaussian Regressor warnings
 import warnings
 from sklearn.exceptions import ConvergenceWarning
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
+warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
 
 class ExperimentConductor:
@@ -88,7 +88,7 @@ class ExperimentConductor:
         apriori_for_utility = cls._process_apriori(exp)
 
         exp.utility = apriori_for_utility + prediction_for_utility.sum(axis=1) + \
-                      exp.curiosity * uncertainty_for_utility.sum(axis=1)
+            exp.curiosity * uncertainty_for_utility.sum(axis=1)
 
     @classmethod
     def _process_predictions(cls, exp):
