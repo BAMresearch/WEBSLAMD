@@ -13,4 +13,4 @@ class BuildingMaterialsFactory:
         elif building_material == BuildingMaterial.BINDER.value:
             return BinderStrategy
         else:
-            raise ValueNotSupportedException('No such building type!')
+            raise ValueNotSupportedException(f'Received invalid building_material: {building_material}')
