@@ -35,43 +35,7 @@ class ExperimentConductor:
 
     @classmethod
     def _fit_model_and_predict(cls, exp):
-        if exp.model == ExperimentModel.RANDOM_FOREST.value:
-            regressor = SlamdRandomForest()
-        elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value:
-            # Hyperparameters from previous implementation of the app (Jupyter notebook)
-            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
-        elif exp.model == ExperimentModel.PCA_GAUSSIAN_PROCESS.value:
-            # Hyperparameters from previous implementation of the app (Jupyter notebook)
-            predictor = GaussianProcessRegressor(n_restarts_optimizer=3)
-            # Select principal components to preserve 99% of the variance
-            pca = PCA(n_components=0.99)
-            # Treat the pipeline as a single regressor to fit the training data and predict the labels.
-            regressor = Pipeline([('pca', pca), ('pred', predictor)])
-        elif exp.model == ExperimentModel.PCA_RANDOM_FOREST.value:
-            predictor = SlamdRandomForest()
-            # Select principal components to preserve 99% of the variance
-            pca = PCA(n_components=0.99)
-            # Treat the pipeline as a single regressor to fit the training data and predict the labels.
-            regressor = Pipeline([('pca', pca), ('pred', predictor)])
-        elif exp.model in [ExperimentModel.TUNED_GAUSSIAN_PROCESS.value, ExperimentModel.TUNED_RANDOM_FOREST.value]:
-            if len(exp.target_names) > 1:
-                raise ValueNotSupportedException(
-                    message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
-
-            target = exp.target_names[0]
-            index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
-            index_unlabelled = exp.targets_df.index[exp.targets_df[target].isnull()]
-
-            training_rows = exp.features_df.loc[index_labelled].values
-            training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
-
-            if exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
-                regressor = TunedGaussianProcessRegressor.find_best_model(training_rows, training_labels)
-            else:
-                regressor = TunedRandomForest.find_best_model(training_rows, training_labels)
-        else:
-            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
+        regressor = cls._initialize_model(exp)
 
         predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
         uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
@@ -101,6 +65,50 @@ class ExperimentConductor:
 
         exp.prediction = predictions
         exp.uncertainty = uncertainties
+
+    @classmethod
+    def _initialize_model(cls, exp):
+        """
+        Initialize the model given by the user. Return a sklearn Regressor.
+        The model must be one of the entries defined in ExperimentModel.
+        """
+        if exp.model == ExperimentModel.RANDOM_FOREST.value:
+            regressor = SlamdRandomForest()
+        elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value:
+            # Hyperparameters from previous implementation of the app (Jupyter notebook)
+            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
+            regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
+        elif exp.model == ExperimentModel.PCA_GAUSSIAN_PROCESS.value:
+            # Hyperparameters from previous implementation of the app (Jupyter notebook)
+            predictor = GaussianProcessRegressor(n_restarts_optimizer=3)
+            # Select principal components to preserve 99% of the variance
+            pca = PCA(n_components=0.99)
+            # Treat the pipeline as a single regressor to fit the training data and predict the labels.
+            regressor = Pipeline([('pca', pca), ('pred', predictor)])
+        elif exp.model == ExperimentModel.PCA_RANDOM_FOREST.value:
+            predictor = SlamdRandomForest()
+            # Select principal components to preserve 99% of the variance
+            pca = PCA(n_components=0.99)
+            # Treat the pipeline as a single regressor to fit the training data and predict the labels.
+            regressor = Pipeline([('pca', pca), ('pred', predictor)])
+        elif exp.model in [ExperimentModel.TUNED_GAUSSIAN_PROCESS.value, ExperimentModel.TUNED_RANDOM_FOREST.value]:
+            if len(exp.target_names) > 1:
+                raise ValueNotSupportedException(
+                    message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
+
+            target = exp.target_names[0]
+            index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
+            training_rows = exp.features_df.loc[index_labelled].values
+            training_labels = exp.targets_df.loc[index_labelled, target].values.reshape(-1, 1)
+
+            if exp.model == ExperimentModel.TUNED_GAUSSIAN_PROCESS.value:
+                regressor = TunedGaussianProcessRegressor.find_best_model(training_rows, training_labels)
+            else:
+                regressor = TunedRandomForest.find_best_model(training_rows, training_labels)
+        else:
+            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
+        # Return the initialized model
+        return regressor
 
     @classmethod
     def _calculate_utility(cls, exp):
