@@ -20,7 +20,7 @@ class ExperimentPreprocessor:
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
 
-        if len(exp.target_names) == 0:
+        if len(exp.feature_names) == 0:
             raise SequentialLearningException('No features specified or all features dropped due to nan values')
 
         if not (len(exp.target_names) == len(exp.target_weights) == len(exp.target_thresholds) ==
@@ -63,7 +63,7 @@ class ExperimentPreprocessor:
 
     @classmethod
     def filter_missing_inputs(cls, exp):
-        for col in exp.feature_names:
+        for col in exp.feature_names.copy():
             if exp.dataframe[col].isna().values.any():
                 exp.dataframe.drop(col, axis=1, inplace=True)
                 exp.feature_names.remove(col)
