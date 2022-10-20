@@ -89,4 +89,3 @@ class DiscoveryPersistence:
     @classmethod
     def extend_session_property(cls, dataset):
         session['datasets'][dataset.name] = dataset
-
