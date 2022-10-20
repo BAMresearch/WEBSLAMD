@@ -30,8 +30,8 @@ def create_app(env=None, with_session=True):
     app.register_blueprint(formulations)
     app.register_blueprint(discovery)
 
-    app.register_error_handler(404, lambda err: handle_404(err))
-    app.register_error_handler(400, lambda err: handle_400(err))
-    app.register_error_handler(413, lambda err: handle_413(err))
-    app.register_error_handler(422, lambda err: handle_422(err))
+    app.register_error_handler(404, handle_404)
+    app.register_error_handler(400, handle_400)
+    app.register_error_handler(413, handle_413)
+    app.register_error_handler(422, handle_422)
     return app
