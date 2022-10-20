@@ -10,14 +10,14 @@ class TunedGaussianProcessRegressor:
     @classmethod
     def find_best_model(cls, training_rows, training_labels):
         # Perform a forward sequential feature selection with 3 features without cross-validation
-        sfs_gr_testing = SequentialFeatureSelector(estimator=cls._create_optimized_gaussian_process(),
+        sfs_gr_testing = SequentialFeatureSelector(estimator=cls._create_baseline_gpr_for_further_tuning(),
                                                    k_features=3,
                                                    forward=True,
                                                    floating=False,
                                                    scoring='r2',
                                                    cv=None)
         pipe = Pipeline([('sfs', sfs_gr_testing),
-                         ('gp2', cls._create_optimized_gaussian_process())])
+                         ('gp2', cls._create_baseline_gpr_for_further_tuning())])
         grid_search_cv = GridSearchCV(estimator=pipe,
                                       param_grid=cls._create_parameters_for_grid_search(),
                                       scoring='r2',
@@ -29,9 +29,9 @@ class TunedGaussianProcessRegressor:
         return pipe.set_params(**grid_search_cv.best_params_)
 
     @classmethod
-    def _create_optimized_gaussian_process(cls):
+    def _create_baseline_gpr_for_further_tuning(cls):
         """
-        Return a regressor with hyperparameters normalize_y=True, n_restarts_optimizer=3
+        Return a Gaussian Process Regressor with hyperparameters normalize_y=True, n_restarts_optimizer=3
         These hyperparameters were found in previous experiments to works best.
         n_restarts_optimizer=3 is a compromise between speed and predictive power.
         """
