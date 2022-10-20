@@ -79,7 +79,7 @@ class WeightsCalculator:
             if len(pieces) == 0:
                 sum_of_all += float(ratios[0])
             else:
-                sum_of_all += float(reduce(lambda x, y: float(x) + float(y), pieces))
+                sum_of_all += sum([float(piece) for piece in pieces])
             dependent_weight = (round(float(weight_constraint) - sum_of_all, 2))
         return dependent_weight
 
