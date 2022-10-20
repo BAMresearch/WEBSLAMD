@@ -113,5 +113,3 @@ class SessionService:
         dataset.dataframe = dataset.dataframe.reset_index(drop=True)
 
         return dataset
-
-
