@@ -13,7 +13,7 @@ from slamd.discovery.processing.experiment.experiment_model import ExperimentMod
 class MLModelFactory:
 
     @classmethod
-    def _initialize_model(cls, exp):
+    def initialize_model(cls, exp):
         """
         Initialize the model given by the user. Return a sklearn Regressor.
         The model must be one of the entries defined in ExperimentModel.
