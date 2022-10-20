@@ -80,13 +80,14 @@ class TargetsService:
         columns = dataset.columns
         dataframe = dataset.dataframe
         all_data_row_dtos = []
-        target_dtos = []
-        preview = ''
+
         for i in range(len(dataframe.index)):
+            preview = ''
             for column, value in zip(columns, dataframe.iloc[i]):
                 preview += f'{column}: {value}, '
             preview = preview.strip()[:-1]
 
+            target_dtos = []
             for target_name in dataset.target_columns:
                 target_value = dataframe.at[i, target_name]
                 target_value = float_if_not_empty(target_value)
@@ -94,10 +95,10 @@ class TargetsService:
                     target_value = None
                 target_dto = TargetDto(i, target_name, target_value)
                 target_dtos.append(target_dto)
+
             dto = DataWithTargetsDto(index=i, preview_of_data=preview, targets=target_dtos)
-            preview = ''
-            target_dtos = []
             all_data_row_dtos.append(dto)
+
         return all_data_row_dtos
 
     @classmethod
