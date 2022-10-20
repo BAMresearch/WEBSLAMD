@@ -191,7 +191,8 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
         },
         'processes_request_data': {
             'processes': []
-        }
+        },
+        'sampling_size': 1
     }
 
     expected_df = _create_expected_df_as_dict()

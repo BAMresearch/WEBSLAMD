@@ -184,7 +184,8 @@ class BuildingMaterialStrategy(ABC):
         combinations_for_formulations = list(product(*materials))
 
         dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
-        dataframe = dataframe.sample(frac=float_if_not_empty(sampling_size))
+        if sampling_size < 1:
+            dataframe = dataframe.sample(frac=float_if_not_empty(sampling_size))
 
         if previous_batch_df:
             dataframe = concat(previous_batch_df.dataframe, dataframe)
