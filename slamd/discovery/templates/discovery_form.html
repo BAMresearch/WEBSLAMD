@@ -47,15 +47,24 @@
 
                 Finally, you may choose a machine learning model, as well as a curiosity value.
                 <ul>
+                    {% if tuned_models_explanation_active %}
                     <li>
-                        There are currently {% if tuned_models_explanation_active %} 6 {% else %} 4 {% endif %}
+                        There are currently 6
                         machine learning models available: Gaussian Process Regression and Random Forest Regression,
-                        plus their variations that run Principal Component Analysis before
-                        {% if tuned_models_explanation_active %} plus their tuned versions optimized with feature
-                        selection and grid search{% endif %}.
-                        If you are not sure which one to use, choose the basic GPR as it generally produces better
+                        their variations that run Principal Component Analysis before and
+                        their tuned versions optimized with feature selection and grid search.
+                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
                         results.
                     </li>
+                    {% else %}
+                    <li>
+                        There are currently 4
+                        machine learning models available: Gaussian Process Regression and Random Forest Regression,
+                        plus their variations that run Principal Component Analysis before.
+                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
+                        results.
+                    </li>
+                    {% endif %}
                     <li>
                         The Gauss Process Regressor requires the targets to have at least one label.
                         The Random Forest Regressor requires the targets to have at least 2 labels.
@@ -141,3 +150,4 @@
         Run experiment with given configuration
     </button>
 </form>
+

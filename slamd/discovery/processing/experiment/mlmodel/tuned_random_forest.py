@@ -32,7 +32,8 @@ class TunedRandomForest:
         """
         Return the grid parameters required by GridSearchCV.
         Use 5 and 10 features. Use a max tree depth of 1 and 5.
-        These hyperparameters were taken from the previous implementation of the app.
+        These hyperparameters were determined by performing some local experiments.
+        In principle, these could be further tuned.
         """
         return {
             'sfs__k_features': [5, 10],

@@ -45,6 +45,8 @@ class TunedGaussianProcessRegressor:
         Return the grid parameters required by GridSearchCV.
         Use an isotropic and an anisotropic kernel.
         Use 5 and 10 features respectively for the anisotropic kernel.
+        These hyperparameters were determined by performing some local experiments.
+        In principle, these could be further tuned.
         """
         default_kernel = ConstantKernel(1.0, constant_value_bounds='fixed') * RBF(1.0, length_scale_bounds='fixed')
         return [
