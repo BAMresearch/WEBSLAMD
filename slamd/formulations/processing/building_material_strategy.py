@@ -170,7 +170,7 @@ class BuildingMaterialStrategy(ABC):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['weights_request_data']['all_weights']
-        sampling_size = formulations_data['sampling_size']
+        sampling_size = float_if_not_empty(formulations_data['sampling_size'])
 
         materials = cls._prepare_materials_for_taking_direct_product(materials_data)
 
@@ -185,7 +185,7 @@ class BuildingMaterialStrategy(ABC):
 
         dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
         if sampling_size < 1:
-            dataframe = dataframe.sample(frac=float_if_not_empty(sampling_size))
+            dataframe = dataframe.sample(frac=sampling_size)
 
         if previous_batch_df:
             dataframe = concat(previous_batch_df.dataframe, dataframe)
