@@ -9,9 +9,13 @@ class ExperimentPreprocessor:
     def preprocess(cls, exp):
         cls.filter_apriori_with_thresholds_and_update_orig_data(exp)
         cls.filter_missing_inputs(exp)
+        cls.validate_experiment(exp)
+        cls.encode_categoricals(exp)
+
+    @classmethod
+    def validate_experiment(cls, exp):
         cls.validate_user_input(exp)
         cls.validate_target_labels(exp)
-        cls.encode_categoricals(exp)
 
     @classmethod
     def validate_user_input(cls, exp):
