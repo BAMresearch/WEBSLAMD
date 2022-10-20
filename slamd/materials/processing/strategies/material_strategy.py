@@ -82,11 +82,12 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def create_dto(cls, material):
-        dto = MaterialDto()
-        dto.uuid = str(material.uuid)
-        dto.name = material.name
-        dto.type = material.type
-        dto.all_properties = join_all(cls.gather_composition_information(material))
+        dto = MaterialDto(
+            uuid=str(material.uuid),
+            name=material.name,
+            material_type=material.type,
+            all_properties=join_all(cls.gather_composition_information(material))
+        )
 
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
