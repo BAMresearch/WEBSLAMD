@@ -87,9 +87,10 @@ class BlendingPropertiesCalculator:
         key_defined_in_all_base_materials = [prop.name for prop in properties_with_key_defined_in_all_base_materials]
         matching_properties_for_all_base_materials = []
         for base_material_dict in base_materials_as_dict:
-            matching_properties_for_base_material = list(
-                filter(lambda prop: prop.name in key_defined_in_all_base_materials,
-                       base_material_dict['additional_properties']))
+            matching_properties_for_base_material = [
+                prop for prop in base_material_dict['additional_properties']
+                if prop.name in key_defined_in_all_base_materials
+            ]
 
             matching_properties_for_all_base_materials.append(matching_properties_for_base_material)
         return matching_properties_for_all_base_materials
