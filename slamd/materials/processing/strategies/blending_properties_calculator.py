@@ -108,7 +108,7 @@ class BlendingPropertiesCalculator:
 
     @classmethod
     def _add_continuous_additional_properties(cls, blended_additional_properties, mapped_properties):
-        mean = sum([prop_value for (_, prop_value) in mapped_properties])
+        mean = sum([prop[1] for prop in mapped_properties])
         blended_additional_properties.append(
             AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
 
