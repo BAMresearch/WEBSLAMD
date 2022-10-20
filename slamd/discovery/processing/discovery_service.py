@@ -147,6 +147,6 @@ class DiscoveryService:
         plot_df = plot_df.sort_values(by='Utility', ascending=False)
 
         # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
-        plot_df.insert(loc=0, column='Row number', value=[i for i in range(1, len(plot_df) + 1)])
+        plot_df.insert(loc=0, column='Row number', value=list(range(1, len(plot_df) + 1)))
 
         return PlotGenerator.create_tsne_input_space_plot(plot_df)

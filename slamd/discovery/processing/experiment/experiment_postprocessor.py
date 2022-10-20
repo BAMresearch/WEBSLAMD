@@ -22,7 +22,8 @@ class ExperimentPostprocessor:
         scatter_plot = cls.plot_output_space(df, exp)
 
         tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df,
-                                      index_all_labelled=exp.index_all_labelled, index_none_labelled=exp.index_none_labelled)
+                                      index_all_labelled=exp.index_all_labelled,
+                                      index_none_labelled=exp.index_none_labelled)
         return df, scatter_plot, tsne_plot_data
 
     @classmethod
@@ -53,7 +54,7 @@ class ExperimentPostprocessor:
         - Move Utility, Novelty, all the target columns and their uncertainties to the left of the dataframe.
         """
         df = df.sort_values(by='Utility', ascending=False)
-        df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
+        df.insert(loc=0, column='Row number', value=list(range(1, len(df) + 1)))
 
         if exp.novelty is not None:
             cols_to_move = ['Utility', 'Novelty'] + exp.target_names
