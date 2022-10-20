@@ -114,8 +114,8 @@ class BlendingPropertiesCalculator:
             AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
 
     @classmethod
-    def _compute_weighted_properties_with_ratios(cls, ratio, property):
-        return property.name, cls._map_according_to_value(ratio, property.value), ratio
+    def _compute_weighted_properties_with_ratios(cls, ratio, prop):
+        return prop.name, cls._map_according_to_value(ratio, prop.value), ratio
 
     @classmethod
     def _map_according_to_value(cls, ratio, value):
