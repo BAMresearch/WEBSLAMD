@@ -104,11 +104,9 @@ class SessionService:
 
     @classmethod
     def _create_dataset_from_dict(cls, dictionary):
-        dataset = Dataset(
+        return Dataset(
             name=dictionary['name'],
             target_columns=dictionary['target_columns'],
+            # Reset the index, otherwise an additional column will appear
+            dataframe=pd.DataFrame.from_dict(dictionary['dataframe']).reset_index(drop=True)
         )
-        dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
-        dataset.dataframe = dataset.dataframe.reset_index(drop=True)
-
-        return dataset
