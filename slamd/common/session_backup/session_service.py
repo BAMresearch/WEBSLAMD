@@ -36,17 +36,16 @@ class SessionService:
                 continue
 
             mat_strat = MaterialFactory.create_strategy(mat_list[0].type)
-            for mat in mat_list:
-                full_json['Materials_and_Processes'].append(mat_strat.convert_material_to_dict(mat))
+            mat_dicts = [mat_strat.convert_material_to_dict(mat) for mat in mat_list]
+            full_json['Materials_and_Processes'].extend(mat_dicts)
 
-        for proc in all_processes:
-            full_json['Materials_and_Processes'].append(ProcessStrategy.convert_material_to_dict(proc))
+        process_dicts = [ProcessStrategy.convert_material_to_dict(proc) for proc in all_processes]
+        full_json['Materials_and_Processes'].extend(process_dicts)
 
-        for dataset in all_datasets:
-            full_json['Datasets'].append(cls._convert_dataset_to_dict(dataset))
+        datasets_dicts = [cls._convert_dataset_to_dict(dataset) for dataset in all_datasets]
+        full_json['Datasets'].extend(datasets_dicts)
 
-        full_string = json.dumps(full_json)
-        return full_string
+        return json.dumps(full_json)
 
     @classmethod
     def load_session_from_json_string(cls, session_data_string):
