@@ -17,6 +17,10 @@ class ExperimentPreprocessor:
         if exp.model not in ExperimentModel.get_all_models():
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
+        if exp.model in ExperimentModel.get_tuned_models() and len(exp.target_names) > 1:
+            raise ValueNotSupportedException(
+                message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
+
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
 

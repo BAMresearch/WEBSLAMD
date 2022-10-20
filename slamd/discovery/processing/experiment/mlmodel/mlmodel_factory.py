@@ -33,11 +33,8 @@ class MLModelFactory:
             predictor = SlamdRandomForest()
             pca = PCA(n_components=0.99)
             regressor = Pipeline([('pca', pca), ('pred', predictor)])
-        elif exp.model in [ExperimentModel.TUNED_GAUSSIAN_PROCESS.value, ExperimentModel.TUNED_RANDOM_FOREST.value]:
-            if len(exp.target_names) > 1:
-                raise ValueNotSupportedException(
-                    message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
-
+        elif exp.model in ExperimentModel.get_tuned_models():
+            # These models only support one target for now. Validated user input in ExperimentPreprocessor.
             target = exp.target_names[0]
             index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
             training_rows = exp.features_df.loc[index_labelled].values
