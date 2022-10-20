@@ -12,12 +12,11 @@ class SlamdRandomForest(RandomForestRegressor):
     minimum data requirements
     """
 
-    def fit(self, x, y, weights=None, random_seed=42):
+    def fit(self, X, y, weights=None, random_seed=42):
         if y.shape[0] < LOLOPY_MINIMUM_DATA_POINTS:
-            x = np.tile(x, (4, 1))
+            X = np.tile(X, (4, 1))
             y = np.tile(y, (4, 1))
 
         y = pd.DataFrame(y)
 
-        return super().fit(x, y, weights, random_seed)
-
+        return super().fit(X, y, weights, random_seed)
