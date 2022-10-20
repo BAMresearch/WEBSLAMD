@@ -19,4 +19,4 @@ class ExperimentModel(Enum):
 
     @ classmethod
     def get_tuned_models(cls):
-        return ['Tuned Gaussian Process', 'Tuned Random Forest']
+        return [ExperimentModel.TUNED_GAUSSIAN_PROCESS.value, ExperimentModel.TUNED_RANDOM_FOREST.value]
