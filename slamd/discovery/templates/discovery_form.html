@@ -48,10 +48,21 @@
                 Finally, you may choose a machine learning model, as well as a curiosity value.
                 <ul>
                     <li>
-                        There are currently two machine learning models available: Gaussian Process Regression
-                        and Random Forest Regression. If you are not sure which one to use choose GPR as it generally
-                        produces better results.
+                        There are currently {% if tuned_models_explanation_active %} 6 {% else %} 4 {% endif %}
+                        machine learning models available: Gaussian Process Regression and Random Forest Regression,
+                        plus their variations that run Principal Component Analysis before
+                        {% if tuned_models_explanation_active %} plus their tuned versions optimized with feature
+                        selection and grid search{% endif %}.
+                        If you are not sure which one to use, choose the basic GPR as it generally produces better
+                        results.
                     </li>
+                    {% if tuned_models_explanation_active %}
+                    <li>
+                        In case you select the tuned versions of the algorithms, please be patient as the algorithms
+                        might run for a couple of seconds. Note that the tuned versions require the targets to have at
+                        least 4 labels.
+                    </li>
+                    {% endif %}
                     <li>
                         The curiosity value affects the calculation of the utility function. The uncertainty of
                         predicted values is added to the utility, weighted by the curiosity. This way, points with
