@@ -191,7 +191,7 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def created_from(cls, base_materials_as_dict):
-        return list(map(lambda material: material['uuid'], base_materials_as_dict))
+        return [material['uuid'] for material in base_materials_as_dict]
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):

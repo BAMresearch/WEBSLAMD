@@ -77,7 +77,7 @@ class BuildingMaterialStrategy(ABC):
     def _to_selection(cls, list_of_models):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
-        return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
+        return [(f'{material.type}|{str(material.uuid)}', f'{material.name}') for material in by_type]
 
     @classmethod
     def _check_for_invalid_material_lists(cls, *material_lists):

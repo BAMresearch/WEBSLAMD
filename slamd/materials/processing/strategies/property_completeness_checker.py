@@ -85,7 +85,7 @@ class PropertyCompletenessChecker:
     def _is_contained_and_has_same_type_in_all_materials(cls, prop, property_list):
         matching_name = False
         matching_type = False
-        names_of_properties = list(map(lambda p: p.name, property_list))
+        names_of_properties = [prop.name for prop in property_list]
         if prop.name in names_of_properties:
             matching_name = True
         if matching_name:

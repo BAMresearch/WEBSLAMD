@@ -21,8 +21,7 @@ class BlendingPropertiesCalculator:
         if not is_complete:
             return None
 
-        ratios_with_property_values = zip(normalized_ratios, all_values)
-        mean = sum(list(map(lambda x: x[0] * string_to_number(x[1]), ratios_with_property_values)))
+        mean = sum([norm_ratio * string_to_number(value) for (norm_ratio, value) in zip(normalized_ratios, all_values)])
         return round(mean, 2)
 
     @classmethod
@@ -109,7 +108,7 @@ class BlendingPropertiesCalculator:
 
     @classmethod
     def _add_continuous_additional_properties(cls, blended_additional_properties, mapped_properties):
-        mean = sum(list(map(lambda x: x[1], mapped_properties)))
+        mean = sum([prop_value for (_, prop_value) in mapped_properties])
         blended_additional_properties.append(
             AdditionalProperty(name=mapped_properties[0][0], value=str(round(mean, 2))))
 
