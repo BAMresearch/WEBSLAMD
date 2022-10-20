@@ -27,22 +27,16 @@ class ExperimentPostprocessor:
         return df, scatter_plot, tsne_plot_data
 
     @classmethod
-    def move_after_row_column(cls, df, cols_to_move=None):
+    def move_after_row_column(cls, df, cols_to_move):
         """
         Move one or several columns after the column named 'Row number'.
         """
         cols = df.columns.tolist()
         seg1 = cols[:list(cols).index('Row number') + 1]
-
-        if cols_to_move is None:
-            seg2 = []
-        else:
-            seg2 = cols_to_move
-
+        seg2 = cols_to_move
         # Make sure to remove overlapping elements between the segments
         seg1 = [i for i in seg1 if i not in seg2]
         seg3 = [i for i in cols if i not in seg1 + seg2]
-
         # Return a new dataset with the columns in the new order to be assigned to the same variable.
         return df[seg1 + seg2 + seg3]
 
