@@ -1,5 +1,6 @@
-from pandas import DataFrame, Index
 from dataclasses import dataclass, field
+from pandas import DataFrame, Index
+
 
 @dataclass
 class ExperimentData:
