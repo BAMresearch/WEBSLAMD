@@ -73,25 +73,30 @@ class FormulationsService:
 
         min_max_form = FormulationsMinMaxForm()
 
+        joined_powder_names = ', '.join(powder_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
-                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
+                                       f'Powders ({joined_powder_names})', 'Powder')
+        joined_liquid_names = ', '.join(liquid_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
-                                       'Liquids ({0})'.format(', '.join(liquid_names)), 'Liquid')
+                                       f'Liquids ({joined_liquid_names})', 'Liquid')
 
         min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
         min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
         min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
 
         if len(admixture_names):
+            joined_admixture_names = ', '.join(admixture_names)
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
-                                           'Admixtures ({0})'.format(', '.join(admixture_names)), 'Admixture')
+                                           f'Admixtures ({joined_admixture_names})', 'Admixture')
 
         if len(custom_names):
+            joined_custom_names = ', '.join(custom_names)
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
-                                           'Customs ({0})'.format(', '.join(custom_names)), 'Custom')
+                                           f'Customs ({joined_custom_names})', 'Custom')
 
+        joined_aggregates_names = ', '.join(aggregates_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
-                                       'Aggregates ({0})'.format(', '.join(aggregates_names)), 'Aggregates')
+                                       f'Aggregates ({joined_aggregates_names})', 'Aggregates')
 
         cls._create_non_editable_entries(formulation_selection, min_max_form, 'Process')
 
@@ -104,16 +109,16 @@ class FormulationsService:
             cls._create_min_max_form_entry(min_max_form.non_editable_entries, item['uuid'], item['name'], type)
 
     @classmethod
-    def _create_min_max_form_entry(cls, entries, uuids, name, type):
+    def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
         entry = entries.append_entry()
         entry.materials_entry_name.data = name
         entry.uuid_field.data = uuids
-        entry.type_field.data = type
-        if type == 'Powder' or type == 'Liquid' or type == 'Aggregates':
-            entry.increment.name = type
-            entry.min.name = type
-            entry.max.name = type
-        if type == 'Aggregates':
+        entry.type_field.data = material_type
+        if material_type in ('Powder', 'Liquid', 'Aggregates'):
+            entry.increment.name = material_type
+            entry.min.name = material_type
+            entry.max.name = material_type
+        if material_type == 'Aggregates':
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
             entry.max.render_kw = {'disabled': 'disabled'}
@@ -130,8 +135,8 @@ class FormulationsService:
         # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
         if empty(weight_constraint):
             raise ValueNotSupportedException('You must set a non-empty weight constraint!')
-        else:
-            weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
+
+        weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
 
         if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
@@ -254,7 +259,7 @@ class FormulationsService:
         targets_as_dto = []
         target_list = targets.split(';')
         target_dict = {k: v for k, v in inner_dict.items() if k in target_list}
-        for key, value in target_dict.items():
+        for _, value in target_dict.items():
             targets_as_dto.append(value)
         return targets_as_dto
 
