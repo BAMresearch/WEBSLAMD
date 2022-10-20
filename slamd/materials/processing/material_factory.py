@@ -47,15 +47,15 @@ class MaterialFactory:
         material_type = material_type.lower()
         if material_type == MaterialType.POWDER.value:
             return PowderStrategy
-        elif material_type == MaterialType.LIQUID.value:
+        if material_type == MaterialType.LIQUID.value:
             return LiquidStrategy
-        elif material_type == MaterialType.AGGREGATES.value:
+        if material_type == MaterialType.AGGREGATES.value:
             return AggregatesStrategy
-        elif material_type == MaterialType.PROCESS.value:
+        if material_type == MaterialType.PROCESS.value:
             return ProcessStrategy
-        elif material_type == MaterialType.ADMIXTURE.value:
+        if material_type == MaterialType.ADMIXTURE.value:
             return AdmixtureStrategy
-        elif material_type == MaterialType.CUSTOM.value:
+        if material_type == MaterialType.CUSTOM.value:
             return CustomStrategy
-        else:
-            raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
+
+        raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
