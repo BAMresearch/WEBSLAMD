@@ -43,12 +43,9 @@ class FormulationsService:
 
     @classmethod
     def _create_targets(cls, inner_dict, targets):
-        targets_as_dto = []
         target_list = targets.split(';')
         target_dict = {k: v for k, v in inner_dict.items() if k in target_list}
-        for key, value in target_dict.items():
-            targets_as_dto.append(value)
-        return targets_as_dto
+        return list(target_dict.values())
 
     @classmethod
     def delete_formulation(cls, building_material):
