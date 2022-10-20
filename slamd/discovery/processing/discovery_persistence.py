@@ -83,8 +83,7 @@ class DiscoveryPersistence:
     def get_session_property_exists(cls, name):
         if 'datasets' in session:
             return name in session['datasets']
-        else:
-            return False
+        return False
 
     @classmethod
     def extend_session_property(cls, dataset):
