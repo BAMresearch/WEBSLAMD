@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_session import Session
 from flask_wtf import CSRFProtect
+from flask_session import Session
 
 import config
 from slamd.common.error_handling import handle_404, handle_400, handle_413, handle_422
