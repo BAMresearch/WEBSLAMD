@@ -56,6 +56,10 @@
                         If you are not sure which one to use, choose the basic GPR as it generally produces better
                         results.
                     </li>
+                    <li>
+                        The Gauss Process Regressor requires the targets to have at least one label.
+                        The Random Forest Regressor requires the targets to have at least 2 labels.
+                    </li>
                     {% if tuned_models_explanation_active %}
                     <li>
                         In case you select the tuned versions of the algorithms, please be patient as the algorithms
