@@ -27,8 +27,8 @@ class ExperimentPreprocessor:
                 len(exp.target_max_or_min)):
             raise SlamdUnprocessableEntityException(message='Target names, weights, thresholds, and max_or_min '
                                                             'parameters do not have the same length.')
-        elif not (len(exp.apriori_names) == len(exp.apriori_weights) == len(exp.apriori_thresholds) ==
-                  len(exp.apriori_max_or_min)):
+        if not (len(exp.apriori_names) == len(exp.apriori_weights) == len(exp.apriori_thresholds) ==
+                len(exp.apriori_max_or_min)):
             raise SlamdUnprocessableEntityException(message='Apriori names, weights, thresholds, and max_or_min '
                                                             'parameters do not have the same length.')
 
@@ -48,21 +48,21 @@ class ExperimentPreprocessor:
                             f'Please ensure that there are at least 2 data points that are not filtered out '
                             f'by the a priori thresholds.'
                 )
-            elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value and count < 1:
+            if exp.model == ExperimentModel.GAUSSIAN_PROCESS.value and count < 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Gaussian Process Regressor '
                             f'requires at least 1 labelled value, but none were found. '
                             f'Please ensure that there is at least 1 data point that is not filtered out '
                             f'by the a priori information thresholds.'
                 )
-            elif exp.model in ExperimentModel.get_tuned_models() and count < 4:
+            if exp.model in ExperimentModel.get_tuned_models() and count < 4:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The {exp.model} model '
                             f'requires at least 4 labelled values, but only {count} was/were found. '
                             f'Please ensure that there are at least 4 data points that are not filtered out '
                             f'by the a priori thresholds.'
                 )
-            elif count == len(exp.targets_df.index):
+            if count == len(exp.targets_df.index):
                 raise SequentialLearningException(message=f'All data is already labelled for target {target}.')
 
     @classmethod
