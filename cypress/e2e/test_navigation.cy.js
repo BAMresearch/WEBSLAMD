@@ -21,7 +21,7 @@ describe("Test navigation bar", () => {
     cy.get("nav").within(() => {
       cy.findByText("Formulations").click();
     });
-    cy.url().should("eq", "http://localhost:5001/materials/formulations");
+    cy.url().should("eq", "http://localhost:5001/materials/formulations/concrete");
   });
 
   it("Go to discovery page", () => {
@@ -53,12 +53,20 @@ describe("Test navigation sidebar", () => {
     cy.url().should("eq", "http://localhost:5001/materials/blended");
   });
 
-  it("Go to formulations page", () => {
+  it("Go to formulations concrete page", () => {
     cy.get("nav").within(() => {
       cy.get("a > .bi-list").click();
     });
-    cy.findAllByText("Formulations").last().click();
-    cy.url().should("eq", "http://localhost:5001/materials/formulations");
+    cy.findByText("Formulations - Concrete").click();
+    cy.url().should("eq", "http://localhost:5001/materials/formulations/concrete");
+  });
+
+  it("Go to formulations binder page", () => {
+    cy.get("nav").within(() => {
+      cy.get("a > .bi-list").click();
+    });
+    cy.findByText("Formulations - Binder").click();
+    cy.url().should("eq", "http://localhost:5001/materials/formulations/binder");
   });
 
   it("Go to discovery page", () => {

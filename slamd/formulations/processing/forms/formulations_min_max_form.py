@@ -3,7 +3,6 @@ from wtforms import FieldList, FormField, DecimalField, StringField, validators
 
 
 class MaterialsMinMaxEntriesForm(Form):
-
     uuid_field = StringField(label='UUID')
 
     type_field = StringField(label='Material Type')
@@ -21,16 +20,13 @@ class MaterialsMinMaxEntriesForm(Form):
 
 
 class NonEditableFormulationItemsForm(Form):
-
     uuid_field = StringField(label='UUID')
 
     type_field = StringField(
-        label='Name',
         validators=[validators.DataRequired(message='Type cannot be empty')]
     )
 
     materials_entry_name = StringField(
-        label='Name',
         validators=[validators.DataRequired(message='Entry name cannot be empty')]
     )
 
@@ -38,4 +34,9 @@ class NonEditableFormulationItemsForm(Form):
 class FormulationsMinMaxForm(Form):
 
     materials_min_max_entries = FieldList(FormField(MaterialsMinMaxEntriesForm), min_entries=0)
-    non_editable_entries = FieldList(FormField(NonEditableFormulationItemsForm), min_entries=0)
+
+    process_entries = FieldList(FormField(NonEditableFormulationItemsForm), min_entries=0)
+
+    liquid_info_entry = StringField(
+        validators=[validators.DataRequired(message='Entry name cannot be empty')]
+    )

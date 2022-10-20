@@ -23,8 +23,8 @@ class CsvStrategy:
         # Generate a safe filename for the new dataset
         file_name = secure_filename(file_data.filename)
 
-        if file_name == 'temporary.csv':
-            raise ValueNotSupportedException('You cannot use the name temporary for your dataset!')
+        if file_name.startswith('temporary'):
+            raise ValueNotSupportedException('The name of the file cannot start with "temporary"!')
 
         try:
             delimiter = cls._determine_delimiter(file_data)

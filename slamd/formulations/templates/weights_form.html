@@ -3,13 +3,36 @@
 <div class="col-12 rounded mb-3 bg-white" role="tooltip">
     <h3 class="explanation-header">You may edit the configurations by hand</h3>
     <div class="explanation-body">
-        Here you can see all the weight combinations generated using the configuration above.
-        In case you want to edit the fields below, follow the pattern number/number/number... N times where N is the
-        number of selected material types.
-        For example, in case you selected 3 materials types a valid entry would be 10/20/70. Note that also
-        decimals with up to two decimal places are allowed.
+        <p>
+            Here you can see all the weight combinations generated using the configuration above.
+            In case you want to edit the fields below, follow the pattern number/number/number... N times where N is the
+            number of selected material types.
+            For example, in case you selected 3 materials types a valid entry would be 10/20/70. Note that also
+            decimals with up to two decimal places are allowed.
+        </p>
+        <p>
+            Additionally, you may use the slider below to randomly drop combinations. The ratio you choose determines
+            how many combinations are actually kept.
+        </p>
     </div>
 </div>
+
+<div class="row g-3 mb-3">
+    <div class="col-xxl-3 col-lg-4 col-md-5 col-12">
+        {{ weights_form.sampling_size_slider.label(class_="control-label") }}
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                {{ weights_form.sampling_size_slider(class_="form-range", min=0, max=1, oninput="updateSamplingRatioValue(value)") }}
+            </div>
+            <div class="col-auto ">
+                <output for="sampling_size_slider" id="selected-ratio">1.00</output>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-3 mb-3 align-items-end">
     {% for entry in weights_form.all_weights_entries %}
     <div class="col-md-3">
@@ -22,8 +45,9 @@
     </div>
     {% endfor %}
 </div>
+
 <button class="btn btn-success col-12 mb-3" type="button" id="create_formulations_batch_button" data-bs-toggle="tooltip"
     data-bs-placement="bottom"
     title="A batch of material formulations based on the configuration are created. You can add several to define a dataset and add some targets in the next step.">
-    6 - Create material formulations for given configuration
+    4 - Create material formulations for given configuration
 </button>

@@ -20,15 +20,20 @@
                     (40, 9) }.
                 </p>
 
-                There are two exceptions to this rule:
+                There are some important exceptions to this rule:
                 <ul>
-                    <li>The amount of aggregates to use is not specified manually, but computed to "fill up" the weight
+                    <li>Liquids masses are not specified in kilograms but using the W/C-Ratio relative to the powder value.
+                        If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
+                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.
+                    </li>
+                    <li>For concrete the amount of aggregates to use is not specified manually, but computed to "fill up" the weight
                         constraint. If there had been a constraint of 50 in the example above, the weights would have been
                         extended to { (20, 7, 23), (20, 8, 22), (20, 9, 21), (30, 7, 13), (30, 8, 12), (30, 9, 11), (40, 7, 3),
                         (40, 8, 2), (40, 9, 1) }.</li>
-                    <li>Liquids are not specified in kilograms but using the W/C-Ratio, relative to the powder value.
-                        If ingredient B in example above would have been a liquid with range [0.5, 0.75] and step size 0.25,
-                        the combinations would have been { (20, 10), (20, 15), (30, 15), (30, 22.5), (40, 20), (40, 30) }.</li>
+                    <li>For binder the amount of powder to use is not specified manually, but computed to "fill up" the weight
+                        constraint. For that purpose, its mass is computed in terms of the W/C ratio and the fact that
+                        the total mass of all materials equals the constraint. I.e. depending on the mass of all materials
+                        except for the powder and liquid, the latter masses are completely determined by W/C-Ratio and constraint.
                 </ul>
             </div>
         </div>
@@ -60,7 +65,7 @@
 </div>
 {% endfor %}
 
-{% for entry in formulations_min_max_form.non_editable_entries %}
+{% for entry in formulations_min_max_form.process_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
@@ -70,8 +75,13 @@
     </div>
 </div>
 {% endfor %}
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-3">
+        {{ formulations_min_max_form.liquid_info_entry(class_="form-control", disabled=True) }}
+    </div>
+</div>
 <button class="btn btn-success col-12 mb-3" type="button" id="confirm_formulations_configuration_button"
     data-bs-toggle="tooltip" data-bs-placement="bottom"
     title="Preview the chosen formulations in terms of their base material composition" disabled>
-    5 - Show mixture in terms of base material composition
+    3 - Show mixture in terms of base material composition
 </button>

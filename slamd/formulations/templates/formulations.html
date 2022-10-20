@@ -8,11 +8,17 @@
 {% extends 'index.html' %}
 {% block content %}
 <main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 py-2 container">
+    {% include 'formulations_navigation.html' %}
     {% include 'formulations_form.html' %}
     <div id="formulations-table-placeholder">
         {% include 'formulations_table.html' %}
     </div>
 </main>
 <script src="{{url_for('formulations.static', filename='formulations.js')}}"></script>
+{% if context == 'concrete' %}
+    <script src="{{url_for('formulations.static', filename='concrete.js')}}"></script>
+{% else %}
+    <script src="{{url_for('formulations.static', filename='binder.js')}}"></script>
+{% endif %}
 <script src="{{url_for('formulations.static', filename='formulations_utils.js')}}"></script>
 {%endblock%}

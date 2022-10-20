@@ -1,6 +1,7 @@
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 
-TEMPORARY_FORMULATION = 'temporary.csv'
+TEMPORARY_CONCRETE_FORMULATION = 'temporary_concrete.csv'
+TEMPORARY_BINDER_FORMULATION = 'temporary_binder.csv'
 
 
 class DiscoveryFacade:
@@ -22,6 +23,6 @@ class DiscoveryFacade:
         return DiscoveryPersistence.find_all_datasets()
 
     @classmethod
-    def save_temporary_dataset(cls, dataset):
-        DiscoveryFacade.delete_dataset_by_name(TEMPORARY_FORMULATION)
+    def save_and_overwrite_dataset(cls, dataset, filename):
+        DiscoveryFacade.delete_dataset_by_name(filename)
         DiscoveryFacade.save_dataset(dataset)
