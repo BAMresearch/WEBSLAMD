@@ -30,8 +30,8 @@ class ExperimentConductor:
     def _fit_model_and_predict(cls, exp):
         regressor = MLModelFactory.initialize_model(exp)
 
-        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
-        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
+        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float64)
+        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float64)
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
             index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]
