@@ -45,7 +45,7 @@ def upload_dataset():
         upload_dataset_form=form,
         discovery_form=DiscoveryForm(),
         datasets=datasets,
-        tuned_models_explanation_active=running_locally
+        tuned_models_explanation_active=RUNNING_LOCALLY
     )
 
 
@@ -60,7 +60,7 @@ def select_dataset(dataset):
         upload_dataset_form=UploadDatasetForm(),
         discovery_form=discovery_form,
         datasets=datasets,
-        tuned_models_explanation_active=running_locally
+        tuned_models_explanation_active=RUNNING_LOCALLY
     )
 
 
