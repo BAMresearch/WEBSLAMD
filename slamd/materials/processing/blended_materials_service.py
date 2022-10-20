@@ -31,11 +31,8 @@ class BlendedMaterialsService(MaterialsService):
             raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
 
         materials_by_type = MaterialsPersistence.query_by_type(material_type)
-        base_materials = list(filter(lambda m: m.is_blended is False, materials_by_type))
-
-        material_selection = []
-        for material in base_materials:
-            material_selection.append((material.uuid, material.name))
+        material_selection = [(material.uuid, material.name)
+                              for material in materials_by_type if material.is_blended is False]
 
         sorted_by_name = sorted(material_selection, key=lambda material: material[1])
         form = BaseMaterialSelectionForm()

@@ -47,7 +47,7 @@ class MaterialsPersistence:
     @classmethod
     def delete_by_type_and_uuid(cls, material_type, uuid_as_str):
         materials = cls.query_by_type(material_type)
-        remaining_materials = list(filter(lambda material: str(material.uuid) != uuid_as_str, materials))
+        remaining_materials = [material for material in materials if str(material.uuid) != uuid_as_str]
         cls.set_session_property(material_type, remaining_materials)
 
     # Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper

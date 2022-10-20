@@ -14,14 +14,12 @@ class MaterialsService(ABC):
 
         all_material_dtos = []
         for material_type in all_material_types:
+            strategy = MaterialFactory.create_strategy(material_type)
             all_materials = MaterialsPersistence.query_by_type(material_type)
 
-            materials = list(filter(lambda material: material.is_blended == blended, all_materials))
-
-            strategy = MaterialFactory.create_strategy(material_type)
-            for material in materials:
-                dto = strategy.create_dto(material)
-                all_material_dtos.append(dto)
+            dtos_given_type = [strategy.create_dto(material)
+                               for material in all_materials if material.is_blended == blended]
+            all_material_dtos.extend(dtos_given_type)
 
         sorted_by_name = sorted(all_material_dtos, key=lambda material: material.name)
         sorted_by_type = sorted(sorted_by_name, key=lambda material: material.type)
