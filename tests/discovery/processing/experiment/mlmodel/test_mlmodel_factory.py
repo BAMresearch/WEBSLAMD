@@ -49,6 +49,7 @@ def test_mlmodel_factory_returns_correct_tuned_gauss_regressor(monkeypatch):
     exp = _get_experiment_data(ExperimentModel.TUNED_GAUSSIAN_PROCESS.value)
     result = MLModelFactory.initialize_model(exp)
     assert type(result) == Pipeline
+    assert mock_find_best_model_called is True
 
 
 def test_mlmodel_factory_returns_correct_tuned_random_forest_regressor(monkeypatch):
@@ -64,3 +65,4 @@ def test_mlmodel_factory_returns_correct_tuned_random_forest_regressor(monkeypat
     exp = _get_experiment_data(ExperimentModel.TUNED_RANDOM_FOREST.value)
     result = MLModelFactory.initialize_model(exp)
     assert type(result) == Pipeline
+    assert mock_find_best_model_called is True
