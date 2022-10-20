@@ -17,7 +17,7 @@ class WeightsForm(Form):
     all_weights_entries = FieldList(FormField(WeightsEntriesForm), min_entries=0)
 
     sampling_size_slider = DecimalRangeField(
-        label='Specify ratio of combinations to include',
+        label='Specify ratio of combinations to include:',
         default=1.00,
         places=2,
         validators=[

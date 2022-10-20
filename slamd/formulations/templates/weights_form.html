@@ -10,6 +10,23 @@
         decimals with up to two decimal places are allowed.
     </div>
 </div>
+
+<div class="row g-3 mb-3">
+    <div class="col-xxl-3 col-lg-4 col-md-5 col-12">
+        {{ weights_form.sampling_size_slider.label(class_="control-label") }}
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                {{ weights_form.sampling_size_slider(class_="form-range", min=0, max=1, oninput="updateSamplingRatioValue(value)") }}
+            </div>
+            <div class="col-auto ">
+                <output for="sampling_size_slider" id="selected-ratio">1.00</output>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-3 mb-3 align-items-end">
     {% for entry in weights_form.all_weights_entries %}
     <div class="col-md-3">
@@ -21,15 +38,6 @@
         </div>
     </div>
     {% endfor %}
-</div>
-
-<div class="row g-3 mb-3">
-    <div class="col-12 col-md-6">
-        <div class="col-12">
-            {{ weights_form.sampling_size_slider.label(class_="control-label") }}
-            {{ weights_form.sampling_size_slider(class_="form-range", min=0, max=1) }}
-        </div>
-    </div>
 </div>
 
 <button class="btn btn-success col-12 mb-3" type="button" id="create_formulations_batch_button" data-bs-toggle="tooltip"

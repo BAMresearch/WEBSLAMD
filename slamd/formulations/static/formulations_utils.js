@@ -333,3 +333,8 @@ function toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields) {
     allWeightFieldsHaveValidInput = nonMatchingInputs <= 0;
     document.getElementById("create_formulations_batch_button").disabled = !allWeightFieldsHaveValidInput;
 }
+
+function updateSamplingRatioValue(ratio) {
+    const value = parseFloat(ratio);
+    document.getElementById("selected-ratio").value = value.toFixed(2);
+}

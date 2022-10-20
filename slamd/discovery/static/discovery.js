@@ -1,7 +1,7 @@
 const DISCOVERY_URL = `${window.location.protocol}//${window.location.host}/materials/discovery`;
 
 function updateCuriosityValue(curiosity) {
-    value = parseFloat(curiosity);
+    const value = parseFloat(curiosity);
     document.getElementById("selected-range").value = parseFloat(value.toFixed(2));
 }
 
