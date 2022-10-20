@@ -14,12 +14,12 @@ from slamd.materials.processing.models.process import Process
 
 @dataclass
 class MaterialsForFormulations:
-    powders: list[Powder] = field(default_factory=lambda: [])
-    aggregates_list: list[Aggregates] = field(default_factory=lambda: [])
-    liquids: list[Liquid] = field(default_factory=lambda: [])
-    admixtures: list[Admixture] = field(default_factory=lambda: [])
-    customs: list[Custom] = field(default_factory=lambda: [])
-    processes: list[Process] = field(default_factory=lambda: [])
+    powders: list[Powder] = field(default_factory=list)
+    aggregates_list: list[Aggregates] = field(default_factory=list)
+    liquids: list[Liquid] = field(default_factory=list)
+    admixtures: list[Admixture] = field(default_factory=list)
+    customs: list[Custom] = field(default_factory=list)
+    processes: list[Process] = field(default_factory=list)
 
 
 class MaterialsFacade:
