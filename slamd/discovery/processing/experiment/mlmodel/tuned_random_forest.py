@@ -9,9 +9,7 @@ class TunedRandomForest:
 
     @classmethod
     def find_best_model(cls, training_rows, training_labels):
-        # Perform a forward sequential feature selection with 3 features without cross-validation
         sfs_rf_testing = SequentialFeatureSelector(estimator=SlamdRandomForest(),
-                                                   k_features=3,
                                                    forward=True,
                                                    floating=False,
                                                    scoring='r2',

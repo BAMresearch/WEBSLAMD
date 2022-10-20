@@ -9,9 +9,7 @@ class TunedGaussianProcessRegressor:
 
     @classmethod
     def find_best_model(cls, training_rows, training_labels):
-        # Perform a forward sequential feature selection with 3 features without cross-validation
         sfs_gr_testing = SequentialFeatureSelector(estimator=cls._create_baseline_gpr_for_further_tuning(),
-                                                   k_features=3,
                                                    forward=True,
                                                    floating=False,
                                                    scoring='r2',
