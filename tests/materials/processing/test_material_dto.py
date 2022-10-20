@@ -14,7 +14,7 @@ def test_material_dto_constructor_sets_properties():
     material_dto = MaterialDto(
         uuid='a8098c1a-f86e-11da-bd1a-00112444be1e',
         name='test material DTO',
-        type='test type',
+        material_type='test type',
         all_properties='prop0: test property, prop1: 12345'
     )
 
