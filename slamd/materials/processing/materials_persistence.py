@@ -50,10 +50,9 @@ class MaterialsPersistence:
         remaining_materials = list(filter(lambda material: str(material.uuid) != uuid_as_str, materials))
         cls.set_session_property(material_type, remaining_materials)
 
-    """
-    Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
-    context and session. Check test_materials_persistence for examples.
-    """
+    # Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
+    # context and session. Check test_materials_persistence for examples.
+
     @classmethod
     def get_session_property(cls, material_type):
         return session.get(f'{material_type.lower()}_list', [])
