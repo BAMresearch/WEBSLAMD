@@ -25,17 +25,34 @@ class BinderStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def create_min_max_form(cls, formulation_selection):
-        powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
-        liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
-        aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
-        admixture_names = [item['name'] for item in formulation_selection if item['type'] == 'Admixture']
-        custom_names = [item['name'] for item in formulation_selection if item['type'] == 'Custom']
-
-        powder_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Powder']
-        liquid_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Liquid']
-        aggregates_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Aggregates']
-        admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
-        custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
+        powder_names = []
+        liquid_names = []
+        aggregates_names = []
+        admixture_names = []
+        custom_names = []
+        powder_uuids = []
+        liquid_uuids = []
+        aggregates_uuids = []
+        admixture_uuids = []
+        custom_uuids = []
+        # Classify the selection in a single pass.
+        # Separate names and uuids.
+        for item in formulation_selection:
+            if item['type'] == 'Powder':
+                powder_names.append(item['name'])
+                powder_uuids.append(item['uuid'])
+            if item['type'] == 'Liquid':
+                liquid_names.append(item['name'])
+                liquid_uuids.append(item['uuid'])
+            if item['type'] == 'Aggregates':
+                aggregates_names.append(item['name'])
+                aggregates_uuids.append(item['uuid'])
+            if item['type'] == 'Admixture':
+                admixture_names.append(item['name'])
+                admixture_uuids.append(item['uuid'])
+            if item['type'] == 'Custom':
+                custom_names.append(item['name'])
+                custom_uuids.append(item['uuid'])
 
         if cls._check_for_invalid_material_lists(liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify at least one powder and one liquid')
