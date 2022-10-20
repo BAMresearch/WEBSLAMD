@@ -45,13 +45,12 @@ class PropertyCompletenessChecker:
             except AttributeError:
                 return value
 
-
     @classmethod
     def additional_properties_are_complete(cls, materials_as_dict):
         consistent_properties = cls.find_additional_properties_defined_in_all_base_materials(materials_as_dict)
         all_additional_properties = cls._collect_all_additional_properties(materials_as_dict)
 
-        sizes_of_additional_properties_for_materials = list(map(lambda ps: len(ps), all_additional_properties))
+        sizes_of_additional_properties_for_materials = [len(ps) for ps in all_additional_properties]
 
         if len(sizes_of_additional_properties_for_materials) == 0:
             if len(consistent_properties) == 0:
