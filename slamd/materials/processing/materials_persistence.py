@@ -8,10 +8,7 @@ class MaterialsPersistence:
     @classmethod
     def find_all_materials(cls):
         all_material_types = MaterialType.get_all_materials()
-        all_materials = []
-        for material_type in all_material_types:
-            materials = cls.query_by_type(material_type)
-            all_materials.append(materials)
+        all_materials = [cls.query_by_type(material_type) for material_type in all_material_types]
         return all_materials
 
     @classmethod
