@@ -36,18 +36,31 @@ def test_mlmodel_factory_returns_correct_model_type():
         assert type(result) == expected_type
 
 
-def test_mlmodel_factory_returns_correct_model_type_for_tuned_models(client, monkeypatch):
-    models = ExperimentModel.get_tuned_models()
-    expected_types = [Pipeline, Pipeline]
-    assert len(models) == len(expected_types)
+def test_mlmodel_factory_returns_correct_tuned_gauss_regressor(monkeypatch):
+    mock_find_best_model_called = False
 
     def mock_find_best_model(training_rows, training_labels):
+        nonlocal mock_find_best_model_called
+        mock_find_best_model_called = True
         return Pipeline(('gp2', GaussianProcessRegressor()))
 
     monkeypatch.setattr(TunedGaussianProcessRegressor, 'find_best_model', mock_find_best_model)
+
+    exp = _get_experiment_data(ExperimentModel.TUNED_GAUSSIAN_PROCESS.value)
+    result = MLModelFactory.initialize_model(exp)
+    assert type(result) == Pipeline
+
+
+def test_mlmodel_factory_returns_correct_tuned_random_forest_regressor(monkeypatch):
+    mock_find_best_model_called = False
+
+    def mock_find_best_model(training_rows, training_labels):
+        nonlocal mock_find_best_model_called
+        mock_find_best_model_called = True
+        return Pipeline(('gp2', GaussianProcessRegressor()))
+
     monkeypatch.setattr(TunedRandomForest, 'find_best_model', mock_find_best_model)
 
-    for (model, expected_type) in zip(models, expected_types):
-        exp = _get_experiment_data(model)
-        result = MLModelFactory.initialize_model(exp)
-        assert type(result) == expected_type
+    exp = _get_experiment_data(ExperimentModel.TUNED_RANDOM_FOREST.value)
+    result = MLModelFactory.initialize_model(exp)
+    assert type(result) == Pipeline
