@@ -1,5 +1,5 @@
-from pandas import DataFrame
 from dataclasses import dataclass, field
+from pandas import DataFrame
 
 
 @dataclass
