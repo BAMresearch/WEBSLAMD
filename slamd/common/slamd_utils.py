@@ -1,14 +1,14 @@
 from slamd.common.error_handling import ValueNotSupportedException, SlamdUnprocessableEntityException
 
 
-def empty(input):
-    if isinstance(input, (int, float)):
+def empty(input_value):
+    if isinstance(input_value, (int, float)):
         return False
-    return input is None or input == ''
+    return input_value is None or input_value == ''
 
 
-def not_empty(input):
-    return not empty(input)
+def not_empty(input_value):
+    return not empty(input_value)
 
 
 def join_all(input_list):
@@ -51,8 +51,7 @@ def string_to_number(input_value):
 def string_to_number_or_string(input_value):
     if not_numeric(input_value):
         return input_value
-    else:
-        return string_to_number(input_value)
+    return string_to_number(input_value)
 
 
 def _pieces_are_numeric(input_value, separator):
