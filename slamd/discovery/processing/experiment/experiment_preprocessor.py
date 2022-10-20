@@ -9,11 +9,12 @@ class ExperimentPreprocessor:
     def preprocess(cls, exp):
         cls.filter_apriori_with_thresholds_and_update_orig_data(exp)
         cls.filter_missing_inputs(exp)
-        cls.validate_experiment(exp)
+        cls.validate_user_input(exp)
+        cls.validate_target_labels(exp)
         cls.encode_categoricals(exp)
 
     @classmethod
-    def validate_experiment(cls, exp):
+    def validate_user_input(cls, exp):
         if exp.model not in ExperimentModel.get_all_models():
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
@@ -40,6 +41,8 @@ class ExperimentPreprocessor:
             raise ValueNotSupportedException(
                 message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
 
+    @classmethod
+    def validate_target_labels(cls, exp):
         for target, count in zip(exp.target_names, exp.targets_df.count()):
             if exp.model == ExperimentModel.RANDOM_FOREST.value and count <= 1:
                 raise ValueNotSupportedException(
