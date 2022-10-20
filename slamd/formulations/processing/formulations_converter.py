@@ -52,16 +52,9 @@ class FormulationsConverter:
     @classmethod
     def _compute_sum(cls, row, property_name):
         entries_for_property_name = {k: v for k, v in dict(row).items() if property_name in k}
-        total_costs = 0
-        for value in entries_for_property_name.values():
-            total_costs += value
-        return total_costs
+        return sum(entries_for_property_name.values())
 
     @classmethod
     def _compute_max(cls, row):
         delivery_time_entries = {k: v for k, v in dict(row).items() if 'delivery_time' in k}
-        max = 0
-        for value in delivery_time_entries.values():
-            if value > max:
-                max = value
-        return max
+        return max(delivery_time_entries.values())
