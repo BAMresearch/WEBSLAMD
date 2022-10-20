@@ -1,13 +1,13 @@
+"""
+We explicitly choose to have dedicated forms for different building materials even though the code looks similar.
+However, we do not want to create a tight coupling between different use cases which can diverge in the future.
+Furthermore in case we are adding more and more types of building materials, dedicated forms (and corresponding HTML files)
+lead too much more flexibility and extensibility.
+"""
 from flask_wtf import FlaskForm as Form
 from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField
 
 
-"""
-We explicitly choose to have dedicated forms for different building materials even though the code looks similar.
-However, we do not want to create a tight coupling between different usecases which can diverge in the future. Further-
-more in case we are adding more and more types of bulding materials, dedicated forms (and corresponding html files)
-lead too much more flexibility and extensibility.
-"""
 class BinderSelectionForm(Form):
 
     powder_selection = SelectMultipleField(
