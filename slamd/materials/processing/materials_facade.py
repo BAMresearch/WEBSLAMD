@@ -55,17 +55,31 @@ class MaterialsFacade:
 
     @classmethod
     def sort_for_concrete_formulation(cls, materials_for_formulation):
-        sorted_materials = {0: materials_for_formulation.powders,
-                            1: materials_for_formulation.liquids,
-                            4: materials_for_formulation.aggregates_list}
+        sorted_materials = [materials_for_formulation.powders, materials_for_formulation.liquids]
 
         if len(materials_for_formulation.admixtures) > 0:
-            sorted_materials[2] = materials_for_formulation.admixtures
+            sorted_materials.append(materials_for_formulation.admixtures)
         if len(materials_for_formulation.customs) > 0:
-            sorted_materials[3] = materials_for_formulation.customs
+            sorted_materials.append(materials_for_formulation.customs)
 
-        sorted_materials = {k: sorted_materials[k] for k in sorted(sorted_materials)}
-        return list(sorted_materials.values())
+        sorted_materials.append(materials_for_formulation.aggregates_list)
+
+        return sorted_materials
+
+    @classmethod
+    def sort_for_binder_formulation(cls, materials_for_formulation):
+        sorted_materials = [materials_for_formulation.liquids]
+
+        if len(materials_for_formulation.aggregates_list) > 0:
+            sorted_materials.append(materials_for_formulation.aggregates_list)
+        if len(materials_for_formulation.admixtures) > 0:
+            sorted_materials.append(materials_for_formulation.admixtures)
+        if len(materials_for_formulation.customs) > 0:
+            sorted_materials.append(materials_for_formulation.customs)
+
+        sorted_materials.append(materials_for_formulation.powders)
+
+        return sorted_materials
 
     @classmethod
     def materials_formulation_as_dict(cls, materials):

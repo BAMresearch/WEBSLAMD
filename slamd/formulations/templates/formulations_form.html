@@ -1,7 +1,9 @@
-{% from 'action_buttons.html' import create_change_selection_button -%}
-
-<h3 class="mt-3">Materials formulations</h3>
-<form action="" method="post" novalidate>
+{% if context == 'concrete' %}
+    <h3 class="mt-3">Concrete formulations</h3>
+{% else %}
+    <h3 class="mt-3">Binder formulations</h3>
+{% endif %}
+<form action="{{ url_for('formulations.submit_dataset', building_material=context) }}" method="post" novalidate>
     {{ materials_and_processes_selection_form.csrf_token }}
 
     <div class="accordion mb-3" id="accordion-formulations-explanation">
@@ -20,9 +22,15 @@
                         successively from <b>formulations</b>.
                     </p>
                     <p>
-                        You must select at least one powder, liquid, and aggregate for a new formulation. You may
-                        additionally select admixtures, custom materials, and processes. Note that only one of each type
-                        of material can be part of a formulation at a time. If you choose e.g. two liquids A and B, the
+                    <ul>
+                        <li>For concrete you must select at least one powder, liquid, and aggregate for a new formulation. You may
+                            additionally select admixtures, custom materials, and processes.
+                        </li>
+                        <li>For binders, it is only required
+                            to choose at least a powder and a liquid while all other materials / processes are optional.
+                        </li>
+                    </ul>
+                        Note that only one of each type of material can be part of a formulation at a time. If you choose e.g. two liquids A and B, the
                         formulations will be created once with liquid A and once with liquid B. If you want to use both
                         liquids as ingredients at the same time create a new blended liquid on the Blend page.
                     </p>
@@ -36,7 +44,7 @@
                         hand. Refer to the infoboxes in the sections below for details.
                     </p>
                     <p>
-                        Once you have defined the ratios, click the "6 - Create formulations" button to add the new
+                        Once you have defined the ratios, click the "4 - Create formulations" button to add the new
                         formulations to the dataset. They will show up in a table at the bottom of the page. At this
                         point you have two options:
                     </p>
@@ -56,57 +64,11 @@
         </div>
     </div>
 
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.powder_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.liquid_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.liquid_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-    </div>
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.aggregates_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.aggregates_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.admixture_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.admixture_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-    </div>
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.custom_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.custom_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.process_selection.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.process_selection(class_="form-control form-select
-            multiple-select-md") }}
-        </div>
-    </div>
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.weight_constraint(class_="form-control") }}
-        </div>
-        <div class="col-md-6">
-            {{ materials_and_processes_selection_form.dataset_name.label(class_="control-label") }}
-            {{ materials_and_processes_selection_form.dataset_name(class_="form-control") }}
-        </div>
-    </div>
-
-    {{ create_change_selection_button("4 - Configure weights for each material type",
-    "change_materials_and_processes_selection_button",
-    "confirm_materials_and_processes_selection_button",
-    "Specify at least one powder, one liquid, one aggregate, and a constraint to create materials formulations") }}
+    {% if context == 'concrete' %}
+        {% include 'concrete_selection_form.html' %}
+    {% else %}
+        {% include 'binder_selection_form.html' %}
+    {% endif %}
 
     <div id="formulations_min_max_placeholder"></div>
 
@@ -123,8 +85,8 @@
         <div class="col-md-6">
             {{ materials_and_processes_selection_form.submit(class_="btn btn-primary col-12 mb-3",
             data_bs_toggle="tooltip", data_bs_placement="bottom",
-            title="Save your created formulation as a dataset to be used for materials discovery. Specify any name but
-            'temporary' for the dataset.", disabled=True) }}
+            title="Save your created formulation as a dataset to be used for materials discovery. Specify any name
+            except for one starting with 'temporary' for the dataset.", disabled=True) }}
         </div>
     </div>
 
