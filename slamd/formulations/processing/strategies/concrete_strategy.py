@@ -73,19 +73,19 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         return min_max_form
 
-    @ classmethod
+    @classmethod
     def create_formulation_batch(cls, formulations_data):
         return cls._create_formulation_batch_internal(formulations_data, TEMPORARY_CONCRETE_FORMULATION)
 
-    @ classmethod
+    @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
         cls._create_min_max_form_entry_internal(entries, uuids, name, material_type, ['Powder', 'Liquid', 'Aggregates'],
                                                 'Aggregates')
 
-    @ classmethod
+    @classmethod
     def _compute_weights_product(cls, all_materials_weights, weight_constraint):
         return WeightsCalculator.compute_full_concrete_weights_product(all_materials_weights, weight_constraint)
 
-    @ classmethod
+    @classmethod
     def _sort_materials(cls, materials_for_formulation):
         return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
