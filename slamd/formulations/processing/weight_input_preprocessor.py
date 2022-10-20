@@ -43,10 +43,10 @@ class WeightInputPreprocessor:
     def _create_weights(cls, material_configuration):
         values_for_given_material = []
         current_value = float(material_configuration['min'])
-        max = float(material_configuration['max'])
+        max_value = float(material_configuration['max'])
         increment = float(material_configuration['increment'])
 
-        while current_value <= max:
+        while current_value <= max_value:
             values_for_given_material.append(str(round(current_value, 2)))
 
             # Round to prevent floating point errors - everything happens with 2 decimals of precision anyway
