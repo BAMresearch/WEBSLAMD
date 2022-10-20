@@ -33,7 +33,7 @@ class TunedGaussianProcessRegressor:
         These hyperparameters were found in previous experiments to works best.
         n_restarts_optimizer=3 is a compromise between speed and predictive power.
         """
-        return GaussianProcessRegressor(normalize_y=True, n_restarts_optimizer=3)
+        return GaussianProcessRegressor(normalize_y=True, n_restarts_optimizer=3, random_state=42)
 
     @classmethod
     def _create_anisotropic_kernel(cls, n_dims):

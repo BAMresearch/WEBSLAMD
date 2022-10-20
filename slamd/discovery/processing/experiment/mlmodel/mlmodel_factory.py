@@ -26,7 +26,7 @@ class MLModelFactory:
             regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
         elif exp.model == ExperimentModel.PCA_GAUSSIAN_PROCESS.value:
             # These hyperparameters were found to be potentially interesting by running local experiments.
-            predictor = GaussianProcessRegressor(n_restarts_optimizer=3)
+            predictor = GaussianProcessRegressor(n_restarts_optimizer=3, random_state=42)
             pca = PCA(n_components=0.99)
             regressor = Pipeline([('pca', pca), ('pred', predictor)])
         elif exp.model == ExperimentModel.PCA_RANDOM_FOREST.value:
