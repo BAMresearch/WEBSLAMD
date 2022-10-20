@@ -21,6 +21,6 @@ class WeightsForm(Form):
         default=1.00,
         places=2,
         validators=[
-            validators.NumberRange(min=0, max=1, message='The curiosity value should be between 0 and 10')
+            validators.NumberRange(min=0, max=1, message='The sampling value should be between 0 and 1')
         ]
     )
