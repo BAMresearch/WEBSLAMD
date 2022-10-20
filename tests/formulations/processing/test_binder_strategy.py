@@ -1,11 +1,13 @@
 from slamd import create_app
-from slamd.formulations.processing.binder_strategy import BinderStrategy
+from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 
 
 """
 Most of the logic is already tested within test_formulations_service. Thus, we only test the functions which are not
 yet properly covered in here.
 """
+
+
 def test_create_min_max_form(monkeypatch):
     formulation_selection = [
         {'uuid': '1', 'type': 'Powder', 'name': 'Blended Powder-0.3/0.7'},

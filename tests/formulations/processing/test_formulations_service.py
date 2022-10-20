@@ -8,7 +8,7 @@ from slamd.common.error_handling import ValueNotSupportedException, SlamdRequest
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-from slamd.formulations.processing.binder_strategy import BinderStrategy
+from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -220,7 +220,8 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_bin
         mock_create_formulation_batch_called_with = 'dummy formulations request data'
         return 'batch'
 
-    monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy', mock_create_building_material_strategy)
+    monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy',
+                        mock_create_building_material_strategy)
     monkeypatch.setattr(BinderStrategy, 'create_formulation_batch', mock_create_formulation_batch)
 
     batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'binder')
