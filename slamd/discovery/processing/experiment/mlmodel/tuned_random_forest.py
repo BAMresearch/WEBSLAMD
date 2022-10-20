@@ -1,8 +1,8 @@
-from slamd.discovery.processing.experiment.mlmodel.slamd_random_forest import SlamdRandomForest
-
 from mlxtend.feature_selection import SequentialFeatureSelector
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
+
+from slamd.discovery.processing.experiment.mlmodel.slamd_random_forest import SlamdRandomForest
 
 
 class TunedRandomForest:
