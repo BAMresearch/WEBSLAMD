@@ -45,7 +45,7 @@ class TunedGaussianProcessRegressor:
     def _create_parameters_for_grid_search(cls):
         """
         Return the grid parameters required by GridSearchCV.
-        Use a isotropic and an anisotropic kernel.
+        Use an isotropic and an anisotropic kernel.
         Use 5 and 10 features respectively for the anisotropic kernel.
         """
         default_kernel = ConstantKernel(1.0, constant_value_bounds='fixed') * RBF(1.0, length_scale_bounds='fixed')
