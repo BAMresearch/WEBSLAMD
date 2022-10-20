@@ -55,4 +55,3 @@ def clear_session():
     # In the frontend, Javascript will reload the page automatically if it receives an OK response
     # Actual content of response does not matter
     return ''
-
