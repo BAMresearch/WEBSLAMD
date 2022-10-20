@@ -42,8 +42,8 @@ class SessionService:
         for proc in all_processes:
             full_json['Materials_and_Processes'].append(ProcessStrategy.convert_material_to_dict(proc))
 
-        for ds in all_datasets:
-            full_json['Datasets'].append(cls._convert_dataset_to_dict(ds))
+        for dataset in all_datasets:
+            full_json['Datasets'].append(cls._convert_dataset_to_dict(dataset))
 
         full_string = json.dumps(full_json)
         return full_string
@@ -92,8 +92,8 @@ class SessionService:
         for proc in all_processes:
             MaterialsPersistence.delete_by_type_and_uuid(proc.type, str(proc.uuid))
 
-        for ds in all_datasets:
-            DiscoveryPersistence.delete_dataset_by_name(ds.name)
+        for dataset in all_datasets:
+            DiscoveryPersistence.delete_dataset_by_name(dataset.name)
 
     @classmethod
     def _convert_dataset_to_dict(cls, dataset):
