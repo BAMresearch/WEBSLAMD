@@ -20,6 +20,9 @@ class ExperimentPreprocessor:
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
 
+        if len(exp.target_names) == 0:
+            raise SequentialLearningException('No features specified or all features dropped due to nan values')
+
         if not (len(exp.target_names) == len(exp.target_weights) == len(exp.target_thresholds) ==
                 len(exp.target_max_or_min)):
             raise SlamdUnprocessableEntityException(message='Target names, weights, thresholds, and max_or_min '
