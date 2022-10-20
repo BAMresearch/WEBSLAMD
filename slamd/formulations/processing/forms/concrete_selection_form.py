@@ -4,10 +4,10 @@ However, we do not want to create a tight coupling between different use cases w
 Furthermore in case we are adding more and more types of building materials, dedicated forms (and corresponding HTML files)
 lead too much more flexibility and extensibility.
 
-IMPORTANT: The order of the elements (as specified by their labels and within the corresponding HTML form) is not 
-arbitrary but reflects a structure which is also expected in 'sort_for_concrete_formulation' within MaterialsFacade. As 
-this is used to create batches of material formulations (for concrete), we need to make sure that the sorting is always 
-properly synchronized. 
+IMPORTANT: The order of the elements (as specified by their labels and within the corresponding HTML form) is not
+arbitrary but reflects a structure which is also expected in 'sort_for_concrete_formulation' within MaterialsFacade. As
+this is used to create batches of material formulations (for concrete), we need to make sure that the sorting is always
+properly synchronized.
 """
 from flask_wtf import FlaskForm as Form
 from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField
