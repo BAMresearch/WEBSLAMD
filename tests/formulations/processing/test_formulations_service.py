@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
@@ -6,6 +7,8 @@ from slamd import create_app
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
+from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
+from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
@@ -26,7 +29,8 @@ MATERIALS_CONFIG = [
 app = create_app('testing', with_session=False)
 
 
-def test_populate_selection_form_creates_entries_for_all_materials_and_processes(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
+def test_load_formulations_page_loads_form_and_dataframe(monkeypatch, context):
     def mock_find_all():
         powder = Powder(name='test powder', type='powder')
         powder.uuid = '1'
@@ -43,10 +47,18 @@ def test_populate_selection_form_creates_entries_for_all_materials_and_processes
                                         customs=[],
                                         processes=[process])
 
-    monkeypatch.setattr(MaterialsFacade, 'find_all', mock_find_all)
+    tmp_df = pd.DataFrame({'a': [1, 2], 'b': [2, 3]})
 
-    with app.test_request_context('/materials/formulations'):
-        form = FormulationsService.populate_selection_form()
+    def mock_query_dataset_by_name(filename):
+        dataframe = tmp_df
+        return Dataset(name=f'temporary_{context}.csv', dataframe=dataframe)
+
+    monkeypatch.setattr(MaterialsFacade, 'find_all', mock_find_all)
+    monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
+
+    with app.test_request_context(f'/materials/formulations/{context}'):
+        form, df = FormulationsService.load_formulations_page(context)
+
     assert form.powder_selection.choices == [('powder|1', 'test powder')]
     assert form.liquid_selection.choices == [('liquid|2', 'test liquid 1'), ('liquid|3', 'test liquid 2')]
     assert form.aggregates_selection.choices == []
@@ -54,11 +66,13 @@ def test_populate_selection_form_creates_entries_for_all_materials_and_processes
     assert form.custom_selection.choices == []
     assert form.process_selection.choices == [('process|4', 'test process')]
 
+    assert df.to_dict() == tmp_df.to_dict()
 
-def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatch):
+
+def test_create_weights_form_computes_all_weights_for_concrete(monkeypatch):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
-    with app.test_request_context('/materials/formulations/add_weights'):
+    with app.test_request_context('/materials/formulations/concrete/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': [
@@ -68,7 +82,7 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
                 'weight_constraint': '100'
             }
 
-        form = FormulationsService.create_weights_form(weight_request_data)
+        form = FormulationsService.create_weights_form(weight_request_data, 'concrete')
 
         assert form.all_weights_entries.data == [{'idx': '0', 'weights': '18.2/9.1/72.7'},
                                                  {'idx': '1', 'weights': '18.2/10.92/70.88'},
@@ -78,10 +92,32 @@ def test_create_weights_form_computes_all_weights_in_constrained_case(monkeypatc
                                                  {'idx': '5', 'weights': '39.2/23.52/37.28'}]
 
 
-def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch):
+def test_create_weights_form_computes_all_weights_for_binder(monkeypatch):
     monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
 
-    with app.test_request_context('/materials/formulations/add_weights'):
+    with app.test_request_context('/materials/formulations/binder/add_weights'):
+        weight_request_data = \
+            {
+                'materials_formulation_configuration': [
+                    {'uuid': '1', 'type': 'Liquid', 'min': 0.2, 'max': 0.3, 'increment': 0.1},
+                    {'uuid': '2', 'type': 'Aggregates', 'min': 20, 'max': 30, 'increment': 10},
+                    {'uuid': '3', 'type': 'Powder', 'min': 66.67, 'max': 53.85, 'increment': None}],
+                'weight_constraint': '100'
+            }
+
+        form = FormulationsService.create_weights_form(weight_request_data, 'binder')
+
+        assert form.all_weights_entries.data == [{'idx': '0', 'weights': '13.33/20.0/66.67'},
+                                                 {'idx': '1', 'weights': '11.67/30.0/58.33'},
+                                                 {'idx': '2', 'weights': '18.46/20.0/61.54'},
+                                                 {'idx': '3', 'weights': '16.16/30.0/53.85'}]
+
+
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
+def test_create_weights_form_raises_exceptions_when_too_many_weights_are_requested(monkeypatch, context):
+    monkeypatch.setattr(MaterialsFacade, 'get_material', _mock_get_material)
+
+    with app.test_request_context(f'/materials/formulations/{context}/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
@@ -89,11 +125,12 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
             }
 
         with pytest.raises(SlamdRequestTooLargeException):
-            FormulationsService.create_weights_form(weight_request_data)
+            FormulationsService.create_weights_form(weight_request_data, context)
 
 
-def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch):
-    with app.test_request_context('/materials/formulations/add_weights'):
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
+def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set(monkeypatch, context):
+    with app.test_request_context(f'/materials/formulations/{context}/add_weights'):
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
@@ -101,12 +138,13 @@ def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set
             }
 
         with pytest.raises(ValueNotSupportedException):
-            FormulationsService.create_weights_form(weight_request_data)
+            FormulationsService.create_weights_form(weight_request_data, context)
 
 
-def test_create_materials_formulations_creates_initial_formulation_batch(monkeypatch):
+# noinspection PyUnresolvedReferences
+def test_create_materials_formulations_creates_initial_formulation_batch_for_concrete(monkeypatch):
     mock_query_dataset_by_name_called_with = None
-    mock_save_temporary_dataset_called_with = None
+    mock_save_and_overwrite_dataset_called_with = None
 
     def mock_query_dataset_by_name(input):
         nonlocal mock_query_dataset_by_name_called_with
@@ -129,15 +167,15 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
             return prepare_test_admixture()
         return None
 
-    def mock_save_temporary_dataset(input):
-        nonlocal mock_save_temporary_dataset_called_with
-        mock_save_temporary_dataset_called_with = input
+    def mock_save_and_overwrite_dataset(input, filename):
+        nonlocal mock_save_and_overwrite_dataset_called_with
+        mock_save_and_overwrite_dataset_called_with = input, filename
         return None
 
     monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
     monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
-    monkeypatch.setattr(DiscoveryFacade, 'save_temporary_dataset', mock_save_temporary_dataset)
+    monkeypatch.setattr(DiscoveryFacade, 'save_and_overwrite_dataset', mock_save_and_overwrite_dataset)
 
     formulations_data = {
         'materials_request_data': {
@@ -153,19 +191,48 @@ def test_create_materials_formulations_creates_initial_formulation_batch(monkeyp
         },
         'processes_request_data': {
             'processes': []
-        }
+        },
+        'sampling_size': 1
     }
 
     expected_df = _create_expected_df_as_dict()
 
-    df = FormulationsService.create_materials_formulations(formulations_data)
+    df = FormulationsService.create_materials_formulations(formulations_data, 'concrete')
 
     assert df.replace({np.nan: None}).to_dict() == expected_df
-    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
-    assert mock_save_temporary_dataset_called_with.name == 'temporary.csv'
+    assert mock_query_dataset_by_name_called_with == 'temporary_concrete.csv'
+    assert mock_save_and_overwrite_dataset_called_with[0].name == 'temporary_concrete.csv'
+    assert mock_save_and_overwrite_dataset_called_with[1] == 'temporary_concrete.csv'
 
 
-def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
+# As we already tested details of the creation of a batch for concrete we choose to only check the basic data flow here
+def test_create_materials_formulations_creates_initial_formulation_batch_for_binder(monkeypatch):
+    mock_create_building_material_strategy_called_with = None
+    mock_create_formulation_batch_called_with = None
+
+    def mock_create_building_material_strategy(building_material):
+        nonlocal mock_create_building_material_strategy_called_with
+        mock_create_building_material_strategy_called_with = building_material
+        return BinderStrategy
+
+    def mock_create_formulation_batch(request_data):
+        nonlocal mock_create_formulation_batch_called_with
+        mock_create_formulation_batch_called_with = 'dummy formulations request data'
+        return 'batch'
+
+    monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy',
+                        mock_create_building_material_strategy)
+    monkeypatch.setattr(BinderStrategy, 'create_formulation_batch', mock_create_formulation_batch)
+
+    batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'binder')
+
+    assert mock_create_building_material_strategy_called_with == 'binder'
+    assert mock_create_formulation_batch_called_with == 'dummy formulations request data'
+    assert batch == 'batch'
+
+
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
+def test_delete_formulation_deletes_tempary_dataset(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
 
     def mock_delete_dataset_by_name(input):
@@ -175,12 +242,13 @@ def test_delete_formulation_deletes_tempary_dataset(monkeypatch):
 
     monkeypatch.setattr(DiscoveryFacade, 'delete_dataset_by_name', mock_delete_dataset_by_name)
 
-    FormulationsService.delete_formulation()
+    FormulationsService.delete_formulation(context)
 
-    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
 
 
-def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch):
+@pytest.mark.parametrize("context", ['concrete', 'binder'])
+def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(monkeypatch, context):
     mock_delete_dataset_by_name_called_with = None
     mock_query_dataset_by_name_called_with = None
     mock_save_dataset_called_with = None
@@ -206,10 +274,10 @@ def test_save_dataset_deletes_temporary_and_creates_dataset_with_custom_name(mon
 
     form = ImmutableMultiDict([('dataset_name', 'dataset_name')])
 
-    FormulationsService.save_dataset(form)
+    FormulationsService.save_dataset(form, context)
 
-    assert mock_query_dataset_by_name_called_with == 'temporary.csv'
-    assert mock_delete_dataset_by_name_called_with == 'temporary.csv'
+    assert mock_query_dataset_by_name_called_with == f'temporary_{context}.csv'
+    assert mock_delete_dataset_by_name_called_with == f'temporary_{context}.csv'
     assert mock_save_dataset_called_with.name == 'dataset_name.csv'
 
 

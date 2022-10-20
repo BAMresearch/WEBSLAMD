@@ -4,9 +4,7 @@ import numpy as np
 import pandas as pd
 
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
-from tests.discovery.processing.plotgenerator.scatter_1dim_json import SCATTER_1DIM_JSON
-from tests.discovery.processing.plotgenerator.scatter_2dim_json import SCATTER_2DIM_JSON
-from tests.discovery.processing.plotgenerator.tsne_3dim_json import TSNE_3DIM_JSON
+from tests.discovery.processing.experiment.test_plot_json_data import SCATTER_1DIM_JSON, SCATTER_2DIM_JSON, TSNE_3DIM_JSON
 
 
 def _plot_df_factory():

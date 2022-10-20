@@ -1,0 +1,52 @@
+{% from 'action_buttons.html' import create_change_selection_button -%}
+
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.powder_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.powder_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.liquid_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.liquid_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+</div>
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.aggregates_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.aggregates_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.admixture_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.admixture_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+</div>
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.custom_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.custom_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.process_selection.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.process_selection(class_="form-control form-select
+        multiple-select-md") }}
+    </div>
+</div>
+<div class="row g-3 mb-3 align-items-end">
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.weight_constraint.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.weight_constraint(class_="form-control") }}
+    </div>
+    <div class="col-md-6">
+        {{ materials_and_processes_selection_form.dataset_name.label(class_="control-label") }}
+        {{ materials_and_processes_selection_form.dataset_name(class_="form-control") }}
+    </div>
+</div>
+{{ create_change_selection_button("2 - Configure weights for each material type",
+"change_materials_and_processes_selection_button",
+"confirm_materials_and_processes_selection_button",
+"Specify at least one powder, one liquid and a constraint to create materials formulations for binder") }}

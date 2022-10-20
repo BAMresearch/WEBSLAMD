@@ -55,13 +55,13 @@ class ProcessStrategy(MaterialStrategy):
         multidict.add('relative humidity', float_if_not_empty(process.relative_humidity))
         return multidict
 
-    """
-    Costs for processes are measured in Euro while for materials they are measured in Euro / kg. Since in FormulationConverter
-    within _postprocess_dataframe all costs are summed up and divided by 1000 (for converting to proper units for formulations)
-    the corresponding processes must be adjusted accordingly. The most simple way is to scale them here.
-    """
     @classmethod
     def _adjust_units_to_match_with_materials(cls, process):
+        """
+        Costs for processes are measured in Euro while for materials they are measured in Euro / kg. Since in FormulationConverter
+        within _postprocess_dataframe all costs are summed up and divided by 1000 (for converting to proper units for formulations)
+        the corresponding processes must be adjusted accordingly. The most simple way is to scale them here.
+        """
         costs = float_if_not_empty(process.costs.costs)
         if costs:
             costs *= 1000

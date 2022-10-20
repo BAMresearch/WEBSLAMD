@@ -110,7 +110,7 @@ class SessionService:
             target_columns=dictionary['target_columns'],
         )
         dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
-        dataset.dataframe = dataset.dataframe.reset_index()
+        dataset.dataframe = dataset.dataframe.reset_index(drop=True)
 
         return dataset
 

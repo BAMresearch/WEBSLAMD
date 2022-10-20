@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import validators, SelectMultipleField, SelectField, DecimalRangeField, FieldList, FormField
 from slamd.discovery.processing.forms.field_configuration_form import FieldConfigurationForm
+from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
 
 
 class DiscoveryForm(Form):
@@ -28,10 +29,7 @@ class DiscoveryForm(Form):
     model = SelectField(
         label='Select Model *',
         validators=[validators.DataRequired(message='Model cannot be empty')],
-        choices=[
-            'Statistics-based model (Gaussian Process Regression)',
-            'AI Model (lolo Random Forest)'
-        ]
+        choices=ExperimentModel.get_all_models()
     )
 
     curiosity = DecimalRangeField(
