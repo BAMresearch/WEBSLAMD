@@ -12,7 +12,7 @@ class ExperimentModel(Enum):
 
     @classmethod
     def get_all_models(cls):
-        if os.getenv('FLASK_ENV') != 'demo':
+        if os.getenv('FLASK_ENV') == 'development':
             return [e.value for e in ExperimentModel]
         else:
             return [e.value for e in ExperimentModel if e.value not in cls.get_tuned_models()]
