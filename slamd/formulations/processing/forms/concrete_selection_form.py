@@ -1,11 +1,7 @@
-from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, BooleanField, SelectField, StringField
-
-
 """
 We explicitly choose to have dedicated forms for different building materials even though the code looks similar.
-However, we do not want to create a tight coupling between different usecases which can diverge in the future. Further-
-more in case we are adding more and more types of bulding materials, dedicated forms (and corresponding html files)
+However, we do not want to create a tight coupling between different use cases which can diverge in the future. Further-
+more in case we are adding more and more types of building materials, dedicated forms (and corresponding html files)
 lead too much more flexibility and extensibility.
 
 IMPORTANT: The order of the elements (as specified by their labels and within the corresponding html form) is not 
@@ -13,6 +9,10 @@ arbitrary but reflects a structure which is also expected in 'sort_for_concrete_
 this is used to create batches of material formulations (for concrete), we need to make sure that the sorting is always 
 properly synchronized. 
 """
+from flask_wtf import FlaskForm as Form
+from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField
+
+
 class ConcreteSelectionForm(Form):
 
     powder_selection = SelectMultipleField(
