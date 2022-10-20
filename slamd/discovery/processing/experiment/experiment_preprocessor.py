@@ -17,10 +17,6 @@ class ExperimentPreprocessor:
         if exp.model not in ExperimentModel.get_all_models():
             raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
 
-        if exp.model in ExperimentModel.get_tuned_models() and len(exp.target_names) > 1:
-            raise ValueNotSupportedException(
-                message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
-
         if len(exp.target_names) == 0:
             raise SequentialLearningException('No targets were specified!')
 
@@ -37,13 +33,17 @@ class ExperimentPreprocessor:
             if value not in ['min', 'max']:
                 raise SequentialLearningException(f'Invalid value for max_or_min, got {value}')
 
+        if exp.model in ExperimentModel.get_tuned_models() and len(exp.target_names) > 1:
+            raise ValueNotSupportedException(
+                message=f'{exp.model} only supports one target column, got {len(exp.target_names)}')
+
         for target, count in zip(exp.target_names, exp.targets_df.count()):
             if exp.model == ExperimentModel.RANDOM_FOREST.value and count <= 1:
                 raise ValueNotSupportedException(
                     message=f'Not enough labelled values for target: {target}. The Random Forest Regressor '
                             f'requires at least 2 labelled values, but only {count} was/were found. '
                             f'Please ensure that there are at least 2 data points that are not filtered out '
-                            f'by the apriori thresholds.'
+                            f'by the a priori thresholds.'
                 )
             elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value and count < 1:
                 raise ValueNotSupportedException(
@@ -51,6 +51,13 @@ class ExperimentPreprocessor:
                             f'requires at least 1 labelled value, but none were found. '
                             f'Please ensure that there is at least 1 data point that is not filtered out '
                             f'by the a priori information thresholds.'
+                )
+            elif exp.model in ExperimentModel.get_tuned_models() and count < 4:
+                raise ValueNotSupportedException(
+                    message=f'Not enough labelled values for target: {target}. The {exp.model} model '
+                            f'requires at least 4 labelled values, but only {count} was/were found. '
+                            f'Please ensure that there are at least 4 data points that are not filtered out '
+                            f'by the a priori thresholds.'
                 )
             elif count == len(exp.targets_df.index):
                 raise SequentialLearningException(message=f'All data is already labelled for target {target}.')
