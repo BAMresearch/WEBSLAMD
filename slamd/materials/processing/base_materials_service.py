@@ -13,9 +13,9 @@ class BaseMaterialService(MaterialsService):
         return MaterialsResponse(materials, 'base materials / processes')
 
     @classmethod
-    def create_material_form(cls, type):
-        form = MaterialFactory.create_material_form(type=type)
-        if type == 'process':
+    def create_material_form(cls, material_type):
+        form = MaterialFactory.create_material_form(material_type=material_type)
+        if material_type == 'process':
             form.co2_footprint.label.text = 'CO₂ footprint (kg)'
             form.costs.label.text = 'Costs (€)'
         else:
@@ -76,5 +76,5 @@ class BaseMaterialService(MaterialsService):
         return False, form
 
     @classmethod
-    def delete_material(cls, type, uuid):
-        MaterialsPersistence.delete_by_type_and_uuid(type, uuid)
+    def delete_material(cls, material_type, uuid):
+        MaterialsPersistence.delete_by_type_and_uuid(material_type, uuid)

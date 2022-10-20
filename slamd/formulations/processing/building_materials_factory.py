@@ -1,7 +1,7 @@
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.formulations.processing.building_material import BuildingMaterial
-from slamd.formulations.processing.binder_strategy import BinderStrategy
-from slamd.formulations.processing.concrete_strategy import ConcreteStrategy
+from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
+from slamd.formulations.processing.strategies.concrete_strategy import ConcreteStrategy
 
 
 class BuildingMaterialsFactory:

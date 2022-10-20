@@ -2,7 +2,8 @@
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
             <button class="accordion-button collapsed explanation-header" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" data-bs-parent="#accordion-discovery-explanation">
+                data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                data-bs-parent="#accordion-discovery-explanation">
                 Show / hide materials discovery explanation
             </button>
         </h2>
@@ -35,7 +36,8 @@
                     <li>You may specify a threshold for each property.
                         <ul>
                             <li>For derived properties, rows outside of the threshold will be dropped.</li>
-                            <li>For target properties, values will be clamped to the threshold during the
+                            <li>
+                                For target properties, values will be clamped to the threshold during the
                                 utility
                                 calculation. The values shown in the results table below will remain unchanged.
                             </li>
@@ -45,22 +47,54 @@
 
                 Finally, you may choose a machine learning model, as well as a curiosity value.
                 <ul>
-                    <li>There are currently two machine learning models available: Gaussian Process Regression
-                        and Random Forest Regression. If you are not sure which one to use choose GPR as it generally
-                        produces better results.
+                    {% if tuned_models_explanation_active %}
+                    <li>
+                        There are currently 6
+                        machine learning models available: Gaussian Process Regression and Random Forest Regression,
+                        their variations that run Principal Component Analysis before and
+                        their tuned versions optimized with feature selection and grid search.
+                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
+                        results.
                     </li>
-                    <li>The curiosity value affects the calculation of the utility function. The uncertainty of
+                    {% else %}
+                    <li>
+                        There are currently 4
+                        machine learning models available: Gaussian Process Regression and Random Forest Regression,
+                        plus their variations that run Principal Component Analysis before.
+                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
+                        results.
+                    </li>
+                    {% endif %}
+                    <li>
+                        The Gauss Process Regressor requires the targets to have at least one label.
+                        The Random Forest Regressor requires the targets to have at least 2 labels.
+                    </li>
+                    {% if tuned_models_explanation_active %}
+                    <li>
+                        In case you select the tuned versions of the algorithms, please be patient as the algorithms
+                        might run for a couple of seconds. Note that the tuned versions require the targets to have at
+                        least 4 labels. The tuned versions only support one target column for the time being.
+                    </li>
+                    {% endif %}
+                    <li>
+                        The curiosity value affects the calculation of the utility function. The uncertainty of
                         predicted values is added to the utility, weighted by the curiosity. This way, points with
                         large uncertainties are preferred. They provide more information gain if measured than points
                         with lower uncertainty.
                         <ul>
-                            <li>If the curiosity is greater than 1 this effect is amplified. Predictions with
-                                large uncertainty are favored disproportionally.</li>
-                            <li>If the curiosity is between 0 and 1 this effect is lessened. Predictions with large
+                            <li>
+                                If the curiosity is greater than 1 this effect is amplified. Predictions with
+                                large uncertainty are favored disproportionally.
+                            </li>
+                            <li>
+                                If the curiosity is between 0 and 1 this effect is lessened. Predictions with large
                                 uncertainty are still favored, but the uncertainty is less important to the utility
-                                overall.</li>
-                            <li>If the curiosity is negative the uncertainty is subtracted instead, providing a
-                                penalty to the utility. This favors predictions with low uncertainty.</li>
+                                overall.
+                            </li>
+                            <li>
+                                If the curiosity is negative the uncertainty is subtracted instead, providing a
+                                penalty to the utility. This favors predictions with low uncertainty.
+                            </li>
                         </ul>
                         Use larger curiosity values if you want to explore the parameter space by covering a wide area,
                         as points at a distance will be less certain in their prediction than nearby points.
@@ -98,7 +132,8 @@
         <div class="col-12 col-md-6">
             <div class="col-12">
                 {{ discovery_form.curiosity.label(class_="control-label") }}
-                {{ discovery_form.curiosity(class_="form-range", min=-1, max=5, oninput="updateCuriosityValue(value)") }}
+                {{ discovery_form.curiosity(class_="form-range", min=-1, max=5, oninput="updateCuriosityValue(value)")
+                }}
             </div>
             <div class="row">
                 <div class="col-4">Exploit</div>
@@ -110,8 +145,9 @@
         </div>
     </div>
     <button id="run-experiment-button" class="btn btn-success col-12 mb-3" type="button" data-bs-toggle="tooltip"
-            data_bs_placement="bottom" title="Select at least a target and whether it should be maximized or minimized"
-            disabled>
+        data_bs_placement="bottom" title="Select at least a target and whether it should be maximized or minimized"
+        disabled>
         Run experiment with given configuration
     </button>
 </form>
+

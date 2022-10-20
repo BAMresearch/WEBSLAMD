@@ -17,46 +17,45 @@ from slamd.materials.processing.strategies.process_strategy import ProcessStrate
 class MaterialFactory:
 
     @classmethod
-    def create_material_form(cls, type=None, submitted_material=None):
+    def create_material_form(cls, material_type=None, submitted_material=None):
         if submitted_material is not None:
-            type = submitted_material['material_type'].lower()
+            material_type = submitted_material['material_type'].lower()
 
-        if type == MaterialType.POWDER.value:
-            cls = PowderForm
-        elif type == MaterialType.LIQUID.value:
-            cls = LiquidForm
-        elif type == MaterialType.AGGREGATES.value:
-            cls = AggregatesForm
-        elif type == MaterialType.PROCESS.value:
-            cls = ProcessForm
-        elif type == MaterialType.ADMIXTURE.value:
-            cls = AdmixtureForm
-        elif type == MaterialType.CUSTOM.value:
-            cls = CustomForm
+        if material_type == MaterialType.POWDER.value:
+            form = PowderForm
+        elif material_type == MaterialType.LIQUID.value:
+            form = LiquidForm
+        elif material_type == MaterialType.AGGREGATES.value:
+            form = AggregatesForm
+        elif material_type == MaterialType.PROCESS.value:
+            form = ProcessForm
+        elif material_type == MaterialType.ADMIXTURE.value:
+            form = AdmixtureForm
+        elif material_type == MaterialType.CUSTOM.value:
+            form = CustomForm
         else:
-            raise MaterialNotFoundException(f'The requested type "{type}" is not supported!')
+            raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
 
         if submitted_material is None:
             # Create an empty form, assigning the type in the correct format for the user
-            return cls(material_type=type.capitalize())
-        else:
-            # Populate a form with user data
-            return cls(submitted_material)
+            return form(material_type=material_type.capitalize())
+        # Populate a form with user data
+        return form(submitted_material)
 
     @classmethod
-    def create_strategy(cls, type):
-        type = type.lower()
-        if type == MaterialType.POWDER.value:
+    def create_strategy(cls, material_type):
+        material_type = material_type.lower()
+        if material_type == MaterialType.POWDER.value:
             return PowderStrategy
-        if type == MaterialType.LIQUID.value:
+        if material_type == MaterialType.LIQUID.value:
             return LiquidStrategy
-        if type == MaterialType.AGGREGATES.value:
+        if material_type == MaterialType.AGGREGATES.value:
             return AggregatesStrategy
-        if type == MaterialType.PROCESS.value:
+        if material_type == MaterialType.PROCESS.value:
             return ProcessStrategy
-        if type == MaterialType.ADMIXTURE.value:
+        if material_type == MaterialType.ADMIXTURE.value:
             return AdmixtureStrategy
-        if type == MaterialType.CUSTOM.value:
+        if material_type == MaterialType.CUSTOM.value:
             return CustomStrategy
-        else:
-            raise MaterialNotFoundException(f'The requested type "{type}" is not supported!')
+
+        raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')

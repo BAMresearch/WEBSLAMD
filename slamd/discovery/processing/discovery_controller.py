@@ -1,5 +1,5 @@
 import json
-
+import os
 from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file
 
 from slamd.discovery.processing.discovery_service import DiscoveryService
@@ -14,6 +14,7 @@ discovery = Blueprint('discovery', __name__,
                       url_prefix='/materials/discovery')
 
 discovery_service = DiscoveryService()
+RUNNING_LOCALLY = bool(os.getenv('FLASK_ENV') == 'development')
 
 
 @discovery.route('', methods=['GET'])
@@ -26,7 +27,8 @@ def discovery_page():
         'discovery.html',
         upload_dataset_form=upload_dataset_form,
         discovery_form=discovery_form,
-        datasets=datasets
+        datasets=datasets,
+        tuned_models_explanation_active=RUNNING_LOCALLY
     )
 
 
@@ -42,7 +44,8 @@ def upload_dataset():
         'discovery.html',
         upload_dataset_form=form,
         discovery_form=DiscoveryForm(),
-        datasets=datasets
+        datasets=datasets,
+        tuned_models_explanation_active=RUNNING_LOCALLY
     )
 
 
@@ -56,7 +59,8 @@ def select_dataset(dataset):
         'discovery.html',
         upload_dataset_form=UploadDatasetForm(),
         discovery_form=discovery_form,
-        datasets=datasets
+        datasets=datasets,
+        tuned_models_explanation_active=RUNNING_LOCALLY
     )
 
 

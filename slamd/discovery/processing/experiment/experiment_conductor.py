@@ -3,15 +3,11 @@
 import numpy as np
 import pandas as pd
 from scipy.spatial import distance_matrix
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
-from slamd.common.error_handling import ValueNotSupportedException, SequentialLearningException
+from slamd.common.error_handling import SequentialLearningException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
 from slamd.discovery.processing.experiment.experiment_preprocessor import ExperimentPreprocessor
-from slamd.discovery.processing.experiment.slamd_random_forest import SlamdRandomForest
-from slamd.discovery.processing.experiment.experiment_model import ExperimentModel
-
+from slamd.discovery.processing.experiment.mlmodel.mlmodel_factory import MLModelFactory
 
 # Attention - suppressing expected Gaussian Regressor warnings
 import warnings
@@ -32,14 +28,7 @@ class ExperimentConductor:
 
     @classmethod
     def _fit_model_and_predict(cls, exp):
-        if exp.model == ExperimentModel.RANDOM_FOREST.value:
-            regressor = SlamdRandomForest()
-        elif exp.model == ExperimentModel.GAUSSIAN_PROCESS.value:
-            # Hyperparameters from previous implementation of the app (jupyter notebook)
-            kernel = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-            regressor = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9, random_state=42)
-        else:
-            raise ValueNotSupportedException(message=f'Invalid model: {exp.model}')
+        regressor = MLModelFactory.initialize_model(exp)
 
         predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
         uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
