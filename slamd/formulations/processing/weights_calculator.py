@@ -85,6 +85,6 @@ class WeightsCalculator:
 
     @classmethod
     def _compute_dependent_binder_weight(cls, entry_list, weight_constraint):
-        non_powder_or_liquid_masses = list(map(lambda w: float(w), entry_list[1:]))
+        non_powder_or_liquid_masses = [float(w) for w in entry_list[1:]]
         powder_mass = (float(weight_constraint) - sum(non_powder_or_liquid_masses)) / (1 + float(entry_list[0]))
         return round(powder_mass, 2)
