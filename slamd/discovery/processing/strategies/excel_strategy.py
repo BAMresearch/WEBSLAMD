@@ -12,10 +12,9 @@ class ExcelStrategy:
         metadata_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in prediction.metadata.items()]))
 
         output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        original_data.to_excel(writer, sheet_name='Original Data')
-        prediction_df.to_excel(writer, sheet_name='Predictions')
-        metadata_df.to_excel(writer, sheet_name='Metadata')
-        writer.close()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            original_data.to_excel(writer, sheet_name='Original Data')
+            prediction_df.to_excel(writer, sheet_name='Predictions')
+            metadata_df.to_excel(writer, sheet_name='Metadata')
         output.seek(0)
         return output
