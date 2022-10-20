@@ -11,7 +11,7 @@ class DiscoveryPersistence:
             cls.set_session_property({dataset.name: dataset})
         else:
             if cls.get_session_property_exists(dataset.name):
-                dataset.name = 'Duplicate of ' + dataset.name
+                dataset.name = 'Duplicate_of_' + dataset.name
 
             cls.extend_session_property(dataset)
 
