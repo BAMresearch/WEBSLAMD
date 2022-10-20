@@ -1,4 +1,5 @@
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.ml_utils import concat
 from slamd.common.slamd_utils import empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.formulations.processing.building_material_strategy import BuildingMaterialStrategy, WEIGHT_FORM_DELIMITER
