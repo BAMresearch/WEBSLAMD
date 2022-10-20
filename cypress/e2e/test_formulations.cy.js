@@ -1,5 +1,6 @@
 describe("Test formulations page", () => {
   beforeEach(() => {
+    cy.intercept("DELETE", "http://localhost:5001/session");
     cy.createExamplePowders();
     cy.createExampleLiquids();
     cy.createExampleAggregates();
@@ -59,12 +60,12 @@ describe("Test formulations page", () => {
     cy.findByText("Idx_Sample").should("exist");
     // Check the first 4 columns for every row
     cy.checkGeneratedTable([
-      [0, 10.0, 3.0, 87.0],
-      [1, 40.0, 12.0, 48.0],
-      [2, 40.0, 10.0, 50.0],
+      [0, 10.0, 2.0, 88.0],
+      [1, 10.0, 2.5, 87.5],
+      [2, 10.0, 3.0, 87.0],
       [3, 40.0, 8.0, 52.0],
-      [4, 10.0, 2.5, 87.5],
-      [5, 10.0, 2.0, 88.0],
+      [4, 40.0, 10.0, 50.0],
+      [5, 40.0, 12.0, 48.0],
     ]);
 
     // Submit dataset with the default dataset name
