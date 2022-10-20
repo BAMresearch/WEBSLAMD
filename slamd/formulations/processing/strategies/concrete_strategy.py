@@ -27,42 +27,21 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def create_min_max_form(cls, formulation_selection):
-        powder_names = []
-        liquid_names = []
-        aggregates_names = []
-        admixture_names = []
-        custom_names = []
-        powder_uuids = []
-        liquid_uuids = []
-        aggregates_uuids = []
-        admixture_uuids = []
-        custom_uuids = []
-        # Classify the selection in a single pass.
-        # Separate names and uuids.
-        for item in formulation_selection:
-            if item['type'] == 'Powder':
-                powder_names.append(item['name'])
-                powder_uuids.append(item['uuid'])
-            if item['type'] == 'Liquid':
-                liquid_names.append(item['name'])
-                liquid_uuids.append(item['uuid'])
-            if item['type'] == 'Aggregates':
-                aggregates_names.append(item['name'])
-                aggregates_uuids.append(item['uuid'])
-            if item['type'] == 'Admixture':
-                admixture_names.append(item['name'])
-                admixture_uuids.append(item['uuid'])
-            if item['type'] == 'Custom':
-                custom_names.append(item['name'])
-                custom_uuids.append(item['uuid'])
+        result = cls.classify_formulation_selection(formulation_selection)
+        powder_names, powder_uuids = result['Powder']
+        liquid_names, liquid_uuids = result['Liquid']
+        aggregates_names, aggregates_uuids = result['Aggregates']
+        admixture_names, admixture_uuids = result['Admixture']
+        custom_names, custom_uuids = result['Custom']
 
         if cls._check_for_invalid_material_lists(aggregates_names, liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify at least one powder, liquid and aggregate')
 
         min_max_form = FormulationsMinMaxForm()
 
+        joined_powder_names = ', '.join(powder_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(powder_uuids),
-                                       'Powders ({0})'.format(', '.join(powder_names)), 'Powder')
+                                       f'Powders ({joined_powder_names})', 'Powder')
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'W/C Ratio', 'Liquid')
 
