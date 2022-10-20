@@ -40,7 +40,6 @@ class PowderStrategy(MaterialStrategy):
 
         return powder
 
-
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
