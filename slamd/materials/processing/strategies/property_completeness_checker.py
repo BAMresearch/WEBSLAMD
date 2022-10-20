@@ -62,8 +62,8 @@ class PropertyCompletenessChecker:
     @classmethod
     def find_additional_properties_defined_in_all_base_materials(cls, base_materials_as_dict):
         additional_properties_for_all_base_materials = cls._collect_all_additional_properties(base_materials_as_dict)
-        properties_with_key_defined_in_all_base_materials = reduce(lambda x, y: cls._keep_matching(x, y),
-                                                                   additional_properties_for_all_base_materials)
+        properties_with_key_defined_in_all_base_materials = reduce(
+            cls._keep_matching, additional_properties_for_all_base_materials)
         return properties_with_key_defined_in_all_base_materials
 
     @classmethod
