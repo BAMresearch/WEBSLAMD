@@ -5,7 +5,7 @@ from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     MaterialNotFoundException
 from slamd.common.ml_utils import concat
-from slamd.common.slamd_utils import empty, not_numeric
+from slamd.common.slamd_utils import empty, not_numeric, float_if_not_empty
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.forms.weights_form import WeightsForm
@@ -170,6 +170,7 @@ class BuildingMaterialStrategy(ABC):
         materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['weights_request_data']['all_weights']
+        sampling_size = formulations_data['sampling_size']
 
         materials = cls._prepare_materials_for_taking_direct_product(materials_data)
 
@@ -183,6 +184,7 @@ class BuildingMaterialStrategy(ABC):
         combinations_for_formulations = list(product(*materials))
 
         dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
+        dataframe = dataframe.sample(frac=float_if_not_empty(sampling_size))
 
         if previous_batch_df:
             dataframe = concat(previous_batch_df.dataframe, dataframe)
