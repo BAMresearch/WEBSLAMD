@@ -72,8 +72,8 @@ class BlendingPropertiesCalculator:
 
             # Create list of property names together with their weighted values and an information about the
             # current ratio, e.g [('Prop1', 1.0, 0.5), ('Prop1', 2.0, 0.5)]
-            mapped_properties = list(
-                map(lambda x: cls._compute_weighted_properties_with_ratios(x[0], x[1][i]), ratios_with_property_values))
+            mapped_properties = [cls._compute_weighted_properties_with_ratios(
+                x[0], x[1][i]) for x in ratios_with_property_values]
             if numeric(mapped_properties[0][1]):
                 cls._add_continuous_additional_properties(blended_additional_properties, mapped_properties)
             else:
@@ -84,8 +84,7 @@ class BlendingPropertiesCalculator:
     def _find_properties_contained_in_all_base_materials(cls, base_materials_as_dict):
         properties_with_key_defined_in_all_base_materials = \
             PropertyCompletenessChecker.find_additional_properties_defined_in_all_base_materials(base_materials_as_dict)
-        key_defined_in_all_base_materials = list(
-            map(lambda prop: prop.name, properties_with_key_defined_in_all_base_materials))
+        key_defined_in_all_base_materials = [prop.name for prop in properties_with_key_defined_in_all_base_materials]
         matching_properties_for_all_base_materials = []
         for base_material_dict in base_materials_as_dict:
             matching_properties_for_base_material = list(
