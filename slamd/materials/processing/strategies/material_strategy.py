@@ -121,6 +121,9 @@ class MaterialStrategy(ABC):
         submitted_names = cls._extract_additional_property_by_label(submitted_material, 'name')
         submitted_values = cls._extract_additional_property_by_label(submitted_material, 'value')
 
+        if len(submitted_names) != len(set(submitted_names)):
+            raise ValueNotSupportedException('Names for additional properties must be unique')
+
         for name, value in zip(submitted_names, submitted_values):
             if name.startswith(INVALID_START_OF_FEATURE_NAME) or value.startswith(INVALID_START_OF_FEATURE_NAME):
                 raise ValueNotSupportedException('You cannot use Target as a feature!')
