@@ -94,6 +94,8 @@ class SessionService:
         for dataset in all_datasets:
             DiscoveryPersistence.delete_dataset_by_name(dataset.name)
 
+        DiscoveryPersistence.delete_tsne_plot_data()
+
     @classmethod
     def _convert_dataset_to_dict(cls, dataset):
         return {

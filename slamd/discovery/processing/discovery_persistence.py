@@ -32,6 +32,10 @@ class DiscoveryPersistence:
         session['tsne_plot_data'] = tsne_plot_data
 
     @classmethod
+    def delete_tsne_plot_data(cls):
+        del session['tsne_plot_data']
+
+    @classmethod
     def delete_dataset_by_name(cls, dataset_name):
         datasets = cls.get_session_property()
         return datasets.pop(dataset_name, None)
