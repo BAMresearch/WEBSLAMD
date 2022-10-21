@@ -13,7 +13,6 @@ discovery = Blueprint('discovery', __name__,
                       static_url_path='static',
                       url_prefix='/materials/discovery')
 
-discovery_service = DiscoveryService()
 RUNNING_LOCALLY = bool(os.getenv('FLASK_ENV') == 'development')
 
 
