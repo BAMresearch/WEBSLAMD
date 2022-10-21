@@ -63,14 +63,6 @@ class WeightsCalculator:
         return list(product(liquid_weight_ratios, *remaining_weights))
 
     @classmethod
-    def _find_dependent_material(cls, materials_formulation_configuration):
-        index_of_dependent_material = len(materials_formulation_configuration) - 1
-        dependent_material_uuid = materials_formulation_configuration[index_of_dependent_material]['uuid']
-        dependent_material_type = materials_formulation_configuration[index_of_dependent_material]['type']
-        dependent_material = MaterialsFacade.get_material(dependent_material_type, dependent_material_uuid)
-        return dependent_material
-
-    @classmethod
     def _compute_dependent_concrete_weight(cls, entry_list, weight_constraint):
         sum_of_all = 0
         dependent_weight = weight_constraint
