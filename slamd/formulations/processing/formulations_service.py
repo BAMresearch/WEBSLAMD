@@ -42,12 +42,6 @@ class FormulationsService:
         return properties
 
     @classmethod
-    def _create_targets(cls, inner_dict, targets):
-        target_list = targets.split(';')
-        target_dict = {k: v for k, v in inner_dict.items() if k in target_list}
-        return list(target_dict.values())
-
-    @classmethod
     def delete_formulation(cls, building_material):
         if building_material == BuildingMaterial.BINDER.value:
             DiscoveryFacade.delete_dataset_by_name(TEMPORARY_BINDER_FORMULATION)
