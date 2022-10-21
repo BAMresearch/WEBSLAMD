@@ -1,4 +1,5 @@
 import math
+
 import numpy as np
 
 from slamd.common.error_handling import DatasetNotFoundException, ValueNotSupportedException
@@ -114,6 +115,9 @@ class TargetsService:
             dataframe = dataset.dataframe
 
         for name in names_of_targets_to_be_edited:
+            if dataframe[name].dtype == object or dataframe[name].dtype == str:
+                raise ValueNotSupportedException('Only numeric columns can be edited')
+
             if name in dataset.target_columns:
                 dataset.target_columns.remove(name)
             else:
