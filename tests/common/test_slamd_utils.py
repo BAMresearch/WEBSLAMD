@@ -1,5 +1,4 @@
-from slamd.common.slamd_utils import empty, not_empty, join_all, molecular_formula_of, not_numeric, float_if_not_empty, \
-    str_if_not_none
+from slamd.common.slamd_utils import empty, not_empty, join_all, not_numeric, float_if_not_empty, str_if_not_none
 
 
 def test_empty_returns_true_when_input_is_none():
@@ -40,18 +39,6 @@ def test_join_all_creates_string_when_list_with_single_item_is_passed():
 
 def test_join_all_create_string_when_list_with_multiple_items_is_passed():
     assert join_all(['item 1', 'item 2']) == 'item 1item 2'
-
-
-def test_molecular_formula_of_returns_original_input_if_no_numbers_are_present():
-    assert molecular_formula_of('NaO') == 'NaO'
-
-
-def test_molecular_formula_of_returns_subscripted_numbers():
-    assert molecular_formula_of('Fe2O3') == u'Fe\u2082O\u2083'
-
-
-def test_molecular_formula_of_returns_subsripted_numbers_for_complex_molecules():
-    assert molecular_formula_of('C6H12') == u'C\u2086H\u2081\u2082'
 
 
 def test_float_if_not_empty_returns_none_for_empty_string():
