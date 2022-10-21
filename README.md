@@ -47,11 +47,9 @@ into the code or extend the app locally.
 
 ##### Prerequisites
 In order to run the app you need Python >= 3.8. The most up-to-date version can be downloaded here:
-[Python Download](https://www.python.org/)   
-Note that we tested the described installation up to python 3.10.7, so in case you
-run into installation problems with a higher python version you may consider downgrading.
+[Python Download](https://www.python.org/)
 
-Further, for running sequential learning with the lolopy random forest implementation you need to have Java >= 8 installed.
+For running sequential learning with the lolopy random forest implementation you also need to have Java >= 8 installed.
 You find the current version for installation here: [Java Download](https://www.oracle.com/java/technologies/downloads/)
 
 Having Python and Java installed, you can now either clone the repository or download the zip on the green "Code" button of this projects Github main page.
@@ -106,7 +104,7 @@ Go to the root directory and run `pytest` to run all tests. If you want to gener
 We have several end-to-end tests in Cypress. More information about the framework here: [Cypress Website](https://www.cypress.io/)
 
 ##### Prerequisite 
-In order to run the app you need [Node.js](https://nodejs.org/). The most up-to-date version can be downloaded here:
+In order to run the cypress tests you need [Node.js](https://nodejs.org/). The most up-to-date version can be downloaded here:
 [https://nodejs.org/en/download/](https://nodejs.org/en/download/). Note that the prompt might ask you if you want to install additional
 options. This step can be skipped as it is not required for our purposes.
 
