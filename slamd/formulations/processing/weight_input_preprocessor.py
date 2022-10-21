@@ -6,26 +6,9 @@ MAX_NUMBER_OF_WEIGHTS = 10000
 class WeightInputPreprocessor:
 
     @classmethod
-    def collect_weights_for_creation_of_formulation_batch(cls, materials_data):
-        return [cls._create_weights(material_data) for material_data in materials_data]
-
-    @classmethod
     def collect_weights(cls, formulation_config):
         # Skip last entry - dependent aggregate or powder
         return [cls._create_weights(entry) for entry in formulation_config[:-1]]
-
-    @classmethod
-    def _add_created_from_base_names(cls, material, material_type):
-        base_names_for_blended_material = []
-
-        if material.created_from is None:
-            base_names_for_blended_material.append(material.name)
-        else:
-            for base_uuid in material.created_from:
-                base_material = MaterialsFacade.get_material(material_type, str(base_uuid))
-                base_names_for_blended_material.append(base_material.name)
-
-        return '/'.join(base_names_for_blended_material)
 
     @classmethod
     def _create_weights(cls, material_configuration):
