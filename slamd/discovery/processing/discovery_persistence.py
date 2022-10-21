@@ -10,9 +10,6 @@ class DiscoveryPersistence:
         if not before:
             cls.set_session_property({dataset.name: dataset})
         else:
-            if cls.get_session_property_exists(dataset.name):
-                dataset.name = 'Duplicate_of_' + dataset.name
-
             cls.extend_session_property(dataset)
 
     @classmethod
@@ -81,12 +78,6 @@ class DiscoveryPersistence:
     @classmethod
     def set_session_property(cls, datasets):
         session['datasets'] = datasets
-
-    @classmethod
-    def get_session_property_exists(cls, name):
-        if 'datasets' in session:
-            return name in session['datasets']
-        return False
 
     @classmethod
     def extend_session_property(cls, dataset):

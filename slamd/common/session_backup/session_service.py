@@ -76,6 +76,9 @@ class SessionService:
             MaterialsPersistence.save(mat_type, mat)
 
         for dataset in loaded_datasets:
+            if DiscoveryPersistence.query_dataset_by_name(dataset.name):
+                dataset.name = 'Duplicate_of_' + dataset.name
+
             DiscoveryPersistence.save_dataset(dataset)
 
     @classmethod
