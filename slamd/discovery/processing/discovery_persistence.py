@@ -33,7 +33,8 @@ class DiscoveryPersistence:
 
     @classmethod
     def delete_tsne_plot_data(cls):
-        del session['tsne_plot_data']
+        if 'tsne_plot_data' in session:
+            del session['tsne_plot_data']
 
     @classmethod
     def delete_dataset_by_name(cls, dataset_name):
