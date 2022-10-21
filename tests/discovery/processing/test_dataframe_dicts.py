@@ -128,7 +128,6 @@ TEST_GAUSS_WITH_PART_LABELS_PRED = {
 }
 
 
-
 TEST_GAUSS_WITHOUT_THRESH_PRED = {
     'Row number': {8: 1, 9: 2, 10: 3, 11: 4, 12: 5, 4: 6, 5: 7, 6: 8, 7: 9},
     'Utility': {8: 2.33421, 9: 2.33421, 10: 2.004382, 11: 2.004382, 12: -1.623728,
@@ -287,7 +286,7 @@ TEST_GAUSS_WITHOUT_THRESH_CONFIG = {
                              'duration', 'temperature', 'relative humidity', 'total costs / ton',
                              'total delivery_time '], 'target_properties': ['Target: X'],
     'a_priori_information': ['total co2_footprint / ton'],
-    'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.48450244698206',
+    'model': 'Gaussian Process Regression (Statistics-based model)', 'curiosity': '1.48450244698206',
     'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''}],
     'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00', 'threshold': ''}]}
 
@@ -298,7 +297,7 @@ TEST_RF_WITHOUT_THRESH_CONFIG = {
                              'duration', 'temperature', 'relative humidity', 'total costs / ton',
                              'total delivery_time '], 'target_properties': ['Target: X'],
     'a_priori_information': ['total co2_footprint / ton'],
-    'model': 'AI Model (lolo Random Forest)', 'curiosity': '1.48450244698206',
+    'model': 'lolo Random Forest (AI model)', 'curiosity': '1.48450244698206',
     'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''}],
     'a_priori_information_configurations': [{'max_or_min': 'min', 'weight': '2.00', 'threshold': ''}]}
 
@@ -310,7 +309,7 @@ TEST_GAUSS_WITH_THRESH_CONFIG = {
                              'total co2_footprint / ton', 'total delivery_time '],
     'target_properties': ['X'],
     'a_priori_information': ['total co2_footprint / ton'],
-    'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.0',
+    'model': 'Gaussian Process Regression (Statistics-based model)', 'curiosity': '1.0',
     'target_configurations': [{'max_or_min': 'min', 'weight': '1.00', 'threshold': '5.0'}],
     'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': '27.0'}]}
 
@@ -318,7 +317,7 @@ TEST_GAUSS_WITH_PART_LABELS_CONFIG = {
     'materials_data_input': ['feat1', 'feat2', 'feat3'],
     'target_properties': ['targ1', 'targ2'],
     'a_priori_information': ['ap1', 'ap2'],
-    'model': 'Statistics-based model (Gaussian Process Regression)', 'curiosity': '1.0',
+    'model': 'Gaussian Process Regression (Statistics-based model)', 'curiosity': '1.0',
     'target_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''},
                               {'max_or_min': 'min', 'weight': '1.00', 'threshold': ''}],
     'a_priori_information_configurations': [{'max_or_min': 'max', 'weight': '1.00', 'threshold': ''},

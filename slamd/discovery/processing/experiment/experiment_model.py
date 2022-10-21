@@ -3,12 +3,12 @@ import os
 
 
 class ExperimentModel(Enum):
-    GAUSSIAN_PROCESS = 'Statistics-based model (Gaussian Process Regression)'
-    RANDOM_FOREST = 'AI Model (lolo Random Forest)'
-    PCA_GAUSSIAN_PROCESS = 'Gaussian Process with PCA'
-    PCA_RANDOM_FOREST = 'Random Forest with PCA'
-    TUNED_GAUSSIAN_PROCESS = 'Tuned Gaussian Process'
-    TUNED_RANDOM_FOREST = 'Tuned Random Forest'
+    GAUSSIAN_PROCESS = 'Gaussian Process Regression (Statistics-based model)'
+    RANDOM_FOREST = 'lolo Random Forest (AI model)'
+    PCA_GAUSSIAN_PROCESS = 'Gaussian Process Regression with PCA'
+    PCA_RANDOM_FOREST = 'lolo Random Forest with PCA'
+    TUNED_GAUSSIAN_PROCESS = 'tuned Gaussian Process Regression (under development)'
+    TUNED_RANDOM_FOREST = 'tuned lolo Random Forest (under development)'
 
     @classmethod
     def get_all_models(cls):
