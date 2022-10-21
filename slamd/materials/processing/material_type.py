@@ -16,7 +16,3 @@ class MaterialType(Enum):
     @classmethod
     def get_all_materials(cls):
         return [e.value for e in MaterialType if e.value != 'process']
-
-    @classmethod
-    def get_all_processes(cls):
-        return [e.value for e in MaterialType if e.value == 'process']
