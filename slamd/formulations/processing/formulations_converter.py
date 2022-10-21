@@ -39,9 +39,11 @@ class FormulationsConverter:
 
     @classmethod
     def _postprocess_dataframe(cls, dataframe):
-        dataframe['total costs / ton'] = dataframe.apply(lambda row: round(cls._compute_sum(row, 'costs') / 1000, 2), axis=1)
-        dataframe['total co2_footprint / ton'] = dataframe.apply(lambda row: round(cls._compute_sum(row, 'co2_footprint') / 1000, 2), axis=1)
-        dataframe['total delivery_time '] = dataframe.apply(lambda row: cls._compute_max(row), axis=1)
+        dataframe['total costs / ton'] = dataframe.apply(
+            lambda row: round(cls._compute_sum(row, 'costs') / 1000, 2), axis=1)
+        dataframe['total co2_footprint / ton'] = dataframe.apply(
+            lambda row: round(cls._compute_sum(row, 'co2_footprint') / 1000, 2), axis=1)
+        dataframe['total delivery_time '] = dataframe.apply(cls._compute_max, axis=1)
         dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('costs')]
         dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('co2_footprint')]
         dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('delivery_time')]
@@ -50,16 +52,9 @@ class FormulationsConverter:
     @classmethod
     def _compute_sum(cls, row, property_name):
         entries_for_property_name = {k: v for k, v in dict(row).items() if property_name in k}
-        total_costs = 0
-        for value in entries_for_property_name.values():
-            total_costs += value
-        return total_costs
+        return sum(entries_for_property_name.values())
 
     @classmethod
     def _compute_max(cls, row):
         delivery_time_entries = {k: v for k, v in dict(row).items() if 'delivery_time' in k}
-        max = 0
-        for value in delivery_time_entries.values():
-            if value > max:
-                max = value
-        return max
+        return max(delivery_time_entries.values())

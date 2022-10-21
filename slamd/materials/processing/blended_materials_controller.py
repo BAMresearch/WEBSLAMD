@@ -28,9 +28,9 @@ def blended_material_page():
                            materials_response=material_response)
 
 
-@blended_materials.route('/<type>', methods=['GET'])
-def select_base_material_type(type):
-    base_material_selection_form = BlendedMaterialsService.list_base_material_selection_by_type(type)
+@blended_materials.route('/<material_type>', methods=['GET'])
+def select_base_material_type(material_type):
+    base_material_selection_form = BlendedMaterialsService.list_base_material_selection_by_type(material_type)
     body = {'template': render_template('base_material_selection.html',
                                         base_material_selection_form=base_material_selection_form)}
     return make_response(jsonify(body), 200)

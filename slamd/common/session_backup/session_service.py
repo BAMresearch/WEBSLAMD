@@ -36,17 +36,16 @@ class SessionService:
                 continue
 
             mat_strat = MaterialFactory.create_strategy(mat_list[0].type)
-            for mat in mat_list:
-                full_json['Materials_and_Processes'].append(mat_strat.convert_material_to_dict(mat))
+            mat_dicts = [mat_strat.convert_material_to_dict(mat) for mat in mat_list]
+            full_json['Materials_and_Processes'].extend(mat_dicts)
 
-        for proc in all_processes:
-            full_json['Materials_and_Processes'].append(ProcessStrategy.convert_material_to_dict(proc))
+        process_dicts = [ProcessStrategy.convert_material_to_dict(proc) for proc in all_processes]
+        full_json['Materials_and_Processes'].extend(process_dicts)
 
-        for ds in all_datasets:
-            full_json['Datasets'].append(cls._convert_dataset_to_dict(ds))
+        datasets_dicts = [cls._convert_dataset_to_dict(dataset) for dataset in all_datasets]
+        full_json['Datasets'].extend(datasets_dicts)
 
-        full_string = json.dumps(full_json)
-        return full_string
+        return json.dumps(full_json)
 
     @classmethod
     def load_session_from_json_string(cls, session_data_string):
@@ -77,6 +76,9 @@ class SessionService:
             MaterialsPersistence.save(mat_type, mat)
 
         for dataset in loaded_datasets:
+            if DiscoveryPersistence.query_dataset_by_name(dataset.name):
+                dataset.name = 'Duplicate_of_' + dataset.name
+
             DiscoveryPersistence.save_dataset(dataset)
 
     @classmethod
@@ -92,8 +94,10 @@ class SessionService:
         for proc in all_processes:
             MaterialsPersistence.delete_by_type_and_uuid(proc.type, str(proc.uuid))
 
-        for ds in all_datasets:
-            DiscoveryPersistence.delete_dataset_by_name(ds.name)
+        for dataset in all_datasets:
+            DiscoveryPersistence.delete_dataset_by_name(dataset.name)
+
+        DiscoveryPersistence.delete_tsne_plot_data()
 
     @classmethod
     def _convert_dataset_to_dict(cls, dataset):
@@ -105,13 +109,9 @@ class SessionService:
 
     @classmethod
     def _create_dataset_from_dict(cls, dictionary):
-        dataset = Dataset(
+        return Dataset(
             name=dictionary['name'],
             target_columns=dictionary['target_columns'],
+            # Reset the index, otherwise an additional column will appear
+            dataframe=pd.DataFrame.from_dict(dictionary['dataframe']).reset_index(drop=True)
         )
-        dataset.dataframe = pd.DataFrame.from_dict(dictionary['dataframe'])
-        dataset.dataframe = dataset.dataframe.reset_index(drop=True)
-
-        return dataset
-
-

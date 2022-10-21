@@ -79,12 +79,12 @@ class WeightsCalculator:
             if len(pieces) == 0:
                 sum_of_all += float(ratios[0])
             else:
-                sum_of_all += float(reduce(lambda x, y: float(x) + float(y), pieces))
+                sum_of_all += sum([float(piece) for piece in pieces])
             dependent_weight = (round(float(weight_constraint) - sum_of_all, 2))
         return dependent_weight
 
     @classmethod
     def _compute_dependent_binder_weight(cls, entry_list, weight_constraint):
-        non_powder_or_liquid_masses = list(map(lambda w: float(w), entry_list[1:]))
+        non_powder_or_liquid_masses = [float(w) for w in entry_list[1:]]
         powder_mass = (float(weight_constraint) - sum(non_powder_or_liquid_masses)) / (1 + float(entry_list[0]))
         return round(powder_mass, 2)

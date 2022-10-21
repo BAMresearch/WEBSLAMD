@@ -1,8 +1,10 @@
 # Adapted from the original Sequential Learning App
 # https://github.com/BAMresearch/SequentialLearningApp
+import warnings
 import numpy as np
 import pandas as pd
 from scipy.spatial import distance_matrix
+from sklearn.exceptions import ConvergenceWarning
 
 from slamd.common.error_handling import SequentialLearningException
 from slamd.discovery.processing.experiment.experiment_postprocessor import ExperimentPostprocessor
@@ -10,8 +12,6 @@ from slamd.discovery.processing.experiment.experiment_preprocessor import Experi
 from slamd.discovery.processing.experiment.mlmodel.mlmodel_factory import MLModelFactory
 
 # Attention - suppressing expected Gaussian Regressor warnings
-import warnings
-from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
 
@@ -30,8 +30,8 @@ class ExperimentConductor:
     def _fit_model_and_predict(cls, exp):
         regressor = MLModelFactory.initialize_model(exp)
 
-        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
-        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float)
+        predictions = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float64)
+        uncertainties = pd.DataFrame(columns=exp.target_names, index=exp.index_predicted, dtype=np.float64)
         for target in exp.target_names:
             # Train the model for every target with the corresponding rows and labels
             index_labelled = exp.targets_df.index[exp.targets_df[target].notnull()]

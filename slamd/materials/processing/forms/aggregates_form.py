@@ -1,4 +1,4 @@
-from wtforms import DecimalField, StringField, validators
+from wtforms import DecimalField, validators
 
 from slamd.materials.processing.forms.materials_form import MaterialsForm
 

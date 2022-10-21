@@ -35,6 +35,44 @@ class BuildingMaterialStrategy(ABC):
         pass
 
     @classmethod
+    def classify_formulation_selection(cls, formulation_selection):
+        powder_names = []
+        liquid_names = []
+        aggregates_names = []
+        admixture_names = []
+        custom_names = []
+        powder_uuids = []
+        liquid_uuids = []
+        aggregates_uuids = []
+        admixture_uuids = []
+        custom_uuids = []
+        # Classify the selection in a single pass.
+        # Separate names and uuids.
+        for item in formulation_selection:
+            if item['type'] == 'Powder':
+                powder_names.append(item['name'])
+                powder_uuids.append(item['uuid'])
+            if item['type'] == 'Liquid':
+                liquid_names.append(item['name'])
+                liquid_uuids.append(item['uuid'])
+            if item['type'] == 'Aggregates':
+                aggregates_names.append(item['name'])
+                aggregates_uuids.append(item['uuid'])
+            if item['type'] == 'Admixture':
+                admixture_names.append(item['name'])
+                admixture_uuids.append(item['uuid'])
+            if item['type'] == 'Custom':
+                custom_names.append(item['name'])
+                custom_uuids.append(item['uuid'])
+        return {
+            'Powder': (powder_names, powder_uuids),
+            'Liquid': (liquid_names, liquid_uuids),
+            'Aggregates': (aggregates_names, aggregates_uuids),
+            'Admixture': (admixture_names, admixture_uuids),
+            'Custom': (custom_names, custom_uuids)
+        }
+
+    @classmethod
     def populate_weights_form(cls, weights_request_data):
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
         weight_constraint = weights_request_data['weight_constraint']
@@ -77,7 +115,7 @@ class BuildingMaterialStrategy(ABC):
     def _to_selection(cls, list_of_models):
         by_name = sorted(list_of_models, key=lambda model: model.name)
         by_type = sorted(by_name, key=lambda model: model.type)
-        return list(map(lambda material: (f'{material.type}|{str(material.uuid)}', f'{material.name}'), by_type))
+        return [(f'{material.type}|{str(material.uuid)}', f'{material.name}') for material in by_type]
 
     @classmethod
     def _check_for_invalid_material_lists(cls, *material_lists):

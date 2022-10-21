@@ -5,7 +5,7 @@ class RatioParser:
 
     @classmethod
     def create_list_of_normalized_ratio_lists(cls, all_ratios, delimiter):
-        return list(map(lambda ratio: cls._to_normalized_ratio_list(ratio, delimiter), all_ratios))
+        return [cls._to_normalized_ratio_list(ratio, delimiter) for ratio in all_ratios]
 
     @classmethod
     def create_ratio_string(cls, entry):
@@ -18,13 +18,12 @@ class RatioParser:
 
     @classmethod
     def ratio_list_to_ratio_string(cls, ratio_list):
-        return '/'.join(map(lambda entry: str(round(entry, 2)), ratio_list))
+        rounded_entries = [str(round(entry, 2)) for entry in ratio_list]
+        return '/'.join(rounded_entries)
 
     @classmethod
     def _to_normalized_ratio_list(cls, ratio, delimiter):
         pieces = ratio.split(delimiter)
-        ratio_list = []
-        for piece in pieces:
-            ratio_list.append(string_to_number(piece))
-        normalized_ratio_list = list(map(lambda ratio: ratio / sum(ratio_list), ratio_list))
-        return normalized_ratio_list
+        ratio_list = [string_to_number(piece) for piece in pieces]
+        sum_ratio_list = sum(ratio_list)
+        return [ratio / sum_ratio_list for ratio in ratio_list]

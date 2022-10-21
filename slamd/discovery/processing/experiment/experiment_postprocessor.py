@@ -22,26 +22,21 @@ class ExperimentPostprocessor:
         scatter_plot = cls.plot_output_space(df, exp)
 
         tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df,
-                                      index_all_labelled=exp.index_all_labelled, index_none_labelled=exp.index_none_labelled)
+                                      index_all_labelled=exp.index_all_labelled,
+                                      index_none_labelled=exp.index_none_labelled)
         return df, scatter_plot, tsne_plot_data
 
     @classmethod
-    def move_after_row_column(cls, df, cols_to_move=None):
+    def move_after_row_column(cls, df, cols_to_move):
         """
         Move one or several columns after the column named 'Row number'.
         """
         cols = df.columns.tolist()
         seg1 = cols[:list(cols).index('Row number') + 1]
-
-        if cols_to_move is None:
-            seg2 = []
-        else:
-            seg2 = cols_to_move
-
+        seg2 = cols_to_move
         # Make sure to remove overlapping elements between the segments
         seg1 = [i for i in seg1 if i not in seg2]
         seg3 = [i for i in cols if i not in seg1 + seg2]
-
         # Return a new dataset with the columns in the new order to be assigned to the same variable.
         return df[seg1 + seg2 + seg3]
 
@@ -53,7 +48,7 @@ class ExperimentPostprocessor:
         - Move Utility, Novelty, all the target columns and their uncertainties to the left of the dataframe.
         """
         df = df.sort_values(by='Utility', ascending=False)
-        df.insert(loc=0, column='Row number', value=[i for i in range(1, len(df) + 1)])
+        df.insert(loc=0, column='Row number', value=list(range(1, len(df) + 1)))
 
         if exp.novelty is not None:
             cols_to_move = ['Utility', 'Novelty'] + exp.target_names

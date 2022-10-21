@@ -17,7 +17,7 @@ class LiquidForm(MaterialsForm):
             validators.Optional()
         ]
     )
-    
+
     na_o_h = DecimalField(
         label='NaOH (m%)',
         validators=[

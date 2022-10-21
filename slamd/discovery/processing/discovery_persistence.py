@@ -10,9 +10,6 @@ class DiscoveryPersistence:
         if not before:
             cls.set_session_property({dataset.name: dataset})
         else:
-            if cls.get_session_property_exists(dataset.name):
-                dataset.name = 'Duplicate of ' + dataset.name
-
             cls.extend_session_property(dataset)
 
     @classmethod
@@ -30,6 +27,11 @@ class DiscoveryPersistence:
     @classmethod
     def set_session_tsne_plot_data(cls, tsne_plot_data):
         session['tsne_plot_data'] = tsne_plot_data
+
+    @classmethod
+    def delete_tsne_plot_data(cls):
+        if 'tsne_plot_data' in session:
+            del session['tsne_plot_data']
 
     @classmethod
     def delete_dataset_by_name(cls, dataset_name):
@@ -58,10 +60,8 @@ class DiscoveryPersistence:
         datasets = cls.get_session_property()
         return list(datasets.values())
 
-    """
-    Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
-    context and session. Check test_discovery_persistence for examples.
-    """
+    # Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
+    # context and session. Check test_discovery_persistence for examples.
 
     @classmethod
     def get_session_property(cls):
@@ -80,13 +80,5 @@ class DiscoveryPersistence:
         session['datasets'] = datasets
 
     @classmethod
-    def get_session_property_exists(cls, name):
-        if 'datasets' in session:
-            return name in session['datasets']
-        else:
-            return False
-
-    @classmethod
     def extend_session_property(cls, dataset):
         session['datasets'][dataset.name] = dataset
-

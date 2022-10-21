@@ -31,11 +31,8 @@ class BlendedMaterialsService(MaterialsService):
             raise MaterialNotFoundException(f'The requested type "{material_type}" is not supported!')
 
         materials_by_type = MaterialsPersistence.query_by_type(material_type)
-        base_materials = list(filter(lambda m: m.is_blended is False, materials_by_type))
-
-        material_selection = []
-        for material in base_materials:
-            material_selection.append((material.uuid, material.name))
+        material_selection = [(material.uuid, material.name)
+                              for material in materials_by_type if material.is_blended is False]
 
         sorted_by_name = sorted(material_selection, key=lambda material: material[1])
         form = BaseMaterialSelectionForm()
@@ -61,7 +58,7 @@ class BlendedMaterialsService(MaterialsService):
         complete = strategy.check_completeness_of_base_material_properties(selected_base_materials_as_dict)
 
         min_max_form = MinMaxForm()
-        for i in range(count):
+        for _ in range(count):
             min_max_form.all_min_max_entries.append_entry()
 
         # Min/Max of the last entry are calculated from the previous entries, and the labels need to be switched
@@ -114,7 +111,7 @@ class BlendedMaterialsService(MaterialsService):
 
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
-        for i, ratio_list in enumerate(list_of_normalized_ratios_lists):
+        for ratio_list in list_of_normalized_ratios_lists:
             if len(ratio_list) != len(base_materials_as_dict):
                 raise ValueNotSupportedException('Ratios cannot be matched with base materials!')
 
@@ -148,9 +145,9 @@ class BlendedMaterialsService(MaterialsService):
         for i in range(len(min_max_values_with_increments) - 1):
             values_for_given_base_material = []
             current_value = min_max_values_with_increments[i]['min']
-            max = min_max_values_with_increments[i]['max']
+            max_value = min_max_values_with_increments[i]['max']
             increment = min_max_values_with_increments[i]['increment']
-            while current_value <= max:
+            while current_value <= max_value:
                 values_for_given_base_material.append(current_value)
                 current_value += increment
             all_values.append(values_for_given_base_material)

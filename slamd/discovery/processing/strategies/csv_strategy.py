@@ -1,8 +1,7 @@
+from csv import Sniffer
 import pandas as pd
 import numpy as np
-from pandas import read_csv
 from werkzeug.utils import secure_filename
-from csv import Sniffer
 
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
     SlamdUnprocessableEntityException
@@ -12,6 +11,7 @@ from slamd.discovery.processing.models.dataset import Dataset
 
 NAN_PLACEHOLDERS = ('#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', '<NA>',
                     'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null')
+
 
 class CsvStrategy:
 
@@ -44,7 +44,7 @@ class CsvStrategy:
         try:
             dataset = Dataset(
                 name=file_name,
-                dataframe=read_csv(file_data, delimiter=delimiter, decimal=decimal, on_bad_lines='error')
+                dataframe=pd.read_csv(file_data, delimiter=delimiter, decimal=decimal, on_bad_lines='error')
             )
         except:
             raise ValueNotSupportedException('The dataset you submitted could not be read. Please check that the '
@@ -76,9 +76,8 @@ class CsvStrategy:
                 # eof
                 raise SlamdUnprocessableEntityException('The csv file you tried to upload does not contain enough '
                                                         'rows.')
-            else:
-                raise SlamdRequestTooLargeException('The csv file you tried to upload is too large or has too many '
-                                                    'columns.')
+            raise SlamdRequestTooLargeException('The csv file you tried to upload is too large or has too many '
+                                                'columns.')
 
         file_data.seek(0)   # reset file pointer to avoid side effects
 

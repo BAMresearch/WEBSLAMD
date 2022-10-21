@@ -33,44 +33,44 @@ def handle_422(err):
 class MaterialNotFoundException(NotFound):
 
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(MaterialNotFoundException, self).__init__()
 
 
 class PlotDataNotFoundException(NotFound):
 
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(PlotDataNotFoundException, self).__init__()
 
 
 class DatasetNotFoundException(NotFound):
 
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(DatasetNotFoundException, self).__init__()
 
 
 class ValueNotSupportedException(BadRequest):
 
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(ValueNotSupportedException, self).__init__()
 
 
 class SlamdRequestTooLargeException(RequestEntityTooLarge):
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(SlamdRequestTooLargeException, self).__init__()
 
 
 class SequentialLearningException(UnprocessableEntity):
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(SequentialLearningException, self).__init__()
 
 
 class SlamdUnprocessableEntityException(UnprocessableEntity):
     def __init__(self, message):
+        super().__init__()
         self.message = message
-        super(SlamdUnprocessableEntityException, self).__init__()

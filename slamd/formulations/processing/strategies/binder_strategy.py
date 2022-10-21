@@ -25,17 +25,12 @@ class BinderStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def create_min_max_form(cls, formulation_selection):
-        powder_names = [item['name'] for item in formulation_selection if item['type'] == 'Powder']
-        liquid_names = [item['name'] for item in formulation_selection if item['type'] == 'Liquid']
-        aggregates_names = [item['name'] for item in formulation_selection if item['type'] == 'Aggregates']
-        admixture_names = [item['name'] for item in formulation_selection if item['type'] == 'Admixture']
-        custom_names = [item['name'] for item in formulation_selection if item['type'] == 'Custom']
-
-        powder_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Powder']
-        liquid_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Liquid']
-        aggregates_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Aggregates']
-        admixture_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Admixture']
-        custom_uuids = [item['uuid'] for item in formulation_selection if item['type'] == 'Custom']
+        result = cls.classify_formulation_selection(formulation_selection)
+        powder_names, powder_uuids = result['Powder']
+        liquid_names, liquid_uuids = result['Liquid']
+        aggregates_names, aggregates_uuids = result['Aggregates']
+        admixture_names, admixture_uuids = result['Admixture']
+        custom_names, custom_uuids = result['Custom']
 
         if cls._check_for_invalid_material_lists(liquid_names, powder_names):
             raise ValueNotSupportedException('You need to specify at least one powder and one liquid')

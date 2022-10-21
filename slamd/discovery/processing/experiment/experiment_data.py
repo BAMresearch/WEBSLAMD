@@ -1,5 +1,6 @@
-from pandas import DataFrame, Index
 from dataclasses import dataclass, field
+from pandas import DataFrame, Index
+
 
 @dataclass
 class ExperimentData:
@@ -8,17 +9,17 @@ class ExperimentData:
     model: str = None
     curiosity: float = None
 
-    target_names: list[str] = field(default_factory=lambda: [])
-    target_weights: list[float] = field(default_factory=lambda: [])
-    target_thresholds: list[float | None] = field(default_factory=lambda: [])
-    target_max_or_min: list[str] = field(default_factory=lambda: [])
+    target_names: list[str] = field(default_factory=list)
+    target_weights: list[float] = field(default_factory=list)
+    target_thresholds: list[float | None] = field(default_factory=list)
+    target_max_or_min: list[str] = field(default_factory=list)
 
-    apriori_names: list[str] = field(default_factory=lambda: [])
-    apriori_weights: list[float] = field(default_factory=lambda: [])
-    apriori_thresholds: list[float | None] = field(default_factory=lambda: [])
-    apriori_max_or_min: list[str] = field(default_factory=lambda: [])
+    apriori_names: list[str] = field(default_factory=list)
+    apriori_weights: list[float] = field(default_factory=list)
+    apriori_thresholds: list[float | None] = field(default_factory=list)
+    apriori_max_or_min: list[str] = field(default_factory=list)
 
-    feature_names: list[str] = field(default_factory=lambda: [])
+    feature_names: list[str] = field(default_factory=list)
 
     labelled_index: Index = None
     unlabelled_index: Index = None

@@ -5,6 +5,7 @@ from slamd.materials.processing.models.additional_property import AdditionalProp
 
 KEY_COSTS = 'costs'
 
+
 @dataclass
 class Costs:
     co2_footprint: float = None
@@ -15,7 +16,7 @@ class Costs:
 @dataclass
 class Material:
     # Generate a new UUID for every material, not one for every material
-    uuid: UUID = field(default_factory=lambda: uuid1())
+    uuid: UUID = field(default_factory=uuid1)
     name: str = ''
     type: str = ''
     costs: Costs = None

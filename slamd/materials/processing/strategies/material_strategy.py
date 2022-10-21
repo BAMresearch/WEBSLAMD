@@ -70,7 +70,6 @@ class MaterialStrategy(ABC):
             mat.additional_properties = [AdditionalProperty(name=p['name'], value=p['value'])
                                          for p in dictionary['additional_properties']]
 
-
     @classmethod
     def for_formulation(cls, material):
         multidict = MultiDict([
@@ -83,11 +82,12 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def create_dto(cls, material):
-        dto = MaterialDto()
-        dto.uuid = str(material.uuid)
-        dto.name = material.name
-        dto.type = material.type
-        dto.all_properties = join_all(cls.gather_composition_information(material))
+        dto = MaterialDto(
+            uuid=str(material.uuid),
+            name=material.name,
+            material_type=material.type,
+            all_properties=join_all(cls.gather_composition_information(material))
+        )
 
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
@@ -139,10 +139,10 @@ class MaterialStrategy(ABC):
         )
 
     @classmethod
-    def include(cls, displayed_name, property):
-        if empty(property):
+    def include(cls, displayed_name, property_value):
+        if empty(property_value):
             return ''
-        return f'{displayed_name}: {property}, '
+        return f'{displayed_name}: {property_value}, '
 
     @classmethod
     def save_model(cls, model):
@@ -162,23 +162,23 @@ class MaterialStrategy(ABC):
             return
 
         additional_property_to_be_displayed = ''
-        for property in additional_properties:
-            additional_property_to_be_displayed += f'{property.name}: {property.value}, '
+        for prop in additional_properties:
+            additional_property_to_be_displayed += f'{prop.name}: {prop.value}, '
         dto.all_properties += additional_property_to_be_displayed
 
     @classmethod
     def _convert_additional_properties_to_multidict(cls, multidict, additional_properties):
-        for (index, property) in enumerate(additional_properties):
-            multidict.add(f'additional_properties-{index}-property_name', property.name)
-            multidict.add(f'additional_properties-{index}-property_value', property.value)
+        for (index, prop) in enumerate(additional_properties):
+            multidict.add(f'additional_properties-{index}-property_name', prop.name)
+            multidict.add(f'additional_properties-{index}-property_value', prop.value)
 
     @classmethod
     def _convert_additional_properties_for_formulation(cls, multidict, material):
-        for (index, property) in enumerate(material.additional_properties):
-            value = property.value
+        for prop in material.additional_properties:
+            value = prop.value
             if numeric(value):
                 value = float(value)
-            multidict.add(property.name, value)
+            multidict.add(prop.name, value)
 
     @classmethod
     def _extract_additional_property_by_label(cls, submitted_material, label):
@@ -191,7 +191,7 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def created_from(cls, base_materials_as_dict):
-        return list(map(lambda material: material['uuid'], base_materials_as_dict))
+        return [material['uuid'] for material in base_materials_as_dict]
 
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
