@@ -11,6 +11,7 @@ class WeightInputPreprocessor:
 
     @classmethod
     def collect_weights(cls, formulation_config):
+        # Skip last entry - dependent aggregate or powder
         return [cls._create_weights(entry) for entry in formulation_config[:-1]]
 
     @classmethod
