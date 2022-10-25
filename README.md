@@ -11,6 +11,7 @@ The objective of SLAMD is to accelerate materials research in the wet lab throug
    4. [Acceptance Tests](#acceptance_tests)
 3. [Documentation](#documentation)
 
+## Preview: 
 ![LandingPage](https://user-images.githubusercontent.com/71640597/197785708-5c25a1a8-498d-43b7-8ee7-4266bebce5f9.png)
 
 ## 1. Summary
