@@ -8,7 +8,7 @@
    4. [Acceptance Tests](#acceptance_tests)
 3. [Documentation](#documentation)
 
-![img.png](slamd/static/landing_page.png)
+![Uploading Bildschirm­foto 2022-10-25 um 15.25.55.png…]()
 
 ## 1. Summary
 
