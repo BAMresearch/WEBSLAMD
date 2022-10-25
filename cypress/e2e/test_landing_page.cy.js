@@ -11,9 +11,9 @@ describe("Test landing page", () => {
     cy.title().should("contain", "SLAMD - Sequential Learning App for Materials Discovery");
     cy.findAllByText("SLAMD Dashboard").should("have.length", 2);
     cy.url().should("eq", "http://localhost:5001/");
-    cy.findByText("Specify resources").should("exist");
-    cy.findByText("Combine resources").should("exist");
-    cy.findByText("Digital recipes").should("exist");
+    cy.findByText("Base").should("exist");
+    cy.findByText("Blend").should("exist");
+    cy.findByText("Formulations").should("exist");
     cy.findByText("Materials Discovery").should("exist");
   });
 

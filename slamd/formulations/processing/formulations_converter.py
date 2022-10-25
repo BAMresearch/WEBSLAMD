@@ -57,4 +57,4 @@ class FormulationsConverter:
     @classmethod
     def _compute_max(cls, row):
         delivery_time_entries = {k: v for k, v in dict(row).items() if 'delivery_time' in k}
-        return max(delivery_time_entries.values())
+        return max([0] + list(delivery_time_entries.values()))
