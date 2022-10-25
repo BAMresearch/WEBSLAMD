@@ -9,37 +9,37 @@
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
             <div class="accordion-body explanation-body" role="tooltip">
-                In this form you can run machine learning experiments to discover interesting material
-                combinations.
-                This is measured by their utility, which is computed using
-                predicted target properties, as well as prior knowledge about properties derived from the
-                input.
+                In this form, you can configure and run machine learning experiments to discover interesting new materials.
+                For this purpose, given formulations are sorted according to their utility. The utility is obtained from
+                predicted target properties and a priori information.
 
-                First, select the properties you want to work with:
+                To start the discovery, first configure the optimization target:
                 <ol>
                     <li>Select a data set to work on from the table above using the blue checkmark buttons.</li>
-                    <li>Select Materials Data columns (features) that you want to use in your experiment in the left
+                    <li>Select the relevant features that define your material formulations (Input) in the left
                         selection box.
                     </li>
                     <li>Select the target properties you want to predict in the center selection box.</li>
-                    <li>Select derived properties that you want to use to maximize utility.</li>
+                    <li>Select a-priori information  that is relevant to the utility.</li>
                 </ol>
 
                 <p>
                     You can use Ctrl+Click or Shift+Click to select multiple properties in each selection box.
                 </p>
 
-                Next, select how you want to use these derived and target properties:
+                Next, configure the specific goals of the materials discovery:
                 <ul>
-                    <li>For each property choose if you want to maximize or minimize it.</li>
-                    <li>You may adjust the weight of each property in the utility calculation.</li>
-                    <li>You may specify a threshold for each property.
+                    <li>For each target property, choose whether to maximize or minimize it. When maximizing,
+                        large values are preferred (e.g., for strengths). When minimizing, small and negative
+                        values are preferred (e.g., for costs). </li>
+                    <li>The weighting determines the factor of importance for each target in the utility assessment.</li>
+                    <li>You may specify required properties using the threshold:
                         <ul>
-                            <li>For derived properties, rows outside of the threshold will be dropped.</li>
+                            <li>In the case of a priori information, formulations that do not meet the criteria, i.e.
+                                whose values are outside the threshold, are discarded and thus not considered.</li>
                             <li>
-                                For target properties, values will be clamped to the threshold during the
-                                utility
-                                calculation. The values shown in the results table below will remain unchanged.
+                                For  target properties, the values are clamped to the threshold for the utility estimate.
+                                calculation. The predicted values shown in the results table below will remain unchanged.
                             </li>
                         </ul>
                     </li>
@@ -53,16 +53,18 @@
                         machine learning models available: Gaussian Process Regression and Random Forest Regression,
                         their variations that run Principal Component Analysis before and
                         their tuned versions optimized with feature selection and grid search.
-                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
-                        results.
+                        A statistics-based model can be selected, which is particularly suitable for relatively continuous data and simple data configurations. For instance, this model is particularly suitable at the beginning of an experimental campaign, when only a few laboratory data are available.
+                        The AI model is more powerful, but also requires more training data. You can use it for more complex formulations when there is already plenty of training data available (more than approximately twenty samples).
+
                     </li>
                     {% else %}
                     <li>
                         There are currently 4
                         machine learning models available: Gaussian Process Regression and Random Forest Regression,
                         plus their variations that run Principal Component Analysis before.
-                        If you are not sure which one to use, choose the basic GPR as it produces the most stable
-                        results.
+                        A statistics-based model can be selected, which is particularly suitable for relatively continuous data and simple data configurations. For instance, this model is particularly suitable at the beginning of an experimental campaign, when only a few laboratory data are available.
+                        The AI model is more powerful, but also requires more training data. You can use it for more complex formulations when there is already plenty of training data available (more than approximately twenty samples).
+
                     </li>
                     {% endif %}
                     <li>
@@ -77,29 +79,24 @@
                     </li>
                     {% endif %}
                     <li>
-                        The curiosity value affects the calculation of the utility function. The uncertainty of
-                        predicted values is added to the utility, weighted by the curiosity. This way, points with
-                        large uncertainties are preferred. They provide more information gain if measured than points
-                        with lower uncertainty.
+                        The curiosity value determines the factor by which the as-yet uncertain material predictions are
+                        preferred. Preferring uncertain predictions can help to systematically gain knowledge.
+                        At the beginning of an experimental campaign, you may increase the curiosity value to explore formulations.
+                        Use smaller or negative curiosity if you think you have identified a desirable area of the
+                        formulation space and want to refine ("exploit") your results by finding a nearby optimum. If you are not sure,
+                        leave the value unchanged. You can read more information in the manual.
                         <ul>
                             <li>
-                                If the curiosity is greater than 1 this effect is amplified. Predictions with
-                                large uncertainty are favored disproportionally.
+                                When curiosity is greater than 0, predictions with greater uncertainties are favored (explore).
                             </li>
-                            <li>
-                                If the curiosity is between 0 and 1 this effect is lessened. Predictions with large
-                                uncertainty are still favored, but the uncertainty is less important to the utility
-                                overall.
-                            </li>
+
                             <li>
                                 If the curiosity is negative the uncertainty is subtracted instead, providing a
-                                penalty to the utility. This favors predictions with low uncertainty.
+                                penalty to materials with high uncertainties. This favors predictions with low uncertainty (exploit).
                             </li>
                         </ul>
-                        Use larger curiosity values if you want to explore the parameter space by covering a wide area,
-                        as points at a distance will be less certain in their prediction than nearby points.
-                        Use smaller or negative curiosity if you think you have identified a desirable area of the
-                        parameter space and want to refine ("exploit") your results by finding a nearby optimum.
+
+
                     </li>
                 </ul>
             </div>
