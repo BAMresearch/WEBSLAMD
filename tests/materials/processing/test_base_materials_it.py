@@ -21,7 +21,7 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
     assert response.status_code == 200
 
     html = response.data.decode('utf-8')
-    assert 'Costs (€/kg)' in html
+    assert 'Costs (€/ton)' in html
     assert 'Fe₂O₃ (m%)' in html
     assert 'SiO₂ (m%)' in html
     assert 'Mn₂O₃ (m%)' in html

@@ -133,7 +133,7 @@ describe("Test blending liquids and property interpolation", () => {
         "SiO₂ (mol%): 6.0",
         "H₂O (mol%): 6.0",
         "NaOH (mol%): 6.0",
-        "Costs (€/kg for materials, € for processes): 6.0",
+        "Costs (€/ton for materials, € for processes): 6.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 6.0",
       ],
       false
@@ -152,7 +152,7 @@ describe("Test blending liquids and property interpolation", () => {
         "Na₂O (mol%): 7.0",
         "SiO₂ (mol%): 7.0",
         "H₂O (mol%): 7.0",
-        "Costs (€/kg for materials, € for processes): 7.0",
+        "Costs (€/ton for materials, € for processes): 7.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 7.0",
       ],
       false
@@ -171,7 +171,7 @@ describe("Test blending liquids and property interpolation", () => {
         "Na₂O (mol%): 8.0",
         "SiO₂ (mol%): 8.0",
         "H₂O (mol%): 8.0",
-        "Costs (€/kg for materials, € for processes): 8.0",
+        "Costs (€/ton for materials, € for processes): 8.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 8.0",
       ],
       false
@@ -190,7 +190,7 @@ describe("Test blending liquids and property interpolation", () => {
         "Na₂O (mol%): 9.0",
         "SiO₂ (mol%): 9.0",
         "H₂O (mol%): 9.0",
-        "Costs (€/kg for materials, € for processes): 9.0",
+        "Costs (€/ton for materials, € for processes): 9.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 9.0",
       ],
       false
@@ -245,10 +245,10 @@ describe("Test blending aggregates and incomplete data", () => {
     // Check that only the properties common to both base materials were interpolated
     cy.checkGeneratedContent(
       [
-        "Costs (€/kg for materials, € for processes): 6.0",
+        "Costs (€/ton for materials, € for processes): 6.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 6.0",
         "Example shared property: 6.0",
-        "Costs (€/kg for materials, € for processes): 8.0",
+        "Costs (€/ton for materials, € for processes): 8.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 8.0",
         "Example shared property: 8.0",
       ],
@@ -308,16 +308,16 @@ describe("Test blending three custom materials with properties with negative val
     cy.checkGeneratedContent(
       [
         // First blend
-        "Costs (€/kg for materials, € for processes): 15.0",
+        "Costs (€/ton for materials, € for processes): 15.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): -4.4",
         // Second blend
-        "Costs (€/kg for materials, € for processes): 20.5",
+        "Costs (€/ton for materials, € for processes): 20.5",
         "CO₂ footprint (kg/ton for materials, kg for processes): -3.65",
         // Third blend
-        "Costs (€/kg for materials, € for processes): 22.5",
+        "Costs (€/ton for materials, € for processes): 22.5",
         "CO₂ footprint (kg/ton for materials, kg for processes): 2.1",
         // Fourth blend
-        "Costs (€/kg for materials, € for processes): 28.0",
+        "Costs (€/ton for materials, € for processes): 28.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 2.85",
       ],
       false
@@ -382,16 +382,16 @@ describe("Test blending three admixtures with properties with negative values", 
     cy.checkGeneratedContent(
       [
         // First blend
-        "Costs (€/kg for materials, € for processes): 15.0",
+        "Costs (€/ton for materials, € for processes): 15.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): -4.4",
         // Second blend
-        "Costs (€/kg for materials, € for processes): 20.5",
+        "Costs (€/ton for materials, € for processes): 20.5",
         "CO₂ footprint (kg/ton for materials, kg for processes): -3.65",
         // Third blend
-        "Costs (€/kg for materials, € for processes): 22.5",
+        "Costs (€/ton for materials, € for processes): 22.5",
         "CO₂ footprint (kg/ton for materials, kg for processes): 2.1",
         // Fourth blend
-        "Costs (€/kg for materials, € for processes): 28.0",
+        "Costs (€/ton for materials, € for processes): 28.0",
         "CO₂ footprint (kg/ton for materials, kg for processes): 2.85",
       ],
       false

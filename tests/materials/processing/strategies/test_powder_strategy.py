@@ -93,7 +93,7 @@ def test_gather_composition_properties_adds_all_properties():
                       'SrO (m%): 8.76, ',
                       'Mn₂O₃ (m%): 7.65, ',
                       'LOI (m%): 2, ',
-                      'Fine modules (m²/kg): 123.45, ',
+                      'Fine modules (m²/ton): 123.45, ',
                       'Specific gravity (m%): 678.9, ']
 
 

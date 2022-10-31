@@ -20,7 +20,7 @@ class BaseMaterialService(MaterialsService):
             form.costs.label.text = 'Costs (€)'
         else:
             form.co2_footprint.label.text = 'CO₂ footprint (kg/ton)'
-            form.costs.label.text = 'Costs (€/kg)'
+            form.costs.label.text = 'Costs (€/ton)'
 
         form.submit.render_kw = {'disabled': 'disabled'}
         return form
