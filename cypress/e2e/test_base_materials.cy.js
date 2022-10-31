@@ -22,7 +22,7 @@ describe("Test creating base materials", () => {
     cy.findByText("3 - Cost").click();
     cy.fillForm({
       "CO₂ footprint (kg/ton)": "12.34",
-      "Costs (€/kg)": "34.56",
+      "Costs (€/ton)": "34.56",
       "Delivery time (days)": "56.78",
     });
 
@@ -104,7 +104,7 @@ describe("Test creating base materials", () => {
     cy.findByText("3 - Cost").click();
     cy.fillForm({
       "CO₂ footprint (kg/ton)": "12.34",
-      "Costs (€/kg)": "34.56",
+      "Costs (€/ton)": "34.56",
       "Delivery time (days)": "56.78",
     });
 
@@ -148,7 +148,7 @@ describe("Test creating base materials", () => {
     cy.findByText("3 - Cost").click();
     cy.fillForm({
       "CO₂ footprint (kg/ton)": "12.34",
-      "Costs (€/kg)": "34.56",
+      "Costs (€/ton)": "34.56",
       "Delivery time (days)": "56.78",
     });
 

@@ -28,7 +28,8 @@ class MaterialsForm(Form):
     )
 
     costs = DecimalField(
-        label='Costs (€/kg for materials, € for processes)',
+        label='Costs (€/ton'
+              ' for materials, € for processes)',
         validators=[
             validators.Optional()
         ]
