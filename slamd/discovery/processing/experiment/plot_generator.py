@@ -78,18 +78,18 @@ class PlotGenerator:
         # The perplexity must be less than the number of data points (the length of the dataframe).
         # Handle this edge case by picking the smallest of the two.
         tsne = TSNE(n_components=2, verbose=1, perplexity=min(40, len(plot_df) - 1),
-                    n_iter=300, random_state=1000, init='random', learning_rate=200)
+                    n_iter=350, random_state=1000, init='random', learning_rate=100)
         # Exclude the columns that do not belong to the features
         tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility', 'is_train_data']))
 
         tsne_result_df = pd.DataFrame(
             {'Row number': plot_df['Row number'],
-             'tsne_1': tsne_result[:, 0],
-             'tsne_2': tsne_result[:, 1],
+             't-SNE-1': tsne_result[:, 0],
+             't-SNE-2': tsne_result[:, 1],
              'Utility': plot_df['Utility'],
              'is_train_data': plot_df['is_train_data']}
         )
-        fig = px.scatter(tsne_result_df, x='tsne_1', y='tsne_2', color='Utility', symbol='is_train_data',
+        fig = px.scatter(tsne_result_df, x='t-SNE-1', y='t-SNE-2', color='Utility', symbol='is_train_data',
                          custom_data=['Row number'],
                          title='Materials data in t-SNE coordinates: train data and targets',
                          symbol_sequence=['circle', 'cross'])
@@ -150,9 +150,9 @@ class PlotGenerator:
     @classmethod
     def _select_error_col_if_available(cls, plot_df, column_name=None):
         """
-        Returns the error column corresponding to the string given divided by 2.
+        Returns the error column corresponding to the string given.
         If the error column is not found, the function returns None.
         Assumes the error columns contain uncertainties of the form (-std, +std).
         """
         error_column = plot_df.get(f'{UNCERTAINTY_COLUMN_PREFIX}{column_name})')
-        return error_column / 2 if error_column is not None else None
+        return error_column if error_column is not None else None
