@@ -24,11 +24,11 @@ class SessionService:
     def convert_session_to_json_string(cls):
         all_materials = MaterialsPersistence.find_all_materials()
         all_processes = MaterialsPersistence.find_all_processes()
-        all_datasets = DiscoveryPersistence.find_all_datasets()
+        #all_datasets = DiscoveryPersistence.find_all_datasets()
 
         full_json = {
             JSON_MAT_PROC_KEY: [],
-            JSON_DATA_KEY: []
+            #JSON_DATA_KEY: []
         }
 
         for mat_list in all_materials:
@@ -42,8 +42,8 @@ class SessionService:
         process_dicts = [ProcessStrategy.convert_material_to_dict(proc) for proc in all_processes]
         full_json['Materials_and_Processes'].extend(process_dicts)
 
-        datasets_dicts = [cls._convert_dataset_to_dict(dataset) for dataset in all_datasets]
-        full_json['Datasets'].extend(datasets_dicts)
+        #datasets_dicts = [cls._convert_dataset_to_dict(dataset) for dataset in all_datasets]
+        #full_json['Datasets'].extend(datasets_dicts)
 
         return json.dumps(full_json)
 
@@ -56,7 +56,7 @@ class SessionService:
 
         # Collect all data first, then write into session, in case there is a problem while loading
         loaded_materials = []
-        loaded_datasets = []
+        #loaded_datasets = []
 
         # We decided to work with Material objects directly rather than building a facade for the material module:
         # "common" part of the code has knowledge about other parts; there is less overhead this way; the interaction
@@ -69,17 +69,17 @@ class SessionService:
                 (material_type, strategy.create_material_from_dict(dictionary))
             )
 
-        for dictionary in session_data[JSON_DATA_KEY]:
-            loaded_datasets.append(cls._create_dataset_from_dict(dictionary))
+        #for dictionary in session_data[JSON_DATA_KEY]:
+            #loaded_datasets.append(cls._create_dataset_from_dict(dictionary))
 
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
 
-        for dataset in loaded_datasets:
-            if DiscoveryPersistence.query_dataset_by_name(dataset.name):
-                dataset.name = 'Duplicate_of_' + dataset.name
+        #for dataset in loaded_datasets:
+            #if DiscoveryPersistence.query_dataset_by_name(dataset.name):
+               # dataset.name = 'Duplicate_of_' + dataset.name
 
-            DiscoveryPersistence.save_dataset(dataset)
+           # DiscoveryPersistence.save_dataset(dataset)
 
     @classmethod
     def clear_session(cls):

@@ -43,7 +43,7 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        return [dataset for dataset in all_datasets if not dataset.name.startswith('temporary')]
+        return [dataset for dataset in all_datasets if dataset not in ['temporary_binder.csv','temporary_concrete.csv']]
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
