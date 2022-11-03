@@ -1,3 +1,5 @@
+[![Github All Releases](https://img.shields.io/github/downloads/BAMresearch/WEBSLAMD/total.svg)]()
+
 # SLAMD
 
 The objective of SLAMD is to accelerate materials research in the wet lab through AI. Currently, the focus is on sustainable concrete and binder formulations, but it can be extended to other material classes in the future.
