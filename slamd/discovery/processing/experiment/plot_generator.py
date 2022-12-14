@@ -78,7 +78,7 @@ class PlotGenerator:
         # The perplexity must be less than the number of data points (the length of the dataframe).
         # Handle this edge case by picking the smallest of the two.
         tsne = TSNE(n_components=2, verbose=1, perplexity=min(20, len(plot_df) - 1),
-                    n_iter=350, random_state=1000, init='pca', learning_rate=200)
+                    n_iter=350, random_state=42, init='pca', learning_rate=200)
         # Exclude the columns that do not belong to the features
         tsne_result = tsne.fit_transform(plot_df.drop(columns=['Row number', 'Utility', 'is_train_data']))
 
@@ -92,7 +92,7 @@ class PlotGenerator:
         fig = px.scatter(tsne_result_df, x='t-SNE-1', y='t-SNE-2', color='Utility', symbol='is_train_data',
                          custom_data=['Row number'],
                          title='Materials data in t-SNE coordinates: train data and targets',
-                         symbol_sequence=['circle', 'cross'])
+                         symbol_sequence=['circle', 'cross'], render_mode="svg")
         fig.update_traces(
             hovertemplate='Row number: %{customdata}, Utility: %{marker.color:.2f}',
             marker=dict(size=7)
