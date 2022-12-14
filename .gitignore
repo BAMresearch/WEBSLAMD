@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache
-
+.DS_Store
 # Environments
 .env
 .venv
@@ -12,6 +12,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+SLAMDVENV/
 
 # IDE configuration files 
 .idea
