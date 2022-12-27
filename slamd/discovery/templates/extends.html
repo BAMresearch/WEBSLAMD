@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+
+<head>
+    <title>SLAMD - Materials Discovery</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width">
+</head>
+{% from 'icons.html' import extend_dataset_icon -%}
+{% extends 'index.html' %}
+{% block content %}
+<main class="col-sm-12 col-md-12 col-lg-12 ml-sm-auto px-md-2 py-2 container">
+
+    <div id="extend-placeholder">
+        {% include 'extend_form.html' %}
+
+    </div>
+</main>
+<script src="{{url_for('discovery.static', filename='extends.js')}}"></script>
+{% endblock %}

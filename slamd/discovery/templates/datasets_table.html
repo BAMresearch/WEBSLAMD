@@ -1,5 +1,5 @@
 {% from 'action_buttons.html' import create_select_dataset_button, create_delete_dataset_button,
-create_add_target_button, create_download_dataset_button -%}
+create_add_target_button, create_download_dataset_button,create_extend_dataset_button  -%}
 
 <h3>All datasets</h3>
 <div class="table-responsive">
@@ -20,6 +20,7 @@ create_add_target_button, create_download_dataset_button -%}
                         {{ create_select_dataset_button(dataset.name, 16, 16) }}
                         {{ create_add_target_button(dataset.name, 16, 16) }}
                         {{ create_download_dataset_button(dataset.name, 16, 16) }}
+                        {{ create_extend_dataset_button(dataset.name, 16, 16) }}
                     </div>
                 </th>
                 <td>{{ dataset.name }}</td>

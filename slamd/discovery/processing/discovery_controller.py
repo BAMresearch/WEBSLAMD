@@ -1,8 +1,10 @@
 import json
 import os
-from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file, url_for
 
+from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
+from slamd.discovery.processing.extend_service import ExtendService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
 from slamd.discovery.processing.targets_service import TargetsService
@@ -50,6 +52,22 @@ def upload_dataset():
 
 @discovery.route('/<dataset>', methods=['GET'])
 def select_dataset(dataset):
+    discovery_form = DiscoveryForm()
+    discovery_form.materials_data_input.choices = DiscoveryService.list_columns(dataset)
+
+    datasets = DiscoveryService.list_datasets()
+    return render_template(
+        'discovery.html',
+        upload_dataset_form=UploadDatasetForm(),
+        discovery_form=discovery_form,
+        datasets=datasets,
+        tuned_models_explanation_active=RUNNING_LOCALLY
+    )
+
+
+# -- Zia ---
+@discovery.route('/<dataset>', methods=['GET'])
+def extend_dataset(dataset):
     discovery_form = DiscoveryForm()
     discovery_form.materials_data_input.choices = DiscoveryService.list_columns(dataset)
 
@@ -155,6 +173,57 @@ def add_target(dataset, target_name):
                                         all_dtos=target_page_data.all_dtos,
                                         target_list=target_page_data.target_name_list)}
     return make_response(jsonify(body), 200)
+
+
+# Zia# ----------------------------------------------------------------------------------------
+
+@discovery.route('/<dataset>/extend_dataset_sample', methods=['GET', 'POST'])
+def extend_dataset_sample(dataset):
+    extend_page_data = ExtendService.get_data_for_extend_page(dataset)
+    dataset = extend_page_data.dataframe
+    form = extend_page_data.extend_form
+
+    if request.method == 'POST':
+        num_samples = int(request.form['num_samples'])
+        min_value = int(request.form['min_value'])
+        max_value = int(request.form['max_value'])
+        string_columns = request.form.getlist('string_columns')
+        target_columns = request.form.getlist('target_columns')
+
+        dataset = ExtendService.generate_samples(dataset, num_samples, min_value, max_value,
+                                                 target_columns, string_columns)
+        # DiscoveryPersistence.save_dataset(dataset)
+
+    #html_dataframe = dataset.to_html(
+     #   index=False,
+     #   table_id='formulations_dataframe',
+      #  classes='table table-bordered table-striped table-hover topscroll-table'
+    #)
+
+    return render_template('extends.html',
+                           dataset_name=dataset,
+                           form=form,
+                           df=dataset,
+                           )
+
+
+''' 
+@discovery.route('/<dataset>/generate_sample', methods=['GET', 'POST'])
+def select_min_max(dataset):
+    test = ExtendService.generate_samples(dataset)
+    html_data = test.dataframe.to_html(
+        index=False,
+        table_id='formulations_dataframe',
+        classes='table table-bordered table-striped table-hover topscroll-table'
+    )
+    return render_template('extends.html',
+                           dataset_name=dataset,
+                           df=html_data)
+
+'''
+
+
+# ----------------------------------------------------------------------------------------
 
 
 @discovery.route('/<dataset>/toggle_targets', methods=['POST'])

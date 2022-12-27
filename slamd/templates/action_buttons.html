@@ -1,4 +1,4 @@
-{% from 'icons.html' import edit_icon, delete_icon, check_icon, download_icon, bullseye_icon -%}
+{% from 'icons.html' import edit_icon, delete_icon, check_icon, download_icon, bullseye_icon,extend_dataset_icon  -%}
 
 {% macro create_delete_button(id, type, width, height) -%}
 <div class="me-1" data-bs-toggle="modal" data-bs-target="{{'#delete-modal-' + id}}">
@@ -78,6 +78,11 @@
 </div>
 {% endmacro %}
 
+
+
+
+
+
 {% macro create_delete_dataset_button(dataset_name, width, height) -%}
 <div class="me-1" data-bs-toggle="modal"
     data-bs-target="{{ '#delete-dataset-modal-' + dataset_name.replace('.', '_') }}">
@@ -119,6 +124,21 @@
     </a>
 </div>
 {% endmacro %}
+
+
+
+
+<!-- # --- Zia ----------------------------------------------------------------->
+{% macro create_extend_dataset_button(dataset_name, width, height) -%}
+<div class="me-1">
+    <a class="btn btn-secondary" href="/materials/discovery/{{ dataset_name }}/extend_dataset_sample"
+        id="'{{ 'extend-dataset-button-' + dataset_name }}'" data-bs-toggle="tooltip" data-bs-placement="right"
+        title="Extend dataset">
+        {{ extend_dataset_icon(width, height, "currentColor") }}
+    </a>
+</div>
+{% endmacro %}
+<!-- # -------------------------------------------------------------------->
 
 {% macro create_download_dataset_button(dataset_name, width, height) -%}
 <div class="me-1">

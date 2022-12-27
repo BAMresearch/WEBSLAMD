@@ -1,0 +1,90 @@
+{% from 'icons.html' import add_icon -%}
+
+<div class="accordion mb-3">
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionTargetsTable-collapseOne">
+                Show / hide dataset as raw table
+            </button>
+        </h3>
+        <div id="accordionTargetsTable-collapseOne"
+             class="accordion-collapse collapse table-responsive topscroll-table-container"
+             aria-labelledby="accordionTargetsTable-headingOne">
+            {{ df | safe }}
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12 rounded bg-white" role="tooltip">
+        <h3 class="explanation-header">How to extend the dataset? </h3>
+        <div class="explanation-body">
+            Enrich you dataset by generating new sample using the statistic calculation in your dataset.
+            For added / selected column, you can add min/max values in the table below. Note that while the main purpose
+            of this page is the generating of new samples. You can also select a feature column in case you want to edit its
+            values. Note that only the editing of columns with numeric values is supported.
+        </div>
+    </div>
+</div>
+
+
+<div class="row g-3 mb-3">
+    <div class="col-12">
+        {{ form.string_columns.label(class_="control-label") }}
+        {{ form.string_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-12">
+        {{ form.target_columns.label(class_="control-label") }}
+        {{ form.target_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+</div>
+
+<form action="" method="post" novalidate>
+    {{ form.csrf_token }}
+
+    <div class="row g-3 mb-3 align-items-end">
+
+        <div class="col-3">
+            {{ form.min_value.label(class_="control-label") }}
+            {{ form.min_value(class_="form-control") }}
+        </div>
+        <div class="col-3">
+            {{ form.max_value.label(class_="control-label") }}
+            {{ form.max_value(class_="form-control") }}
+        </div>
+        <div class="col-3">
+            {{ form.num_samples.label(class_="control-label") }}
+            {{ form.num_samples(class_="form-control") }}
+        </div>
+    </div>
+
+
+
+    {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    title="Click to generate your samples")
+    }}
+
+     <div class="explanation-body">
+
+        </div>
+
+    <table>
+    <tr>
+        {% for column in df.columns %}
+            <th>{{ column }}</th>
+        {% endfor %}
+    </tr>
+    {% for index, row in df.iterrows()|reverse %}
+        <tr>
+            {% for value in row %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+
+</form>
