@@ -1,3 +1,5 @@
+
+
 import math
 
 import numpy as np
@@ -28,6 +30,11 @@ class ExtendService:
 
     @classmethod
     def generate_samples(cls, df, num_samples, selected_columns, min_values, max_values, target_columns):
+<<<<<<< Updated upstream
+=======
+        new_df = df.copy()
+
+>>>>>>> Stashed changes
         for i in range(num_samples):
             sample_row = {}
             for col in df.columns:
@@ -39,6 +46,11 @@ class ExtendService:
                     sample_row[col] = np.random.uniform(min_value, max_value)
                 else:
                     sample_row[col] = df[col].sample(1).values[0]
+<<<<<<< Updated upstream
             df = df.append(sample_row, ignore_index=True)
         return df
+=======
+            new_df = new_df.append(sample_row, ignore_index=True)
+        return new_df
+>>>>>>> Stashed changes
 

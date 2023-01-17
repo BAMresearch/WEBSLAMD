@@ -9,6 +9,7 @@
                 Show / hide dataset as raw table
             </button>
         </h3>
+<<<<<<< Updated upstream
         <div id="accordionTargetsTable-collapseOne" class="accordion-collapse collapse table-responsive" aria-labelledby="accordionTargetsTable-headingOne">
             <table>
                 <tr>
@@ -24,6 +25,25 @@
                      </tr>
                     {% endfor %}
             </table>
+=======
+        <div id="accordionTargetsTable-collapseOne"
+             class="accordion-collapse collapse table-responsive "
+             aria-labelledby="accordionTargetsTable-headingOne">
+              <table>
+            <tr>
+                {% for column in df.columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+                {% for index, row in df.iterrows() %}
+            <tr>
+                {% for value in row %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+>>>>>>> Stashed changes
         </div>
     </div>
 </div>
@@ -36,6 +56,31 @@
 <div class="row mb-3">
     <div class="col-12 rounded bg-white" role="tooltip">
         <h3 class="explanation-header">How to extend the dataset? </h3>
+<<<<<<< Updated upstream
+=======
+        <div class="explanation-body">
+            Enhance your dataset by generating new samples using statistical calculations from your existing dataset.
+            You can specify minimum and maximum values for selected columns in the table below. Keep in mind that the main purpose of this page is
+            to generate new samples. Note: If any of the features in your dataset are strings, be sure to select them in the options below.
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="row g-3 mb-3">
+    <div class="col-6">
+        {{ form.select_columns.label(class_="control-label") }}
+        {{ form.select_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+
+    <div class="col-6">
+        {{ form.target_columns.label(class_="control-label") }}
+        {{ form.target_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+>>>>>>> Stashed changes
 </div>
 
 
@@ -64,6 +109,7 @@
 
  <div class="min-max-container">
     <div class="row g-3 mb-3 align-items-end">
+<<<<<<< Updated upstream
 
 
        <div id="min_value" class="col-4">
@@ -71,6 +117,12 @@
             {{ form.min_value(class_="form-control") }}
         </div>
 
+=======
+       <div id="min_value" class="col-4">
+            {{ form.min_value.label(class_="control-label") }}
+            {{ form.min_value(class_="form-control") }}
+       </div>
+>>>>>>> Stashed changes
         <div id="max_value" class="col-4">
             {{ form.max_value.label(class_="control-label") }}
             {{ form.max_value(class_="form-control") }}
@@ -81,7 +133,6 @@
     <div class="col-12">
             {{ form.num_samples.label(class_="control-label") }}
             {{ form.num_samples(class_="form-control") }}
-        </div>
     </div>
 
 
@@ -112,12 +163,16 @@
                 {% endfor %}
             </tr>
                 {% for index, row in df.iterrows() %}
+<<<<<<< Updated upstream
              <tr>
+=======
+>>>>>>> Stashed changes
             <tr>
                 {% for value in row %}
                     <td>{{ value }}</td>
                 {% endfor %}
             </tr>
+<<<<<<< Updated upstream
 
             {% endfor %}
         </table>
@@ -125,4 +180,11 @@
       </div>
     </div>
 </div>
+=======
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+>>>>>>> Stashed changes
 </div>

@@ -1,0 +1,46 @@
+<div class="row g-3 mb-3">
+    <div class="col-6">
+        {{ form.select_columns.label(class_="control-label") }}
+        {{ form.select_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+    <div class="col-6">
+        {{ form.target_columns.label(class_="control-label") }}
+        {{ form.target_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+</div>
+
+
+{% if get_flashed_messages() %}
+  <div class="alert alert-warning" role="alert">
+    {% for message in get_flashed_messages() %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" novalidate>
+    {{ form.csrf_token }}
+
+    <div class="row g-3 mb-3 align-items-end">
+
+        <div class="col-4">
+            {{ form.min_value.label(class_="control-label") }}
+            {{ form.min_value(class_="form-control") }}
+        </div>
+        <div class="col-4">
+            {{ form.max_value.label(class_="control-label") }}
+            {{ form.max_value(class_="form-control") }}
+        </div>
+        <div class="col-4">
+            {{ form.num_samples.label(class_="control-label") }}
+            {{ form.num_samples(class_="form-control") }}
+        </div>
+    </div>
+
+
+
+    {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    title="Click to generate your samples")
+    }}
+
+</form>

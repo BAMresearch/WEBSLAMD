@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
-from tests.discovery.processing.experiment.test_plot_json_data import SCATTER_1DIM_JSON, SCATTER_2DIM_JSON, TSNE_3DIM_JSON
+from tests.discovery.processing.experiment.test_plot_json_data import SCATTER_1DIM_JSON, SCATTER_2DIM_JSON, \
+    TSNE_3DIM_JSON
 
 
 def _plot_df_factory():
@@ -42,7 +43,7 @@ def test_create_target_scatter_plot_1dim():
 
 
 def test_create_target_scatter_plot_2dim():
-    plot_df = _plot_df_factory().loc[:, ['t1', 't2',  'Uncertainty (t1)', 'Uncertainty (t2)', 'Utility', 'Row number']]
+    plot_df = _plot_df_factory().loc[:, ['t1', 't2', 'Uncertainty (t1)', 'Uncertainty (t2)', 'Utility', 'Row number']]
 
     expected_output = SCATTER_2DIM_JSON
     actual_output = json.loads(PlotGenerator.create_target_scatter_plot(plot_df))
@@ -55,5 +56,10 @@ def test_create_tsne_input_space_plot():
 
     expected_output = TSNE_3DIM_JSON
     actual_output = json.loads(PlotGenerator.create_tsne_input_space_plot(plot_df))
+<<<<<<< Updated upstream
     print('actual', actual_output)
+=======
+    print('expect_output', expected_output)
+    print('actual_output', actual_output)
+>>>>>>> Stashed changes
     assert expected_output == actual_output

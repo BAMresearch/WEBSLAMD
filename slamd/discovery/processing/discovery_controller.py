@@ -1,13 +1,18 @@
 import json
 import os
-from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file, url_for
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file, url_for, \
+    current_app, app
 from flask import flash
+
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.extend_service import ExtendService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
+from slamd.discovery.processing.forms.extend_form import ExtendForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.models import dataset
 from slamd.discovery.processing.targets_service import TargetsService
+import requests
 
 discovery = Blueprint('discovery', __name__,
                       template_folder='../templates',
@@ -192,11 +197,16 @@ def extend_dataset_sample(dataset):
 
         if not all(min_value.values()) or not all(max_value.values()) or not num_samples:
             flash('Please enter a value for all fields.')
+<<<<<<< Updated upstream
             return render_template('extends.html',
                                    dataset_name=dataset,
                                    form=form,
                                    df=dataset,
                                    )
+=======
+            return render_template('extends.html', dataset_name=dataset, form=form, df=dataset)
+
+>>>>>>> Stashed changes
         try:
             num_samples = int(num_samples)
             min_value = {col: int(val) for col, val in min_value.items()}
@@ -219,20 +229,33 @@ def extend_dataset_sample(dataset):
                            )
 
 
-''' 
-@discovery.route('/<dataset>/generate_sample', methods=['GET', 'POST'])
-def select_min_max(dataset):
-    test = ExtendService.generate_samples(dataset)
-    html_data = test.dataframe.to_html(
-        index=False,
-        table_id='formulations_dataframe',
-        classes='table table-bordered table-striped table-hover topscroll-table'
-    )
-    return render_template('extends.html',
-                           dataset_name=dataset,
-                           df=html_data)
+@discovery.route('/download-dataset1/<dataset_name>')
+def download_dataset1(dataset_name):
+    try:
+        dataframe = extend_dataset_sample(dataset_name)
+        print(f'dataset_name: {dataset_name}')
+        print(f'dataframe: {dataframe}')
 
-'''
+        csv_string = dataframe.to_csv(index=False)
+
+        response = make_response(csv_string)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename={dataset_name}.csv'
+        return response
+    except Exception as e:
+        current_app.logger.error(e)
+        return 'Server error', 500
+
+
+@discovery.route('/send-data', methods=['POST'])
+def send_data():
+    url = request.form['url']
+    data = {'resampled_dataset': dataset}
+    response = requests.post(url, json=data)
+    if response.status_code == 200:
+        return 'Data sent successfully!'
+    else:
+        return 'Error sending data: {}'.format(response.status_code)
 
 
 # ----------------------------------------------------------------------------------------

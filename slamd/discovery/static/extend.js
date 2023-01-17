@@ -48,4 +48,8 @@ window.addEventListener('load', function() {
     }
   });
   console.log("Javascript is working!");
+<<<<<<< Updated upstream
 });
+=======
+});
+>>>>>>> Stashed changes
