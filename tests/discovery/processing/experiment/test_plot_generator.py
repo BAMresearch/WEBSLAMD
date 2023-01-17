@@ -55,5 +55,5 @@ def test_create_tsne_input_space_plot():
 
     expected_output = TSNE_3DIM_JSON
     actual_output = json.loads(PlotGenerator.create_tsne_input_space_plot(plot_df))
-
+    print('actual', actual_output)
     assert expected_output == actual_output

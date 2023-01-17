@@ -22,25 +22,23 @@ class ExtendService:
     def _create_extend_page_data(cls, dataset):
         dataframe = dataset.dataframe
         extend_form = ExtendForm()
-        extend_form.string_columns.choices = dataset.columns
+        extend_form.select_columns.choices = dataset.columns
         extend_form.target_columns.choices = dataset.columns
         return ExtendPageData(dataframe, extend_form)
 
     @classmethod
-    def generate_samples(cls, dataset, num_sample, min_value, max_value, target_columns, string_columns):
-
-        new_df = dataset.copy()
-
-        for i in range(num_sample):
+    def generate_samples(cls, df, num_samples, selected_columns, min_values, max_values, target_columns):
+        for i in range(num_samples):
             sample_row = {}
-            for col in dataset.columns:
+            for col in df.columns:
                 if col in target_columns:
                     sample_row[col] = np.nan
-                elif col in string_columns:
-                    sample_row[col] = dataset[col].values[0]
+                elif col in selected_columns:
+                    min_value = min_values[col]
+                    max_value = max_values[col]
+                    sample_row[col] = np.random.uniform(min_value, max_value)
                 else:
-                    sample_row[col] = round(np.random.uniform(min_value, max_value), 2)
+                    sample_row[col] = df[col].sample(1).values[0]
+            df = df.append(sample_row, ignore_index=True)
+        return df
 
-        new_df = new_df.apply(lambda x: round(x, 2) if x.dtype == 'float' else x)
-
-        return new_df

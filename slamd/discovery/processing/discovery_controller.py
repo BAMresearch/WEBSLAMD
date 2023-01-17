@@ -185,33 +185,31 @@ def extend_dataset_sample(dataset):
 
     if request.method == 'POST':
         num_samples = request.form.get('num_samples')
-        min_value = request.form.get('min_value')
-        max_value = request.form.get('max_value')
-        string_columns = request.form.getlist('string_columns')
+        select_columns = request.form.getlist('select_columns')
         target_columns = request.form.getlist('target_columns')
+        min_value = {col: request.form.get(f"min_{col}") for col in select_columns}
+        max_value = {col: request.form.get(f"max_{col}") for col in select_columns}
 
-        if not min_value or not max_value or not num_samples:
+        if not all(min_value.values()) or not all(max_value.values()) or not num_samples:
             flash('Please enter a value for all fields.')
             return render_template('extends.html',
                                    dataset_name=dataset,
                                    form=form,
                                    df=dataset,
                                    )
-
         try:
             num_samples = int(num_samples)
-            min_value = int(min_value)
-            max_value = int(max_value)
+            min_value = {col: int(val) for col, val in min_value.items()}
+            max_value = {col: int(val) for col, val in max_value.items()}
         except ValueError:
             flash('Please enter a valid integer value for all fields.')
             return render_template('extends.html',
-                                   dataset_name=dataset,
-                                   form=form,
                                    df=dataset,
                                    )
 
-        dataset = ExtendService.generate_samples(dataset, num_samples, min_value, max_value,
-                                                 target_columns, string_columns)
+        dataset = ExtendService.generate_samples(dataset, num_samples, min_value, max_value, target_columns,
+                                                 select_columns)
+
         # DiscoveryPersistence.save_dataset(dataset)
 
     return render_template('extends.html',
