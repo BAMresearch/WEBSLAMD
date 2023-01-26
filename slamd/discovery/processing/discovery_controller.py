@@ -1,12 +1,17 @@
 import json
 import os
-from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file, url_for
+
+import pandas as pd
+from flask import Blueprint, request, render_template, make_response, jsonify, redirect, send_file, url_for, session
 from flask import flash
+
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.discovery_service import DiscoveryService
 from slamd.discovery.processing.extend_service import ExtendService
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
+from slamd.discovery.processing.forms.extend_form import SubmitResampleForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.targets_service import TargetsService
 
 discovery = Blueprint('discovery', __name__,
@@ -52,22 +57,6 @@ def upload_dataset():
 
 @discovery.route('/<dataset>', methods=['GET'])
 def select_dataset(dataset):
-    discovery_form = DiscoveryForm()
-    discovery_form.materials_data_input.choices = DiscoveryService.list_columns(dataset)
-
-    datasets = DiscoveryService.list_datasets()
-    return render_template(
-        'discovery.html',
-        upload_dataset_form=UploadDatasetForm(),
-        discovery_form=discovery_form,
-        datasets=datasets,
-        tuned_models_explanation_active=RUNNING_LOCALLY
-    )
-
-
-# -- Zia ---
-@discovery.route('/<dataset>', methods=['GET'])
-def extend_dataset(dataset):
     discovery_form = DiscoveryForm()
     discovery_form.materials_data_input.choices = DiscoveryService.list_columns(dataset)
 
@@ -176,70 +165,65 @@ def add_target(dataset, target_name):
 
 
 # Zia# ----------------------------------------------------------------------------------------
-
-@discovery.route('/<dataset>/extend_dataset_sample', methods=['GET', 'POST'])
-def extend_dataset_sample(dataset):
-    extend_page_data = ExtendService.get_data_for_extend_page(dataset)
-    dataset = extend_page_data.dataframe
-    form = extend_page_data.extend_form
+@discovery.route('/<dataset_name>/extend_dataset_sample', methods=['GET', 'POST'])
+def extend_dataset_sample(dataset_name):
+    extend_page_data = ExtendService.get_data_for_extend_page(dataset_name)
+    dataset = extend_page_data.dataframe.to_html(index=False,
+                                                 table_id='resample_dataframe',
+                                                 classes='table table-bordered table-striped table-hover '
+                                                         'topscroll-table '
+                                                 )
+    form1 = extend_page_data.extend_form
 
     if request.method == 'POST':
         num_samples = request.form.get('num_samples')
-        min_value = request.form.get('min_value')
-        max_value = request.form.get('max_value')
-        string_columns = request.form.getlist('string_columns')
+        select_columns = request.form.getlist('select_columns')
         target_columns = request.form.getlist('target_columns')
+        min_value = {col: request.form.get(f"min_{col}") for col in select_columns}
+        max_value = {col: request.form.get(f"max_{col}") for col in select_columns}
 
-        if not min_value or not max_value or not num_samples:
+        if not all(min_value.values()) or not all(max_value.values()) or not num_samples:
             flash('Please enter a value for all fields.')
             return render_template('extends.html',
-                                   dataset_name=dataset,
-                                   form=form,
+                                   dataset_name=dataset_name,
+                                   form1=form1,
+                                   form2=SubmitResampleForm(),
                                    df=dataset,
+                                   raw_df=extend_page_data.dataframe,
                                    )
-
         try:
             num_samples = int(num_samples)
-            min_value = int(min_value)
-            max_value = int(max_value)
+            min_value = {col: int(val) for col, val in min_value.items()}
+            max_value = {col: int(val) for col, val in max_value.items()}
         except ValueError:
             flash('Please enter a valid integer value for all fields.')
             return render_template('extends.html',
-                                   dataset_name=dataset,
-                                   form=form,
-                                   df=dataset,
+                                   dataset=dataset,
                                    )
 
-        dataset = ExtendService.generate_samples(dataset, num_samples, min_value, max_value,
-                                                 target_columns, string_columns)
-        # DiscoveryPersistence.save_dataset(dataset)
+        dataset = ExtendService.generate_samples(dataset, num_samples, select_columns, min_value, max_value,
+                                                 target_columns, dataset_name).dataframe
 
     return render_template('extends.html',
-                           dataset_name=dataset,
-                           form=form,
-                           df=dataset,
+                           dataset_name=dataset_name,
+                           form1=form1,
+                           form2=SubmitResampleForm(),
+                           dataset=dataset,
+                           raw_df=extend_page_data.dataframe,
                            )
 
 
-''' 
-@discovery.route('/<dataset>/generate_sample', methods=['GET', 'POST'])
-def select_min_max(dataset):
-    test = ExtendService.generate_samples(dataset)
-    html_data = test.dataframe.to_html(
-        index=False,
-        table_id='formulations_dataframe',
-        classes='table table-bordered table-striped table-hover topscroll-table'
-    )
-    return render_template('extends.html',
-                           dataset_name=dataset,
-                           df=html_data)
+@discovery.route('/submit_resample/<dataset_name>', methods=['POST'])
+def submit_resample(dataset_name):
+    df = pd.read_json(request.form.get('dataset'), orient='split')
+    new_name = f"{dataset_name}_resampled"
+    dataset = Dataset(new_name, [], df)
+    DiscoveryPersistence.save_dataset(dataset)
 
-'''
+    return redirect('/materials/discovery')
 
 
 # ----------------------------------------------------------------------------------------
-
-
 @discovery.route('/<dataset>/toggle_targets', methods=['POST'])
 def toggle_targets(dataset):
     request_body = json.loads(request.data)

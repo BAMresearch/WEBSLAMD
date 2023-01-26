@@ -60,8 +60,8 @@ class DiscoveryPersistence:
         datasets = cls.get_session_property()
         return list(datasets.values())
 
-    # Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a proper
-    # context and session. Check test_discovery_persistence for examples.
+    # Wrappers for session logic. This way we can easily mock the methods in tests without any need for creating a
+    # proper context and session. Check test_discovery_persistence for examples.
 
     @classmethod
     def get_session_property(cls):
@@ -82,3 +82,9 @@ class DiscoveryPersistence:
     @classmethod
     def extend_session_property(cls, dataset):
         session['datasets'][dataset.name] = dataset
+
+    @classmethod
+    def save_resample(cls, dataset, name):
+        # save resampled dataset to session
+        new_name = f"{name}_resampled"
+        session['datasets'][new_name] = dataset

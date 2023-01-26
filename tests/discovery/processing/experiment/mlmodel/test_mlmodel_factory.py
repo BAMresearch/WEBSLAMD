@@ -27,7 +27,7 @@ def _get_experiment_data(model):
 
 def test_mlmodel_factory_returns_correct_model_type():
     models = ExperimentModel.get_all_models()
-    expected_types = [GaussianProcessRegressor, SlamdRandomForest, Pipeline, Pipeline]
+    expected_types = [GaussianProcessRegressor, SlamdRandomForest, Pipeline, Pipeline, None, None]
     assert len(models) == len(expected_types)
 
     for (model, expected_type) in zip(models, expected_types):

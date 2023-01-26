@@ -1,124 +1,103 @@
 {% from 'icons.html' import add_icon -%}
 
-<div class="accordion mb-3">
+<div class="accordion">
     <div class="accordion-item">
-        <h3 class="accordion-header" id="accordionTargetsTable-headingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#accordionTargetsTable-collapseOne" aria-expanded="true"
-                    aria-controls="accordionTargetsTable-collapseOne">
-                Show / hide dataset as raw table
+        <h3 class="accordion-header" id="accordionFormulationsTable-headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#accordionFormulationsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionFormulationsTable-collapseOne">
+                Show / hide resamples
             </button>
         </h3>
-        <div id="accordionTargetsTable-collapseOne"
-             class="accordion-collapse collapse table-responsive topscroll-table-container"
-             aria-labelledby="accordionTargetsTable-headingOne">
-            {{ df | safe }}
-        </div>
-    </div>
-</div>
-<div class="row mb-3">
-    <div class="col-12 rounded bg-white" role="tooltip">
-        <h3 class="explanation-header">How to extend the dataset? </h3>
-        <div class="explanation-body">
-            Enhance your dataset by generating new samples using statistical calculations from your existing dataset.
-            You can specify minimum and maximum values for selected columns in the table below. Keep in mind that the main purpose of this page is
-            to generate new samples. Note: If any of the features in your dataset are strings, be sure to select them in the options below.
+        <div id="accordionFormulationsTable-collapseOne"
+             class="accordion-collapse collapse show table-responsive topscroll-table-container"
+             aria-labelledby="accordionFormulationsTable-headingOne">
+            {{ dataset | safe }}
         </div>
     </div>
 </div>
 
+<br>
 
-<div class="row g-3 mb-3">
-    <div class="col-12">
-        {{ form.string_columns.label(class_="control-label") }}
-        {{ form.string_columns(class_="form-control form-select multiple-select-lg") }}
-    </div>
-</div>
-<div class="row g-3 mb-3">
-    <div class="col-12">
-        {{ form.target_columns.label(class_="control-label") }}
-        {{ form.target_columns(class_="form-control form-select multiple-select-lg") }}
-    </div>
+<div class="col-12 rounded bg-white" role="tooltip">
+    <h3 class="explanation-header">How to extend the dataset? </h3>
 </div>
 
 
 {% if get_flashed_messages() %}
-  <div class="alert alert-warning" role="alert">
+<div class="alert alert-warning" role="alert">
     {% for message in get_flashed_messages() %}
-      {{ message }}
+    {{ message }}
     {% endfor %}
-  </div>
+</div>
 {% endif %}
 
-<form method="post" novalidate>
-    {{ form.csrf_token }}
 
-    <div class="row g-3 mb-3 align-items-end">
-
-        <div class="col-4">
-            {{ form.min_value.label(class_="control-label") }}
-            {{ form.min_value(class_="form-control") }}
-        </div>
-        <div class="col-4">
-            {{ form.max_value.label(class_="control-label") }}
-            {{ form.max_value(class_="form-control") }}
-        </div>
-        <div class="col-4">
-            {{ form.num_samples.label(class_="control-label") }}
-            {{ form.num_samples(class_="form-control") }}
-        </div>
+<form method="post" action="{{ url_for('discovery.extend_dataset_sample', dataset_name=dataset_name) }}">
+         {{ form1.csrf_token }}
+<div class="row g-3 mb-3">
+    <div class="col-6">
+        {{ form1.select_columns.label(class_="control-label") }}
+        {{ form1.select_columns(class_="form-control form-select multiple-select-lg") }}
     </div>
 
+    <div class="col-6">
+        {{ form1.target_columns.label(class_="control-label") }}
+        {{ form1.target_columns(class_="form-control form-select multiple-select-lg") }}
+    </div>
+ </div>
 
-
-    {{ form.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
-    title="Click to generate your samples")
-    }}
-
-
-<div class="accordion mb-3">
-<div class="accordion-item" style="height: auto">
-    <h3 class="accordion-header" id="accordionTargetsTable2-headingOne">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#accordionTargetsTable2-collapseOne" aria-expanded="true"
-                aria-controls="accordionTargetsTable2-collapseOne">
-            Show / hide dataset as raw table
-        </button>
-    </h3>
-    <div id="accordionTargetsTable2-collapseOne"
-         class="accordion-collapse collapse table-responsive topscroll-table-container"
-         aria-labelledby="accordionTargetsTable2-headingOne" dir="ltr">
-
-         <table style="width: auto; height: auto">
-        <tr>
-            {% for column in df.columns %}
-                <th>{{ column }}</th>
-            {% endfor %}
-        </tr>
-                {% for index, row in df.iterrows() %}
-             <tr>
-                {% for value in row %}
-                    <td>{{ value }}</td>
-                {% endfor %}
-            </tr>
-                {% endfor %}
-        </table>
-
+<div class="min-max-container">
+    <div class="row g-3">
+        <div id="min_value" class="col-6">
+            {{ form1.min_value.label(class_="control-label") }}
+            {{ form1.min_value(class_="form-control") }}
+        </div>
+        <div id="max_value" class="col-6">
+            {{ form1.max_value.label(class_="control-label") }}
+            {{ form1.max_value(class_="form-control") }}
+        </div>
     </div>
 </div>
+
+<div class="col-12">
+    {{ form1.num_samples.label(class_="control-label") }}
+    {{ form1.num_samples(class_="form-control") }}
 </div>
+
+<br>
+
+{{ form1.submit(class_="btn btn-success col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+title="Click to generate your samples")
+}}
 </form>
-     <table>
-    <tr>
-        {% for column in df.columns %}
-            <th>{{ column }}</th>
-        {% endfor %}
-    </tr>
-            {% for index, row in df.iterrows() %}
-        <tr>
-            {% for value in row %}
-                <td>{{ value }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
+<br>
+<form method="post" action="{{ url_for('discovery.submit_resample', dataset_name=dataset_name) }}">
+    <input type="hidden" name="dataset" value="{{ raw_df.to_json(orient='split') }}">
+    {{ form2.csrf_token }}
+    {{ form2.submit(class_="btn btn-primary col-12", data_bs_toggle="tooltip", data_bs_placement="bottom",
+    title="Click to generate your samples")
+}}
+</form>
+
+
+
+<script src="{{url_for('discovery.static', filename='extend.js')}}"></script>
+
+
+<div class="accordion">
+    <div class="accordion-item">
+        <h3 class="accordion-header" id="resampled_output">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#accordionFormulationsTable-collapseOne" aria-expanded="true"
+                    aria-controls="accordionFormulationsTable-collapseOne">
+                Show / hide resamples
+            </button>
+        </h3>
+        <div id="resampled_output
+             class="accordion-collapse collapse show table-responsive topscroll-table-container"
+             aria-labelledby="accordionFormulationsTable-headingOne">
+            {{ dataset | safe }}
+        </div>
+    </div>
+</div>

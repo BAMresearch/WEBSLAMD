@@ -12,6 +12,7 @@ from slamd.discovery.processing.experiment.experiment_data import ExperimentData
 from slamd.discovery.processing.experiment.plot_generator import PlotGenerator
 from slamd.discovery.processing.forms.discovery_form import DiscoveryForm
 from slamd.discovery.processing.forms.upload_dataset_form import UploadDatasetForm
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.discovery.processing.models.prediction import Prediction
 from slamd.discovery.processing.strategies.csv_strategy import CsvStrategy
 from slamd.discovery.processing.strategies.excel_strategy import ExcelStrategy
@@ -43,7 +44,10 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        return [dataset for dataset in all_datasets if dataset not in ['temporary_binder.csv','temporary_concrete.csv']]
+        print('all', type(all_datasets))
+        return [dataset for dataset in all_datasets if
+                dataset not in ['temporary_binder.csv', 'temporary_concrete.csv']]
+
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
