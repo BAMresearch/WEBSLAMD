@@ -23,8 +23,7 @@
 <div class="col-12 rounded bg-white" role="tooltip">
     <h3 class="explanation-header">How to extend the dataset?</h3>
     <div class="explanation-body">
-        To generate a new sample, select one to many features, set the min/max values, and specify the number of samples.
-         Remember to also select the target feature. Note: resampling will not affect the target feature.
+        Extend your dataset by generating new samples. Select independent columns for generative sampling by specifying outer boundaries via min/max, conducting the sampling with statistical methods, and specifying the number of generated samples. The target variable will be replaced with empty entries (NaNs) in the generative sampling
     </div>
 </div>
 
@@ -37,7 +36,7 @@
 </div>
 {% endif %}
 
-
+<br>
 <form method="post" action="{{ url_for('discovery.extend_dataset_sample', dataset_name=dataset_name) }}">
          {{ form1.csrf_token }}
 <div class="row g-3 mb-3">
@@ -52,18 +51,21 @@
     </div>
  </div>
 
-<div class="min-max-container">
- <div class="row g-3 mb-3 align-items-end">
-        <div id="min_value" class="col-6">
-            {{ form1.min_value.label(class_="control-label") }}
-            {{ form1.min_value(class_="form-control") }}
-        </div>
-        <div id="max_value" class="col-6">
-            {{ form1.max_value.label(class_="control-label") }}
-            {{ form1.max_value(class_="form-control") }}
+ <div class="min-max-container row">
+    <div class="row">
+        <div class="row g-3 mb-3 align-items-end">
+            <div class="col-6" id="min_value">
+                {{ form1.min_value.label(class_="control-label") }}
+                {{ form1.min_value(class_="form-control") }}
+            </div>
+            <div  class="col-6" id="max_value">
+                {{ form1.max_value.label(class_="control-label") }}
+                {{ form1.max_value(class_="form-control") }}
+            </div>
         </div>
     </div>
 </div>
+
 
 <div class="col-12">
     {{ form1.num_samples.label(class_="control-label") }}
