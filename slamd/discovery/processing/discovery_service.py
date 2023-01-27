@@ -44,7 +44,7 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        print('all', type(all_datasets))
+        print('all', all_datasets)
         return [dataset for dataset in all_datasets if
                 dataset not in ['temporary_binder.csv', 'temporary_concrete.csv']]
 

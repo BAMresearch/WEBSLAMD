@@ -10,7 +10,6 @@ from slamd.discovery.processing.forms.extend_form import ExtendForm
 from slamd.discovery.processing.models.dataset import Dataset
 
 
-
 class ExtendService:
 
     @classmethod
@@ -29,14 +28,14 @@ class ExtendService:
         return ExtendPageData(dataframe, extend_form)
 
     @classmethod
-    def generate_samples(cls, df, num_samples, selected_columns, min_values, max_values, target_columns, dataset_name):
+    def generate_samples(cls, df, num_samples, select_columns, min_values, max_values, target_columns, dataset_name):
         generated_df = pd.DataFrame()
         for i in range(num_samples):
             sample_row = {}
             for col in df.columns:
                 if col in target_columns:
                     sample_row[col] = np.nan
-                elif col in selected_columns:
+                elif col in select_columns:
                     min_value = min_values[col]
                     max_value = max_values[col]
                     sample_row[col] = np.random.uniform(min_value, max_value)

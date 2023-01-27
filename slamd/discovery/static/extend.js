@@ -1,7 +1,7 @@
 document.getElementById("min_value").style.display = "none";
 document.getElementById("max_value").style.display = "none";
 window.addEventListener('load', function() {
-  // Get the select_columns element
+
   var selectColumns = document.getElementById("select_columns");
   var selected_columns = new Set();
   // Add an event listener to the select_columns element

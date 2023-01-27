@@ -83,8 +83,3 @@ class DiscoveryPersistence:
     def extend_session_property(cls, dataset):
         session['datasets'][dataset.name] = dataset
 
-    @classmethod
-    def save_resample(cls, dataset, name):
-        # save resampled dataset to session
-        new_name = f"{name}_resampled"
-        session['datasets'][new_name] = dataset

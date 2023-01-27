@@ -164,7 +164,6 @@ def add_target(dataset, target_name):
     return make_response(jsonify(body), 200)
 
 
-# Zia# ----------------------------------------------------------------------------------------
 @discovery.route('/<dataset_name>/extend_dataset_sample', methods=['GET', 'POST'])
 def extend_dataset_sample(dataset_name):
     extend_page_data = ExtendService.get_data_for_extend_page(dataset_name)
@@ -173,8 +172,9 @@ def extend_dataset_sample(dataset_name):
                                                  classes='table table-bordered table-striped table-hover '
                                                          'topscroll-table '
                                                  )
-    form1 = extend_page_data.extend_form
 
+    form1 = extend_page_data.extend_form
+    print(type(dataset))
     if request.method == 'POST':
         num_samples = request.form.get('num_samples')
         select_columns = request.form.getlist('select_columns')
@@ -189,7 +189,7 @@ def extend_dataset_sample(dataset_name):
                                    form1=form1,
                                    form2=SubmitResampleForm(),
                                    df=dataset,
-                                   raw_df=extend_page_data.dataframe,
+                                   #raw_df=extend_page_data.dataframe,
                                    )
         try:
             num_samples = int(num_samples)
@@ -200,9 +200,9 @@ def extend_dataset_sample(dataset_name):
             return render_template('extends.html',
                                    dataset=dataset,
                                    )
-
-        dataset = ExtendService.generate_samples(dataset, num_samples, select_columns, min_value, max_value,
-                                                 target_columns, dataset_name).dataframe
+        ds = extend_page_data.dataframe
+        dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
+                                                 max_value, target_columns, dataset_name).dataframe
 
     return render_template('extends.html',
                            dataset_name=dataset_name,
@@ -223,7 +223,6 @@ def submit_resample(dataset_name):
     return redirect('/materials/discovery')
 
 
-# ----------------------------------------------------------------------------------------
 @discovery.route('/<dataset>/toggle_targets', methods=['POST'])
 def toggle_targets(dataset):
     request_body = json.loads(request.data)
