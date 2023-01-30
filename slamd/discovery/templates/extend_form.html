@@ -95,7 +95,7 @@ title="Click to generate your samples")
 
 <div class="accordion">
     <div class="accordion-item">
-        <h3 class="accordion-header" id="resampled_output">
+        <h3 class="accordion-header" id="resampled_dataframe">
             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                     data-bs-target="#resampled_output" aria-expanded="true"
                     aria-controls="resampled_output">
@@ -105,7 +105,7 @@ title="Click to generate your samples")
         <div id="resampled_output"
              class="accordion-collapse collapse show table-responsive topscroll-table-container"
              aria-labelledby="resampled_output">
-            {{ dataset | safe }}
+            {{ resampled_dataset | safe }}
         </div>
     </div>
 </div>

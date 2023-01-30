@@ -168,12 +168,13 @@ def add_target(dataset, target_name):
 def extend_dataset_sample(dataset_name):
     extend_page_data = ExtendService.get_data_for_extend_page(dataset_name)
     dataset = extend_page_data.dataframe.to_html(index=False,
-                                                 table_id='resample_dataframe',
+                                                 table_id='dataframe',
                                                  classes='table table-bordered table-striped table-hover '
                                                          'topscroll-table '
                                                  )
 
     form1 = extend_page_data.extend_form
+    resampled_dataset = dataset
     print(type(dataset))
     if request.method == 'POST':
         num_samples = request.form.get('num_samples')
@@ -189,7 +190,7 @@ def extend_dataset_sample(dataset_name):
                                    form1=form1,
                                    form2=SubmitResampleForm(),
                                    df=dataset,
-                                   #raw_df=extend_page_data.dataframe,
+                                   # raw_df=extend_page_data.dataframe,
                                    )
         try:
             num_samples = int(num_samples)
@@ -201,14 +202,20 @@ def extend_dataset_sample(dataset_name):
                                    dataset=dataset,
                                    )
         ds = extend_page_data.dataframe
-        dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
-                                                 max_value, target_columns, dataset_name).dataframe
+        resampled_dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
+                                                           max_value, target_columns, dataset_name).dataframe
+        resampled_dataset = resampled_dataset.to_html(index=False,
+                                                      table_id='resample_dataframe',
+                                                      classes='table table-bordered table-striped table-hover '
+                                                              'topscroll-table '
+                                                      )
 
     return render_template('extends.html',
                            dataset_name=dataset_name,
                            form1=form1,
                            form2=SubmitResampleForm(),
                            dataset=dataset,
+                           resampled_dataset=resampled_dataset,
                            raw_df=extend_page_data.dataframe,
                            )
 

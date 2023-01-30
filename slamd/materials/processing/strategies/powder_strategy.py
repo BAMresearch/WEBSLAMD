@@ -87,7 +87,7 @@ class PowderStrategy(MaterialStrategy):
                 cls.include('SrO (m%)', powder.composition.sr_o),
                 cls.include('Mn₂O₃ (m%)', powder.composition.mn2_o3),
                 cls.include('LOI (m%)', powder.composition.loi),
-                cls.include('Fine modules (m²/kg)', powder.structure.fine),
+                cls.include('Fine modules (m²/ton)', powder.structure.fine),
                 cls.include('Specific gravity (m%)', powder.structure.gravity)]
 
     @classmethod
