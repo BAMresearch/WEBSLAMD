@@ -202,20 +202,19 @@ def extend_dataset_sample(dataset_name):
                                    dataset=dataset,
                                    )
         ds = extend_page_data.dataframe
-        resampled_dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
-                                                           max_value, target_columns, dataset_name).dataframe
-        resampled_dataset = resampled_dataset.to_html(index=False,
-                                                      table_id='resample_dataframe',
-                                                      classes='table table-bordered table-striped table-hover '
-                                                              'topscroll-table '
-                                                      )
+        dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
+                                                 max_value, target_columns, dataset_name).dataframe
+        dataset = dataset.to_html(index=False,
+                                  table_id='resample_dataframe',
+                                  classes='table table-bordered table-striped table-hover '
+                                          'topscroll-table '
+                                  )
 
     return render_template('extends.html',
                            dataset_name=dataset_name,
                            form1=form1,
-                           form2=SubmitResampleForm(),
                            dataset=dataset,
-                           resampled_dataset=resampled_dataset,
+                           form2=SubmitResampleForm(),
                            raw_df=extend_page_data.dataframe,
                            )
 
