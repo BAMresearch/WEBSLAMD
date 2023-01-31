@@ -29,7 +29,6 @@ class ExtendService:
 
     @classmethod
     def generate_samples(cls, df, num_samples, select_columns, min_values, max_values, target_columns, dataset_name):
-        generated_df = pd.DataFrame()
         for i in range(num_samples):
             sample_row = {}
             for col in df.columns:
@@ -38,8 +37,8 @@ class ExtendService:
                 elif col in select_columns:
                     min_value = min_values[col]
                     max_value = max_values[col]
-                    sample_row[col] = np.random.uniform(min_value, max_value)
+                    sample_row[col] = round(np.random.uniform(min_value, max_value), 2)
                 else:
                     sample_row[col] = df[col].sample(1).values[0]
-            generated_df = generated_df.append(sample_row, ignore_index=True)
-        return Dataset(name=dataset_name, dataframe=generated_df)
+            df = df.append(sample_row, ignore_index=True)
+        return Dataset(name=dataset_name, dataframe=df)
