@@ -29,6 +29,7 @@ class ExtendService:
 
     @classmethod
     def generate_samples(cls, df, num_samples, select_columns, min_values, max_values, target_columns, dataset_name):
+        sample_rows = []
         for i in range(num_samples):
             sample_row = {}
             for col in df.columns:
@@ -39,6 +40,10 @@ class ExtendService:
                     max_value = max_values[col]
                     sample_row[col] = round(np.random.uniform(min_value, max_value), 2)
                 else:
-                    sample_row[col] = df[col].sample(1).values[0]
-            df = df.append(sample_row, ignore_index=True)
-        return Dataset(name=dataset_name, dataframe=df)
+                    sample_row[col] = df.at[i % len(df), col]
+            sample_rows.append(sample_row)
+        new_df = pd.DataFrame(sample_rows, columns=df.columns)
+        new_df = pd.concat([df, new_df], ignore_index=True)
+        return Dataset(name=dataset_name, dataframe=new_df)
+
+

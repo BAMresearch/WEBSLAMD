@@ -174,8 +174,6 @@ def extend_dataset_sample(dataset_name):
                                                  )
 
     form1 = extend_page_data.extend_form
-    resampled_dataset = dataset
-    print(type(dataset))
     if request.method == 'POST':
         num_samples = request.form.get('num_samples')
         select_columns = request.form.getlist('select_columns')
@@ -204,6 +202,7 @@ def extend_dataset_sample(dataset_name):
         ds = extend_page_data.dataframe
         dataset = ExtendService.generate_samples(ds, num_samples, select_columns, min_value,
                                                  max_value, target_columns, dataset_name).dataframe
+
         dataset = dataset.to_html(index=False,
                                   table_id='resample_dataframe',
                                   classes='table table-bordered table-striped table-hover '
