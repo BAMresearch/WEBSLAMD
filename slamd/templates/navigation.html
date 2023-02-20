@@ -1,4 +1,4 @@
-{% from 'icons.html' import home_icon, bucket_icon, pencil_icon, tools_icon, search_icon -%}
+{% from 'icons.html' import home_icon, bucket_icon, pencil_icon, tools_icon, lab_icon, search_icon -%}
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebar-label">
     <div class="offcanvas-header bg-primary bg-gradient">
@@ -43,6 +43,13 @@
                 <a class="nav-link link-dark" aria-current="page" href="/materials/discovery">
                     {{ search_icon(16, 16, "currentColor") }}
                     Discovery
+                </a>
+            </li>
+
+             <li class="nav-item mb-3 list-group-item list-group-item-action">
+                <a class="nav-link link-dark" aria-current="page" href="/materials/map">
+                    {{ lab_icon(16, 16, "currentColor") }}
+                    Slamd Lab
                 </a>
             </li>
         </ul>
