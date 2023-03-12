@@ -9,7 +9,7 @@ The objective of SLAMD is to accelerate materials research in the wet lab throug
    2. [Starting the App](#start_app)
    3. [Unit Tests](#unit_tests)
    4. [Acceptance Tests](#acceptance_tests)
-3. [Documentation](#documentation)
+3. [Resources](#documentation)
 
 ## Preview: 
 ![LandingPage](https://user-images.githubusercontent.com/71640597/197785708-5c25a1a8-498d-43b7-8ee7-4266bebce5f9.png)
@@ -122,6 +122,19 @@ If you prefer to watch the test running in a GUI, go to the root directory and r
 A window will open. Select "E2E Testing" and then select any browser on the list.
 You may then run each specs file separately and see the tests in action.
 
-## 3. Documentation (Optional) <a name="documentation"></a>
+## 3. Resources (Optional) <a name="documentation"></a>
 
 Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku. It explains details about the code as well as the usage of the app.
+
+
+#### Articles
+1. Christoph Völker, et al. "Searching for the needle in the haystack - a case study on how machine learning could help to find ideal sustainable building materials." Proceedings of RILEM Spring Convention-CMSS23, Rabat, Morocco, 2023. [Available on ResearchGate.net](https://www.researchgate.net/publication/368510732_Searching_for_the_needle_in_the_haystack_-_how_machine_learning_could_help_to_find_ideal_sustainable_building_materials).
+2. Christoph Völker, et al. "Green building materials: a new frontier in data-driven sustainable concrete design." Journal of Cleaner Production, pre-print submitted, 2023. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.29079.85925).
+3. Christoph Völker, et al. "Accelerating the search for alkali-activated cements with sequential learning." Proceedings of FIB Conference 2022, Oslo, Norway, 2022. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.33502.92480/1).
+4. Christoph Völker, et al. "Sequential learning to accelerate discovery of alkali-activated binders." Journal of Materials Science, vol. 56, no. 21, 2021, pp. 15859-15881. [Available on SpringerLink.com](https://doi.org/10.1007/s10853-021-06324-z).
+
+#### Data
+- SLAMD Session data and an alkali-activated concrete data set which contains ground truth data and for the AI optimization of SLAMD that has been created for teaching purposes: [SLAMD example data](https://github.com/BAMcvoelker/Praktikum_MD)
+- A comprehensive alkali-activated concrete data set for Sustainable Building Materials: [DOI: 10.5281/zenodo.7693719](https://doi.org/10.5281/zenodo.7693719).
+- 9 ML-ready data extracted from the comprehensive data set and used in references 2) and 3): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
+- ML-ready data used in reference 4): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
