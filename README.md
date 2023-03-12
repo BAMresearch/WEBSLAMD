@@ -10,6 +10,7 @@ The objective of SLAMD is to accelerate materials research in the wet lab throug
    3. [Unit Tests](#unit_tests)
    4. [Acceptance Tests](#acceptance_tests)
 3. [Resources](#documentation)
+4. [Homepage and Contact] (#contact)
 
 ## Preview: 
 ![LandingPage](https://user-images.githubusercontent.com/71640597/197785708-5c25a1a8-498d-43b7-8ee7-4266bebce5f9.png)
@@ -142,3 +143,12 @@ Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku. It expla
 - A comprehensive alkali-activated concrete data set for Sustainable Building Materials: [DOI: 10.5281/zenodo.7693719](https://doi.org/10.5281/zenodo.7693719).
 - 9 ML-ready data extracted from the comprehensive data set and used in references 2) and 3): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
 - ML-ready data used in reference 4): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
+
+## 4. Homepage and Contact  (Optional) <a name="contact"></a>
+
+
+Homepage: [https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html](https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html)  
+Contact: [Christoph.Voelker@bam.de](mailto:Christoph.Voelker@bam.de)
+
+Feel free to reach out to us if you have any questions or would like to learn more about SLAMD!
+
