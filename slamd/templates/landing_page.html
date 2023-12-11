@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% from 'icons.html' import github_icon, bam_icon, book_icon, iteratec_icon -%}
+{% from 'icons.html' import github_icon, bam_icon, book_icon, reincarnate_icon, iteratec_icon -%}
 
 <head>
     <title>SLAMD - Sequential Learning App for Materials Discovery</title>
@@ -145,6 +145,11 @@
             data-bs-toggle="tooltip" data-bs-placement="bottom" title="Open User Manual">
             {{ book_icon(20, 20, "currentColor") }} User Manual
         </a>
+        <a class="btn btn-success text-white me-2" href="https://www.reincarnate-project.eu" target="_blank" data-bs-toggle="tooltip"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit Reincarnate project website">
+            {{ reincarnate_icon(20, 20) }} Funded by Reincarnate
+        </a>
+
         <a class="btn btn-dark me-2 ms-auto" href="https://www.iteratec.com/" target="_blank" data-bs-toggle="tooltip"
             data-bs-placement="bottom" title="Visit iteratec website" style="background-color: black;">
             {{ iteratec_icon(36, 36) }} Powered by iteratec
