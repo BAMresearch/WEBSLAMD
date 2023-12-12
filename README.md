@@ -155,7 +155,8 @@ The clear guidance provided in this paper allows immediate adoption into practic
 
 - **Introduction to SLAMD with Video Tutorial**: Dive into SLAMD through our engaging video tutorial. This introduction includes a hands-on session featuring a practical case study, offering insights into the application of SLAMD in real-world scenarios. Watch it on YouTube: [SLAMD Introductory Tutorial](https://www.youtube.com/watch?v=0fAW2tg2KZM&t=969s).
 
-- **Seminar on Data-Driven Design in Cementitious Materials**: Explore the innovative world of data-driven design for cementitious materials in our detailed seminar. This session covers the outcomes of extensive benchmarking exercises, utilizing real-world laboratory data from tens of thousands
+- **Seminar on Data-Driven Design in Cementitious Materials**: Explore the innovative world of data-driven design for cementitious materials in our detailed seminar. This session covers the outcomes of extensive benchmarking exercises, utilizing real-world laboratory data from tens of thousands of experiments. The seminar is conducted in German and available on YouTube: [Data-Driven Design Seminar](https://www.youtube.com/watch?v=VXPrYZ7NJlM&t=422s).
+
 
 
 ## 4. Homepage and Contact <a name="contact"></a>
