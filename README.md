@@ -1,6 +1,6 @@
 # SLAMD
 
-The objective of SLAMD is to accelerate materials research in the wet lab through AI. Currently, the focus is on sustainable concrete and binder formulations, but it can be extended to other material classes in the future.
+The objective of **SLAMD** is to accelerate materials research in the wet lab through AI. Currently, the focus is on sustainable concrete and binder formulations, but it can be extended to other material classes in the future.
 
 (Web-hosted version available under: https://slamd-demo.herokuapp.com)
 
@@ -20,25 +20,27 @@ The objective of SLAMD is to accelerate materials research in the wet lab throug
 
 ##### Leverage the Digital Lab and AI optimization to discover exciting new materials
 
-- Represent resources and processes and their socio-economic impact.
-- Calculate complex compositions and enrich them with detailed material knowledge.
-- Integrate laboratory data and apply it to novel formulations.
-- Tailor materials to the purpose to achieve the best solution.
+- Represent **resources and processes** and their environmental and economic **impact**.
+- Calculate complex compositions and enrich them with **detailed material knowledge**.
+- **Integrate laboratory data** and apply it to novel formulations.
+- **Tailor materials** to the purpose to achieve the best solution.
 
-#### Workflow
+### Workflow
 
-##### Digital Lab
+#### Digital Lab
 
-1. Specify resources:
+**1. Specify resources:**
    From base materials to manufacturing processes – "Base" enables a detailed and consistent description of existing resources
-2. Combine resources:
+   
+**2. Combine resources:**
    The combination of base materials and processes offers an almost infinite optimization potential. "Blend" makes it easier to design complex configurations.
-3. Digital Formulations:
+   
+**3. Digital Formulations:**
    With "Formulations" you can effortlessly convert your resources into the entire spectrum of possible concrete formulations. This automatically generates a detailed set of data for AI optimization.
 
-##### AI-Optimization
+#### AI-Optimization
 
-4. Materials Discovery:
+**4. Materials Discovery:**
    Integrate data from the "Digital Lab" or upload your own material data. Enrich the data with lab results and adopt the knowledge to new recipes via artificial intelligence. Leverage socio-economic metrics to identify recipes tailored to your requirements.
 
 ![img.png](slamd/static/scatter_plot.png)
@@ -143,16 +145,24 @@ The clear guidance provided in this paper allows immediate adoption into practic
 
 
 #### Data
-- SLAMD session data and an alkali-activated concrete data set which contains ground truth data and for the AI optimization of SLAMD. This data has been created for teaching purposes: [SLAMD example data](https://github.com/BAMcvoelker/Praktikum_MD)
-- A comprehensive alkali-activated concrete data set for Sustainable Building Materials: [DOI: 10.5281/zenodo.7693719](https://doi.org/10.5281/zenodo.7693719).
-- 9 ML-ready data extracted from the comprehensive data set and used in references 2) and 3): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
-- ML-ready data used in reference 4): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
+- **SLAMD session data and an alkali-activated concrete data set** which contains ground truth data and for the AI optimization of SLAMD. This data has been created for teaching purposes: [SLAMD example data](https://github.com/BAMcvoelker/Praktikum_MD)
+- ***A comprehensive alkali-activated concrete data set*** for Sustainable Building Materials: [DOI: 10.5281/zenodo.7693719](https://doi.org/10.5281/zenodo.7693719).
+- **9 ML-ready data extracted from the comprehensive data set** and used in references 2) and 3): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
+- **ML-ready data** used in reference 4): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
+
+
+#### Videos
+
+- **Introduction to SLAMD with Video Tutorial**: Dive into SLAMD through our engaging video tutorial. This introduction includes a hands-on session featuring a practical case study, offering insights into the application of SLAMD in real-world scenarios. Watch it on YouTube: [SLAMD Introductory Tutorial](https://www.youtube.com/watch?v=0fAW2tg2KZM&t=969s).
+
+- **Seminar on Data-Driven Design in Cementitious Materials**: Explore the innovative world of data-driven design for cementitious materials in our detailed seminar. This session covers the outcomes of extensive benchmarking exercises, utilizing real-world laboratory data from tens of thousands
+
 
 ## 4. Homepage and Contact <a name="contact"></a>
 
 
-Homepage: [https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html](https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html)  
-Contact: [Christoph.Voelker@bam.de](mailto:Christoph.Voelker@bam.de)
+**Homepage:** [https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html](https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html)  
+**Contact:** [Christoph.Voelker@bam.de](mailto:Christoph.Voelker@bam.de)
 
 Feel free to reach out to us if you have any questions or would like to learn more about SLAMD!
 
