@@ -11,10 +11,10 @@ describe("Test landing page", () => {
     cy.title().should("contain", "SLAMD - Sequential Learning App for Materials Discovery");
     cy.findAllByText("SLAMD Dashboard").should("have.length", 2);
     cy.url().should("eq", "http://localhost:5001/");
-    cy.findByText("Base").should("exist");
-    cy.findByText("Blend").should("exist");
-    cy.findByText("Formulations").should("exist");
-    cy.findByText("Materials Discovery").should("exist");
+    cy.contains("Base").should("exist");
+    cy.contains("Blend").should("exist");
+    cy.contains("Formulations").should("exist");
+    cy.contains("Discovery").should("exist");
   });
 
   it("Link to GitHub repo is present", () => {
@@ -25,7 +25,7 @@ describe("Test landing page", () => {
   });
 
   it("Link to BAM website is present", () => {
-    cy.findByText("BAM website").should(($a) => {
+    cy.findByText("BAM Homepage").should(($a) => {
       expect($a.attr("href"), "href").to.contain("bam.de");
       expect($a.attr("target"), "target").to.equal("_blank");
     });

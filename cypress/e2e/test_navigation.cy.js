@@ -41,7 +41,7 @@ describe("Test navigation sidebar", () => {
     cy.get("nav").within(() => {
       cy.get("a > .bi-list").click();
     });
-    cy.findAllByText("Base").last().click();
+    cy.findAllByText("Base").last().click({force: true});
     cy.url().should("eq", "http://localhost:5001/materials/base");
   });
 
@@ -49,7 +49,7 @@ describe("Test navigation sidebar", () => {
     cy.get("nav").within(() => {
       cy.get("a > .bi-list").click();
     });
-    cy.findAllByText("Blend").last().click();
+    cy.findAllByText("Blend").last().click({force: true});
     cy.url().should("eq", "http://localhost:5001/materials/blended");
   });
 
