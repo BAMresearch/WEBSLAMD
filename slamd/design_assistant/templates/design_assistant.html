@@ -12,8 +12,7 @@
       {{ form.csrf_token }}
       <div class="container">
         <div class="border rounded p-2 col d-inline-block">
-          {{ form.design_assistant_task(class = 'list-unstyled') }} {{
-          form.submit(class ='') }}
+          {% include 'design_assistant_select_task.html' %}
         </div>
       </div>
       <div class="position-absolute bottom-0 border rounded-pill w-auto">
@@ -23,4 +22,5 @@
   </div>
 </main>
 <script src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"></script>
+<script src="{{url_for('design_assistant.static', filename='design_assistant_task.js')}}"></script>
 {%endblock%}

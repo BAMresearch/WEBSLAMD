@@ -7,12 +7,12 @@ from slamd.design_assistant.processing.forms.design_assistant_form import (
 )
 
 
-class DesignAssistantTaskForm(DesignAssistantForm):
+class DesignAssistantSelectImportForm(DesignAssistantForm):
     design_assistant_task = RadioField(
-        label="Design Assitant Service",
+        label="Design Assitant Import Selection",
         choices=[
-            " Create a new Data Set in the digital Lab",
-            "Zero shot predictions using LLMs",
+            "Yes",
+            "No",
         ],
-        validators=[validators.DataRequired(message="Service cannot be empty!")],
+        validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
