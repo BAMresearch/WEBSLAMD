@@ -3,7 +3,6 @@ from io import BytesIO
 import pandas as pd
 import pytest
 from pandas import DataFrame
-from pandas.core.indexes.numeric import Int64Index
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 
 from slamd import create_app
@@ -146,8 +145,8 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
     def mock_get_session_tsne_plot_data():
         utility = pd.Series((0, 1), (1, 2))
         features_df = pd.DataFrame([1, 2])
-        label_index = Int64Index([1], dtype='int64')
-        nolabel_index = Int64Index([0, 1], dtype='int64')
+        label_index = pd.Index([1], dtype='int64')
+        nolabel_index = pd.Index([0, 1], dtype='int64')
         return TSNEPlotData(utility=utility,
                             features_df=features_df,
                             index_all_labelled=label_index,

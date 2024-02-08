@@ -1,3 +1,4 @@
+import os
 from uuid import UUID
 
 from slamd.common.session_backup.session_service import SessionService
@@ -41,7 +42,11 @@ def test_convert_session_to_json_string(monkeypatch):
 
     session_as_json = SessionService.convert_session_to_json_string()
 
-    with open('tests/common/session/test_session.json') as f:
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, '..', 'common', 'session', 'test_session.json')
+    path_to_test_session = os.path.abspath(file_path)
+
+    with open(path_to_test_session) as f:
         # JSON file is assumed to only contain one long line. splitlines removes newline.
         assert session_as_json == f.readline().splitlines()[0]
 
@@ -62,7 +67,11 @@ def test_load_session_from_json_string(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'save', _mock_save_material)
     monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', _mock_save_dataset)
 
-    with open('tests/common/session/test_session.json') as f:
+    current_dir = os.path.dirname(__file__)
+    file_path = os.path.join(current_dir, '..', 'common', 'session', 'test_session.json')
+    path_to_test_session = os.path.abspath(file_path)
+
+    with open(path_to_test_session) as f:
         # JSON file is assumed to only contain one long line. splitlines removes newline.
         session_data_string = f.readline()
 
