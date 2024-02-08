@@ -8,30 +8,18 @@
 {% extends 'index.html' %} {% block content %}
 <main class="h-75 mt-lg-5 ml-sm-auto px-md-2 py-2 container border">
   <div id="chat-window" class="p-4 position-relative h-100">
-    <div>How can I help you today?</div>
-    <div class="container text-center">
-      <div class="row">
-        <!-- <span
-          id="selection-digital-lab"
-          class="col p-2 border rounded"
-          role="button"
-        >
-          Create a new Data Set in the digital Lab
-        </span>
-        <span
-          id="selection-zero-shot-learner"
-          class="col p-2 border rounded"
-          role="button"
-        >
-          Zero shot predictions using LLMs
-        </span> -->
-        {{ form.design_assistant_service }}
-        {{ form.submit }}
+    <form action="" method="post" novalidate>
+      {{ form.csrf_token }}
+      <div class="container">
+        <div class="border rounded p-2 col d-inline-block">
+          {{ form.design_assistant_task(class = 'list-unstyled') }} {{
+          form.submit(class ='') }}
+        </div>
       </div>
-    </div>
-    <div class="position-absolute bottom-0 border rounded-pill w-auto">
-      Message the design assistant...
-    </div>
+      <div class="position-absolute bottom-0 border rounded-pill w-auto">
+        Message the design assistant...
+      </div>
+    </form>
   </div>
 </main>
 <script src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"></script>

@@ -1,8 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+import json
 
-from slamd.design_assistant.processing.forms.design_assistant_service_form import (
-    DesignAssistantServiceForm,
-)
 from slamd.design_assistant.processing.design_assistant_service import (
     DesignAssistantService,
 )
@@ -19,6 +17,14 @@ design_assistant = Blueprint(
 
 @design_assistant.route("/", methods=["GET"])
 def design_assistant_page():
-    form = DesignAssistantService.create_design_assistant_service_form()
+    form = DesignAssistantService.create_design_assistant_task_form()
     # form = DesignAssistantServiceForm()
+    return render_template("design_assistant.html", form=form)
+
+
+@design_assistant.route("/", methods=["POST"])
+def select_design_assistant_task():
+    # data = json.loads(request)
+    form = DesignAssistantService.create_design_assistant_task_form()
+    print(request)
     return render_template("design_assistant.html", form=form)
