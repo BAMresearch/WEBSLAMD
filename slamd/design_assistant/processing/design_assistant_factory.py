@@ -1,5 +1,9 @@
-from slamd.design_assistant.processing.forms.design_assistant_form import DesignAssistantForm
-from slamd.design_assistant.processing.forms.design_assistant_select_task_form import DesignAssistantSelectTaskForm
+from slamd.design_assistant.processing.forms.design_assistant_form import (
+    DesignAssistantForm,
+)
+from slamd.design_assistant.processing.forms.task_form import TaskForm
+
+
 class DesignAssistantFactory:
 
     @classmethod
@@ -9,5 +13,5 @@ class DesignAssistantFactory:
 
     @classmethod
     def create_design_assistant_task_form(cls):
-        form = DesignAssistantSelectTaskForm()
+        form = TaskForm()
         return form

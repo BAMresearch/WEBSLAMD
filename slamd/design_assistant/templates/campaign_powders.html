@@ -1,0 +1,12 @@
+{% block content %}
+<div class="col">
+  <div class="border rounded p-2 d-inline-block">
+    {{ form.campaign_form.restrain_powders_field.label}} {{
+    form.campaign_form.restrain_powders_field(class = 'list-unstyled') }}
+  </div>
+  <div class="border rounded p-2 d-inline-block">
+    {{ form.campaign_form.blend_powders_field.label}} {{
+    form.campaign_form.blend_powders_field(class = 'list-unstyled') }}
+  </div>
+</div>
+{% endblock %}

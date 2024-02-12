@@ -3,8 +3,8 @@ from wtforms import RadioField
 from wtforms import validators
 
 
-class DesignAssistantSelectTaskForm(Form):
-    select_task_field = RadioField(
+class TaskForm(Form):
+    task_field = RadioField(
         label="How can I help you Today?",
         choices=[
             "Create a new Data Set in the digital Lab",

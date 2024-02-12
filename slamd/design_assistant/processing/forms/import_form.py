@@ -3,9 +3,9 @@ from wtforms import RadioField
 from wtforms import validators
 
 
-class DesignAssistantSelectImportForm(Form):
-    select_import_field = RadioField(
-        label="Design Assitant Import Selection",
+class ImportForm(Form):
+    import_field = RadioField(
+        label="Do you want to important an existing campaign?",
         choices=[
             "Yes",
             "No",

@@ -22,20 +22,33 @@ def design_assistant_page():
     return render_template("design_assistant.html", form=form)
 
 
-# @design_assistant.route("/", methods=["POST"])
-# def select_design_assistant_task():
-#     design_task_selection = json.loads(request.data)
-#     # form = DesignAssistantService.create_design_assistant_task_form()
-#     print(json.loads(request.data))
-#     return render_template("design_assistant.html", form=form)
-
-
-@design_assistant.route("/select_task", methods=["POST"])
-def select_design_assistant_task():
+@design_assistant.route("/task", methods=["POST"])
+def handle_task():
     design_task_selection = json.loads(request.data)
     print(design_task_selection)
-    # DesignAssistantService.update_design_assistant_chat(design_task_selection)
-    # form = DesignAssistantService.create_design_assistant_task_form()
-    # body = {"template": render_template("design_assistant.html", form=form)}
-    # return make_response(jsonify(body), 200)
-    # return render_template("design_assistant.html", form=form)
+    pass
+
+
+@design_assistant.route("/import", methods=["POST"])
+def handle_import():
+    pass
+
+
+@design_assistant.route("/material", methods=["POST"])
+def handle_material():
+    pass
+
+
+@design_assistant.route("/target_values", methods=["POST"])
+def handle_target_values():
+    pass
+
+
+@design_assistant.route("/powders", methods=["POST"])
+def handle_powders():
+    pass
+
+
+@design_assistant.route("/liquids", methods=["POST"])
+def handle_liquids():
+    pass

@@ -1,20 +1,20 @@
 from flask_wtf import FlaskForm as Form
 from wtforms import FieldList, FormField
-from slamd.design_assistant.processing.forms.design_assistant_select_task_form import (
-    DesignAssistantSelectTaskForm,
+from slamd.design_assistant.processing.forms.task_form import (
+    TaskForm,
 )
-from slamd.design_assistant.processing.forms.design_assistant_select_import_form import (
-    DesignAssistantSelectImportForm,
+from slamd.design_assistant.processing.forms.import_form import (
+    ImportForm,
 )
-from slamd.design_assistant.processing.forms.design_assistant_campaign_form import (
-    DesignAssistantCampaignForm,
+from slamd.design_assistant.processing.forms.campaign_form import (
+    CampaignForm,
 )
 
 
 class DesignAssistantForm(Form):
 
-    select_task_form = FormField(DesignAssistantSelectTaskForm)
+    task_form = FormField(TaskForm)
 
-    select_import_form = FormField(DesignAssistantSelectImportForm)
+    import_form = FormField(ImportForm)
 
-    design_assistant_campaign_form = FormField(DesignAssistantCampaignForm)
+    campaign_form = FormField(CampaignForm)

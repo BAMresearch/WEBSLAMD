@@ -12,8 +12,8 @@
 >
   <div id="chat-window" class="p-4 h-100">
     <form action="" method="post" novalidate>
-      {{ form.csrf_token }} {% include 'select_task.html' %} {% include
-      'select_import.html'%}
+      {{ form.csrf_token }} {% include 'task.html' %} {% include 'import.html'%}
+      {% include 'campaign.html' %}
     </form>
   </div>
   <div
