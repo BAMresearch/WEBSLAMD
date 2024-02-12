@@ -6,19 +6,22 @@
 </head>
 
 {% extends 'index.html' %} {% block content %}
-<main class="h-75 mt-lg-5 ml-sm-auto px-md-2 py-2 container border">
-  <div id="chat-window" class="p-4 position-relative h-100">
+<main
+  class="h-75 mt-lg-5 ml-sm-auto px-md-2 py-2 container"
+  id="chat-window-container"
+>
+  <div id="chat-window" class="p-4 h-100">
     <form action="" method="post" novalidate>
-      {{ form.csrf_token }}
-      <div class="container">
-        <div class="border rounded p-2 col d-inline-block">
-          {% include 'design_assistant_select_task.html' %}
-        </div>
-      </div>
-      <div class="position-absolute bottom-0 border rounded-pill w-auto">
-        Message the design assistant...
-      </div>
+      {{ form.csrf_token }} {% include 'select_task.html' %} {% include
+      'select_import.html'%}
     </form>
+  </div>
+  <div
+    class="w-100 border rounded-pill py-2 px-4"
+    id="chat_message_input_container
+  "
+  >
+    Message design assistant...
   </div>
 </main>
 <script src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"></script>

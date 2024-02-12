@@ -10,6 +10,11 @@ from abc import ABC, abstractmethod
 class DesignAssistantService:
 
     @classmethod
+    def create_design_assistant_form(cls):
+        form = DesignAssistantFactory.create_design_assistant_form()
+        return form
+
+    @classmethod
     def create_design_assistant_task_form(cls):
         form = DesignAssistantFactory.create_design_assistant_task_form()
         return form

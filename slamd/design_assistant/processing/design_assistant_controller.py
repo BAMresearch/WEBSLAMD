@@ -17,7 +17,7 @@ design_assistant = Blueprint(
 
 @design_assistant.route("/", methods=["GET"])
 def design_assistant_page():
-    form = DesignAssistantService.create_design_assistant_task_form()
+    form = DesignAssistantService.create_design_assistant_form()
     # form = DesignAssistantServiceForm()
     return render_template("design_assistant.html", form=form)
 
@@ -35,7 +35,7 @@ def select_design_assistant_task():
     design_task_selection = json.loads(request.data)
     print(design_task_selection)
     # DesignAssistantService.update_design_assistant_chat(design_task_selection)
-    form = DesignAssistantService.create_design_assistant_task_form()
+    # form = DesignAssistantService.create_design_assistant_task_form()
     # body = {"template": render_template("design_assistant.html", form=form)}
     # return make_response(jsonify(body), 200)
-    return render_template("design_assistant.html", form=form)
+    # return render_template("design_assistant.html", form=form)

@@ -1,86 +1,88 @@
 .sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    padding: 90px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .8);
-    z-index: 99;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: 90px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.8);
+  z-index: 99;
 }
 
 @media (max-width: 767.98px) {
-    .sidebar {
-        top: 11.5rem;
-        padding: 0;
-    }
+  .sidebar {
+    top: 11.5rem;
+    padding: 0;
+  }
 }
 
 .navbar {
-    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 767.98px) {
-    .navbar {
-        top: 0;
-        position: sticky;
-        z-index: 999;
-    }
+  .navbar {
+    top: 0;
+    position: sticky;
+    z-index: 999;
+  }
 }
 
 /* Adapted from .popover-header from Bootstrap */
 .explanation-header {
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-style: normal;
-    text-align: start;
-    letter-spacing: normal;
-    word-break: normal;
-    white-space: normal;
-    word-spacing: normal;
-    line-break: auto;
-    word-wrap: break-word;
-    margin-top: 0;
-    font-weight: 500;
-    line-height: 1.2;
-    padding: 0.5rem 1rem;
-    margin-bottom: 0;
-    font-size: 1rem;
-    background-color: lightgrey; /*#f0f0f0;*/
-    border-bottom: 1px solid rgba(0, 0, 0, 0.175);
-    border-top-left-radius: calc(0.5rem - 1px);
-    border-top-right-radius: calc(0.5rem - 1px);
-    /*border-top-right-radius: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);*/
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-style: normal;
+  text-align: start;
+  letter-spacing: normal;
+  word-break: normal;
+  white-space: normal;
+  word-spacing: normal;
+  line-break: auto;
+  word-wrap: break-word;
+  margin-top: 0;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  background-color: lightgrey; /*#f0f0f0;*/
+  border-bottom: 1px solid rgba(0, 0, 0, 0.175);
+  border-top-left-radius: calc(0.5rem - 1px);
+  border-top-right-radius: calc(0.5rem - 1px);
+  /*border-top-right-radius: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);*/
 }
 
 /* Adapted from .popover-body from Bootstrap */
 .explanation-body {
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: start;
-    letter-spacing: normal;
-    word-break: normal;
-    white-space: normal;
-    word-spacing: normal;
-    line-break: auto;
-    font-size: 0.875rem;
-    word-wrap: break-word;
-    padding: 1rem 1rem;
-    color: #212529;
-    border-bottom-left-radius: calc(0.5rem - 1px);
-    border-bottom-right-radius: calc(0.5rem - 1px);
-    background-color: #f0f0f0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: start;
+  letter-spacing: normal;
+  word-break: normal;
+  white-space: normal;
+  word-spacing: normal;
+  line-break: auto;
+  font-size: 0.875rem;
+  word-wrap: break-word;
+  padding: 1rem 1rem;
+  color: #212529;
+  border-bottom-left-radius: calc(0.5rem - 1px);
+  border-bottom-right-radius: calc(0.5rem - 1px);
+  background-color: #f0f0f0;
 }
-
 
 .multiple-select-md {
-    height: 100px;
+  height: 100px;
 }
 
-
 .multiple-select-lg {
-    height: 180px !important;
+  height: 180px !important;
 }
 
 /* 
@@ -90,6 +92,41 @@
  * see the scrollbar on top and then rotate the content again by
  * 180 degrees to restore it to the right orientation.
  */
-.topscroll-table, .topscroll-table-container {
-    transform: rotateX(180deg);
+.topscroll-table,
+.topscroll-table-container {
+  transform: rotateX(180deg);
+}
+
+/* design assistant css */
+
+#chat-window {
+  overflow-y: scroll;
+}
+
+#chat_message_input_container {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #818181;
+  border-radius: 10px;
+  width: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #8f8f8f;
 }

@@ -2,13 +2,9 @@ from flask_wtf import FlaskForm as Form
 from wtforms import RadioField
 from wtforms import validators
 
-from slamd.design_assistant.processing.forms.design_assistant_form import (
-    DesignAssistantForm,
-)
 
-
-class DesignAssistantSelectImportForm(DesignAssistantForm):
-    design_assistant_task = RadioField(
+class DesignAssistantSelectImportForm(Form):
+    select_import_field = RadioField(
         label="Design Assitant Import Selection",
         choices=[
             "Yes",

@@ -3,6 +3,8 @@ from flask import session
 
 class DesignAssistantPersistence:
 
+    
+
     @classmethod
     def set_session_interaction_step(cls):
         current_interaction_step = cls.get_session_property('interaction_step')
