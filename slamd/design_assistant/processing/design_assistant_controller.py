@@ -4,6 +4,7 @@ import json
 from slamd.design_assistant.processing.design_assistant_service import (
     DesignAssistantService,
 )
+from flask import session
 
 design_assistant = Blueprint(
     "design_assistant",
@@ -17,21 +18,22 @@ design_assistant = Blueprint(
 
 @design_assistant.route("/", methods=["GET"])
 def design_assistant_page():
-    form = DesignAssistantService.create_design_assistant_form()
-    # form = DesignAssistantServiceForm()
+    form = DesignAssistantService.create_design_assistant_task_form()
     return render_template("design_assistant.html", form=form)
 
 
 @design_assistant.route("/task", methods=["POST"])
 def handle_task():
-    design_task_selection = json.loads(request.data)
-    print(design_task_selection)
-    pass
+    selection = json.loads(request.data)
+    ## handle this selection for when implementing data creation in digital lab
+    form = DesignAssistantService.create_design_assistant_import_form()
+    body = {"template": render_template("import.html", form=form)}
+    return make_response(jsonify(body), 200)
 
 
 @design_assistant.route("/import", methods=["POST"])
 def handle_import():
-    pass
+    
 
 
 @design_assistant.route("/material", methods=["POST"])

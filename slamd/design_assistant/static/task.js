@@ -1,15 +1,13 @@
 async function selectDesignTask(userInput) {
-  const url = "/design_assistant/select_task";
+  const url = "/design_assistant/task";
   await postDataAndEmbedTemplateInPlaceholder(
     url,
-    "design_assistant_task",
+    "import_container",
     userInput
   );
 }
 
-var task_options = document.querySelectorAll(
-  '#design_assistant_task input[type="radio"]'
-);
+var task_options = document.querySelectorAll('#tasks input[type="radio"]');
 
 task_options.forEach(function (option) {
   option.addEventListener("click", function () {

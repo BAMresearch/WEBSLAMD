@@ -4,8 +4,6 @@ from slamd.design_assistant.processing.design_assistant_factory import (
 from slamd.design_assistant.processing.design_assistant_persistence import (
     DesignAssistantPersistence,
 )
-from abc import ABC, abstractmethod
-
 
 class DesignAssistantService:
 
@@ -18,6 +16,17 @@ class DesignAssistantService:
     def create_design_assistant_task_form(cls):
         form = DesignAssistantFactory.create_design_assistant_task_form()
         return form
+    
+    @classmethod
+    def create_design_assistant_import_form(cls):
+        form = DesignAssistantFactory.create_design_assistant_import_form()
+        return form
+
+    @classmethod
+    def create_design_assistant_campaign_form(cls):
+        form = DesignAssistantFactory.create_design_assistant_campaign_form()
+        return form
+
 
     @classmethod
     def update_design_assistant_chat(cls, userInput):

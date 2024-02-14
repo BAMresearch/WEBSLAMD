@@ -1,8 +1,8 @@
 {% block content %}
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
-    {{ form.task_form.task_field.label}} {{
-    form.task_form.task_field(class = 'list-unstyled') }}
+    {{ form.task_field.label}} {{ form.task_field(class = 'list-unstyled',
+    id='tasks') }}
   </div>
 </div>
 {% endblock %}
