@@ -1,21 +1,24 @@
-async function selectDesignTask(userInput) {
+async function selectDesignTask(task) {
   const url = "/design_assistant/task";
   await postDataAndEmbedTemplateInPlaceholder(
     url,
-    "import_container",
-    userInput
+    "import_selection_container",
+    task
   );
 }
 
-var task_options = document.querySelectorAll('#tasks input[type="radio"]');
+const task_options = document.querySelectorAll('#tasks input[type="radio"]');
 
 task_options.forEach(function (option) {
   option.addEventListener("click", function () {
-    const userInput = {
-      type: "design_assistant_task_selection",
-      task: option.value,
-    };
-    selectDesignTask(userInput);
+    let task;
+    if (option.value === "Zero shot predictions using LLMs") {
+      task = "zero_shot_learner";
+    } else {
+      task = "data_creation";
+    }
+    console.log(option.value);
+    selectDesignTask(task);
     task_options.forEach(function (otherRadio) {
       if (otherRadio !== option) {
         otherRadio.disabled = true;

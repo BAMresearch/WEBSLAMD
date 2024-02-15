@@ -3,8 +3,8 @@ from wtforms import RadioField
 from wtforms import validators
 
 
-class ImportForm(Form):
-    import_field = RadioField(
+class ImportSelectionForm(Form):
+    import_selection_field = RadioField(
         label="Do you want to important an existing campaign?",
         choices=[
             "Yes",

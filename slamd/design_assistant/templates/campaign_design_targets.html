@@ -1,16 +1,12 @@
 {% block content %}
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
-    {{ form.campaign_form.target_strength_field.label }} {{
-    form.campaign_form.target_strength_field }} {{
-    form.campaign_form.target_workability_field.label }} {{
-    form.campaign_form.target_workability_field }} {{
-    form.campaign_form.target_reactivity_field.label }} {{
-    form.campaign_form.target_reactivity_field }} {{
-    form.campaign_form.target_sustainability_field.label }} {{
-    form.campaign_form.target_sustainability_field }}{{
-    form.campaign_form.target_cost_field.label }} {{
-    form.campaign_form.target_cost_field }}
+    {{ form.target_strength_field.label }} {{ form.target_strength_field }} {{
+    form.target_workability_field.label }} {{ form.target_workability_field }}
+    {{ form.target_reactivity_field.label }} {{ form.target_reactivity_field }}
+    {{ form.target_sustainability_field.label }} {{
+    form.target_sustainability_field }}{{ form.target_cost_field.label }} {{
+    form.target_cost_field }}
     <div>
       <button>Optimize other +</button>
     </div>

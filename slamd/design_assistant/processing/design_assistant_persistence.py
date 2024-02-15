@@ -4,20 +4,31 @@ from flask import session
 class DesignAssistantPersistence:
 
     @classmethod
-    def get_session_property(cls, property):
-        return session.get(property, [])
-    
-    @classmethod
-    def set_session_task(cls, task):
-        session["task"] = task
+    def init_session(cls):
+        session["design_assistant"] = {}
 
     @classmethod
-    def set_session_interaction_step(cls):
-        current_interaction_step = cls.get_session_property("interaction_step")
-        if current_interaction_step > 0:
-            session["interaction_step"] = current_interaction_step + 1
+    def update_session(cls, value, key=None):
+        if value in ["zero_shot_learner"]:
+            session["design_assistant"]["zero_shot_learner"] = {}
+        if value in ["no_import"]:
+            session["design_assistant"]["dataset"] = "None"
         else:
-            session["interaction_step"] = 1
+            session["design_assistant"]["zero_shot_learner"][key] = value
 
 
-
+"""
+{
+    "design_assistant_config": {
+        "zero-shot":
+            "campaign" : {
+                "uuid": 123,
+                "process_step": 2,
+                "type": "concrete",
+                "powder_config": [360, 370, ...],
+            } 
+        },
+        "dataset": None
+    }
+}
+"""

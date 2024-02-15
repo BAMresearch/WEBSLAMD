@@ -13,7 +13,7 @@
   <div id="chat-window" class="p-4 h-100">
     <form action="" method="post" novalidate>
       {{ form.csrf_token }} {% include 'task.html' %}
-      <div id="import_container"></div>
+      <div id="import_selection_container"></div>
       <div id="campaign_container"></div>
     </form>
   </div>
@@ -26,5 +26,7 @@
   </div>
 </main>
 <script src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"></script>
-<script src="{{url_for('design_assistant.static', filename='design_assistant_task.js')}}"></script>
+<script src="{{url_for('design_assistant.static', filename='import.js')}}"></script>
+<script src="{{url_for('design_assistant.static', filename='task.js')}}"></script>
+
 {%endblock%}
