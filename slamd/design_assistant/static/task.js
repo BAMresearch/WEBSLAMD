@@ -9,6 +9,7 @@ async function selectDesignTask(task) {
 
 const task_options = document.querySelectorAll('#tasks input[type="radio"]');
 
+
 task_options.forEach(function (option) {
   option.addEventListener("click", function () {
     let task;
@@ -17,7 +18,6 @@ task_options.forEach(function (option) {
     } else {
       task = "data_creation";
     }
-    console.log(option.value);
     selectDesignTask(task);
     task_options.forEach(function (otherRadio) {
       if (otherRadio !== option) {

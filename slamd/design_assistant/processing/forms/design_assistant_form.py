@@ -14,7 +14,5 @@ from slamd.design_assistant.processing.forms.campaign_form import (
 class DesignAssistantForm(Form):
 
     task_form = FormField(TaskForm)
-
     import_form = FormField(ImportSelectionForm)
-
     campaign_form = FormField(CampaignForm)

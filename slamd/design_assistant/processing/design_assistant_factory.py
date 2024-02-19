@@ -10,8 +10,8 @@ from flask import session
 class DesignAssistantFactory:
 
     @classmethod
-    def create_design_assistant_form(cls, session):
-        form = DesignAssistantForm(session)
+    def create_design_assistant_form(cls):
+        form = DesignAssistantForm()
         return form
 
     @classmethod

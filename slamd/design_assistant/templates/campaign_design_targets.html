@@ -1,15 +1,29 @@
 {% block content %}
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
-    {{ form.target_strength_field.label }} {{ form.target_strength_field }} {{
-    form.target_workability_field.label }} {{ form.target_workability_field }}
-    {{ form.target_reactivity_field.label }} {{ form.target_reactivity_field }}
-    {{ form.target_sustainability_field.label }} {{
-    form.target_sustainability_field }}{{ form.target_cost_field.label }} {{
-    form.target_cost_field }}
-    <div>
-      <button>Optimize other +</button>
-    </div>
+    <form>
+      <div>
+        Great! What are the targets of your design (klick most important
+        targets, add target value (optional), select up to two different
+        targets)
+      </div>
+      {{ campaign_form.target_strength_field.label }} {{
+      campaign_form.target_strength_field }} {{
+      campaign_form.target_workability_field.label }} {{
+      campaign_form.target_workability_field }} {{
+      campaign_form.target_reactivity_field.label }} {{
+      campaign_form.target_reactivity_field }} {{
+      campaign_form.target_sustainability_field.label }} {{
+      campaign_form.target_sustainability_field }}{{
+      campaign_form.target_cost_field.label }} {{
+      campaign_form.target_cost_field }}
+      <!-- <div>
+                        <button>Optimize other +</button>
+                      </div> -->
+      <div>
+        {{ campaign_form.submit_button}}
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

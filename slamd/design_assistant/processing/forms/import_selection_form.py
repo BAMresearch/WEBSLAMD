@@ -7,8 +7,8 @@ class ImportSelectionForm(Form):
     import_selection_field = RadioField(
         label="Do you want to important an existing campaign?",
         choices=[
-            "Yes",
-            "No",
+            ("import_data", "Yes"),
+            ("None", "No"),
         ],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )

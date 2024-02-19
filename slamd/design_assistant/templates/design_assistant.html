@@ -11,11 +11,22 @@
   id="chat-window-container"
 >
   <div id="chat-window" class="p-4 h-100">
-    <form action="" method="post" novalidate>
-      {{ form.csrf_token }} {% include 'task.html' %}
-      <div id="import_selection_container"></div>
-      <div id="campaign_container"></div>
-    </form>
+    {{ form.csrf_token }}
+    <div id="task_selection_container">{% include 'task.html' %}</div>
+    <div id="import_selection_container">
+      {% if form.import_form is not none %} {% include 'import_selection.html'
+      %} {% endif %}
+    </div>
+    <div id="campaign_container">
+      <div id="material_type_container">
+        {% if form.campaign_form is not none %} {% include
+        'campaign_material_type.html' %} {% endif %}
+      </div>
+      <div id="design_targets_container">
+        {% if form.campaign_form is not none %} {% include
+        'campaign_design_targets.html' %} {% endif %}
+      </div>
+    </div>
   </div>
   <div
     class="w-100 border rounded-pill py-2 px-4"
@@ -25,8 +36,9 @@
     Message design assistant...
   </div>
 </main>
-<script src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"></script>
-<script src="{{url_for('design_assistant.static', filename='import.js')}}"></script>
-<script src="{{url_for('design_assistant.static', filename='task.js')}}"></script>
+<script
+  type="module"
+  src="{{url_for('design_assistant.static', filename='design_assistant.js')}}"
+></script>
 
 {%endblock%}

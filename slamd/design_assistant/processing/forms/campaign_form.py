@@ -1,15 +1,12 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import RadioField, FieldList, validators, DecimalField
+from wtforms import RadioField, validators, DecimalField, SubmitField
 
 
 class CampaignForm(Form):
 
     material_type_field = RadioField(
         label="Understood. Let’s design a Material. What do you want to create: a binder or a concrete?",
-        choices=[
-            "Concrete",
-            "Binder",
-        ],
+        choices=["Concrete", "Binder"],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
@@ -49,3 +46,4 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
+    submit_button = SubmitField()
