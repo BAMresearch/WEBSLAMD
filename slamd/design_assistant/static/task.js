@@ -1,28 +1,20 @@
-async function selectDesignTask(task) {
-  const url = "/design_assistant/task";
+const task_options = document.querySelectorAll(".task_field_option");
+
+task_options.forEach((task_option) =>
+  task_option.addEventListener("click", handle_task_selection)
+);
+
+async function handle_task_selection(event) {
+  const task = event.target.value;
   await postDataAndEmbedTemplateInPlaceholder(
-    url,
+    "/design_assistant/task",
     "import_selection_container",
     task
   );
-}
 
-const task_options = document.querySelectorAll('#tasks input[type="radio"]');
-
-
-task_options.forEach(function (option) {
-  option.addEventListener("click", function () {
-    let task;
-    if (option.value === "Zero shot predictions using LLMs") {
-      task = "zero_shot_learner";
-    } else {
-      task = "data_creation";
+  task_options.forEach(function (other_option) {
+    if (other_option !== this) {
+      other_option.disabled = true;
     }
-    selectDesignTask(task);
-    task_options.forEach(function (otherRadio) {
-      if (otherRadio !== option) {
-        otherRadio.disabled = true;
-      }
-    });
   });
-});
+}
