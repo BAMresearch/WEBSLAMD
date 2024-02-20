@@ -62,7 +62,7 @@ def handle_import():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/material", methods=["POST"])
+@design_assistant.route("/material_type", methods=["POST"])
 def handle_material():
     material_type = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(material_type, "type")
