@@ -13,7 +13,7 @@ class DesignAssistantPersistence:
         print(key)
         if key is None and value in ["zero_shot_learner", "data_creation"]:
             session["design_assistant"]["zero_shot_learner"] = {}
-        if key is None and value in ["no_import"]:
+        if key is None and value in ["no_import", "None"]:
             session["design_assistant"]["dataset"] = "None"
         if key is not None:
             session["design_assistant"]["zero_shot_learner"][key] = value
@@ -21,6 +21,7 @@ class DesignAssistantPersistence:
     @classmethod
     def get_session_for_property(cls, key):
         return session.get(key)
+
 
 """
 {

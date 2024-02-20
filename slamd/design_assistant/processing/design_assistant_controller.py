@@ -48,6 +48,7 @@ def handle_task():
 @design_assistant.route("/import_selection", methods=["POST"])
 def handle_import():
     import_selection = json.loads(request.data)
+    print(import_selection)
     DesignAssistantService.update_design_assistant_session(import_selection)
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {
