@@ -40,12 +40,22 @@ async function handle_material_type_selection(event) {
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"
   );
-  console.log("test");
   material_type_options.forEach(function (other_option) {
     if (other_option !== this) {
       other_option.disabled = true;
     }
   });
+}
+
+async function handle_design_targets(event) {
+  const design_target_inputs = document.querySelectorAll(
+    ".design_target_input"
+  );
+  const design_targets = {};
+  design_target_inputs.forEach(function (input) {
+    design_targets[input.name] = input.value;
+  });
+  console.log(design_targets);
 }
 
 function assignClickEventToTaskForm() {
@@ -74,8 +84,17 @@ function assignClickEventToMaterialTypeField() {
   );
 }
 
+function assignClickEventToSubmitButton(button_id, handle_function) {
+  const submit_button = document.getElementById(button_id);
+  submit_button.addEventListener("click", handle_function);
+}
+
 window.addEventListener("load", function () {
   assignClickEventToTaskForm();
   assignClickEventToImportForm();
   assignClickEventToMaterialTypeField();
+  assignClickEventToSubmitButton(
+    "design_targets_submit_button",
+    handle_design_targets
+  );
 });

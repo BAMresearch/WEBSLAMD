@@ -10,23 +10,27 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
-    target_strength_field = DecimalField(
-        "Optimize Strength: Target Value (optional): Min MPa"
+    design_targets_field = RadioField(
+        label="Great! What are the targets of your design? (Click most important targets, add target value optional, select up to two different targets)",
+        choices=[
+            ("strength", "Optimize Strength : "),
+            ("workability", "Optimize Workability : "),
+            ("reactivity", "Optimize Reactivity : "),
+            ("sustainability", "Optimize Sustainability : "),
+            ("cost", "Optimize Cost : "),
+        ],
+        validators=[validators.DataRequired(message="Select at least one target!")],
     )
 
-    target_workability_field = DecimalField(
-        "Optimize Workability: Slump (optional): Min mm"
-    )
+    target_strength_field = DecimalField("Target Value (optional): Min MPa ")
 
-    target_reactivity_field = DecimalField(
-        "Optimize Reactivity: Target Value (optional): Min °C"
-    )
+    target_workability_field = DecimalField("Slump (optional): Min mm ")
 
-    target_sustainability_field = DecimalField(
-        "Optimize Sustainability: Target Value (optional): Max CO_2/t"
-    )
+    target_reactivity_field = DecimalField("Target Value (optional): Min °C ")
 
-    target_cost_field = DecimalField("Optimize Cost: Target Value (optional): Max €/t")
+    target_sustainability_field = DecimalField("Target Value (optional): Max CO_2/t ")
+
+    target_cost_field = DecimalField("Target Value (optional): Max €/t ")
 
     restrain_powders_field = RadioField(
         label="Perfect! Let’s move on. What type of powders do you want to use?",
@@ -46,6 +50,4 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
-    submit_button = SubmitField(
-        "Save"
-    )
+    submit_button = SubmitField("Save")

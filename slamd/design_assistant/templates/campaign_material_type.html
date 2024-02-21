@@ -8,9 +8,8 @@
       {% if option.data == campaign_form.material_type_field.data %}checked {%
       endif %} {% if campaign_form.material_type_field.data %} disabled {% endif
       %}/>
-      <label for="{{ option.id }}">{{ option.label.text }}</label>
+      <label>{{ option.label.text }}</label>
     </div>
-
     {% endfor %}
   </div>
 </div>

@@ -1,29 +1,34 @@
 {% block content %}
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
-    <form>
+    <div>{{ campaign_form.design_targets_field.label }}</div>
+    {% for option in campaign_form.design_targets_field %}
+    <div class="design_target_option_container d-flex justify-content-between">
+
       <div>
-        Great! What are the targets of your design (klick most important
-        targets, add target value (optional), select up to two different
-        targets)
-      </div>
-      {{ campaign_form.target_strength_field.label }} {{
-      campaign_form.target_strength_field }} {{
-      campaign_form.target_workability_field.label }} {{
-      campaign_form.target_workability_field }} {{
-      campaign_form.target_reactivity_field.label }} {{
-      campaign_form.target_reactivity_field }} {{
-      campaign_form.target_sustainability_field.label }} {{
-      campaign_form.target_sustainability_field }}{{
-      campaign_form.target_cost_field.label }} {{
-      campaign_form.target_cost_field }}
-      <!-- <div>
-                        <button>Optimize other +</button>
-                      </div> -->
-      <div>
-        {{ campaign_form.submit_button}}
-      </div>
-    </form>
+        <input class="design_target_option" value="{{option.data}}"
+        type="radio" {% if option.data == campaign_form.design_targets_field.data
+          %}checked {% endif %} {% if campaign_form.design_targets_field.data %}
+          disabled {% endif %}/>
+          <label">{{ option.label.text }}</label>
+        </div><div>
+
+          {% if loop.index == 1
+            %} {{campaign_form.target_strength_field.label }}<input class="design_target_value" {% if campaign_form.target_strength_field.data is not none %} value="{{ campaign_form.target_strength_field.data}}" {% endif %} disabled/>
+            {% elif loop.index == 2
+              %} {{campaign_form.target_workability_field.label }}<input class="design_target_value" {% if campaign_form.target_workability_field.data is not none %} value="{{ campaign_form.target_workability_field.data}}" {% endif %} disabled/>
+              {% elif loop.index == 3
+                %} {{campaign_form.target_reactivity_field.label }}<input class="design_target_value"  {% if campaign_form.target_reactivity_field.data is not none %} value="{{ campaign_form.target_reactivity_field.data}}" {% endif %} disabled/>
+                {% elif loop.index == 4
+                  %} {{campaign_form.target_sustainability_field.label }}<input class="design_target_value"  {% if campaign_form.target_sustainability_field.data is not none %} value="{{ campaign_form.target_sustainability_field.data}}" {% endif %}disabled/>
+                  {% elif loop.index == 5
+                    %} {{campaign_form.target_cost_field.label }}<input class="design_target_value"  {% if campaign_form.target_cost_field.data is not none %} value="{{ campaign_form.target_cost_field.data}}" {% endif %} disabled/>
+                    {% endif %}
+                  </div>
+                  </div>
+                  {% endfor %}
+
+    <div><button id="design_targets_submit_button">Save</button></div>
   </div>
 </div>
 {% endblock %}
