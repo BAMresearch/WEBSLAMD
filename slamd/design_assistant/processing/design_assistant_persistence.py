@@ -9,11 +9,10 @@ class DesignAssistantPersistence:
 
     @classmethod
     def update_session(cls, value, key):
-        # print(value)
         print(key)
         if key is None and value in ["zero_shot_learner", "data_creation"]:
             session["design_assistant"]["zero_shot_learner"] = {}
-        if key is None and value in ["no_import", "None"]:
+        if key is None and value in ["import_data", "None"]:
             session["design_assistant"]["dataset"] = "None"
         if key is not None:
             session["design_assistant"]["zero_shot_learner"][key] = value

@@ -37,6 +37,7 @@ async function handle_material_type_selection(event) {
     "design_targets_container",
     material_type_selection
   );
+  assignClickEventToDesignTargetForm();
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"
   );
@@ -47,15 +48,44 @@ async function handle_material_type_selection(event) {
   });
 }
 
-async function handle_design_targets(event) {
-  const design_target_inputs = document.querySelectorAll(
-    ".design_target_input"
+async function handle_design_targets_submission(event) {
+  const design_target_values = document.querySelectorAll(
+    ".design_target_value"
   );
-  const design_targets = {};
-  design_target_inputs.forEach(function (input) {
-    design_targets[input.name] = input.value;
+  const design_targets = [];
+  design_target_values.forEach(function (design_target_value) {
+    console.log(design_target_value);
+    if (design_target_value.value)
+      design_targets.push(design_target_value.value);
   });
   console.log(design_targets);
+}
+
+function handle_design_targets_selection(event) {
+  const design_target_value = event.target
+    .closest("div")
+    .nextElementSibling.querySelector(".design_target_value");
+  design_target_value.disabled = false;
+  design_target_value.focus();
+  const design_target_options = document.querySelectorAll(
+    ".design_target_option"
+  );
+  const count = count_selected_options(design_target_options);
+  design_target_options.forEach(function (design_target_option) {
+    if (count >= 2 && !design_target_option.checked) {
+      design_target_option.disabled = true;
+    }
+  });
+}
+
+function count_selected_options(options) {
+  let count = 0;
+  options.forEach(function (option) {
+    if (option.checked) {
+      ++count;
+    }
+  });
+  return count;
 }
 
 function assignClickEventToTaskForm() {
@@ -86,7 +116,21 @@ function assignClickEventToMaterialTypeField() {
 
 function assignClickEventToSubmitButton(button_id, handle_function) {
   const submit_button = document.getElementById(button_id);
-  submit_button.addEventListener("click", handle_function);
+  if (submit_button) {
+    submit_button.addEventListener("click", handle_function);
+  }
+}
+
+function assignClickEventToDesignTargetForm() {
+  const design_target_options = document.querySelectorAll(
+    ".design_target_option"
+  );
+  design_target_options.forEach(function (design_target_option) {
+    design_target_option.addEventListener(
+      "click",
+      handle_design_targets_selection
+    );
+  });
 }
 
 window.addEventListener("load", function () {
@@ -95,6 +139,7 @@ window.addEventListener("load", function () {
   assignClickEventToMaterialTypeField();
   assignClickEventToSubmitButton(
     "design_targets_submit_button",
-    handle_design_targets
+    handle_design_targets_submission
   );
+  assignClickEventToDesignTargetForm();
 });
