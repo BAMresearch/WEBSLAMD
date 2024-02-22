@@ -37,6 +37,10 @@ async function handle_material_type_selection(event) {
     "design_targets_container",
     material_type_selection
   );
+  assignClickEventToSubmitButton(
+    "design_targets_submit_button",
+    handle_design_targets_submission
+  );
   assignClickEventToDesignTargetForm();
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"
@@ -52,13 +56,24 @@ async function handle_design_targets_submission(event) {
   const design_target_values = document.querySelectorAll(
     ".design_target_value"
   );
-  const design_targets = [];
+  const design_targets = {};
   design_target_values.forEach(function (design_target_value) {
-    console.log(design_target_value);
     if (design_target_value.value)
-      design_targets.push(design_target_value.value);
+      design_targets[design_target_value.name] = design_target_value.value;
   });
-  console.log(design_targets);
+  //   await postDataAndEmbedTemplateInPlaceholder(
+  //     "/design_assistant/design_targets",
+  //     "design_targets_container",
+  //     design_targets
+  //   );
+  const token = document.getElementById("csrf_token").value;
+  await fetch("/design_assistant/design_targets", {
+    method: "POST",
+    headers: {
+      "X-CSRF-TOKEN": token,
+    },
+    body: JSON.stringify(design_targets),
+  });
 }
 
 function handle_design_targets_selection(event) {

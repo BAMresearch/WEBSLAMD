@@ -30,9 +30,17 @@ class DesignAssistantService:
                     for key, value in design_assistant_session[
                         "zero_shot_learner"
                     ].items():
-                        print(key)
                         if key == "type":
                             form.campaign_form.material_type_field.data = value
+                        if key == "design_targets":
+                            design_target_options = []
+                            for design_target in value:
+                                design_target_option = list(design_target.keys())[0]
+                                design_target_options.append(design_target_option)
+                            form.campaign_form.design_targets_field.data = (
+                                design_target_options
+                            )
+                            # add design_target_values into fields here
             else:
                 form.campaign_form = None
         return form

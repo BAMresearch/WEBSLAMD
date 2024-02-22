@@ -1,5 +1,13 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import RadioField, validators, DecimalField, SubmitField
+from wtforms import (
+    RadioField,
+    validators,
+    DecimalField,
+    SubmitField,
+    SelectMultipleField,
+    widgets,
+)
+from wtforms.widgets import ListWidget, CheckboxInput
 
 
 class CampaignForm(Form):
@@ -10,7 +18,7 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
-    design_targets_field = RadioField(
+    design_targets_field = SelectMultipleField(
         label="Great! What are the targets of your design? (Click most important targets, add target value optional, select up to two different targets)",
         choices=[
             ("strength", "Optimize Strength : "),
@@ -19,6 +27,8 @@ class CampaignForm(Form):
             ("sustainability", "Optimize Sustainability : "),
             ("cost", "Optimize Cost : "),
         ],
+        widget=ListWidget(prefix_label=False),
+        option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Select at least one target!")],
     )
 

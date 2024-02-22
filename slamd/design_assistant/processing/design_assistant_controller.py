@@ -76,9 +76,20 @@ def handle_material():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/target_values", methods=["POST"])
+@design_assistant.route("/design_targets", methods=["POST"])
 def handle_target_values():
-    pass
+    design_targets = json.loads(request.data)
+    print(design_targets)
+    DesignAssistantService.update_design_assistant_session(design_targets)
+    print(session)
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {
+        "template": render_template(
+            "campaign_powders.html", campaign_form=campaign_form
+        )
+    }
+    # return make_response(jsonify(body), 200)
+    return "test response"
 
 
 @design_assistant.route("/powders", methods=["POST"])

@@ -2,31 +2,115 @@
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
     <div>{{ campaign_form.design_targets_field.label }}</div>
-    {% for option in campaign_form.design_targets_field %}
+    {% set labels_to_check = ["Label 1", "Label 2"] %} {% for option in
+    campaign_form.design_targets_field %}
     <div class="design_target_option_container d-flex justify-content-between">
-
       <div>
-        <input class="design_target_option" value="{{option.data}}"
-        type="radio" {% if option.data == campaign_form.design_targets_field.data
-          %}checked {% endif %} {% if campaign_form.design_targets_field.data %}
-          disabled {% endif %}/>
-          <label">{{ option.label.text }}</label>
-        </div><div>
-
-          {% if loop.index == 1
-            %} {{campaign_form.target_strength_field.label }}<input class="design_target_value ms-2" type="number" step="0.01" {% if campaign_form.target_strength_field.data is not none %} value="{{ campaign_form.target_strength_field.data}}" {% endif %} disabled/>
-            {% elif loop.index == 2
-              %} {{campaign_form.target_workability_field.label }}<input class="design_target_value ms-2"  type="number"  step="0.01" {% if campaign_form.target_workability_field.data is not none %} value="{{ campaign_form.target_workability_field.data}}" {% endif %} disabled/>
-              {% elif loop.index == 3
-                %} {{campaign_form.target_reactivity_field.label }}<input class="design_target_value ms-2"  type="number"  step="0.01" {% if campaign_form.target_reactivity_field.data is not none %} value="{{ campaign_form.target_reactivity_field.data}}" {% endif %} disabled/>
-                {% elif loop.index == 4
-                  %} {{campaign_form.target_sustainability_field.label }}<input class="design_target_value ms-2" type="number"  step="0.01"  {% if campaign_form.target_sustainability_field.data is not none %} value="{{ campaign_form.target_sustainability_field.data}}" {% endif %}disabled/>
-                  {% elif loop.index == 5
-                    %} {{campaign_form.target_cost_field.label }}<input class="design_target_value ms-2" type="number" step="0.01" {% if campaign_form.target_cost_field.data is not none %} value="{{ campaign_form.target_cost_field.data}}" {% endif %} disabled/>
-                    {% endif %}
-                  </div>
-                  </div>
-                  {% endfor %}
+        {% if campaign_form.design_targets_field.data %} {{
+        option(class_="design_target_option", disabled='disabled') }} {% else %}
+        {{option(class_="design_target_option") }} {% endif %} {{
+        option.label.text }}
+      </div>
+      <div>
+        {% if loop.index == 1 %} {{campaign_form.target_strength_field.label
+        }}<input
+          class="design_target_value ms-2"
+          name="{{option.data}}"
+          type="number"
+          step="0.01"
+          {%
+          if
+          campaign_form.target_strength_field.data
+          is
+          not
+          none
+          %}
+          value="{{ campaign_form.target_strength_field.data}}"
+          {%
+          endif
+          %}
+          disabled
+        />
+        {% elif loop.index == 2 %}
+        {{campaign_form.target_workability_field.label }}<input
+          class="design_target_value ms-2"
+          name="{{option.data}}"
+          type="number"
+          step="0.01"
+          {%
+          if
+          campaign_form.target_workability_field.data
+          is
+          not
+          none
+          %}
+          value="{{ campaign_form.target_workability_field.data}}"
+          {%
+          endif
+          %}
+          disabled
+        />
+        {% elif loop.index == 3 %} {{campaign_form.target_reactivity_field.label
+        }}<input
+          class="design_target_value ms-2"
+          name="{{option.data}}"
+          type="number"
+          step="0.01"
+          {%
+          if
+          campaign_form.target_reactivity_field.data
+          is
+          not
+          none
+          %}
+          value="{{ campaign_form.target_reactivity_field.data}}"
+          {%
+          endif
+          %}
+          disabled
+        />
+        {% elif loop.index == 4 %}
+        {{campaign_form.target_sustainability_field.label }}<input
+          class="design_target_value ms-2"
+          name="{{option.data}}"
+          type="number"
+          step="0.01"
+          {%
+          if
+          campaign_form.target_sustainability_field.data
+          is
+          not
+          none
+          %}
+          value="{{ campaign_form.target_sustainability_field.data}}"
+          {%
+          endif
+          %}
+          disabled
+        />
+        {% elif loop.index == 5 %} {{campaign_form.target_cost_field.label
+        }}<input
+          class="design_target_value ms-2"
+          name="{{option.data}}"
+          type="number"
+          step="0.01"
+          {%
+          if
+          campaign_form.target_cost_field.data
+          is
+          not
+          none
+          %}
+          value="{{ campaign_form.target_cost_field.data}}"
+          {%
+          endif
+          %}
+          disabled
+        />
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
 
     <div><button id="design_targets_submit_button">Save</button></div>
   </div>
