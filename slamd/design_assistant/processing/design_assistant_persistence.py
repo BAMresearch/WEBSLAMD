@@ -18,11 +18,12 @@ class DesignAssistantPersistence:
         if isinstance(value, dict):
             design_targets = []
             for k, v in value.items():
-                design_targets.append({k : v})
+                design_targets.append({k: v})
             session["design_assistant"]["zero_shot_learner"][
                 "design_targets"
             ] = design_targets
-
+        if isinstance(value, list):
+            session["design_assistant"]["zero_shot_learner"]["design_targets"] = value
 
     @classmethod
     def get_session_for_property(cls, key):

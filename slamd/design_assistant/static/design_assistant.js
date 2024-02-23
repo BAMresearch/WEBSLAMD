@@ -53,19 +53,25 @@ async function handle_material_type_selection(event) {
 }
 
 async function handle_design_targets_submission(event) {
-  const design_target_values = document.querySelectorAll(
-    ".design_target_value"
+  let design_targets = {};
+  const design_target_options = document.querySelectorAll(
+    ".design_target_option"
   );
-  const design_targets = {};
-  design_target_values.forEach(function (design_target_value) {
-    if (design_target_value.value)
+  design_target_options.forEach(function (option) {
+    if (option.checked) {
+      const design_target_value = option
+        .closest("div")
+        .nextElementSibling.querySelector(".design_target_value");
       design_targets[design_target_value.name] = design_target_value.value;
+    }
   });
+
   //   await postDataAndEmbedTemplateInPlaceholder(
   //     "/design_assistant/design_targets",
   //     "design_targets_container",
   //     design_targets
   //   );
+  console.log(design_targets);
   const token = document.getElementById("csrf_token").value;
   await fetch("/design_assistant/design_targets", {
     method: "POST",
@@ -80,8 +86,13 @@ function handle_design_targets_selection(event) {
   const design_target_value = event.target
     .closest("div")
     .nextElementSibling.querySelector(".design_target_value");
-  design_target_value.disabled = false;
-  design_target_value.focus();
+  if (design_target_value.disabled) {
+    design_target_value.disabled = false;
+    design_target_value.focus();
+  } else {
+    design_target_value.disabled = true;
+    design_target_value.value = "";
+  }
   const design_target_options = document.querySelectorAll(
     ".design_target_option"
   );
@@ -89,6 +100,8 @@ function handle_design_targets_selection(event) {
   design_target_options.forEach(function (design_target_option) {
     if (count >= 2 && !design_target_option.checked) {
       design_target_option.disabled = true;
+    } else {
+      design_target_option.disabled = false;
     }
   });
 }
