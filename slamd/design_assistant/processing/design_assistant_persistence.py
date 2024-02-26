@@ -28,3 +28,8 @@ class DesignAssistantPersistence:
     @classmethod
     def get_session_for_property(cls, key):
         return session.get(key)
+
+    @classmethod
+    def delete_session_key(cls, key):
+        if key in session.keys():
+            session.pop(key)

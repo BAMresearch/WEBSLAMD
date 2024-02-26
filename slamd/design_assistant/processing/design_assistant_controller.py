@@ -1,4 +1,12 @@
-from flask import Blueprint, render_template, request, make_response, jsonify, session
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    make_response,
+    jsonify,
+    session,
+    redirect,
+)
 import json
 
 from slamd.design_assistant.processing.design_assistant_service import (
@@ -100,3 +108,10 @@ def handle_powders():
 @design_assistant.route("/liquids", methods=["POST"])
 def handle_liquids():
     pass
+
+
+@design_assistant.route("/delete_session", methods=["POST"])
+def handle_delete_session():
+    print("redirecting...")
+    DesignAssistantService.delete_design_assistant_session()
+    return redirect("/")

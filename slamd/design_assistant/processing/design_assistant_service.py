@@ -42,17 +42,19 @@ class DesignAssistantService:
                                     form.campaign_form.target_strength_field.data = (
                                         design_target_value
                                     )
-                                if design_target_option == 'workability':
-                                    form.campaign_form.target_workability_field.data = design_target_value
-                                if design_target_option == 'reactivity':
+                                if design_target_option == "workability":
+                                    form.campaign_form.target_workability_field.data = (
+                                        design_target_value
+                                    )
+                                if design_target_option == "reactivity":
                                     form.campaign_form.target_reactivity_field.data = (
                                         design_target_value
                                     )
-                                if design_target_option == 'sustainability':
+                                if design_target_option == "sustainability":
                                     form.campaign_form.target_sustainability_field.data = (
                                         design_target_value
                                     )
-                                if design_target_option == 'cost':
+                                if design_target_option == "cost":
                                     form.campaign_form.target_cost_field.data = (
                                         design_target_value
                                     )
@@ -89,3 +91,7 @@ class DesignAssistantService:
     @classmethod
     def populate_form(cls):
         pass
+
+    @classmethod
+    def delete_design_assistant_session(cls):
+        DesignAssistantPersistence.delete_session_key("design_assistant")
