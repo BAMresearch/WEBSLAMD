@@ -112,7 +112,19 @@
     </div>
     {% endfor %}
 
-    <div><button id="design_targets_submit_button">Save</button></div>
+    <div>
+      <button
+        id="design_targets_submit_button"
+        {%
+        if
+        campaign_form.design_targets_field.data
+        %}disabled{%
+        endif
+        %}
+      >
+        Save
+      </button>
+    </div>
   </div>
 </div>
 {% endblock %}

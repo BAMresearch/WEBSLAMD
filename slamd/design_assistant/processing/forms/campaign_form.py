@@ -42,15 +42,21 @@ class CampaignForm(Form):
 
     target_cost_field = DecimalField("Target Value (optional): Max €/t ")
 
-    restrain_powders_field = RadioField(
+    select_powders_field = SelectMultipleField(
         label="Perfect! Let’s move on. What type of powders do you want to use?",
-        choices=["add OPC", "Fly Ash", "GGBFS", "Geopolymer", "other"],
-        validators=[validators.DataRequired(message="Selection cannot be empty!")],
+        choices=[
+            ("opc", "Add OPC"),
+            ("fly_ash", "Fly Ash"),
+            ("ggbfs", "GGBFS"),
+            ("geopolymer", "Geopolymer"),
+        ],
+        option_widget=CheckboxInput(),
+        validators=[validators.DataRequired(message="Select at least one powder!")],
     )
 
     blend_powders_field = RadioField(
-        label="Blend powders?",
-        choices=["Yes", "No"],
+        label="Blend powders? (Minimum of two powders need to be selected.)",
+        choices=[("yes", "Yes"), ("no", "No")],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 

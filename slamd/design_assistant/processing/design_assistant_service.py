@@ -61,6 +61,20 @@ class DesignAssistantService:
                             form.campaign_form.design_targets_field.data = (
                                 design_target_options
                             )
+                        if key == "powders":
+                            for (
+                                powder_session_key,
+                                powder_session_value,
+                            ) in value.items():
+                                if powder_session_key == "selected":
+                                    form.campaign_form.select_powders_field.data = (
+                                        powder_session_value
+                                    )
+                                if powder_session_key == "blend":
+                                    form.campaign_form.blend_powders_field.data = (
+                                        powder_session_value
+                                    )
+
             else:
                 form.campaign_form = None
         return form
