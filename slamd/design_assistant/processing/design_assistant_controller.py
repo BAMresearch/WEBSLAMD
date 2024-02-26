@@ -97,6 +97,10 @@ def handle_target_values():
     }
     return make_response(jsonify(body), 200)
 
+# @design_assistant.route('/design_targets/add_design_targets', methods=["POST"])
+# def handle_adding_design_targets():
+#     additional_design_target = json.loads
+
 
 @design_assistant.route("/powders", methods=["POST"])
 def handle_powders():

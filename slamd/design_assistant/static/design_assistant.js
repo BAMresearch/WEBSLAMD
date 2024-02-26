@@ -1,4 +1,4 @@
-async function handle_task_selection(event) {
+async function handleTaskSelection(event) {
   const task = event.target.value;
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/task",
@@ -14,7 +14,7 @@ async function handle_task_selection(event) {
   });
 }
 
-async function handle_import_selection(event) {
+async function handleImportSelection(event) {
   const import_selection = event.target.value;
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/import_selection",
@@ -30,7 +30,7 @@ async function handle_import_selection(event) {
   });
 }
 
-async function handle_material_type_selection(event) {
+async function handleMaterialTypeSelection(event) {
   const material_type_selection = event.target.value;
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/material_type",
@@ -39,9 +39,13 @@ async function handle_material_type_selection(event) {
   );
   assignClickEventToSubmitButton(
     "design_targets_submit_button",
-    handle_design_targets_submission
+    handleDesignTargetsSubmission
   );
   assignClickEventToDesignTargetForm();
+  assignClickEventToSubmitButton(
+    "additional_design_targets_button",
+    handleAddingDesignTargets
+  );
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"
   );
@@ -52,7 +56,7 @@ async function handle_material_type_selection(event) {
   });
 }
 
-async function handle_design_targets_submission(event) {
+async function handleDesignTargetsSubmission(event) {
   let design_targets = {};
   const design_target_options = document.querySelectorAll(
     ".design_target_option"
@@ -62,7 +66,7 @@ async function handle_design_targets_submission(event) {
       const design_target_value = option
         .closest("div")
         .nextElementSibling.querySelector(".design_target_value");
-      design_targets[design_target_value.name] = design_target_value.value;
+      design_targets[option.value] = design_target_value.value;
       option.disabled = true;
     }
   });
@@ -74,14 +78,14 @@ async function handle_design_targets_submission(event) {
 
   assignClickEventToSubmitButton(
     "powders_submit_button",
-    handle_powders_submission
+    handlePowdersSubmission
   );
   assignClickEventToPowdersForm();
   const submit_button = document.getElementById("design_targets_submit_button");
   submit_button.disabled = true;
 }
 
-function handle_design_targets_selection(event) {
+function handleDesignTargetsSelection(event) {
   const design_target_value = event.target
     .closest("div")
     .nextElementSibling.querySelector(".design_target_value");
@@ -95,7 +99,8 @@ function handle_design_targets_selection(event) {
   const design_target_options = document.querySelectorAll(
     ".design_target_option"
   );
-  const count = count_selected_options(design_target_options);
+  const count = countSelectedOptions(design_target_options);
+  const submit_button = document.getElementById("design_targets_submit_button");
   design_target_options.forEach(function (design_target_option) {
     if (count >= 2 && !design_target_option.checked) {
       design_target_option.disabled = true;
@@ -103,9 +108,14 @@ function handle_design_targets_selection(event) {
       design_target_option.disabled = false;
     }
   });
+  if (count >= 2) {
+    submit_button.disabled = false;
+  } else {
+    submit_button.disabled = true;
+  }
 }
 
-async function handle_powders_submission() {
+async function handlePowdersSubmission() {
   const powders_submission = {};
   const selected_powders = [];
   const powders_options = document.querySelectorAll(".powder_option");
@@ -141,7 +151,7 @@ async function handle_powders_submission() {
   powders_submit_button.disabled = true;
 }
 
-async function handle_powders_selection() {
+async function handlePowdersSelection() {
   const powders_options = document.querySelectorAll(".powder_option");
   const powders_submit_button = document.getElementById(
     "powders_submit_button"
@@ -163,7 +173,7 @@ async function handle_powders_selection() {
   });
 }
 
-function count_selected_options(options) {
+function countSelectedOptions(options) {
   let count = 0;
   options.forEach(function (option) {
     if (option.checked) {
@@ -176,14 +186,14 @@ function count_selected_options(options) {
 function assignClickEventToTaskForm() {
   const task_options = document.querySelectorAll(".task_field_option");
   task_options.forEach((task_option) =>
-    task_option.addEventListener("click", handle_task_selection)
+    task_option.addEventListener("click", handleTaskSelection)
   );
 }
 
 function assignClickEventToImportForm() {
   const import_options = document.querySelectorAll(".import_selection_option");
   import_options.forEach((import_option) =>
-    import_option.addEventListener("click", handle_import_selection)
+    import_option.addEventListener("click", handleImportSelection)
   );
 }
 
@@ -192,10 +202,7 @@ function assignClickEventToMaterialTypeField() {
     ".material_type_field_option"
   );
   material_type_options.forEach((material_type_option) =>
-    material_type_option.addEventListener(
-      "click",
-      handle_material_type_selection
-    )
+    material_type_option.addEventListener("click", handleMaterialTypeSelection)
   );
 }
 
@@ -213,7 +220,7 @@ function assignClickEventToDesignTargetForm() {
   design_target_options.forEach(function (design_target_option) {
     design_target_option.addEventListener(
       "click",
-      handle_design_targets_selection
+      handleDesignTargetsSelection
     );
   });
 }
@@ -221,7 +228,7 @@ function assignClickEventToDesignTargetForm() {
 function assignClickEventToPowdersForm() {
   const powder_options = document.querySelectorAll(".powder_option");
   powder_options.forEach(function (powder_option) {
-    powder_option.addEventListener("click", handle_powders_selection);
+    powder_option.addEventListener("click", handlePowdersSelection);
   });
 }
 
@@ -241,6 +248,61 @@ async function handleDeleteDesignAssistantSession() {
   }
 }
 
+function handleAddingDesignTargets() {
+  console.log("working");
+
+  const container = document.getElementById("design_target_options_container");
+
+  const design_target_option_container = document.createElement("div");
+  design_target_option_container.classList.add(
+    "design_target_option_container",
+    "d-flex",
+    "justify-content-between",
+    "additional_design_target_input"
+  );
+
+  const design_target_option_container_2 = document.createElement("div");
+
+  const design_target_option_input_checkbox = document.createElement("input");
+  design_target_option_input_checkbox.classList.add("design_target_option");
+  design_target_option_input_checkbox.type = "checkbox";
+  design_target_option_input_checkbox.value =
+    "additional design target checkbox";
+  const design_target_option_input = document.createElement("input");
+
+  const design_target_value_container = document.createElement("div");
+  const design_target_value_unit = document.createElement("input");
+  const design_target_value_input = document.createElement("input");
+  design_target_option_input.placeholder = "Name of the design target";
+  design_target_value_input.placeholder = "Target value";
+  design_target_value_input.type = "number";
+  design_target_value_input.disabled = "true";
+  design_target_value_input.step = "0.01";
+  design_target_value_unit.placeholder = "Unit";
+
+  design_target_value_input.classList.add("design_target_value");
+
+  design_target_value_container.appendChild(design_target_value_unit);
+  design_target_value_container.appendChild(design_target_value_input);
+
+  design_target_option_container_2.appendChild(
+    design_target_option_input_checkbox
+  );
+  design_target_option_container_2.appendChild(design_target_option_input);
+  design_target_option_container.appendChild(design_target_option_container_2);
+  design_target_option_container.appendChild(design_target_value_container);
+  container.appendChild(design_target_option_container);
+
+  design_target_option_input.addEventListener("input", function (event) {
+    const design_target_option =
+      event.target.closest("input").previousElementSibling;
+
+    design_target_option.value = event.target.value.toLowerCase();
+    console.log(design_target_option);
+  });
+  assignClickEventToDesignTargetForm();
+}
+
 window.addEventListener("load", function () {
   assignClickEventToSubmitButton(
     "delete_session_button",
@@ -251,12 +313,16 @@ window.addEventListener("load", function () {
   assignClickEventToMaterialTypeField();
   assignClickEventToSubmitButton(
     "design_targets_submit_button",
-    handle_design_targets_submission
+    handleDesignTargetsSubmission
   );
   assignClickEventToSubmitButton(
     "powders_submit_button",
-    handle_powders_submission
+    handlePowdersSubmission
   );
   assignClickEventToDesignTargetForm();
   assignClickEventToPowdersForm();
+  assignClickEventToSubmitButton(
+    "additional_design_targets_button",
+    handleAddingDesignTargets
+  );
 });

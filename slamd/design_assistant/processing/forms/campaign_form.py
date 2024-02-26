@@ -6,8 +6,11 @@ from wtforms import (
     SubmitField,
     SelectMultipleField,
     widgets,
+    FieldList,
+    FormField,
 )
 from wtforms.widgets import ListWidget, CheckboxInput
+from slamd.design_assistant.processing.forms.additional_design_targets_form import AdditionalDesignTargetsForm
 
 
 class CampaignForm(Form):
@@ -41,6 +44,10 @@ class CampaignForm(Form):
     target_sustainability_field = DecimalField("Target Value (optional): Max CO_2/t ")
 
     target_cost_field = DecimalField("Target Value (optional): Max €/t ")
+
+    additional_design_targets = FieldList(
+        FormField(AdditionalDesignTargetsForm), min_entries=0, max_entries=10
+    )
 
     select_powders_field = SelectMultipleField(
         label="Perfect! Let’s move on. What type of powders do you want to use?",
