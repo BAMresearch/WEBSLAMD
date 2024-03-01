@@ -70,6 +70,7 @@ async function handleDesignTargetsSubmission(event) {
       option.disabled = true;
     }
   });
+  console.log(design_targets);
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/design_targets",
     "powders_container",
@@ -81,8 +82,8 @@ async function handleDesignTargetsSubmission(event) {
     handlePowdersSubmission
   );
   assignClickEventToPowdersForm();
-  const submit_button = document.getElementById("design_targets_submit_button");
-  submit_button.disabled = true;
+  document.getElementById("additional_design_targets_button").disabled = true;
+  document.getElementById("design_targets_submit_button").disabled = true;
 }
 
 function handleDesignTargetsSelection(event) {
@@ -108,7 +109,7 @@ function handleDesignTargetsSelection(event) {
       design_target_option.disabled = false;
     }
   });
-  if (count >= 2) {
+  if (count >= 1) {
     submit_button.disabled = false;
   } else {
     submit_button.disabled = true;
@@ -156,7 +157,7 @@ async function handlePowdersSelection() {
   const powders_submit_button = document.getElementById(
     "powders_submit_button"
   );
-  const count = count_selected_options(powders_options);
+  const count = countSelectedOptions(powders_options);
   const blend_powder_options = document.querySelectorAll(
     ".blend_powder_option"
   );

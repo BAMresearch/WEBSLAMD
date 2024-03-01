@@ -38,26 +38,48 @@ class DesignAssistantService:
                                 design_target_option = list(design_target.keys())[0]
                                 design_target_options.append(design_target_option)
                                 design_target_value = list(design_target.values())[0]
-                                if design_target_option == "strength":
-                                    form.campaign_form.target_strength_field.data = (
-                                        design_target_value
-                                    )
-                                if design_target_option == "workability":
-                                    form.campaign_form.target_workability_field.data = (
-                                        design_target_value
-                                    )
-                                if design_target_option == "reactivity":
-                                    form.campaign_form.target_reactivity_field.data = (
-                                        design_target_value
-                                    )
-                                if design_target_option == "sustainability":
-                                    form.campaign_form.target_sustainability_field.data = (
-                                        design_target_value
-                                    )
-                                if design_target_option == "cost":
-                                    form.campaign_form.target_cost_field.data = (
-                                        design_target_value
-                                    )
+                                if design_target_option in [
+                                    "strength",
+                                    "workability",
+                                    "reactivity",
+                                    "sustainability",
+                                    "cost",
+                                ]:
+                                    if design_target_option == "strength":
+                                        form.campaign_form.target_strength_field.data = (
+                                            design_target_value
+                                        )
+                                    if design_target_option == "workability":
+                                        form.campaign_form.target_workability_field.data = (
+                                            design_target_value
+                                        )
+                                    if design_target_option == "reactivity":
+                                        form.campaign_form.target_reactivity_field.data = (
+                                            design_target_value
+                                        )
+                                    if design_target_option == "sustainability":
+                                        form.campaign_form.target_sustainability_field.data = (
+                                            design_target_value
+                                        )
+                                    if design_target_option == "cost":
+                                        form.campaign_form.target_cost_field.data = (
+                                            design_target_value
+                                        )
+                                else:
+                                    if form.campaign_form.additional_design_targets:
+                                        form.campaign_form.additional_design_targets.append(
+                                            {
+                                                "name": design_target_option,
+                                                "target_value": design_target_value,
+                                            }
+                                        )
+                                    else:
+                                        form.campaign_form.additional_design_targets = [
+                                            {
+                                                "name": design_target_option,
+                                                "target_value": design_target_value,
+                                            }
+                                        ]
                             form.campaign_form.design_targets_field.data = (
                                 design_target_options
                             )

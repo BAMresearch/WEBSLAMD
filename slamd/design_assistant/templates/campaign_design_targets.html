@@ -3,8 +3,7 @@
   <div class="border rounded p-2 d-inline-block">
     <div id="design_target_options_container">
       <div>{{ campaign_form.design_targets_field.label }}</div>
-      {% set labels_to_check = ["Label 1", "Label 2"] %} {% for option in
-      campaign_form.design_targets_field %}
+      {% for option in campaign_form.design_targets_field %}
       <div
         class="design_target_option_container d-flex justify-content-between"
       >
@@ -117,10 +116,64 @@
     </div>
 
     <div id="additional_design_targets_container">
-      {{ campaign_form.additional_design_targets }}
+      {% for additional_design_target in
+      campaign_form.additional_design_targets%}
+      <div
+        class="design_target_option_container d-flex justify-content-between"
+      >
+        <div>
+          <input
+            type="checkbox"
+            checked
+            {%
+            if
+            additional_design_target.value
+            is
+            not
+            none%}
+            disabled
+            {%
+            endif
+            %}
+          />
+          {{ additional_design_target.name }}
+        </div>
+        <div>
+          <input
+            class="design_target_value ms-2"
+            name="{{additional_design_target.name}}"
+            {%
+            if
+            additional_design_target.value
+            is
+            not
+            none
+            %}
+            value="{{ additional_design_target.target_value}}"
+            {%
+            endif
+            %}
+            disabled
+          />
+        </div>
+      </div>
+      {% endfor %}
     </div>
     <div>
-      <button id="additional_design_targets_button">Optimize other +</button>
+      <button
+        id="additional_design_targets_button"
+        {%
+        if
+        campaign_form.design_targets_field.data
+        is
+        not
+        none
+        %}disabled{%
+        endif
+        %}
+      >
+        Optimize other +
+      </button>
     </div>
     <div>
       <button id="design_targets_submit_button" disabled>Save</button>

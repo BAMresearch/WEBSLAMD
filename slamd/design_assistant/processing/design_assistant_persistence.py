@@ -18,6 +18,7 @@ class DesignAssistantPersistence:
             session["design_assistant"]["zero_shot_learner"]["type"] = value
         if key == "design_targets":
             if isinstance(value, dict):
+                print("is dict", value)
                 design_targets = []
                 for k, v in value.items():
                     design_targets.append({k: v})
@@ -25,6 +26,7 @@ class DesignAssistantPersistence:
                     "design_targets"
                 ] = design_targets
             if isinstance(value, list):
+                print("is list", value)
                 session["design_assistant"]["zero_shot_learner"][
                     "design_targets"
                 ] = value
