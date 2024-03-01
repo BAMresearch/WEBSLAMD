@@ -154,24 +154,16 @@ async function handlePowdersSubmission() {
 
 async function handlePowdersSelection() {
   const powders_options = document.querySelectorAll(".powder_option");
-  const powders_submit_button = document.getElementById(
-    "powders_submit_button"
-  );
   const count = countSelectedOptions(powders_options);
   const blend_powder_options = document.querySelectorAll(
     ".blend_powder_option"
   );
-  let disabled_value;
   if (count >= 2) {
-    disabled_value = false;
-    powders_submit_button.disabled = false;
-  } else {
-    disabled_value = true;
-    powders_submit_button.disabled = true;
+    blend_powder_options.forEach(function (blend_powder_option) {
+      blend_powder_option.disabled = false;
+    });
   }
-  blend_powder_options.forEach(function (blend_powder_option) {
-    blend_powder_option.disabled = disabled_value;
-  });
+  document.getElementById("powders_submit_button").disabled = false;
 }
 
 function countSelectedOptions(options) {
