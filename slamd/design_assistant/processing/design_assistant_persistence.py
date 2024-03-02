@@ -37,9 +37,12 @@ class DesignAssistantPersistence:
                 "selected": selected_powders,
                 "blend": blend_powders,
             }
-        if key == 'liquid':
+        if key == "liquid":
             selected_liquid = value
             session["design_assistant"]["zero_shot_learner"]["liquid"] = selected_liquid
+        if key == "other":
+            selected_other = value
+            session["design_assistant"]["zero_shot_learner"]["other"] = selected_other
 
     @classmethod
     def get_session_for_property(cls, key):

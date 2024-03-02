@@ -45,6 +45,11 @@
         form.campaign_form.liquids_field.data %} {% include
         'campaign_other.html' %} {% endif %}
       </div>
+      <div id="comment_container">
+        {% if form.campaign_form is not none and
+        form.campaign_form.other_field.data %} {% include 'comment.html' %} {%
+        endif %}
+      </div>
     </div>
   </div>
   <div

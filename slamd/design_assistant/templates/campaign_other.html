@@ -4,14 +4,52 @@
     <div id="other_option_container">
       {{ campaign_form.other_field.label}} {% for option in
       campaign_form.other_field %}
-      <div class="liquid_option">
-        <input type="radio" name="other_option" />
+      <div>
+        <input
+          type="radio"
+          name="other_option"
+          class="other_option"
+          value="{{ option.data }}"
+          {%
+          if
+          campaign_form.other_field.data
+          is
+          not
+          none%}
+          disabled
+          {%
+          endif
+          %}
+          {%
+          if
+          option.checked
+          %}
+          checked
+          {%
+          endif
+          %}
+        />
         <label for="{{ option.id }}">{{ option.label.text }}</label>
       </div>
       {% endfor %}
     </div>
-    <div><button id="addtional_other_button">Add other +</button></div>
-    <button id="submit_other_button">Save</button>
+    <div>
+      <button
+        id="addtional_other_button"
+        {%
+        if
+        campaign_form.other_field.data
+        is
+        not
+        none
+        %}disabled{%
+        endif
+        %}
+      >
+        Add other +
+      </button>
+    </div>
+    <button id="submit_other_button" disabled>Save</button>
   </div>
 </div>
-{% endblock%}
+{% endblock %}

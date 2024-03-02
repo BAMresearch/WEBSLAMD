@@ -126,8 +126,17 @@ def handle_liquids():
     return make_response(jsonify(body), 200)
 
 
+@design_assistant.route("/other", methods=["POST"])
+def handle_other():
+    other = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(other, "other")
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {"template": render_template("comment.html", campaign_form=campaign_form)}
+    print(session)
+    return make_response(jsonify(body), 200)
+
+
 @design_assistant.route("/delete_session", methods=["POST"])
 def handle_delete_session():
-    print("redirecting...")
     DesignAssistantService.delete_design_assistant_session()
     return redirect("/")
