@@ -1,9 +1,55 @@
 {% block content %}
 <div class="col">
   <div class="border rounded p-2 d-inline-block">
-    {{ campaign_form.liquids_field.label}} {{
-    campaign_form.liquids_field(class = 'list-unstyled') }}
-    <div><button>other +</button></div>
+    <div id="liquids_option_container">
+      {{ campaign_form.liquids_field.label}} {% for option in
+      campaign_form.liquids_field %}
+      <div>
+        <input
+          type="radio"
+          name="liquid_option"
+          class="liquid_option"
+          value="{{ option.data }}"
+          {%
+          if
+          campaign_form.liquids_field.data
+          is
+          not
+          none%}
+          disabled
+          {%
+          endif
+          %}
+          {%
+          if
+          option.checked
+          %}
+          checked
+          {%
+          endif
+          %}
+        />
+        <label for="{{ option.id }}">{{ option.label.text }}</label>
+      </div>
+      {% endfor %}
+    </div>
+    <div>
+      <button
+        id="addtional_liquid_button"
+        {%
+        if
+        campaign_form.liquids_field.data
+        is
+        not
+        none
+        %}disabled{%
+        endif
+        %}
+      >
+        Add other +
+      </button>
+    </div>
+    <button id="submit_liquid_button" disabled>Save</button>
   </div>
 </div>
 {% endblock %}

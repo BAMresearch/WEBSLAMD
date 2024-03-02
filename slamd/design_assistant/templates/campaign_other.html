@@ -1,0 +1,17 @@
+{% block content %}
+<div class="col">
+  <div class="border rounded p-2 d-inline-block">
+    <div id="other_option_container">
+      {{ campaign_form.other_field.label}} {% for option in
+      campaign_form.other_field %}
+      <div class="liquid_option">
+        <input type="radio" name="other_option" />
+        <label for="{{ option.id }}">{{ option.label.text }}</label>
+      </div>
+      {% endfor %}
+    </div>
+    <div><button id="addtional_other_button">Add other +</button></div>
+    <button id="submit_other_button">Save</button>
+  </div>
+</div>
+{% endblock%}

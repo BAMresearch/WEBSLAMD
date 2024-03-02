@@ -96,6 +96,8 @@ class DesignAssistantService:
                                     form.campaign_form.blend_powders_field.data = (
                                         powder_session_value
                                     )
+                        if key == "liquid":
+                            form.campaign_form.liquids_field.data = value
 
             else:
                 form.campaign_form = None

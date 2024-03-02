@@ -8,9 +8,12 @@ from wtforms import (
     widgets,
     FieldList,
     FormField,
+    StringField,
 )
 from wtforms.widgets import ListWidget, CheckboxInput
-from slamd.design_assistant.processing.forms.additional_design_targets_form import AdditionalDesignTargetsForm
+from slamd.design_assistant.processing.forms.additional_design_target_form import (
+    AdditionalDesignTargetForm,
+)
 
 
 class CampaignForm(Form):
@@ -24,11 +27,11 @@ class CampaignForm(Form):
     design_targets_field = SelectMultipleField(
         label="Great! What are the targets of your design? (Click most important targets, add target value optional, select up to two different targets)",
         choices=[
-            ("strength", "Optimize Strength : "),
-            ("workability", "Optimize Workability : "),
-            ("reactivity", "Optimize Reactivity : "),
-            ("sustainability", "Optimize Sustainability : "),
-            ("cost", "Optimize Cost : "),
+            ("strength", "Strength : "),
+            ("workability", "Workability : "),
+            ("reactivity", "Reactivity : "),
+            ("sustainability", "Sustainability : "),
+            ("cost", "Cost : "),
         ],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
@@ -46,7 +49,7 @@ class CampaignForm(Form):
     target_cost_field = DecimalField("Target Value (optional): Max €/t ")
 
     additional_design_targets = FieldList(
-        FormField(AdditionalDesignTargetsForm), min_entries=0, max_entries=10
+        FormField(AdditionalDesignTargetForm), min_entries=0, max_entries=10
     )
 
     select_powders_field = SelectMultipleField(
@@ -69,8 +72,24 @@ class CampaignForm(Form):
 
     liquids_field = RadioField(
         label="Great! Let's select the liquid?",
-        choices=["Pure Water", "Activator Liquid (H2O, NaOH, Na2SiO3)"],
+        choices=[
+            ("pure_water", "Pure Water"),
+            ("activator_liquid", "Activator Liquid (H2O, NaOH, Na2SiO3)"),
+        ],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
+
+    additional_liquid = StringField()
+
+    other_field = RadioField(
+        label="Anything else?",
+        choices=[
+            ("scm", "SCM"),
+            ("super_plasticizer", "Super Plasticizer"),
+        ],
+        validators=[validators.DataRequired(message="Selection cannot be empty!")],
+    )
+
+    additional_other = StringField()
 
     submit_button = SubmitField("Save")

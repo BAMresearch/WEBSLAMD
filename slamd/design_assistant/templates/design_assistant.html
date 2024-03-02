@@ -12,7 +12,7 @@
 >
   <div id="chat-window" class="p-4 h-100">
     <button id="delete_session_button" class="btn btn-primary mb-3">
-      Delete session
+      Reset conversation
     </button>
     {{ form.csrf_token }}
     <div id="task_selection_container">{% include 'task.html' %}</div>
@@ -39,6 +39,11 @@
         {% if form.campaign_form is not none and
         form.campaign_form.select_powders_field.data %} {% include
         'campaign_liquids.html' %} {% endif %}
+      </div>
+      <div id="other_container">
+        {% if form.campaign_form is not none and
+        form.campaign_form.liquids_field.data %} {% include
+        'campaign_other.html' %} {% endif %}
       </div>
     </div>
   </div>

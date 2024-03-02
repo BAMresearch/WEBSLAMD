@@ -100,11 +100,6 @@ def handle_target_values():
     return make_response(jsonify(body), 200)
 
 
-# @design_assistant.route('/design_targets/add_design_targets', methods=["POST"])
-# def handle_adding_design_targets():
-#     additional_design_target = json.loads
-
-
 @design_assistant.route("/powders", methods=["POST"])
 def handle_powders():
     powders = json.loads(request.data)
@@ -117,12 +112,18 @@ def handle_powders():
     }
     print(session)
     return make_response(jsonify(body), 200)
-    return "success"
 
 
-@design_assistant.route("/liquids", methods=["POST"])
+@design_assistant.route("/liquid", methods=["POST"])
 def handle_liquids():
-    pass
+    liquid = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(liquid, "liquid")
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {
+        "template": render_template("campaign_other.html", campaign_form=campaign_form)
+    }
+    print(session)
+    return make_response(jsonify(body), 200)
 
 
 @design_assistant.route("/delete_session", methods=["POST"])
