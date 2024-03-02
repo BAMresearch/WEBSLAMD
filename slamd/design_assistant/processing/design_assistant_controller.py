@@ -136,6 +136,16 @@ def handle_other():
     return make_response(jsonify(body), 200)
 
 
+@design_assistant.route("/comment", methods=["POST"])
+def handle_comment():
+    comment = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(comment, "comment")
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {"template": render_template("knowledge.html", campaign_form=campaign_form)}
+    print(session)
+    return make_response(jsonify(body), 200)
+
+
 @design_assistant.route("/delete_session", methods=["POST"])
 def handle_delete_session():
     DesignAssistantService.delete_design_assistant_session()

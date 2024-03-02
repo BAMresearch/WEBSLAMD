@@ -1,4 +1,14 @@
 {% block content %}
-<div>Comment</div>
-
+<div class="col">
+  <div class="border rounded p-2 d-inline-block">
+    <div id="comment_container">
+{{ campaign_form.comment_field.label }}
+<div>
+    <textarea id="comment" placeholder="Please enter your comment here"     {% if campaign_form.comment_field.data is not none %} disabled {% endif %}>{{ campaign_form.comment_field.data }}</textarea>
+</div>
+    </div>
+    <button id="submit_comment_button" disabled>Save</button>
+</div>
+</div>
+  </div></div>
 {% endblock %}

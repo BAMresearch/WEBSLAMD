@@ -317,19 +317,29 @@ function handleAddingDesignTargets() {
 }
 
 async function handleLiquidSubmission() {
+  const submit_liquid_button = document.getElementById("submit_liquid_button");
+  submit_liquid_button.disabled = "true";
+  const additional_liquid_button = document.getElementById(
+    "additional_liquid_button"
+  );
+  additional_liquid_button.disabled = "true";
   const liquid_options = document.querySelectorAll(".liquid_option");
   let liquid;
   liquid_options.forEach(function (liquid_option) {
     if (liquid_option.checked) {
       liquid = liquid_option.value;
     }
+    liquid_option.disabled = "true";
   });
-  console.log(liquid);
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/liquid",
     "other_container",
     liquid
   );
+
+  assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
+  assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
+  assignClickEventToOtherForm();
 }
 
 function handleLiquidSelection(event) {
@@ -395,18 +405,30 @@ function assignClickEventToOtherForm() {
 }
 
 async function handleOtherSubmission() {
+  const submit_other_button = document.getElementById("submit_other_button");
+  submit_other_button.disabled = "true";
+  const additional_other_button = document.getElementById(
+    "additional_other_button"
+  );
+  additional_other_button.disabled = "true";
   const other_options = document.querySelectorAll(".other_option");
   let other;
   other_options.forEach(function (other_option) {
     if (other_option.checked) {
       other = other_option.value;
     }
+    other_option.disabled = "true";
   });
   console.log(other);
   await postDataAndEmbedTemplateInPlaceholder(
     "/design_assistant/other",
     "knowledge_container",
     other
+  );
+  assignInputEventToCommentForm();
+  assignClickEventToSubmitButton(
+    "submit_comment_button",
+    handleCommentSubmission
   );
 }
 
@@ -460,6 +482,39 @@ function handleAddingOther() {
   assignInputEventToOtherForm();
 }
 
+function assignInputEventToCommentForm() {
+  const comment_input = document.getElementById("comment");
+  if (comment_input) {
+    comment_input.addEventListener("input", handleCommentInput);
+  }
+}
+
+function handleCommentInput(event) {
+  const comment_input = document.getElementById("comment");
+  const submit_comment_button = document.getElementById(
+    "submit_comment_button"
+  );
+  comment_input.value = event.target.value;
+  if (comment_input.value) {
+    submit_comment_button.disabled = false;
+  }
+}
+
+async function handleCommentSubmission() {
+  const comment_input = document.getElementById("comment");
+  comment_input.disabled = "true";
+  const submit_comment_button = document.getElementById(
+    "submit_comment_button"
+  );
+  submit_comment_button.disabled = "true";
+  console.log(comment_input.value);
+  await postDataAndEmbedTemplateInPlaceholder(
+    "/design_assistant/comment",
+    "knowledge_container",
+    comment_input.value
+  );
+}
+
 window.addEventListener("load", function () {
   assignClickEventToSubmitButton(
     "delete_session_button",
@@ -486,9 +541,17 @@ window.addEventListener("load", function () {
     "submit_liquid_button",
     handleLiquidSubmission
   );
-  assignClickEventToSubmitButton("addtional_liquid_button", handleAddingLiquid);
+  assignClickEventToSubmitButton(
+    "additional_liquid_button",
+    handleAddingLiquid
+  );
   assignClickEventToLiquidForm();
   assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
-  assignClickEventToSubmitButton("addtional_other_button", handleAddingOther);
+  assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
   assignClickEventToOtherForm();
+  assignInputEventToCommentForm();
+  assignClickEventToSubmitButton(
+    "submit_comment_button",
+    handleCommentSubmission
+  );
 });

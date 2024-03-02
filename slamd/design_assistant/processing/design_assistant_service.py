@@ -100,6 +100,8 @@ class DesignAssistantService:
                             form.campaign_form.liquids_field.data = value
                         if key == "other":
                             form.campaign_form.other_field.data = value
+                        if key == "comment":
+                            form.campaign_form.comment_field.data = value
 
             else:
                 form.campaign_form = None

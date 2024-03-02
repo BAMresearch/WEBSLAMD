@@ -50,15 +50,20 @@
         form.campaign_form.other_field.data %} {% include 'comment.html' %} {%
         endif %}
       </div>
+      <div id="knowledge_container">
+        {% if form.campaign_form is not none and
+        form.campaign_form.comment_field.data %} {% include 'knowledge.html' %}
+        {% endif %}
+      </div>
     </div>
   </div>
-  <div
+  <!-- <div
     class="w-100 border rounded-pill py-2 px-4"
     id="chat_message_input_container
   "
   >
     Message design assistant...
-  </div>
+  </div> -->
 </main>
 <script
   type="module"

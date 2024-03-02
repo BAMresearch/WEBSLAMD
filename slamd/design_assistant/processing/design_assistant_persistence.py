@@ -43,6 +43,9 @@ class DesignAssistantPersistence:
         if key == "other":
             selected_other = value
             session["design_assistant"]["zero_shot_learner"]["other"] = selected_other
+        if key == "comment":
+            selected_comment = value
+            session["design_assistant"]["zero_shot_learner"]["comment"] = selected_comment
 
     @classmethod
     def get_session_for_property(cls, key):

@@ -92,4 +92,6 @@ class CampaignForm(Form):
 
     additional_other = StringField()
 
+    comment_field = StringField(label="Ok! Is there anything else you want me to know?")
+
     submit_button = SubmitField("Save")
