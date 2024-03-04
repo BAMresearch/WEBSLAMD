@@ -161,20 +161,34 @@ async function handlePowdersSubmission() {
   assignClickEventToLiquidForm();
 }
 
-async function handlePowdersSelection() {
+function handlePowdersSelection() {
   const powders_options = document.querySelectorAll(".powder_option");
   const count = countSelectedOptions(powders_options);
   const blend_powder_options = document.querySelectorAll(
     ".blend_powder_option"
   );
+  console.log(count);
   blend_powder_options.forEach(function (blend_powder_option) {
     if (count >= 2) {
       blend_powder_option.disabled = false;
+      document.getElementById("powders_submit_button").disabled = true;
+      document.getElementById(
+        "campaign_form-blend_powders_field-1"
+      ).checked = false;
+    } else if (count == 1) {
+      document.getElementById("powders_submit_button").disabled = false;
+      document.getElementById(
+        "campaign_form-blend_powders_field-1"
+      ).checked = true;
+      blend_powder_option.disabled = true;
     } else {
       blend_powder_option.disabled = true;
+      document.getElementById("powders_submit_button").disabled = true;
     }
   });
+}
 
+function handleBlendPowdersSelection() {
   document.getElementById("powders_submit_button").disabled = false;
 }
 
@@ -234,6 +248,12 @@ function assignClickEventToPowdersForm() {
   const powder_options = document.querySelectorAll(".powder_option");
   powder_options.forEach(function (powder_option) {
     powder_option.addEventListener("click", handlePowdersSelection);
+  });
+  const blend_powder_options = document.querySelectorAll(
+    ".blend_powder_option"
+  );
+  blend_powder_options.forEach(function (blend_powder_option) {
+    blend_powder_option.addEventListener("click", handleBlendPowdersSelection);
   });
 }
 
