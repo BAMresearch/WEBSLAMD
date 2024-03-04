@@ -7,7 +7,7 @@
       <div class="border rounded p-2 d-inline-block" id="tasks">
         {{ task_form.task_field.label}} {% for option in task_form.task_field %}
         <div>
-          <input class="task_field_option" type="radio" value="{{option.data}}" {% if
+          <input class="task_field_option" type="radio" value="{{option.data}}" name="task_option" {% if
             option.data == task_form.task_field.data %}checked {% endif %} {% if
               task_form.task_field.data %} disabled {% endif %}/>
               <label for="{{ option.id }}">{{ option.label.text }}</label>
