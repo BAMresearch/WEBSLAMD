@@ -147,10 +147,12 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
         features_df = pd.DataFrame([1, 2])
         label_index = pd.Index([1], dtype='int64')
         nolabel_index = pd.Index([0, 1], dtype='int64')
+        partially_labelled_index = pd.Index([0], dtype='int64')
         return TSNEPlotData(utility=utility,
                             features_df=features_df,
                             index_all_labelled=label_index,
-                            index_none_labelled=nolabel_index)
+                            index_none_labelled=nolabel_index,
+                            index_partially_labelled=partially_labelled_index)
 
     mock_create_tsne_input_space_plot_called_with = None
 
@@ -167,4 +169,66 @@ def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
                                                                        0: {1: 0.7071067811865475,
                                                                            0: -0.7071067811865475},
                                                                        'is_train_data': {1: 'Labelled', 0: 'Predicted'},
+                                                                       'Utility': {1: 1, 0: 0}}
+
+
+def test_create_tsne_plot_calls_generator_with_proper_data(monkeypatch):
+    def mock_get_session_tsne_plot_data():
+        utility = pd.Series((0, 1), (1, 2))
+        features_df = pd.DataFrame([1, 2])
+        label_index = pd.Index([1], dtype='int64')
+        nolabel_index = pd.Index([0, 1], dtype='int64')
+        partially_labelled_index = pd.Index([0], dtype='int64')
+        return TSNEPlotData(utility=utility,
+                            features_df=features_df,
+                            index_all_labelled=label_index,
+                            index_none_labelled=nolabel_index,
+                            index_partially_labelled=partially_labelled_index)
+
+    mock_create_tsne_input_space_plot_called_with = None
+
+    def mock_create_tsne_input_space_plot(plot_df):
+        nonlocal mock_create_tsne_input_space_plot_called_with
+        mock_create_tsne_input_space_plot_called_with = plot_df
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_tsne_plot_data', mock_get_session_tsne_plot_data)
+    monkeypatch.setattr(PlotGenerator, 'create_tsne_input_space_plot', mock_create_tsne_input_space_plot)
+
+    DiscoveryService.create_tsne_plot()
+
+    assert mock_create_tsne_input_space_plot_called_with.to_dict() == {'Row number': {1: 1, 0: 2},
+                                                                       0: {1: 0.7071067811865475,
+                                                                           0: -0.7071067811865475},
+                                                                       'is_train_data': {1: 'Labelled', 0: 'Predicted'},
+                                                                       'Utility': {1: 1, 0: 0}}
+
+
+def test_create_tsne_plot_creates_plot_for_mutually_exclusively_labelled_date(monkeypatch):
+    def mock_get_session_tsne_plot_data():
+        utility = pd.Series((0, 1), (1, 2))
+        features_df = pd.DataFrame([1, 2])
+        label_index = pd.Index([], dtype='int64')
+        nolabel_index = pd.Index([], dtype='int64')
+        partially_labelled_index = pd.Index([0, 1], dtype='int64')
+        return TSNEPlotData(utility=utility,
+                            features_df=features_df,
+                            index_all_labelled=label_index,
+                            index_none_labelled=nolabel_index,
+                            index_partially_labelled=partially_labelled_index)
+
+    mock_create_tsne_input_space_plot_called_with = None
+
+    def mock_create_tsne_input_space_plot(plot_df):
+        nonlocal mock_create_tsne_input_space_plot_called_with
+        mock_create_tsne_input_space_plot_called_with = plot_df
+
+    monkeypatch.setattr(DiscoveryPersistence, 'get_session_tsne_plot_data', mock_get_session_tsne_plot_data)
+    monkeypatch.setattr(PlotGenerator, 'create_tsne_input_space_plot', mock_create_tsne_input_space_plot)
+
+    DiscoveryService.create_tsne_plot()
+
+    assert mock_create_tsne_input_space_plot_called_with.to_dict() == {'Row number': {1: 1, 0: 2},
+                                                                       0: {1: 0.7071067811865475,
+                                                                           0: -0.7071067811865475},
+                                                                       'is_train_data': {1: 'Predicted', 0: 'Predicted'},
                                                                        'Utility': {1: 1, 0: 0}}
