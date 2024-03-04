@@ -99,9 +99,6 @@
 
 /* design assistant css */
 
-#chat-window {
-  overflow-y: scroll;
-}
 
 #chat_message_input_container {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -129,4 +126,9 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #8f8f8f;
+}
+
+#chat_window {
+  overflow-y: scroll;
+ background-color: #f2f2f22e
 }

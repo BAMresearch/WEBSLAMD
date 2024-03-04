@@ -1,16 +1,23 @@
 {% block content %}
-<div class="col">
-  <div class="border rounded p-2 d-inline-block" id="import_choices">
-    {{ import_form.import_selection_field.label }} {% for option in
-    import_form.import_selection_field %}
-    <div>
-      <input class="import_selection_option" value="{{option.data}}"
-      type="radio" {% if option.data == import_form.import_selection_field.data
-      %}checked {% endif %} {% if import_form.import_selection_field.data %}
-      disabled {% endif %}/>
-      <label for="{{ option.id }}">{{ option.label.text }}</label>
-    </div>
-    {% endfor %}
-  </div>
+{% from 'icons.html' import chatbot_icon %}
+<div class="col d-flex gap-3">
+  {{ chatbot_icon(30, 30, "currentColor")}}
+  <div>
+
+    <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+    <div class="border rounded p-2 d-inline-block" id="import_choices">
+      {{ import_form.import_selection_field.label }} {% for option in
+        import_form.import_selection_field %}
+        <div>
+          <input class="import_selection_option" value="{{option.data}}"
+          type="radio" {% if option.data == import_form.import_selection_field.data
+            %}checked {% endif %} {% if import_form.import_selection_field.data %}
+            disabled {% endif %}/>
+            <label for="{{ option.id }}">{{ option.label.text }}</label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+     
 </div>
 {% endblock %}

@@ -1,13 +1,17 @@
 {% block content %}
-<div class="col">
+{% from 'icons.html' import chatbot_icon %}
+<div class="col d-flex gap-3">
+    {{ chatbot_icon(30, 30, "currentColor")}}
+    <div>
   <div class="border rounded p-2 d-inline-block">
     <div id="comment_container">
 {{ campaign_form.comment_field.label }}
 <div>
-    <textarea id="comment" placeholder="Please enter your comment here"     {% if campaign_form.comment_field.data is not none %} disabled {% endif %}>{{ campaign_form.comment_field.data }}</textarea>
+    <textarea id="comment" placeholder="Please enter your comment here"     {% if campaign_form.comment_field.data is not none %} disabled {% endif %}></textarea>
 </div>
     </div>
-    <button id="submit_comment_button" disabled>Save</button>
+    <button  class="btn btn-primary" id="submit_comment_button" disabled>Save</button>
+</div>
 </div>
 </div>
   </div></div>

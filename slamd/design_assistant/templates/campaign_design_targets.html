@@ -1,5 +1,9 @@
 {% block content %}
-<div class="col">
+{% from 'icons.html' import chatbot_icon %}
+<div class="col d-flex gap-3">
+  {{ chatbot_icon(30, 30, "currentColor")}}
+  <div>
+    <div class="fw-bold mt-1 mb-2">Design Assistant</div>
   <div class="border rounded p-2 d-inline-block">
     <div id="design_target_options_container">
       <div>{{ campaign_form.design_targets_field.label }}</div>
@@ -159,8 +163,8 @@
       </div>
       {% endfor %}
     </div>
-    <div>
-      <button
+    <div class="d-flex mt-2 gap-2">
+      <button class="btn btn-secondary"
         id="additional_design_targets_button"
         {%
         if
@@ -174,10 +178,10 @@
       >
         Optimize other +
       </button>
+      <button class="btn btn-primary" id="design_targets_submit_button" disabled>Save</button>
     </div>
-    <div>
-      <button id="design_targets_submit_button" disabled>Save</button>
-    </div>
+
+  </div>
   </div>
 </div>
 {% endblock %}

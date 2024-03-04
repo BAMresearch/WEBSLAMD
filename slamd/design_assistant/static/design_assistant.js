@@ -1,11 +1,19 @@
 async function handleTaskSelection(event) {
   const task = event.target.value;
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/task",
+  insertSpinnerInPlaceholder(
     "import_selection_container",
-    task
+    true,
+    CHATBOT_RESPONSE_SPINNER
   );
-  assignClickEventToImportForm();
+  setTimeout(async function handleSubmission() {
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/task",
+      "import_selection_container",
+      task
+    );
+    assignClickEventToImportForm();
+  }, 1000);
+
   const task_options = document.querySelectorAll(".task_field_option");
   task_options.forEach(function (other_option) {
     if (other_option !== this) {
@@ -14,14 +22,22 @@ async function handleTaskSelection(event) {
   });
 }
 
+
 async function handleImportSelection(event) {
   const import_selection = event.target.value;
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/import_selection",
+  insertSpinnerInPlaceholder(
     "material_type_container",
-    import_selection
+    true,
+    CHATBOT_RESPONSE_SPINNER
   );
-  assignClickEventToMaterialTypeField();
+  setTimeout(async function handleSubmission() {
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/import_selection",
+      "material_type_container",
+      import_selection
+      );
+    assignClickEventToMaterialTypeField();
+  }, 1000)
   const import_options = document.querySelectorAll(".import_selection_option");
   import_options.forEach(function (other_option) {
     if (other_option !== this) {
@@ -32,20 +48,27 @@ async function handleImportSelection(event) {
 
 async function handleMaterialTypeSelection(event) {
   const material_type_selection = event.target.value;
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/material_type",
+    insertSpinnerInPlaceholder(
     "design_targets_container",
-    material_type_selection
+    true,
+    CHATBOT_RESPONSE_SPINNER
   );
-  assignClickEventToSubmitButton(
-    "design_targets_submit_button",
-    handleDesignTargetsSubmission
-  );
-  assignClickEventToDesignTargetForm();
-  assignClickEventToSubmitButton(
-    "additional_design_targets_button",
-    handleAddingDesignTargets
-  );
+  setTimeout(async function handleSubmission () {
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/material_type",
+      "design_targets_container",
+      material_type_selection
+    );
+    assignClickEventToSubmitButton(
+      "design_targets_submit_button",
+      handleDesignTargetsSubmission
+    );
+    assignClickEventToDesignTargetForm();
+    assignClickEventToSubmitButton(
+      "additional_design_targets_button",
+      handleAddingDesignTargets
+    );
+  },1000)
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"
   );
@@ -58,32 +81,22 @@ async function handleMaterialTypeSelection(event) {
 
 async function handleDesignTargetsSubmission(event) {
   let design_targets = {};
-  const design_target_options = document.querySelectorAll(
-    ".design_target_option"
-  );
+  const design_target_options = document.querySelectorAll(".design_target_option");
   design_target_options.forEach(function (option) {
     if (option.checked) {
-      const design_target_value = option
-        .closest("div")
-        .nextElementSibling.querySelector(".design_target_value");
+      const design_target_value = option.closest("div").nextElementSibling.querySelector(".design_target_value");
       design_targets[option.value] = design_target_value.value;
       option.disabled = true;
     }
   });
-  console.log(design_targets);
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/design_targets",
-    "powders_container",
-    design_targets
-  );
-
-  assignClickEventToSubmitButton(
-    "powders_submit_button",
-    handlePowdersSubmission
-  );
-  assignClickEventToPowdersForm();
   document.getElementById("additional_design_targets_button").disabled = true;
   document.getElementById("design_targets_submit_button").disabled = true;
+  insertSpinnerInPlaceholder( "powders_container", true, CHATBOT_RESPONSE_SPINNER );
+  setTimeout(async function handleSubmission() {
+      await postDataAndEmbedTemplateInPlaceholder( "/design_assistant/design_targets", "powders_container", design_targets);
+      assignClickEventToSubmitButton( "powders_submit_button", handlePowdersSubmission);
+      assignClickEventToPowdersForm();
+  },1000)
 }
 
 function handleDesignTargetsSelection(event) {
@@ -128,9 +141,7 @@ async function handlePowdersSubmission() {
     option.disabled = true;
   });
   powders_submission["selected_powders"] = selected_powders;
-  const blend_powder_options = document.querySelectorAll(
-    ".blend_powder_option"
-  );
+  const blend_powder_options = document.querySelectorAll(".blend_powder_option");
   blend_powder_options.forEach(function (option) {
     if (option.checked) {
       powders_submission["blend_powders"] = option.value;
@@ -140,25 +151,18 @@ async function handlePowdersSubmission() {
   if (!powders_submission["blend_powders"]) {
     powders_submission["blend_powders"] = "no";
   }
-  console.log(powders_submission);
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/powders",
-    "liquids_container",
-    powders_submission
-  );
-  const powders_submit_button = document.getElementById(
-    "powders_submit_button"
-  );
-  powders_submit_button.disabled = true;
-  assignClickEventToSubmitButton(
-    "submit_liquid_button",
-    handleLiquidSubmission
-  );
-  assignClickEventToSubmitButton(
-    "additional_liquid_button",
-    handleAddingLiquid
-  );
-  assignClickEventToLiquidForm();
+  document.getElementById("powders_submit_button").disabled = true;
+  insertSpinnerInPlaceholder( "liquids_container", true, CHATBOT_RESPONSE_SPINNER);
+  setTimeout(async function handleSubmission(){
+      await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/powders",
+      "liquids_container",
+      powders_submission
+    );
+    assignClickEventToSubmitButton("submit_liquid_button", handleLiquidSubmission);
+    assignClickEventToSubmitButton("additional_liquid_button", handleAddingLiquid);
+    assignClickEventToLiquidForm();
+  }, 1000)
 }
 
 function handlePowdersSelection() {
@@ -351,15 +355,17 @@ async function handleLiquidSubmission() {
     }
     liquid_option.disabled = "true";
   });
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/liquid",
-    "other_container",
-    liquid
-  );
-
-  assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
-  assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
-  assignClickEventToOtherForm();
+  insertSpinnerInPlaceholder( "other_container", true, CHATBOT_RESPONSE_SPINNER );
+  setTimeout(async function handleSubmission() {
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/liquid",
+      "other_container",
+      liquid
+    );
+    assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
+    assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
+    assignClickEventToOtherForm();
+  },1000)
 }
 
 function handleLiquidSelection(event) {
@@ -440,16 +446,16 @@ async function handleOtherSubmission() {
     other_option.disabled = "true";
   });
   console.log(other);
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/other",
-    "knowledge_container",
-    other
-  );
-  assignInputEventToCommentForm();
-  assignClickEventToSubmitButton(
-    "submit_comment_button",
-    handleCommentSubmission
-  );
+  insertSpinnerInPlaceholder( "knowledge_container", true, CHATBOT_RESPONSE_SPINNER );
+  setTimeout(async function handleSubmission(){
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/other",
+      "knowledge_container",
+      other
+    );
+    assignInputEventToCommentForm();
+    assignClickEventToSubmitButton("submit_comment_button", handleCommentSubmission);
+  },1000)
 }
 
 function handleOtherSelection(event) {
@@ -514,6 +520,7 @@ function handleCommentInput(event) {
   const submit_comment_button = document.getElementById(
     "submit_comment_button"
   );
+  console.log(comment_input.value)
   comment_input.value = event.target.value;
   if (comment_input.value) {
     submit_comment_button.disabled = false;
@@ -527,12 +534,15 @@ async function handleCommentSubmission() {
     "submit_comment_button"
   );
   submit_comment_button.disabled = "true";
-  console.log(comment_input.value);
-  await postDataAndEmbedTemplateInPlaceholder(
-    "/design_assistant/comment",
-    "knowledge_container",
-    comment_input.value
-  );
+  insertSpinnerInPlaceholder( "knowledge_container", true, CHATBOT_RESPONSE_SPINNER );
+  setTimeout(async function handleSubmission() {
+    await postDataAndEmbedTemplateInPlaceholder(
+      "/design_assistant/comment",
+      "knowledge_container",
+      comment_input.value
+    );
+  },1000)
+
 }
 
 window.addEventListener("load", function () {

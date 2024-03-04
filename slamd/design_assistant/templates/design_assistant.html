@@ -7,56 +7,59 @@
 
 {% extends 'index.html' %} {% block content %}
 <main
-  class="h-75 mt-lg-5 ml-sm-auto px-md-2 py-2 container"
+  class="h-75 mt-lg-2 ml-sm-auto px-md-2 py-2 container"
   id="chat-window-container"
->
-  <div id="chat-window" class="p-4 h-100">
-    <button id="delete_session_button" class="btn btn-primary mb-3">
+>  <div class="d-flex justify-content-end mb-4">
+
+    <button id="delete_session_button" class="btn btn-primary text-end">
       Reset conversation
     </button>
+  </div>
+  <div id="chat_window" class="p-4 h-100">
     {{ form.csrf_token }}
-    <div id="task_selection_container">{% include 'task.html' %}</div>
-    <div id="import_selection_container">
+    <div id="task_selection_container" class="mb-4">{% include 'task.html' %}</div>
+    <div id="import_selection_container" class="mb-4">
       {% if form.import_form is not none %} {% include 'import_selection.html'
       %} {% endif %}
     </div>
     <div id="campaign_container">
-      <div id="material_type_container">
+      <div id="material_type_container" class="mb-4">
         {% if form.campaign_form is not none %} {% include
         'campaign_material_type.html' %} {% endif %}
       </div>
-      <div id="design_targets_container">
+      <div id="design_targets_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.material_type_field.data %} {% include
         'campaign_design_targets.html' %} {% endif %}
       </div>
-      <div id="powders_container">
+      <div id="powders_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.design_targets_field.data %} {% include
         'campaign_select_powders.html' %} {% endif %}
       </div>
-      <div id="liquids_container">
+      <div id="liquids_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.select_powders_field.data %} {% include
         'campaign_liquids.html' %} {% endif %}
       </div>
-      <div id="other_container">
+      <div id="other_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.liquids_field.data %} {% include
         'campaign_other.html' %} {% endif %}
       </div>
-      <div id="comment_container">
+      <div id="comment_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.other_field.data %} {% include 'comment.html' %} {%
         endif %}
       </div>
-      <div id="knowledge_container">
+      <div id="knowledge_container" class="mb-4">
         {% if form.campaign_form is not none and
         form.campaign_form.comment_field.data %} {% include 'knowledge.html' %}
         {% endif %}
       </div>
     </div>
   </div>
+
   <!-- <div
     class="w-100 border rounded-pill py-2 px-4"
     id="chat_message_input_container

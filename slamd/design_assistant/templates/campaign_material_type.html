@@ -1,16 +1,21 @@
 {% block content %}
-<div class="col">
-  <div class="border rounded p-2 d-inline-block">
-    {{ campaign_form.material_type_field.label }} {% for option in
-    campaign_form.material_type_field %}
+{% from 'icons.html' import chatbot_icon %}
+<div class="col d-flex gap-3">
+    {{ chatbot_icon(30, 30, "currentColor")}}
     <div>
-      <input class="material_type_field_option" type="radio" value="{{ option.data }}"
-      {% if option.data == campaign_form.material_type_field.data %}checked {%
-      endif %} {% if campaign_form.material_type_field.data %} disabled {% endif
-      %}/>
-      <label>{{ option.label.text }}</label>
-    </div>
-    {% endfor %}
-  </div>
+      <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+      <div class="border rounded p-2 d-inline-block">
+        {{ campaign_form.material_type_field.label }} {% for option in
+          campaign_form.material_type_field %}
+          <div>
+            <input class="material_type_field_option" type="radio" value="{{ option.data }}"
+            {% if option.data == campaign_form.material_type_field.data %}checked {%
+              endif %} {% if campaign_form.material_type_field.data %} disabled {% endif
+                %}/>
+                <label>{{ option.label.text }}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
 </div>
 {% endblock %}
