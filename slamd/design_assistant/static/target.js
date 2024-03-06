@@ -17,6 +17,19 @@ export function assignClickEventToDesignTargetForm() {
   });
 }
 
+function assignInputEventToDesignTargetForm() {
+  const design_target_options = document.querySelectorAll(
+      ".design_target_option"
+  );
+  design_target_options.forEach(function (design_target_option) {
+    design_target_option.addEventListener(
+        "input",
+        handleDesignTargetsSelection
+    );
+  });
+}
+
+
 export async function handleDesignTargetsSubmission(event) {
   let design_targets = {};
   const design_target_options = document.querySelectorAll(
@@ -28,9 +41,12 @@ export async function handleDesignTargetsSubmission(event) {
         .closest("div")
         .nextElementSibling.querySelector(".design_target_value");
       design_targets[option.value] = design_target_value.value;
-      option.disabled = true;
     }
+    option.disabled = true;
   });
+
+
+
   document.getElementById("additional_design_targets_button").disabled = true;
   document.getElementById("design_targets_submit_button").disabled = true;
   insertSpinnerInPlaceholder(
@@ -40,7 +56,7 @@ export async function handleDesignTargetsSubmission(event) {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/design_targets",
+      "/design_assistant/zero_shot/design_targets",
       "powders_container",
       design_targets
     );
@@ -82,39 +98,40 @@ export function handleDesignTargetsSelection(event) {
   }
 }
 
+function handleCustomDesignTargetNaming(event){
+
+}
+
 export function handleAddingDesignTargets() {
   const container = document.getElementById("design_target_options_container");
   const design_target_option_container = document.createElement("div");
-  design_target_option_container.classList.add(
-    "design_target_option_container",
-    "d-flex",
-    "justify-content-between",
-    "additional_design_target_input"
-  );
-  const design_target_option_container_2 = document.createElement("div");
+  const design_target_option_inner_container = document.createElement("div");
   const design_target_option_input_checkbox = document.createElement("input");
-  design_target_option_input_checkbox.classList.add("design_target_option");
-  design_target_option_input_checkbox.type = "checkbox";
-  design_target_option_input_checkbox.value =
-    "additional design target checkbox";
   const design_target_option_input = document.createElement("input");
   const design_target_value_container = document.createElement("div");
   const design_target_value_unit = document.createElement("input");
   const design_target_value_input = document.createElement("input");
+  design_target_option_container.classList.add("design_target_option_container", "d-flex", "justify-content-between", "additional_design_target_input");
+  design_target_option_inner_container.classList.add("d-flex", "gap-2")
+  design_target_option_input_checkbox.classList.add("design_target_option");
+  design_target_option_input_checkbox.type = "checkbox";
+  design_target_option_input_checkbox.disabled = true
+  design_target_option_input_checkbox.value = "additional design target checkbox";
+  design_target_option_input.classList.add("form-control")
   design_target_option_input.placeholder = "Name of the design target";
   design_target_value_input.placeholder = "Target value";
   design_target_value_input.type = "number";
-  design_target_value_input.disabled = "true";
+  design_target_value_input.disabled = true;
   design_target_value_input.step = "0.01";
   design_target_value_unit.placeholder = "Unit";
-  design_target_value_input.classList.add("design_target_value");
+  design_target_value_unit.classList.add("form-control")
+  design_target_value_input.classList.add("design_target_value", "form-control");
+  design_target_value_container.classList.add("d-flex", 'gap-2')
   design_target_value_container.appendChild(design_target_value_unit);
   design_target_value_container.appendChild(design_target_value_input);
-  design_target_option_container_2.appendChild(
-    design_target_option_input_checkbox
-  );
-  design_target_option_container_2.appendChild(design_target_option_input);
-  design_target_option_container.appendChild(design_target_option_container_2);
+  design_target_option_inner_container.appendChild(design_target_option_input_checkbox);
+  design_target_option_inner_container.appendChild(design_target_option_input);
+  design_target_option_container.appendChild(design_target_option_inner_container);
   design_target_option_container.appendChild(design_target_value_container);
   container.appendChild(design_target_option_container);
   design_target_option_input.addEventListener("input", function (event) {

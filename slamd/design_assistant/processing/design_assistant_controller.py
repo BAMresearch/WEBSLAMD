@@ -1,152 +1,90 @@
-from flask import (
-    Blueprint,
-    render_template,
-    request,
-    make_response,
-    jsonify,
-    session,
-    redirect,
-)
 import json
+from flask import Blueprint, render_template, request, make_response, jsonify, session
+from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 
-from slamd.design_assistant.processing.design_assistant_service import (
-    DesignAssistantService,
-)
-from slamd.design_assistant.processing.design_assistant_persistence import (
-    DesignAssistantPersistence,
-)
+design_assistant = Blueprint('design_assistant',__name__,template_folder='../templates',static_folder='../static',static_url_path='static',url_prefix='/design_assistant',)
 
-
-design_assistant = Blueprint(
-    "design_assistant",
-    __name__,
-    template_folder="../templates",
-    static_folder="../static",
-    static_url_path="static",
-    url_prefix="/design_assistant",
-)
-
-
-@design_assistant.route("/", methods=["GET"])
+@design_assistant.route('/', methods=['GET', 'DELETE'])
 def design_assistant_page():
     form = DesignAssistantService.create_design_assistant_form()
     print(session)
-    return render_template(
-        "design_assistant.html",
-        form=form,
-        task_form=form.task_form,
-        import_form=form.import_form,
-        campaign_form=form.campaign_form,
-    )
+    return render_template('design_assistant.html',form=form,task_form=form.task_form,import_form=form.import_form,campaign_form=form.campaign_form,)
 
 
-@design_assistant.route("/task", methods=["POST"])
+@design_assistant.route('/task', methods=['POST'])
 def handle_task():
     task = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(task)
+    DesignAssistantService.update_design_assistant_session(task, 'task')
     import_form = DesignAssistantService.create_design_assistant_import_selection_form()
-    body = {
-        "template": render_template("import_selection.html", import_form=import_form)
-    }
-    print(session)
-
+    body = {'template': render_template('import_selection.html', import_form=import_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/import_selection", methods=["POST"])
-def handle_import():
+@design_assistant.route('/zero_shot/import_selection', methods=['POST'])
+def handle_import_selection():
     import_selection = json.loads(request.data)
-    print(import_selection)
-    DesignAssistantService.update_design_assistant_session(import_selection)
+    DesignAssistantService.update_design_assistant_session(import_selection, 'import_selection')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {
-        "template": render_template(
-            "campaign_material_type.html",
-            campaign_form=campaign_form,
-            session=session,
-        )
-    }
-    print(session)
+    body = {'template': render_template('campaign_material_type.html',campaign_form=campaign_form,session=session,)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/material_type", methods=["POST"])
+@design_assistant.route('/zero_shot/material_type', methods=['POST'])
 def handle_material():
     material_type = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(material_type, "type")
-    print(session)
+    DesignAssistantService.update_design_assistant_session(material_type, 'type')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {
-        "template": render_template(
-            "campaign_design_targets.html", campaign_form=campaign_form
-        )
-    }
+    body = {'template': render_template('campaign_design_targets.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/design_targets", methods=["POST"])
+@design_assistant.route('/zero_shot/design_targets', methods=['POST'])
 def handle_target_values():
     design_targets = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(
-        design_targets, "design_targets"
-    )
-    print(session)
+    DesignAssistantService.update_design_assistant_session(design_targets, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {
-        "template": render_template(
-            "campaign_select_powders.html", campaign_form=campaign_form
-        )
-    }
+    body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/powders", methods=["POST"])
+@design_assistant.route('/zero_shot/powders', methods=['POST'])
 def handle_powders():
     powders = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(powders, "powders")
+    DesignAssistantService.update_design_assistant_session(powders, 'powders')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {
-        "template": render_template(
-            "campaign_liquids.html", campaign_form=campaign_form
-        )
-    }
-    print(session)
+    body = {'template': render_template('campaign_liquids.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/liquid", methods=["POST"])
+@design_assistant.route('/zero_shot/liquid', methods=['POST'])
 def handle_liquids():
     liquid = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(liquid, "liquid")
+    DesignAssistantService.update_design_assistant_session(liquid, 'liquid')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {
-        "template": render_template("campaign_other.html", campaign_form=campaign_form)
-    }
-    print(session)
+    body = {'template': render_template('campaign_other.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/other", methods=["POST"])
+@design_assistant.route('/zero_shot/other', methods=['POST'])
 def handle_other():
     other = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(other, "other")
+    DesignAssistantService.update_design_assistant_session(other, 'other')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {"template": render_template("comment.html", campaign_form=campaign_form)}
-    print(session)
+    body = {'template': render_template('comment.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/comment", methods=["POST"])
+@design_assistant.route('/zero_shot/comment', methods=['POST'])
 def handle_comment():
     comment = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(comment, "comment")
+    DesignAssistantService.update_design_assistant_session(comment, 'comment')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {"template": render_template("knowledge.html", campaign_form=campaign_form)}
-    print(session)
+    body = {'template': render_template('knowledge.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route("/delete_session", methods=["POST"])
+@design_assistant.route('/session', methods=['DELETE'])
 def handle_delete_session():
+    print(request)
     DesignAssistantService.delete_design_assistant_session()
-    return redirect("/")
+    return jsonify({'message': 'Session deleted successfully'})

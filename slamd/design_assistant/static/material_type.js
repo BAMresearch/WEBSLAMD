@@ -23,7 +23,7 @@ async function handleMaterialTypeSelection(event) {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/material_type",
+      "/design_assistant/zero_shot/material_type",
       "design_targets_container",
       material_type_selection
     );

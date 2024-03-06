@@ -1,6 +1,6 @@
 import { assignClickEventToMaterialTypeField } from "./material_type.js";
 
-export function assignClickEventToImportForm() {
+export function assignClickEventToImportSelectionForm() {
   const import_options = document.querySelectorAll(".import_selection_option");
   import_options.forEach((import_option) =>
     import_option.addEventListener("click", handleImportSelection)
@@ -16,7 +16,7 @@ async function handleImportSelection(event) {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/import_selection",
+      "/design_assistant/zero_shot/import_selection",
       "material_type_container",
       import_selection
     );

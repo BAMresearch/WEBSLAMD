@@ -191,7 +191,6 @@ async function autoUploadSessionFile() {
 async function deleteCurrentSession() {
   const token = document.getElementById("csrf_token").value;
   const url = `${window.location.protocol}//${window.location.host}/session/`;
-
   const response = await fetch(url, {
     method: "DELETE",
     headers: {

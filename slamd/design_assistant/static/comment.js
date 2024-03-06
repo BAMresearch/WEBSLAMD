@@ -8,7 +8,7 @@ export function assignInputEventToCommentForm() {
 function handleCommentInput(event) {
   const comment_input = document.getElementById("comment");
   const submit_comment_button = document.getElementById(
-    "submit_comment_button"
+      "submit_comment_button"
   );
   comment_input.value = event.target.value;
   if (comment_input.value) {
@@ -20,19 +20,19 @@ export async function handleCommentSubmission() {
   const comment_input = document.getElementById("comment");
   comment_input.disabled = "true";
   const submit_comment_button = document.getElementById(
-    "submit_comment_button"
+      "submit_comment_button"
   );
   submit_comment_button.disabled = "true";
   insertSpinnerInPlaceholder(
-    "knowledge_container",
-    true,
-    CHATBOT_RESPONSE_SPINNER
+      "knowledge_container",
+      true,
+      CHATBOT_RESPONSE_SPINNER
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/comment",
-      "knowledge_container",
-      comment_input.value
+        "/design_assistant/zero_shot/comment",
+        "knowledge_container",
+        comment_input.value
     );
   }, 1000);
 }

@@ -132,3 +132,11 @@
   overflow-y: scroll;
  background-color: #f2f2f22e
 }
+
+.chat_message_container {
+  width: 100%;
+}
+
+.chat_message {
+  width: 85%;
+}

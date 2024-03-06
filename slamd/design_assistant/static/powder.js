@@ -50,7 +50,7 @@ export async function handlePowdersSubmission() {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/powders",
+      "/design_assistant/zero_shot/powders",
       "liquids_container",
       powders_submission
     );

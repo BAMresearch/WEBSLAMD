@@ -1,4 +1,4 @@
-import { assignClickEventToImportForm } from "./import.js";
+import { assignClickEventToImportSelectionForm } from "./import_selection.js";
 
 export function assignClickEventToTaskForm() {
   const task_options = document.querySelectorAll(".task_field_option");
@@ -21,7 +21,7 @@ export async function handleTaskSelection(event) {
       "import_selection_container",
       task
     );
-    assignClickEventToImportForm();
+    assignClickEventToImportSelectionForm();
   }, 1000);
 
   const task_options = document.querySelectorAll(".task_field_option");
