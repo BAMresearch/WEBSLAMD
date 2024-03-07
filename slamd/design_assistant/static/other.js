@@ -1,5 +1,6 @@
 import { assignInputEventToCommentForm,  handleCommentSubmission} from "./comment.js";
-import {assignClickEventToSubmitButton, countSelectedOptions} from "./utils.js";
+import {assignClickEventToSubmitButton } from "./utils.js";
+
 
 export function assignClickEventToOtherForm() {
   const other_options = document.querySelectorAll(".other_option");
@@ -37,15 +38,10 @@ export async function handleOtherSubmission() {
       "comment_container",
       other
     );
-    assignClickEventToSubmitButton(
-      "submit_comment_button",
-      handleCommentSubmission
-    );
+    assignClickEventToSubmitButton("submit_comment_button", handleCommentSubmission);
     assignInputEventToCommentForm()
   }, 1000);
 }
-
-
 
 export function handleOtherSelection(event) {
   const submit_other_button = document.getElementById("submit_other_button");
@@ -58,6 +54,7 @@ export function handleOtherSelection(event) {
     submit_other_button.disabled = false;
   }
 }
+
 export function handleAddingOther() {
   const others_container = document.getElementById("other_option_container");
   const other_container = document.createElement("div");
@@ -73,5 +70,5 @@ export function handleAddingOther() {
   other_container.appendChild(other_name_input);
   others_container.appendChild(other_container);
   assignClickEventToOtherForm();
-  assignInputEventToOtherForm()
+  document.getElementById('additional_other_button').disabled = true
 }

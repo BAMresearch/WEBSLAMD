@@ -24,40 +24,35 @@
                                             {% if campaign_form.target_strength_field.data is not none %}
                                             value="{{ campaign_form.target_strength_field.data }}"
                                             {% endif %}
-                                           disabled
-                                    />
+                                           disabled/>
                                 {% elif loop.index == 2 %}
                                     {{ campaign_form.target_workability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
                                     <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_workability_field" type="number" step="0.01"
                                             {% if campaign_form.target_workability_field.data is not none %}
                                             value="{{ campaign_form.target_workability_field.data }}"
                                             {% endif %}
-                                            disabled
-                                    />
+                                            disabled/>
                                 {% elif loop.index == 3 %}
                                     {{ campaign_form.target_reactivity_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
                                     <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_reactivity_field" type="number" step="0.01"
                                             {% if campaign_form.target_reactivity_field.data is not none %}
                                             value="{{ campaign_form.target_reactivity_field.data }}"
                                             {% endif %}
-                                            disabled
-                                    />
+                                            disabled/>
                                 {% elif loop.index == 4 %}
                                     {{ campaign_form.target_sustainability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
                                     <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_sustainability_field" type="number" step="0.01"
                                             {% if campaign_form.target_sustainability_field.data is not none %}
                                             value="{{ campaign_form.target_sustainability_field.data }}"
                                             {% endif %}
-                                            disabled
-                                    />
+                                            disabled/>
                                 {% elif loop.index == 5 %}
                                     {{ campaign_form.target_cost_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
                                     <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_cost_field" type="number" step="0.01"
                                             {% if campaign_form.target_cost_field.data is not none %}
                                             value="{{ campaign_form.target_cost_field.data }}"
                                             {% endif %}
-                                            disabled
-                                    />
+                                            disabled/>
                                 {% endif %}
                             </div>
                         </div>
@@ -70,8 +65,7 @@
                                 <input type="checkbox" checked
                                         {% if additional_design_target.value is not none %}
                                         disabled
-                                        {% endif %}
-                                />
+                                        {% endif %}/>
                                 {{ additional_design_target.name }}
                             </div>
                             <div>
@@ -79,8 +73,7 @@
                                         {% if additional_design_target.value is not none %}
                                         value="{{ additional_design_target.target_value }}"
                                         {% endif %}
-                                        disabled
-                                />
+                                        disabled/>
                             </div>
                         </div>
                     {% endfor %}
@@ -89,8 +82,7 @@
                     <button class="btn btn-secondary" id="additional_design_targets_button"
                             {% if campaign_form.design_targets_field.data is not none %}
                             disabled
-                            {% endif %}
-                    >
+                            {% endif %}>
                         Optimize other +
                     </button>
                     <button class="btn btn-primary" id="design_targets_submit_button" disabled>Save</button>

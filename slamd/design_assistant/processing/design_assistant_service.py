@@ -1,6 +1,7 @@
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
+
 class DesignAssistantService:
 
     @classmethod
@@ -18,10 +19,11 @@ class DesignAssistantService:
             if 'dataset' in list(design_assistant_session.keys()):
                 cls.populate_import_selection_form_with_session_value(form, design_assistant_session)
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
-                    cls.populate_campaign_form_with_session_value(form, design_assistant_session)
+                cls.populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
                 form.campaign_form = None
         return form
+
     @classmethod
     def populate_task_form_with_session_value(cls, form, session_value):
         form.task_form.task_field.data = session_value
@@ -48,7 +50,6 @@ class DesignAssistantService:
             if key == 'comment':
                 cls.populate_comment_field_with_session_value(form, value)
 
-
     @classmethod
     def create_design_assistant_task_form(cls):
         form = DesignAssistantFactory.create_design_assistant_task_form()
@@ -66,55 +67,28 @@ class DesignAssistantService:
             design_target_option = list(design_target.keys())[0]
             design_target_options.append(design_target_option)
             design_target_value = list(design_target.values())[0]
-            if design_target_option in [
-                'strength',
-                'workability',
-                'reactivity',
-                'sustainability',
-                'cost',
-            ]:
+            if design_target_option in ['strength','workability','reactivity','sustainability','cost']:
                 if design_target_option == 'strength':
-                    form.campaign_form.target_strength_field.data = (
-                        design_target_value
-                    )
+                    form.campaign_form.target_strength_field.data = design_target_value
                 if design_target_option == 'workability':
-                    form.campaign_form.target_workability_field.data = (
-                        design_target_value
-                    )
+                    form.campaign_form.target_workability_field.data = design_target_value
                 if design_target_option == 'reactivity':
-                    form.campaign_form.target_reactivity_field.data = (
-                        design_target_value
-                    )
+                    form.campaign_form.target_reactivity_field.data = design_target_value
                 if design_target_option == 'sustainability':
-                    form.campaign_form.target_sustainability_field.data = (
-                        design_target_value
-                    )
+                    form.campaign_form.target_sustainability_field.data = design_target_value
                 if design_target_option == 'cost':
-                    form.campaign_form.target_cost_field.data = (
-                        design_target_value
-                    )
+                    form.campaign_form.target_cost_field.data = design_target_value
             else:
                 if form.campaign_form.additional_design_targets:
-                    form.campaign_form.additional_design_targets.append(
-                        {
-                            'name': design_target_option,
-                            'target_value': design_target_value,
-                        }
-                    )
+                    form.campaign_form.additional_design_targets.append({'name': design_target_option, 'target_value': design_target_value})
                 else:
-                    form.campaign_form.additional_design_targets = [
-                        {
-                            'name': design_target_option,
-                            'target_value': design_target_value,
-                        }
-                    ]
-        form.campaign_form.design_targets_field.data = (
-            design_target_options
-        )
+                    form.campaign_form.additional_design_targets = [{'name': design_target_option, 'target_value': design_target_value}]
+        form.campaign_form.design_targets_field.data = design_target_options
 
     @classmethod
     def populate_material_type_field_with_session_value(cls, form, session_value):
         form.campaign_form.material_type_field.data = session_value
+
     @classmethod
     def populate_powders_field_with_session_value(cls, form, value):
         for ( powder_session_key, powder_session_value) in value.items():
@@ -140,7 +114,6 @@ class DesignAssistantService:
     @classmethod
     def populate_comment_field_with_session_value(cls, form, value):
         form.campaign_form.comment_field.data = value
-
 
     @classmethod
     def create_design_assistant_campaign_form(cls):

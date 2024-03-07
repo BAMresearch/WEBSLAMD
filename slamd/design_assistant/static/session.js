@@ -1,6 +1,5 @@
 export async function handleDeleteDesignAssistantSession() {
   const token = document.getElementById("csrf_token").value;
-  console.log(token)
   const response = await fetch("/design_assistant/session", {
     method: "DELETE",
     headers: {

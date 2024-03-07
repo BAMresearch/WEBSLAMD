@@ -1,9 +1,6 @@
-import { assignClickEventToSubmitButton } from "./utils.js";
-import {
-  assignClickEventToPowdersForm,
-  handlePowdersSubmission,
-} from "./powder.js";
-import { countSelectedOptions } from "./utils.js";
+import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
+import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
+
 
 export function assignClickEventToDesignTargetForm() {
   const design_target_options = document.querySelectorAll(
@@ -29,12 +26,9 @@ function assignInputEventToDesignTargetForm() {
   });
 }
 
-
 export async function handleDesignTargetsSubmission(event) {
   let design_targets = {};
-  const design_target_options = document.querySelectorAll(
-    ".design_target_option"
-  );
+  const design_target_options = document.querySelectorAll(".design_target_option");
   design_target_options.forEach(function (option) {
     if (option.checked) {
       const design_target_value = option
@@ -44,9 +38,6 @@ export async function handleDesignTargetsSubmission(event) {
     }
     option.disabled = true;
   });
-
-
-
   document.getElementById("additional_design_targets_button").disabled = true;
   document.getElementById("design_targets_submit_button").disabled = true;
   insertSpinnerInPlaceholder(
@@ -60,18 +51,13 @@ export async function handleDesignTargetsSubmission(event) {
       "powders_container",
       design_targets
     );
-    assignClickEventToSubmitButton(
-      "powders_submit_button",
-      handlePowdersSubmission
-    );
+    assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
     assignClickEventToPowdersForm();
   }, 1000);
 }
 
 export function handleDesignTargetsSelection(event) {
-  const design_target_value = event.target
-    .closest("div")
-    .nextElementSibling.querySelector(".design_target_value");
+  const design_target_value = event.target.closest("div").nextElementSibling.querySelector(".design_target_value");
   if (design_target_value.disabled) {
     design_target_value.disabled = false;
     design_target_value.focus();
@@ -79,9 +65,7 @@ export function handleDesignTargetsSelection(event) {
     design_target_value.disabled = true;
     design_target_value.value = "";
   }
-  const design_target_options = document.querySelectorAll(
-    ".design_target_option"
-  );
+  const design_target_options = document.querySelectorAll(".design_target_option");
   const count = countSelectedOptions(design_target_options);
   const submit_button = document.getElementById("design_targets_submit_button");
   design_target_options.forEach(function (design_target_option) {
@@ -96,10 +80,6 @@ export function handleDesignTargetsSelection(event) {
   } else {
     submit_button.disabled = true;
   }
-}
-
-function handleCustomDesignTargetNaming(event){
-
 }
 
 export function handleAddingDesignTargets() {
@@ -135,9 +115,7 @@ export function handleAddingDesignTargets() {
   design_target_option_container.appendChild(design_target_value_container);
   container.appendChild(design_target_option_container);
   design_target_option_input.addEventListener("input", function (event) {
-    const design_target_option =
-      event.target.closest("input").previousElementSibling;
-
+    const design_target_option = event.target.closest("input").previousElementSibling;
     design_target_option.value = event.target.value.toLowerCase();
   });
   assignClickEventToDesignTargetForm();

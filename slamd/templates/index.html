@@ -1,216 +1,79 @@
 <!DOCTYPE html>
-
-{% from 'icons.html' import list_icon, question_mark_icon, download_icon,
-upload_icon, trash3_icon -%}
+{% from 'icons.html' import list_icon, question_mark_icon, download_icon, upload_icon, trash3_icon -%}
 <html lang="en" class="h-100">
-  <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width" />
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width"/>
     <title>SLAMD Dashboard</title>
     <!-- Favicon -->
-    <link
-      rel="icon"
-      type="imgae/x-icon"
-      href="https://media.glassdoor.com/sqll/1258242/bundesanstalt-f%C3%BCr-materialforschung-und-pr%C3%BCfung-squarelogo-1475059914794.png"
-    />
-
+    <link rel="icon" type="imgae/x-icon" href="https://media.glassdoor.com/sqll/1258242/bundesanstalt-f%C3%BCr-materialforschung-und-pr%C3%BCfung-squarelogo-1475059914794.png"/>
     <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
-      crossorigin="anonymous"
-    />
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
     <!-- SLAMD global CSS -->
-    <link
-      rel="stylesheet"
-      href="{{url_for('static', filename='global.css')}}"
-    />
-  </head>
-
-  <body class="h-100">
-    <nav class="navbar navbar-dark navbar-expand-lg bg-primary bg-gradient">
-      <div class="container">
-        <a
-          class="btn btn-default btn-outline-light"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#sidebar"
-          aria-controls="sidebar"
-        >
-          {{ list_icon(30, 30, "currentColor") }}
-        </a>
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}" />
+</head>
+<body class="h-100">
+<nav class="navbar navbar-dark navbar-expand-lg bg-primary bg-gradient">
+    <div class="container">
+        <a class="btn btn-default btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" >{{ list_icon(30, 30, "currentColor") }}</a>
         <a class="navbar-brand text-white ps-3" href="/"> SLAMD Dashboard </a>
         <div class="collapse navbar-collapse">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
-            <li class="nav-item">
-              <a id="nav-bar-home" class="nav-link" aria-current="page" href="/"
-                >Home</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                id="nav-bar-design-assistant"
-                class="nav-link"
-                aria-current="page"
-                href="/design_assistant"
-                >Design Assistant</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                id="nav-bar-base"
-                class="nav-link"
-                aria-current="page"
-                href="/materials/base"
-                >Base</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                id="nav-bar-blended"
-                class="nav-link"
-                aria-current="page"
-                href="/materials/blended"
-                >Blend</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                id="nav-bar-formulations"
-                class="nav-link"
-                aria-current="page"
-                href="/materials/formulations/concrete"
-                >Formulations</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                id="nav-bar-discovery"
-                class="nav-link"
-                aria-current="page"
-                href="/materials/discovery"
-                >Discovery</a
-              >
-            </li>
-          </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
+                <li class="nav-item">
+                    <a id="nav-bar-home" class="nav-link" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-bar-design-assistant" class="nav-link" aria-current="page" href="/design_assistant">Design Assistant</a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-bar-base" class="nav-link" aria-current="page" href="/materials/base">Base</a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-bar-blended" class="nav-link" aria-current="page" href="/materials/blended">Blend</a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-bar-formulations" class="nav-link" aria-current="page" href="/materials/formulations/concrete">Formulations</a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-bar-discovery" class="nav-link" aria-current="page" href="/materials/discovery">Discovery</a>
+                </li>
+            </ul>
         </div>
-        <a
-          class="btn btn-default text-white"
-          href="/session"
-          aria-controls="save"
-          data-bs-toggle="tooltip"
-          data-bs-placement="bottom"
-          title="Save session"
-        >
-          {{ download_icon(30, 30, "white") }}
-        </a>
-        <form
-          id="session-load-form"
-          method="POST"
-          enctype="multipart/form-data"
-          action="/session"
-        >
-          <!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
-          <!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
-          <!-- forms, such as the landing page, it needs to be manually added. -->
-          <input
-            type="file"
-            id="session-button-upload"
-            style="display: none"
-            accept=".json"
-          />
-          <a
-            type="button"
-            class="btn btn-default text-white"
-            id="session-button-save"
-            aria-controls="load"
-            data-bs-toggle="tooltip"
-            data-bs-placement="bottom"
-            title="Load session"
-          >
-            {{ upload_icon(30, 30, "white") }}
-          </a>
+        <a class="btn btn-default text-white" href="/session" aria-controls="save" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Save session">{{ download_icon(30, 30, "white") }}</a>
+        <form id="session-load-form" method="POST" enctype="multipart/form-data" action="/session">
+            <!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
+            <!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
+            <!-- forms, such as the landing page, it needs to be manually added. -->
+            <input type="file" id="session-button-upload" style="display: none" accept=".json"/>
+            <a type="button" class="btn btn-default text-white" id="session-button-save" aria-controls="load" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Load session">{{ upload_icon(30, 30, "white") }}</a>
         </form>
-        <div
-          data-bs-toggle="tooltip"
-          data-bs-placement="bottom"
-          title="Clear session"
-        >
-          <button
-            type="button"
-            class="btn btn-default text-white"
-            title="Clear session"
-            data-bs-target="#clear-session-dialogue"
-            aria-controls="clear"
-            data-bs-toggle="modal"
-            id="session-button-clear"
-          >
-            {{ trash3_icon(30, 30, "white") }}
-          </button>
+        <div data-bs-toggle="tooltip" data-bs-placement="bottom" title="Clear session">
+            <button type="button" class="btn btn-default text-white" title="Clear session" data-bs-target="#clear-session-dialogue" aria-controls="clear" data-bs-toggle="modal" id="session-button-clear">{{ trash3_icon(30, 30, "white") }}</button>
         </div>
-        <a
-          class="btn btn-default text-white"
-          href="/static/SLAMD-UserManual.pdf"
-          target="_blank"
-          aria-controls="manual"
-          data-bs-toggle="tooltip"
-          data-bs-placement="bottom"
-          title="User Manual"
-        >
-          {{ question_mark_icon(30, 30, "white") }}
-        </a>
-      </div>
-    </nav>
-
-    <div
-      class="modal fade"
-      id="clear-session-dialogue"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Clear Session</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>Do you really want to clear the entire session?</p>
-            <p style="color: red">
-              This will <b>delete all data</b> in your current session.
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button id="session-button-clear-confirm" class="btn btn-primary">
-              Confirm
-            </button>
-          </div>
-        </div>
-      </div>
+        <a class="btn btn-default text-white" href="/static/SLAMD-UserManual.pdf" target="_blank" aria-controls="manual" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User Manual">{{ question_mark_icon(30, 30, "white") }}</a>
     </div>
-
-    {% include 'navigation.html' %} {% block content %} {% endblock %}
-
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-      crossorigin="anonymous"
-    ></script>
-
-    <!-- SLAMD global JS file -->
-    <script src="{{url_for('static', filename='global.js')}}"></script>
-  </body>
+</nav>
+<div class="modal fade" id="clear-session-dialogue" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Clear Session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to clear the entire session?</p>
+                <p style="color: red">This will <b>delete all data</b> in your current session.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="session-button-clear-confirm" class="btn btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'navigation.html' %} {% block content %} {% endblock %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+<!-- SLAMD global JS file -->
+<script src="{{ url_for('static', filename='global.js') }}"></script>
+</body>
 </html>

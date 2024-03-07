@@ -1,5 +1,6 @@
 import { assignClickEventToMaterialTypeField } from "./material_type.js";
 
+
 export function assignClickEventToImportSelectionForm() {
   const import_options = document.querySelectorAll(".import_selection_option");
   import_options.forEach((import_option) =>

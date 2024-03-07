@@ -4,7 +4,6 @@ from slamd.design_assistant.processing.forms.import_selection_form import Import
 from slamd.design_assistant.processing.forms.campaign_form import CampaignForm
 
 
-
 class DesignAssistantFactory:
 
     @classmethod

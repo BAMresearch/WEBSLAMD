@@ -26,7 +26,6 @@ class DesignAssistantPersistence:
         if key == 'comment':
             cls.update_session_for_comment_key(value)
 
-
     @classmethod
     def update_session_for_task_key(cls, value):
         if value == 'zero_shot_learner':
@@ -45,6 +44,7 @@ class DesignAssistantPersistence:
             session['design_assistant']['zero_shot_learner']['design_targets'] = design_targets
         if isinstance(value, list):
             session['design_assistant']['zero_shot_learner']['design_targets'] = value
+
     @classmethod
     def update_session_for_material_type_key(cls, value):
         session['design_assistant']['zero_shot_learner']['type'] = value

@@ -1,9 +1,6 @@
-import {
-  assignClickEventToOtherForm,
-  handleOtherSubmission,
-  handleAddingOther,
-} from "./other.js";
+import {assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther} from "./other.js";
 import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
+
 
 function assignInputEventToLiquidForm() {
   const custom_liquid_name_field = document.querySelector(".liquid_option_name")
@@ -54,14 +51,8 @@ export async function handleLiquidSubmission() {
       "other_container",
       liquid
     );
-    assignClickEventToSubmitButton(
-      "submit_other_button",
-      handleOtherSubmission
-    );
-    assignClickEventToSubmitButton(
-      "additional_other_button",
-      handleAddingOther
-    );
+    assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
+    assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
     assignClickEventToOtherForm();
   }, 1000);
 }
@@ -72,7 +63,6 @@ function handleCustomLiquidNaming(event) {
   const custom_liquid_option = event.target.previousElementSibling;
   const count = countSelectedOptions(liquid_options)
   custom_liquid_option.value = event.target.value;
-  console.log(custom_liquid_option.checked)
   if (custom_liquid_option.checked) {
     if (event.target.value){
       submit_liquid_button.disabled = false
@@ -84,7 +74,6 @@ function handleCustomLiquidNaming(event) {
 }
 
 export function handleAddingLiquid() {
-
     const liquids_container = document.getElementById("liquids_option_container");
     const liquid_container = document.createElement("div");
     const liquid_option_input = document.createElement("input");

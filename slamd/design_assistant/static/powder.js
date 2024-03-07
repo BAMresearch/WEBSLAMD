@@ -1,19 +1,14 @@
 import { assignClickEventToSubmitButton } from "./utils.js";
 import { countSelectedOptions } from "./utils.js";
-import {
-  assignClickEventToLiquidForm,
-  handleLiquidSubmission,
-  handleAddingLiquid,
-} from "./liquid.js";
+import {assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid,} from "./liquid.js";
+
 
 export function assignClickEventToPowdersForm() {
   const powder_options = document.querySelectorAll(".powder_option");
   powder_options.forEach(function (powder_option) {
     powder_option.addEventListener("click", handlePowdersSelection);
   });
-  const blend_powder_options = document.querySelectorAll(
-    ".blend_powder_option"
-  );
+  const blend_powder_options = document.querySelectorAll(".blend_powder_option");
   blend_powder_options.forEach(function (blend_powder_option) {
     blend_powder_option.addEventListener("click", handleBlendPowdersSelection);
   });
@@ -54,14 +49,8 @@ export async function handlePowdersSubmission() {
       "liquids_container",
       powders_submission
     );
-    assignClickEventToSubmitButton(
-      "submit_liquid_button",
-      handleLiquidSubmission
-    );
-    assignClickEventToSubmitButton(
-      "additional_liquid_button",
-      handleAddingLiquid
-    );
+    assignClickEventToSubmitButton("submit_liquid_button", handleLiquidSubmission);
+    assignClickEventToSubmitButton("additional_liquid_button", handleAddingLiquid);
     assignClickEventToLiquidForm();
   }, 1000);
 }
@@ -69,8 +58,7 @@ export async function handlePowdersSubmission() {
 function handlePowdersSelection() {
   const powders_options = document.querySelectorAll(".powder_option");
   const count = countSelectedOptions(powders_options);
-  const blend_powder_options = document.querySelectorAll(
-    ".blend_powder_option"
+  const blend_powder_options = document.querySelectorAll(".blend_powder_option"
   );
 
   blend_powder_options.forEach(function (blend_powder_option) {
