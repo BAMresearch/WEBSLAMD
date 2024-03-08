@@ -55,7 +55,7 @@ class AggregatesStrategy(MaterialStrategy):
     def gather_composition_information(cls, aggregates):
         return [cls.include('Fine Aggregates (m%)', aggregates.composition.fine_aggregates),
                 cls.include('Coarse Aggregates (m%)', aggregates.composition.coarse_aggregates),
-                cls.include('Specific Gravity (kg/m³)', aggregates.composition.gravity),
+                cls.include('Specific Gravity', aggregates.composition.gravity),
                 cls.include('Bulk Density (kg/m³)', aggregates.composition.bulk_density),
                 cls.include('Fineness modulus (m³/kg)', aggregates.composition.fineness_modulus),
                 cls.include('Water absorption (m%)', aggregates.composition.water_absorption)]

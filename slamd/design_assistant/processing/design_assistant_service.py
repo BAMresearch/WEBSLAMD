@@ -13,7 +13,6 @@ class DesignAssistantService:
             form.import_form = None
             form.campaign_form = None
         if design_assistant_session:
-            print(list(design_assistant_session.keys()))
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls.populate_task_form_with_session_value(form, 'zero_shot_learner')
             if 'dataset' in list(design_assistant_session.keys()):

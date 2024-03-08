@@ -88,7 +88,7 @@ class PowderStrategy(MaterialStrategy):
                 cls.include('Mn₂O₃ (m%)', powder.composition.mn2_o3),
                 cls.include('LOI (m%)', powder.composition.loi),
                 cls.include('Fine modules (m²/kg)', powder.structure.fine),
-                cls.include('Specific gravity (m%)', powder.structure.gravity)]
+                cls.include('Specific gravity', powder.structure.gravity)]
 
     @classmethod
     def convert_to_multidict(cls, powder):
