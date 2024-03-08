@@ -1,0 +1,28 @@
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="chat_message_container">
+            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <div class="chat_message border rounded p-2 d-inline-block" id="import_choices">
+                {{ import_form.import_selection_field.label(class = "mb-3") }}
+                {% for option in import_form.import_selection_field %}
+                    <div>
+                        <input class="import_selection_option" value="{{ option.data }}"
+                               type="radio"
+                                {% if option.data == import_form.import_selection_field.data %}
+                               checked
+                                {% endif %}
+                                {% if import_form.import_selection_field.data %}
+                               disabled
+                                {% endif %}
+                                {% if option.data == 'import_data' %}
+                               disabled
+                                {% endif %} />
+                        <label for="{{ option.id }}">{{ option.label.text }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

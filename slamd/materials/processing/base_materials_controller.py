@@ -3,11 +3,11 @@ from flask import Blueprint, render_template, request, make_response, jsonify, r
 
 from slamd.materials.processing.base_materials_service import BaseMaterialService
 
-base_materials = Blueprint('base_materials', __name__,
-                           template_folder='../templates',
-                           static_folder='../static',
-                           static_url_path='static',
-                           url_prefix='/materials/base')
+base_materials = Blueprint('base_materials',__name__,
+                                  template_folder='../templates',
+                                  static_folder='../static',
+                                  static_url_path='static',
+                                  url_prefix='/materials/base',)
 
 
 @base_materials.route('', methods=['GET'])

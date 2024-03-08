@@ -1,0 +1,36 @@
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="chat_message_container">
+            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <div class="chat_message border rounded p-2 d-inline-block">
+                <div>{{ campaign_form.select_powders_field.label(class = "mb-3") }}</div>
+                <div>
+                    {% for option in campaign_form.select_powders_field %}
+                        <div>
+                            {% if campaign_form.select_powders_field.data %}
+                                {{ option(class_="powder_option", disabled='disabled') }}
+                            {% else %}
+                                {{ option(class_="powder_option") }}
+                            {% endif %}
+                            {{ option.label.text }}
+                        </div>
+                    {% endfor %}
+                    <div>{{ campaign_form.blend_powders_field.label }}</div>
+                    {% for option in campaign_form.blend_powders_field %}
+                        {% if campaign_form.blend_powders_field.data == option.data %}
+                            {{ option(class='blend_powder_option', checked='true', disabled='disabled', value="{{ option.data }}") }}
+                        {% else %}
+                            {{ option(class='blend_powder_option', disabled='disabled') }}
+                        {% endif %}
+                        {{ option.label }}
+                    {% endfor %}
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-primary" id="powders_submit_button" disabled>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
