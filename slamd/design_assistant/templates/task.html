@@ -1,0 +1,27 @@
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="chat_message_container">
+            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <div class="chat_message border rounded p-2 d-inline-block" id="tasks">
+                {{ task_form.task_field.label(class = "mb-3") }}
+                {% for option in task_form.task_field %}
+                <div>
+                    <input class="task_field_option" type="radio" value="{{ option.data }}" name="task_option"
+                            {% if option.data == task_form.task_field.data %}
+                           checked
+                            {% endif %}
+                            {% if  task_form.task_field.data %}
+                           disabled
+                            {% endif %}
+                            {% if option.data == 'data_creation' %}
+                           disabled
+                            {% endif %}/>
+                    <label for="{{ option.id }}">{{ option.label.text }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

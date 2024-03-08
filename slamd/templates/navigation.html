@@ -1,9 +1,8 @@
-{% from 'icons.html' import home_icon, bucket_icon, pencil_icon, tools_icon, search_icon -%}
-
+{% from 'icons.html' import home_icon, bucket_icon, pencil_icon, tools_icon, chatbot_icon,
+search_icon -%}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebar-label">
     <div class="offcanvas-header bg-primary bg-gradient">
-        <img src="{{ url_for('static', filename='bam_logo.jfif') }}" alt="" width="28" height="28"
-            class="rounded-circle me-2">
+        <img src="{{ url_for('static', filename='bam_logo.jfif') }}" alt="" width="28" height="28" class="rounded-circle me-2"/>
         <h5 class="offcanvas-title navbar-brand text-white" id="sidebar-label">SLAMD</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
@@ -11,38 +10,37 @@
         <ul class="nav flex-column mb-auto list-group list-group-flush">
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/">
-                    {{ home_icon(16, 16, "currentColor") }}
-                    Home
+                    {{ home_icon(16, 16, "currentColor") }} Home
+                </a>
+            </li>
+            <li class="nav-item mb-3 list-group-item list-group-item-action">
+                <a class="nav-link link-dark" aria-current="page" href="/design_assistant">
+                    {{ chatbot_icon(16, 16, "currentColor")}} Design Assistant
                 </a>
             </li>
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/materials/base">
-                    {{ bucket_icon(16, 16, "currentColor") }}
-                    Base
+                    {{ bucket_icon(16, 16, "currentColor") }} Base
                 </a>
             </li>
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/materials/blended">
-                    {{ pencil_icon(16, 16, "currentColor") }}
-                    Blend
+                    {{ pencil_icon(16, 16, "currentColor") }} Blend
                 </a>
             </li>
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/materials/formulations/concrete">
-                    {{ tools_icon(16, 16, "currentColor") }}
-                    Formulations - Concrete
+                    {{ tools_icon(16, 16, "currentColor") }} Formulations - Concrete
                 </a>
             </li>
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/materials/formulations/binder">
-                    {{ tools_icon(16, 16, "currentColor") }}
-                    Formulations - Binder
+                    {{ tools_icon(16, 16, "currentColor") }} Formulations - Binder
                 </a>
             </li>
             <li class="nav-item mb-3 list-group-item list-group-item-action">
                 <a class="nav-link link-dark" aria-current="page" href="/materials/discovery">
-                    {{ search_icon(16, 16, "currentColor") }}
-                    Discovery
+                    {{ search_icon(16, 16, "currentColor") }} Discovery
                 </a>
             </li>
         </ul>
