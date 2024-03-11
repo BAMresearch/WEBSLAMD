@@ -1,3 +1,5 @@
+from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
@@ -120,7 +122,62 @@ class DesignAssistantService:
 
     @classmethod
     def update_design_assistant_session(cls, value, key=None):
-        DesignAssistantPersistence.update_session(value, key)
+        if key == 'task':
+            if value not in ['zero_shot_learner', 'data_creation']:
+                raise ValueNotSupportedException('Provided task is not supported.')
+            DesignAssistantPersistence.update_session_for_task_key(value)
+
+        if key == 'import_selection':
+            # TODO: Story for Session Import
+            DesignAssistantPersistence.update_session_for_import_selection_key()
+
+        if key == 'type':
+            if value not in ['Concrete', 'Binder']:
+                raise ValueNotSupportedException('Provided type is not supported.')
+            DesignAssistantPersistence.update_session_for_material_type_key(value)
+
+        if key == 'design_targets':
+            target_values = value.values()
+            if len(target_values) > 2:
+                raise ValueNotSupportedException('Only up to two target values are supported.')
+            for item in target_values:
+                if not_empty(item) and not_numeric(item):
+                    raise ValueNotSupportedException('Only numerical values ar allowed.')
+            DesignAssistantPersistence.update_session_for_design_targets_key(value)
+
+        if key == 'powders':
+            if not cls._valid_powder_selection(value):
+                raise ValueNotSupportedException('Powder selection is not valid.')
+            DesignAssistantPersistence.update_session_for_powders_key(value)
+
+        if key == 'liquid':
+            # TODO: implement AI-based check that input string is indeed a liquid
+            # For now: By setting the mask length to 20 for custom fields, we reduce the risk of injections
+            if value not in ['pure_water', 'activator_liquid'] and len(value) > 20:
+                raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
+                                                 'shall be given, it cannot be longer than 20 characters')
+            DesignAssistantPersistence.update_session_for_liquid_key(value)
+
+        if key == 'other':
+            # TODO: implement AI-based check that input string is not harmful
+            # For now: By setting the mask length to 20 for custom fields, we reduce the risk of injections
+            if value not in ['scm', 'super_plasticizer'] and len(value) > 20:
+                raise ValueNotSupportedException('Other selection is not valid. If a custom name '
+                                                 'shall be given, it cannot be longer than 20 characters')
+            DesignAssistantPersistence.update_session_for_other_key(value)
+
+        if key == 'comment':
+            # TODO: implement AI-based check that input string is not harmful
+            DesignAssistantPersistence.update_session_for_comment_key(value)
+
+    @classmethod
+    def _valid_powder_selection(cls, value):
+        blend = value['blend_powders']
+        selected_powders = value['selected_powders']
+        if all(x in ['opc', 'geopolymer', 'ggbfs', 'fly_ash'] for x in selected_powders):
+            if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['yes', 'no']:
+                return True
+        return False
 
     @classmethod
     def delete_design_assistant_session(cls):
