@@ -1,7 +1,6 @@
-from slamd.design_assistant.processing.forms.design_assistant_form import DesignAssistantForm
-from slamd.design_assistant.processing.forms.task_form import TaskForm
-from slamd.design_assistant.processing.forms.import_selection_form import ImportSelectionForm
 from slamd.design_assistant.processing.forms.campaign_form import CampaignForm
+from slamd.design_assistant.processing.forms.design_assistant_form import DesignAssistantForm
+from slamd.design_assistant.processing.forms.import_selection_form import ImportSelectionForm
 
 
 class DesignAssistantFactory:

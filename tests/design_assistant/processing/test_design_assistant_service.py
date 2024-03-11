@@ -13,7 +13,7 @@ def test_update_design_assistant_session_calls_persistence_with_task(monkeypatch
         mock_update_session_called_with = input
         return None
 
-    monkeypatch.setattr(DesignAssistantPersistence,'update_session_for_task_key', mock_update_session_for_task_key)
+    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_task_key', mock_update_session_for_task_key)
     DesignAssistantService.update_design_assistant_session('zero_shot_learner', 'task')
 
     assert mock_update_session_called_with == 'zero_shot_learner'
@@ -32,7 +32,8 @@ def test_update_design_assistant_session_calls_persistence_with_type(monkeypatch
         mock_update_session_called_with = input
         return None
 
-    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_material_type_key', mock_update_session_for_type_key)
+    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_material_type_key',
+                        mock_update_session_for_type_key)
     DesignAssistantService.update_design_assistant_session('Concrete', 'type')
 
     assert mock_update_session_called_with == 'Concrete'
@@ -51,7 +52,8 @@ def test_update_design_assistant_session_calls_persistence_with_targets(monkeypa
         mock_update_session_called_with = input
         return None
 
-    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_design_targets_key', mock_update_session_for_targets)
+    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_design_targets_key',
+                        mock_update_session_for_targets)
     mock_targets = {'x1': 1, 'x2': 2}
     DesignAssistantService.update_design_assistant_session(mock_targets, 'design_targets')
 
@@ -149,3 +151,28 @@ def test_update_design_assistant_session_raises_error_when_other_is_too_long():
     with pytest.raises(ValueNotSupportedException):
         mock_liquid = 'This other name is way too long and thus invalid'
         DesignAssistantService.update_design_assistant_session(mock_liquid, 'other')
+
+
+# def test_create_design_assistant_form_creates_properly_populated_form(monkeypatch):
+#     mock_get_session_called_with = None
+#
+#     def mock_get_session_for_property(input):
+#         nonlocal mock_get_session_called_with
+#         mock_get_session_called_with = input
+#         return {'dataset': 'None',
+#                 'zero_shot_learner': {'design_targets': [{'reactivity': ''}, {'cost': ''}], 'liquid': 'dhiwq',
+#                                       'powders': {'blend': 'yes', 'selected': ['opc', 'fly_ash']}, 'type': 'Binder'}}
+#
+#     monkeypatch.setattr(DesignAssistantPersistence, 'get_session_for_property', mock_get_session_for_property)
+#     form = DesignAssistantService.create_design_assistant_form()
+#
+#     assert mock_get_session_called_with == 'design_assistant'
+#     assert form.task_form['task_field'].data == 'zero_shot_learner'
+#     assert form.campaign_form.data == {'material_type_field': 'Binder', 'design_targets_field': ['reactivity', 'cost'],
+#                                        'target_strength_field': None, 'target_workability_field': None,
+#                                        'target_reactivity_field': '', 'target_sustainability_field': None,
+#                                        'target_cost_field': '', 'additional_design_targets': [],
+#                                        'select_powders_field': ['opc', 'fly_ash'], 'blend_powders_field': 'yes',
+#                                        'liquids_field': None, 'additional_liquid': 'dhiwq', 'other_field': None,
+#                                        'additional_other': None, 'comment_field': None, 'submit_button': False,
+#                                        'csrf_token': None}
