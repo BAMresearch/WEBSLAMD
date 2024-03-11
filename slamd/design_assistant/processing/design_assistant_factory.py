@@ -12,11 +12,6 @@ class DesignAssistantFactory:
         return form
 
     @classmethod
-    def create_design_assistant_task_form(cls):
-        form = TaskForm()
-        return form
-    
-    @classmethod
     def create_design_assistant_import_selection_form(cls):
         form = ImportSelectionForm()
         return form
