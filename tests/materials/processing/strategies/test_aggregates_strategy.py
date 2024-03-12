@@ -51,7 +51,7 @@ def test_gather_composition_properties_adds_all_properties():
     result = AggregatesStrategy.gather_composition_information(aggregates)
     assert result == ['Fine Aggregates (m%): 123.45, ',
                       'Coarse Aggregates (m%): 67.89, ',
-                      'Specific Gravity (kg/m³): 987.6, ',
+                      'Specific Gravity: 987.6, ',
                       'Bulk Density (kg/m³): 543.2, ',
                       'Fineness modulus (m³/kg): 123.45, ',
                       'Water absorption (m%): 543.21, ']

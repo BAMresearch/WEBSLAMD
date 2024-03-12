@@ -10,3 +10,4 @@ class TSNEPlotData:
     features_df: DataFrame = None
     index_all_labelled: Index = None
     index_none_labelled: Index = None
+    index_partially_labelled: Index = None

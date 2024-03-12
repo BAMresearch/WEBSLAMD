@@ -39,9 +39,9 @@ class FormulationsConverter:
 
     @classmethod
     def _postprocess_dataframe(cls, dataframe):
-        dataframe['total costs / ton'] = dataframe.apply(
+        dataframe['total costs'] = dataframe.apply(
             lambda row: round(cls._compute_sum(row, 'costs') / 1000, 2), axis=1)
-        dataframe['total co2_footprint / ton'] = dataframe.apply(
+        dataframe['total co2_footprint'] = dataframe.apply(
             lambda row: round(cls._compute_sum(row, 'co2_footprint') / 1000, 2), axis=1)
         dataframe['total delivery_time '] = dataframe.apply(cls._compute_max, axis=1)
         dataframe = dataframe.loc[:, ~dataframe.columns.str.startswith('costs')]

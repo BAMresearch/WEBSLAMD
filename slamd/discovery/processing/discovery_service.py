@@ -43,7 +43,8 @@ class DiscoveryService:
     @classmethod
     def list_datasets(cls):
         all_datasets = DiscoveryPersistence.find_all_datasets()
-        return [dataset for dataset in all_datasets if dataset not in ['temporary_binder.csv','temporary_concrete.csv']]
+        return [dataset for dataset in all_datasets if
+                dataset not in ['temporary_binder.csv', 'temporary_concrete.csv']]
 
     @classmethod
     def create_target_configuration_form(cls, target_names):
@@ -143,7 +144,11 @@ class DiscoveryService:
         plot_df.loc[tsne_plot_data.index_all_labelled, 'is_train_data'] = 'Labelled'
 
         plot_df['Utility'] = -np.inf
-        plot_df.loc[tsne_plot_data.index_none_labelled, 'Utility'] = pd.Series(tsne_plot_data.utility).values
+
+        # if mutually exclusively labelled indices are present we need to take partial labels into account
+        union = tsne_plot_data.index_none_labelled.union(tsne_plot_data.index_partially_labelled)
+        plot_df.loc[union, 'Utility'] = pd.Series(tsne_plot_data.utility).values
+
         plot_df = plot_df.sort_values(by='Utility', ascending=False)
 
         # Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
