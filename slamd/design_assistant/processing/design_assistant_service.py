@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
@@ -130,3 +133,12 @@ class DesignAssistantService:
     @classmethod
     def delete_design_assistant_session(cls):
         DesignAssistantPersistence.delete_session_key('design_assistant')
+
+    @classmethod
+    def convert_da_session_to_json_string(cls):
+        da_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        return json.dumps(da_session)
+
+    @classmethod
+    def create_default_filename(cls):
+        return datetime.now().strftime('design_assistant_conversation_%Y-%m-%d_%H%M%S.json')

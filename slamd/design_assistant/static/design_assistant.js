@@ -1,13 +1,17 @@
-import { assignClickEventToSubmitButton } from "./utils.js";
-import { assignClickEventToTaskForm} from "./task.js"
-import { assignClickEventToImportSelectionForm } from "./import_selection.js"
-import { assignClickEventToMaterialTypeField } from "./material_type.js";
-import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingDesignTargets } from "./target.js";
-import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
-import { assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid } from "./liquid.js";
-import { assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther } from "./other.js";
-import { handleCommentSubmission, assignInputEventToCommentForm} from "./comment.js";
-import { handleDeleteDesignAssistantSession } from "./session.js"
+import {assignClickEventToSubmitButton} from "./utils.js";
+import {assignClickEventToTaskForm} from "./task.js"
+import {assignClickEventToImportSelectionForm} from "./import_selection.js"
+import {assignClickEventToMaterialTypeField} from "./material_type.js";
+import {
+  assignClickEventToDesignTargetForm,
+  handleAddingDesignTargets,
+  handleDesignTargetsSubmission
+} from "./target.js";
+import {assignClickEventToPowdersForm, handlePowdersSubmission} from "./powder.js";
+import {assignClickEventToLiquidForm, handleAddingLiquid, handleLiquidSubmission} from "./liquid.js";
+import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} from "./other.js";
+import {assignInputEventToCommentForm, handleCommentSubmission} from "./comment.js";
+import {handleDeleteDesignAssistantSession} from "./session.js"
 
 
 window.addEventListener("load", function () {
