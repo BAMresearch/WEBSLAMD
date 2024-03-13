@@ -2,6 +2,8 @@ import os
 from uuid import UUID
 
 from slamd.common.session_backup.session_service import SessionService
+from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
+from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
@@ -35,10 +37,15 @@ def _mock_find_all_datasets():
     return []
 
 
+def _mock_get_session_for_propery(input):
+    return {"zero_shot_learner": {"type": "Concrete"}, "dataset": "None"}
+
+
 def test_convert_session_to_json_string(monkeypatch):
     monkeypatch.setattr(MaterialsPersistence, 'find_all_materials', _mock_find_all_materials)
     monkeypatch.setattr(MaterialsPersistence, 'find_all_processes', _mock_find_all_processes)
     monkeypatch.setattr(DiscoveryPersistence, 'find_all_datasets', _mock_find_all_datasets)
+    monkeypatch.setattr(DesignAssistantPersistence, 'get_session_for_property', _mock_get_session_for_propery)
 
     session_as_json = SessionService.convert_session_to_json_string()
 
@@ -54,6 +61,7 @@ def test_convert_session_to_json_string(monkeypatch):
 def test_load_session_from_json_string(monkeypatch):
     saved_materials = {}
     saved_datasets = []
+    da_session = {}
 
     def _mock_save_material(mat_type, mat):
         if mat_type not in saved_materials:
@@ -64,8 +72,13 @@ def test_load_session_from_json_string(monkeypatch):
     def _mock_save_dataset(dataset):
         saved_datasets.append(dataset)
 
+    def _mock_instantiate_da_session_on_upload(mock_da_session):
+        da_session['design_assistant'] = mock_da_session
+
     monkeypatch.setattr(MaterialsPersistence, 'save', _mock_save_material)
     monkeypatch.setattr(DiscoveryPersistence, 'save_dataset', _mock_save_dataset)
+    monkeypatch.setattr(DesignAssistantService, 'instantiate_da_session_on_upload',
+                        _mock_instantiate_da_session_on_upload)
 
     current_dir = os.path.dirname(__file__)
     file_path = os.path.join(current_dir, '..', 'common', 'session', 'test_session.json')
@@ -84,3 +97,4 @@ def test_load_session_from_json_string(monkeypatch):
     assert saved_materials['powder'][0].structure.fine == 5
     assert saved_materials['liquid'][0].composition.na2_o == 3
     assert saved_materials['aggregates'][0].composition.gravity == 2
+    assert da_session['design_assistant'] == {'dataset': 'None', 'zero_shot_learner': {'type': 'Concrete'}}

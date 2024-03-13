@@ -153,6 +153,11 @@ class DesignAssistantService:
         except ValueError:
             raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
 
+        cls.instantiate_da_session_on_upload(session_data)
+
+
+    @classmethod
+    def instantiate_da_session_on_upload(cls, session_data):
         DesignAssistantPersistence.delete_session_key('design_assistant')
         DesignAssistantPersistence.init_session()
         if 'zero_shot_learner' in list(session_data.keys()) and 'data_creation' in list(session_data.keys()):
