@@ -1,8 +1,5 @@
 from flask import session
 
-from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import not_numeric, not_empty
-
 
 class DesignAssistantPersistence:
 
