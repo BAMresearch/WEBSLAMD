@@ -23,7 +23,8 @@ class ExperimentPostprocessor:
 
         tsne_plot_data = TSNEPlotData(utility=exp.utility, features_df=exp.features_df,
                                       index_all_labelled=exp.index_all_labelled,
-                                      index_none_labelled=exp.index_none_labelled)
+                                      index_none_labelled=exp.index_none_labelled,
+                                      index_partially_labelled=exp.index_partially_labelled)
         return df, scatter_plot, tsne_plot_data
 
     @classmethod

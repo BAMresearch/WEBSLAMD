@@ -104,7 +104,7 @@ class PowderForm(MaterialsForm):
     )
 
     gravity = DecimalField(
-        label='Specific gravity (m%)',
+        label='Specific gravity',
         validators=[
             validators.Optional()
         ]

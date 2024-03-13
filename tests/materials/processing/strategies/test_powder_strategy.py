@@ -94,7 +94,7 @@ def test_gather_composition_properties_adds_all_properties():
                       'Mn₂O₃ (m%): 7.65, ',
                       'LOI (m%): 2, ',
                       'Fine modules (m²/kg): 123.45, ',
-                      'Specific gravity (m%): 678.9, ']
+                      'Specific gravity: 678.9, ']
 
 
 def test_convert_to_multidict_adds_all_properties():
