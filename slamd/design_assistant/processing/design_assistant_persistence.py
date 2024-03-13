@@ -28,8 +28,8 @@ class DesignAssistantPersistence:
 
     @classmethod
     def update_session_for_task_key(cls, value):
-        if value == 'zero_shot_learner':
-            session['design_assistant']['zero_shot_learner'] = {}
+        session['design_assistant'][value] = {}
+
 
     @classmethod
     def update_session_for_import_selection_key(cls):
@@ -75,3 +75,7 @@ class DesignAssistantPersistence:
     def delete_session_key(cls, key):
         if key in session.keys():
             session.pop(key)
+
+    @classmethod
+    def save(cls, session_data, task):
+        session['design_assistant'][task] = session_data[task]

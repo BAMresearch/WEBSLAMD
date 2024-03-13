@@ -12,7 +12,14 @@
             </a>
         </div>
         <div class="me-1">
-            <button id="upload_session_button" class="btn btn-success">Upload conversation</button>
+            <form id="da-session-load-form" method="POST" enctype="multipart/form-data" action="design_assistant/session">
+                <!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
+                <!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
+                <!-- forms, such as the landing page, it needs to be manually added. -->
+                <input type="file" id="da-button-upload" style="display: none" accept=".json"/>
+                <a type="button" class="btn btn-success text-white" id="upload_session_button" aria-controls="load"
+                   data-bs-placement="bottom">Upload conversation</a>
+            </form>
         </div>
         <div class="me-1">
             <button id="delete_session_button" class="btn btn-danger">Reset conversation</button>

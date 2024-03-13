@@ -1,5 +1,7 @@
 import json
 from flask import Blueprint, render_template, request, make_response, jsonify, session
+
+from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 
 design_assistant = Blueprint('design_assistant', __name__,
@@ -102,3 +104,27 @@ def save_da_session():
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     response.mimetype = 'text/json'
     return response
+
+
+@design_assistant.route('/upload', methods=['POST'])
+def upload_da_session():
+    if 'file' not in request.files:
+        raise SlamdUnprocessableEntityException(message='Request did not contain a file')
+
+    file_extension = request.files['file'].filename.lower().split('.')[-1]
+    if file_extension != 'json':
+        raise ValueNotSupportedException(message=f'Invalid file type: {file_extension}')
+
+    # Flask checks that the 'Content-Length' header is present.
+    # Otherwise, it rejects the request and returns a status code 400 - Bad Request.
+    length_of_file = int(request.headers['CONTENT_LENGTH'])
+    try:
+        file_as_string = request.files['file'].read(length_of_file).decode()
+    except UnicodeDecodeError:
+        raise SlamdUnprocessableEntityException(message='Error while attempting to decode JSON file')
+
+    DesignAssistantService.upload_da_session(file_as_string)
+
+    # In the frontend, Javascript will reload the page automatically if it receives an OK response
+    # Actual content of response does not matter
+    return ''

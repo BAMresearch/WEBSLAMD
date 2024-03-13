@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
@@ -61,7 +62,7 @@ class DesignAssistantService:
     def create_design_assistant_import_selection_form(cls):
         form = DesignAssistantFactory.create_design_assistant_import_selection_form()
         return form
-    
+
     @classmethod
     def populate_design_targets_field_with_session_value(cls, form, value):
         design_target_options = []
@@ -69,7 +70,7 @@ class DesignAssistantService:
             design_target_option = list(design_target.keys())[0]
             design_target_options.append(design_target_option)
             design_target_value = list(design_target.values())[0]
-            if design_target_option in ['strength','workability','reactivity','sustainability','cost']:
+            if design_target_option in ['strength', 'workability', 'reactivity', 'sustainability', 'cost']:
                 if design_target_option == 'strength':
                     form.campaign_form.target_strength_field.data = design_target_value
                 if design_target_option == 'workability':
@@ -82,9 +83,11 @@ class DesignAssistantService:
                     form.campaign_form.target_cost_field.data = design_target_value
             else:
                 if form.campaign_form.additional_design_targets:
-                    form.campaign_form.additional_design_targets.append({'name': design_target_option, 'target_value': design_target_value})
+                    form.campaign_form.additional_design_targets.append(
+                        {'name': design_target_option, 'target_value': design_target_value})
                 else:
-                    form.campaign_form.additional_design_targets = [{'name': design_target_option, 'target_value': design_target_value}]
+                    form.campaign_form.additional_design_targets = [
+                        {'name': design_target_option, 'target_value': design_target_value}]
         form.campaign_form.design_targets_field.data = design_target_options
 
     @classmethod
@@ -93,7 +96,7 @@ class DesignAssistantService:
 
     @classmethod
     def populate_powders_field_with_session_value(cls, form, value):
-        for ( powder_session_key, powder_session_value) in value.items():
+        for (powder_session_key, powder_session_value) in value.items():
             if powder_session_key == 'selected':
                 form.campaign_form.select_powders_field.data = powder_session_value
             if powder_session_key == 'blend':
@@ -142,3 +145,22 @@ class DesignAssistantService:
     @classmethod
     def create_default_filename(cls):
         return datetime.now().strftime('design_assistant_conversation_%Y-%m-%d_%H%M%S.json')
+
+    @classmethod
+    def upload_da_session(cls, file_as_string):
+        try:
+            session_data = json.loads(file_as_string)
+        except ValueError:
+            raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
+
+        DesignAssistantPersistence.delete_session_key('design_assistant')
+        DesignAssistantPersistence.init_session()
+        if 'zero_shot_learner' in list(session_data.keys()) and 'data_creation' in list(session_data.keys()):
+            raise SlamdUnprocessableEntityException(message='Only one campaign, either zero shot or data creation can '
+                                                            'be supported simultaneously.')
+        if 'zero_shot_learner' in list(session_data.keys()):
+            DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
+        elif 'dataset' in list(session_data.keys()):
+            DesignAssistantPersistence.save(session_data, 'dataset')
+        else:
+            pass
