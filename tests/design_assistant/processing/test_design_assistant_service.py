@@ -154,7 +154,7 @@ def test_update_design_assistant_session_raises_error_when_other_is_too_long():
         DesignAssistantService.update_design_assistant_session(mock_liquid, 'other')
 
 
-def test_create_design_assistant_form_creates_properly_populated_form(monkeypatch):
+def test_create_design_assistant_form_creates_properly_populated_form_without_optional_targets(monkeypatch):
     mock_get_session_called_with = None
 
     def mock_get_session_for_property(input):
@@ -187,3 +187,32 @@ def test_create_design_assistant_form_creates_properly_populated_form(monkeypatc
                                        'target_strength_field': None,
                                        'target_sustainability_field': None,
                                        'target_workability_field': None}
+
+
+def test_create_design_assistant_form_creates_properly_populated_form_with_optional_targets(monkeypatch):
+    mock_get_session_called_with = None
+
+    def mock_get_session_for_property(input):
+        nonlocal mock_get_session_called_with
+        mock_get_session_called_with = input
+        return {'dataset': 'None',
+                'zero_shot_learner': {'design_targets': [{'workability': '11.3'}, {'fc28d': '50'}],
+                                      'liquid': 'pure_water',
+                                      'powders': {'blend': 'yes', 'selected': ['fly_ash', 'ggbfs']},
+                                      'type': 'Concrete'}}
+
+    app = create_app('testing', with_session=False)
+    with app.test_request_context('/design_assistant'):
+        monkeypatch.setattr(DesignAssistantPersistence, 'get_session_for_property', mock_get_session_for_property)
+        form = DesignAssistantService.create_design_assistant_form()
+
+    assert mock_get_session_called_with == 'design_assistant'
+    assert form.task_form['task_field'].data == 'zero_shot_learner'
+    assert form.campaign_form.data == {'material_type_field': 'Concrete',
+                                       'design_targets_field': ['workability', 'fc28d'], 'target_strength_field': None,
+                                       'target_workability_field': '11.3', 'target_reactivity_field': None,
+                                       'target_sustainability_field': None, 'target_cost_field': None,
+                                       'additional_design_targets': [], 'select_powders_field': ['fly_ash', 'ggbfs'],
+                                       'blend_powders_field': 'yes', 'liquids_field': 'pure_water',
+                                       'additional_liquid': None, 'other_field': None, 'additional_other': None,
+                                       'comment_field': None, 'submit_button': False}
