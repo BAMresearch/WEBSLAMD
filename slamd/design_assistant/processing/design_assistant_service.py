@@ -151,23 +151,23 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_powders_key(value)
 
         if key == 'liquid':
-            # TODO: implement AI-based check that input string is indeed a liquid
-            # For now: By setting the mask length to 20 for custom fields, we reduce the risk of injections
+            # TODO: implement AI-based check that input string is sensible
+            # For now: Naive Check for the inputs length
             if value not in ['pure_water', 'activator_liquid'] and len(value) > 20:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
 
         if key == 'other':
-            # TODO: implement AI-based check that input string is not harmful
-            # For now: By setting the mask length to 20 for custom fields, we reduce the risk of injections
+            # TODO: implement AI-based check that input string is sensible
+            # For now: Naive Check for the inputs length
             if value not in ['scm', 'super_plasticizer'] and len(value) > 20:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
-            # TODO: implement AI-based check that input string is not harmful
+            # TODO: implement AI-based check that input string is sensible
             DesignAssistantPersistence.update_session_for_comment_key(value)
 
     @classmethod
