@@ -60,6 +60,10 @@ class SessionService:
         except ValueError:
             raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
 
+        if JSON_MAT_PROC_KEY not in session_data:
+            raise SlamdUnprocessableEntityException(message='Not a valid file for session upload.')
+
+
         # Collect all data first, then write into session, in case there is a problem while loading
         loaded_materials = []
         #loaded_datasets = []

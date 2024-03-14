@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from slamd.common.error_handling import SlamdUnprocessableEntityException
+from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
@@ -37,9 +37,7 @@ class DesignAssistantService:
 
     @classmethod
     def populate_campaign_form_with_session_value(cls, form, design_assistant_session):
-        for key, value in design_assistant_session[
-            'zero_shot_learner'
-        ].items():
+        for key, value in design_assistant_session['zero_shot_learner'].items():
             if key == 'type':
                 cls.populate_material_type_field_with_session_value(form, value)
             if key == 'design_targets':
@@ -140,6 +138,8 @@ class DesignAssistantService:
     @classmethod
     def convert_da_session_to_json_string(cls):
         da_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        if not da_session:
+            raise ValueNotSupportedException('You can only save configurations of ongoing dialogs.')
         return json.dumps(da_session)
 
     @classmethod
@@ -154,7 +154,6 @@ class DesignAssistantService:
             raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
 
         cls.instantiate_da_session_on_upload(session_data)
-
 
     @classmethod
     def instantiate_da_session_on_upload(cls, session_data):
