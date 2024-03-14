@@ -2,7 +2,7 @@ from slamd.common.error_handling import ValueNotSupportedException
 from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
-
+from slamd.design_assistant.processing.llm_service import LLMService
 
 class DesignAssistantService:
 
@@ -182,3 +182,8 @@ class DesignAssistantService:
     @classmethod
     def delete_design_assistant_session(cls):
         DesignAssistantPersistence.delete_session_key('design_assistant')
+
+
+    @classmethod
+    def generate_design_knowledge(cls):
+        LLMService.generate_design_knowledge()

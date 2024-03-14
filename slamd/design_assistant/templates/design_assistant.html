@@ -49,8 +49,13 @@
                 </div>
                 <div id="knowledge_container" class="mb-4">
                     {% if form.campaign_form is not none and form.campaign_form.comment_field.data %}
-                        {% include 'knowledge.html' %}
+                        {% include 'design_knowledge.html' %}
                     {% endif %}
+                </div>
+                <div id="prompt_container" class="mb-4">
+{#                    {% if form.campaign_form is not none and form.campaign_form.comment_field.data %}#}
+{#                        {% include 'prompt.html' %}#}
+{#                    {% endif %}#}
                 </div>
             </div>
         </div>

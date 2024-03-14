@@ -86,7 +86,21 @@ def handle_comment():
     comment = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(comment, 'comment')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('knowledge.html', campaign_form=campaign_form)}
+    body = {'template': render_template('design_knowledge.html', campaign_form=campaign_form)}
+    return make_response(jsonify(body), 200)
+
+
+@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['POST'])
+def handle_generating_design_knowledge():
+    body = {'template': 'This is a test response from the LLM'}
+    return make_response(jsonify(body), 200)
+
+
+@design_assistant.route('/zero_shot/generate_prompt', methods=['POST'])
+def handle_generating_prompt():
+    design_knowledge = json.loads(request.data)
+    prompt = 'This is a test prompt from the LLM'
+    body = {'template': render_template('prompt.html', prompt=prompt)}
     return make_response(jsonify(body), 200)
 
 

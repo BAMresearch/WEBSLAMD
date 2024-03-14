@@ -1,3 +1,5 @@
+import {assignEventsToDesignKnowledge} from './design_knowledge.js'
+
 export function assignInputEventToCommentForm() {
   const comment_input = document.getElementById("comment");
   if (comment_input) {
@@ -26,9 +28,10 @@ export async function handleCommentSubmission() {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-        "/design_assistant/zero_shotcomment",
+        "/design_assistant/zero_shot/comment",
         "knowledge_container",
         comment_input.value
     );
   }, 1000);
+  assignEventsToDesignKnowledge()
 }

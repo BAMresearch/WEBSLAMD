@@ -41,7 +41,13 @@ function countSelectedOptionsMultipleSelectField(elem) {
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder( url, placeholderId, append = false) {
-  const response = await fetch(url);
+  const token = document.getElementById("csrf_token").value;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "X-CSRF-TOKEN": token,
+    },
+  });
   if (response.ok) {
     const form = await response.json();
     if (append) {
