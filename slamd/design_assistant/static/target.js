@@ -55,6 +55,7 @@ export async function handleDesignTargetsSubmission(event) {
         .closest("div")
         .nextElementSibling.querySelector(".design_target_value");
       design_targets[option.value] = design_target_value.value;
+      design_target_value.disabled = true
     }
     option.disabled = true;
   });

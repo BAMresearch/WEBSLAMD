@@ -32,6 +32,6 @@ export async function handleCommentSubmission() {
         "knowledge_container",
         comment_input.value
     );
-  }, 1000);
   assignEventsToDesignKnowledge()
+  }, 1000);
 }

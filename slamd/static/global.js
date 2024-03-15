@@ -41,13 +41,7 @@ function countSelectedOptionsMultipleSelectField(elem) {
 }
 
 async function fetchDataAndEmbedTemplateInPlaceholder( url, placeholderId, append = false) {
-  const token = document.getElementById("csrf_token").value;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "X-CSRF-TOKEN": token,
-    },
-  });
+  const response = await fetch(url);
   if (response.ok) {
     const form = await response.json();
     if (append) {
@@ -108,9 +102,9 @@ function insertSpinnerInPlaceholder(placeholderId, append = false, spinner = SPI
   }
 }
 
-function removeSpinnerInPlaceholder(placeholderId) {
+function removeSpinnerInPlaceholder(placeholderId, spinner = SPINNER) {
   const placeholder = document.getElementById(placeholderId);
-  placeholder.innerHTML = placeholder.innerHTML.replace(SPINNER, "");
+  placeholder.innerHTML = placeholder.innerHTML.replace(spinner, "");
 }
 
 function collectSelection(placeholder) {

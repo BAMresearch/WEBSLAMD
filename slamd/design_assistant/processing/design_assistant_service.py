@@ -48,6 +48,8 @@ class DesignAssistantService:
                 cls._populate_other_field_with_session_value(form, value)
             if key == 'comment':
                 cls._populate_comment_field_with_session_value(form, value)
+            if key == 'design_knowledge':
+                cls._populate_design_knowledge_field_with_session_value(form, value)
 
     @classmethod
     def create_design_assistant_import_selection_form(cls):
@@ -112,6 +114,10 @@ class DesignAssistantService:
         form.campaign_form.comment_field.data = value
 
     @classmethod
+    def _populate_design_knowledge_field_with_session_value(cls, form, value):
+        form.campaign_form.design_knowledge_field.data = value
+
+    @classmethod
     def create_design_assistant_campaign_form(cls):
         form = DesignAssistantFactory.create_design_assistant_campaign_form()
         return form
@@ -170,6 +176,8 @@ class DesignAssistantService:
             # TODO: implement AI-based check that input string is sensible
             DesignAssistantPersistence.update_session_for_comment_key(value)
 
+        if key == 'design_knowledge':
+            DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
     @classmethod
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']

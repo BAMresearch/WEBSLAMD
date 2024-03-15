@@ -94,4 +94,9 @@ class CampaignForm(Form):
 
     comment_field = StringField(label="Ok! Is there anything else you want me to know? (optional)")
 
+    design_knowledge_field = StringField(
+        label="Design knowledge",
+        validators=[validators.DataRequired(message="Selection cannot be empty!")],
+    )
+
     submit_button = SubmitField("Save")

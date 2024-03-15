@@ -50,6 +50,10 @@ class DesignAssistantPersistence:
         session['design_assistant']['zero_shot_learner']['comment'] = value
 
     @classmethod
+    def update_session_for_design_knowledge_key(cls, value):
+        session['design_assistant']['zero_shot_learner']['design_knowledge'] = value
+
+    @classmethod
     def get_session_for_property(cls, key):
         return session.get(key)
 

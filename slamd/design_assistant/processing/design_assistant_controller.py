@@ -13,7 +13,7 @@ design_assistant = Blueprint('design_assistant', __name__,
 def design_assistant_page():
     form = DesignAssistantService.create_design_assistant_form()
     return render_template('design_assistant.html', form=form, task_form=form.task_form, import_form=form.import_form,
-                           campaign_form=form.campaign_form, )
+                           campaign_form=form.campaign_form)
 
 
 @design_assistant.route('/task', methods=['POST'])
@@ -90,7 +90,7 @@ def handle_comment():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['POST'])
+@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['GET'])
 def handle_generating_design_knowledge():
     body = {'template': 'This is a test response from the LLM'}
     return make_response(jsonify(body), 200)
@@ -99,8 +99,10 @@ def handle_generating_design_knowledge():
 @design_assistant.route('/zero_shot/generate_prompt', methods=['POST'])
 def handle_generating_prompt():
     design_knowledge = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(design_knowledge, 'design_knowledge')
     prompt = 'This is a test prompt from the LLM'
     body = {'template': render_template('prompt.html', prompt=prompt)}
+    print(session)
     return make_response(jsonify(body), 200)
 
 
