@@ -2,15 +2,13 @@ import { assignClickEventToSubmitButton } from "./utils.js";
 import { assignClickEventToTaskForm} from "./task.js"
 import { assignClickEventToImportSelectionForm } from "./import_selection.js"
 import { assignClickEventToMaterialTypeField } from "./material_type.js";
-import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingDesignTargets } from "./target.js";
+import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingCustomDesignTarget } from "./design_targets.js";
 import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
 import { assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid } from "./liquid.js";
 import { assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther } from "./other.js";
 import { handleCommentSubmission, assignInputEventToCommentForm} from "./comment.js";
 import { handleDeleteDesignAssistantSession } from "./session.js"
-import {
-assignEventsToDesignKnowledge
-} from './design_knowledge.js'
+import { assignEventsToDesignKnowledge } from './design_knowledge.js'
 
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
@@ -22,7 +20,7 @@ window.addEventListener("load", function () {
   assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
   assignClickEventToDesignTargetForm();
   assignClickEventToPowdersForm();
-  assignClickEventToSubmitButton("additional_design_targets_button", handleAddingDesignTargets);
+  assignClickEventToSubmitButton("additional_design_targets_button", handleAddingCustomDesignTarget);
   assignClickEventToSubmitButton("submit_liquid_button", handleLiquidSubmission);
   assignClickEventToSubmitButton("additional_liquid_button", handleAddingLiquid);
   assignClickEventToLiquidForm();

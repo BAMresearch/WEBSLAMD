@@ -58,30 +58,8 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
-        design_target_options = []
         for design_target in value:
-            design_target_option = list(design_target.keys())[0]
-            design_target_options.append(design_target_option)
-            design_target_value = list(design_target.values())[0]
-            if design_target_option in ['strength', 'workability', 'reactivity', 'sustainability', 'cost']:
-                if design_target_option == 'strength':
-                    form.campaign_form.target_strength_field.data = design_target_value
-                if design_target_option == 'workability':
-                    form.campaign_form.target_workability_field.data = design_target_value
-                if design_target_option == 'reactivity':
-                    form.campaign_form.target_reactivity_field.data = design_target_value
-                if design_target_option == 'sustainability':
-                    form.campaign_form.target_sustainability_field.data = design_target_value
-                if design_target_option == 'cost':
-                    form.campaign_form.target_cost_field.data = design_target_value
-            else:
-                if form.campaign_form.additional_design_targets:
-                    form.campaign_form.additional_design_targets.append(
-                        {'name': design_target_option, 'target_value': design_target_value})
-                else:
-                    form.campaign_form.additional_design_targets = [
-                        {'name': design_target_option, 'target_value': design_target_value}]
-        form.campaign_form.design_targets_field.data = design_target_options
+            form.campaign_form.design_targets.append_entry({'design_target_name_field': design_target["name"]})
 
     @classmethod
     def _populate_material_type_field_with_session_value(cls, form, session_value):
@@ -143,12 +121,14 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_material_type_key(value)
 
         if key == 'design_targets':
-            target_values = value.values()
-            if len(target_values) > 2:
+            if len(value) > 2:
                 raise ValueNotSupportedException('Only up to two target values are supported.')
-            for item in target_values:
-                if not_empty(item) and not_numeric(item):
-                    raise ValueNotSupportedException('Only numerical values ar allowed.')
+            DesignAssistantPersistence.update_session_for_design_targets_key(value)
+
+        if key == 'design_targets_values':
+            for design_target_value in value:
+                if not_numeric(design_target_value['value']):
+                    raise ValueNotSupportedException('Only numerical values are allowed.')
             DesignAssistantPersistence.update_session_for_design_targets_key(value)
 
         if key == 'powders':

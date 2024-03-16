@@ -1,5 +1,5 @@
 import { assignClickEventToSubmitButton } from "./utils.js";
-import {assignClickEventToDesignTargetForm, handleAddingDesignTargets, handleDesignTargetsSubmission,} from "./target.js";
+import {assignClickEventToDesignTargetForm, handleAddingCustomDesignTarget, handleDesignTargetsSubmission,} from "./design_targets.js";
 
 
 export function assignClickEventToMaterialTypeField() {
@@ -24,7 +24,7 @@ async function handleMaterialTypeSelection(event) {
     );
     assignClickEventToSubmitButton("design_targets_submit_button", handleDesignTargetsSubmission);
     assignClickEventToDesignTargetForm();
-    assignClickEventToSubmitButton("additional_design_targets_button", handleAddingDesignTargets);
+    assignClickEventToSubmitButton("additional_design_targets_button", handleAddingCustomDesignTarget);
   }, 1000);
   const material_type_options = document.querySelectorAll(
     ".material_type_field_option"

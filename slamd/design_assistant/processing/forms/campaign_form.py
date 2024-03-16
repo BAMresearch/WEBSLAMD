@@ -1,19 +1,7 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import (
-    RadioField,
-    validators,
-    DecimalField,
-    SubmitField,
-    SelectMultipleField,
-    widgets,
-    FieldList,
-    FormField,
-    StringField,
-)
+from wtforms import ( RadioField, validators, DecimalField, SubmitField, SelectMultipleField, FieldList, FormField, StringField,)
 from wtforms.widgets import ListWidget, CheckboxInput
-from slamd.design_assistant.processing.forms.additional_design_target_form import (
-    AdditionalDesignTargetForm,
-)
+from slamd.design_assistant.processing.forms.design_targets_form import DesignTargetsForm
 
 
 class CampaignForm(Form):
@@ -24,33 +12,15 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
-    design_targets_field = SelectMultipleField(
+    standard_design_targets_field = SelectMultipleField(
         label="Great! What are the targets of your design? (Click most important targets, add target value optional, select up to two different targets)",
-        choices=[
-            ("strength", "Strength "),
-            ("workability", "Workability "),
-            ("reactivity", "Reactivity "),
-            ("sustainability", "Sustainability "),
-            ("cost", "Cost "),
-        ],
+        choices=["Strength","Workability","Reactivity","Sustainability","Cost"],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Select at least one target!")],
     )
 
-    target_strength_field = DecimalField("Min MPa ")
-
-    target_workability_field = DecimalField("Min mm ")
-
-    target_reactivity_field = DecimalField("Min °C ")
-
-    target_sustainability_field = DecimalField("Max CO_2/t ")
-
-    target_cost_field = DecimalField("Max €/t ")
-
-    additional_design_targets = FieldList(
-        FormField(AdditionalDesignTargetForm), min_entries=0, max_entries=10
-    )
+    design_targets = FieldList(FormField(DesignTargetsForm), min_entries=0, max_entries=2)
 
     select_powders_field = SelectMultipleField(
         label="Perfect! Let’s move on. What type of powders do you want to use?",

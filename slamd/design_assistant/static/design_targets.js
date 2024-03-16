@@ -27,37 +27,48 @@ function assignInputEventToDesignTargetForm() {
 }
 
 function handleCustomDesignTargetNaming(event) {
-  const design_target_option = event.target.closest("input").previousElementSibling;
-  design_target_option.value = event.target.value.toLowerCase();
+  const custom_design_target_option = event.target.closest("input").previousElementSibling;
+  custom_design_target_option.value = event.target.value
+  event.target.disabled = true
   const design_target_options = document.querySelectorAll(".design_target_option")
   let count = countSelectedOptions(design_target_options);
   if (event.target.value){
     if (count < 2){
-      design_target_option.disabled = false
+      custom_design_target_option.disabled = false
     }
   }
   else {
-    design_target_option.disabled = true
-    design_target_option.checked = false
+    custom_design_target_option.checked = false
     count = countSelectedOptions(design_target_options);
     if (count < 1){
       document.getElementById("design_targets_submit_button").disabled = true
     }
+    if (count < 2){
+      design_target_options.forEach(function (design_target_option){
+        if (design_target_option.disabled){
+          if (!design_target_option.classList.contains('custom_design_target_option'))
+            design_target_option.disabled = false
+          else {
+            const other_custom_design_target_option_name = design_target_option.nextElementSibling
+            if (other_custom_design_target_option_name.value){
+              design_target_option.disabled = false
+            }
+          }
+        }
+      })
+    }
+    custom_design_target_option.disabled = true
   }
 }
 
 export async function handleDesignTargetsSubmission(event) {
-  let design_targets = {};
+  let design_targets = [];
   const design_target_options = document.querySelectorAll(".design_target_option");
-  design_target_options.forEach(function (option) {
-    if (option.checked) {
-      const design_target_value = option
-        .closest("div")
-        .nextElementSibling.querySelector(".design_target_value");
-      design_targets[option.value] = design_target_value.value;
-      design_target_value.disabled = true
+  design_target_options.forEach(function (design_target_option) {
+    if (design_target_option.checked) {
+      design_targets.push({"name": design_target_option.value})
     }
-    option.disabled = true;
+    design_target_option.disabled = true;
   });
   document.getElementById("additional_design_targets_button").disabled = true;
   document.getElementById("design_targets_submit_button").disabled = true;
@@ -69,7 +80,7 @@ export async function handleDesignTargetsSubmission(event) {
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
       "/design_assistant/zero_shot/design_targets",
-      "powders_container",
+      "design_targets_values_container",
       design_targets
     );
     assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
@@ -78,14 +89,6 @@ export async function handleDesignTargetsSubmission(event) {
 }
 
 export function handleDesignTargetsSelection(event) {
-  const design_target_value = event.target.closest("div").nextElementSibling.querySelector(".design_target_value");
-  if (design_target_value.disabled) {
-    design_target_value.disabled = false;
-    design_target_value.focus();
-  } else {
-    design_target_value.disabled = true;
-    design_target_value.value = "";
-  }
   const design_target_options = document.querySelectorAll(".design_target_option");
   const count = countSelectedOptions(design_target_options);
   const submit_button = document.getElementById("design_targets_submit_button");
@@ -111,39 +114,32 @@ export function handleDesignTargetsSelection(event) {
   }
 }
 
-export function handleAddingDesignTargets() {
+export function handleAddingCustomDesignTarget() {
+  // select html container for all design targets
   const container = document.getElementById("design_target_options_container");
+  // create html container for design target option and add bootstrap classes
   const design_target_option_container = document.createElement("div");
-  const design_target_option_inner_container = document.createElement("div");
-  const design_target_option_input_checkbox = document.createElement("input");
-  const design_target_option_input = document.createElement("input");
-  const design_target_value_container = document.createElement("div");
-  const design_target_value_unit = document.createElement("input");
-  const design_target_value_input = document.createElement("input");
   design_target_option_container.classList.add("design_target_option_container", "d-flex", "justify-content-between", "additional_design_target_input");
+  // create html inner container for design target option and add bootstrap classes
+  const design_target_option_inner_container = document.createElement("div");
   design_target_option_inner_container.classList.add("d-flex", "gap-2")
-  design_target_option_input_checkbox.classList.add("design_target_option", "custom_design_target_option");
-  design_target_option_input.classList.add("custom_design_target_option_name")
-  design_target_option_input_checkbox.type = "checkbox";
-  design_target_option_input_checkbox.disabled = true
-  design_target_option_input_checkbox.value = "additional design target checkbox";
-  design_target_option_input.classList.add("form-control")
-  design_target_option_input.placeholder = "Name of the design target";
-  design_target_value_input.placeholder = "Target value";
-  design_target_value_input.type = "number";
-  design_target_value_input.disabled = true;
-  design_target_value_input.step = "0.01";
-  design_target_value_unit.placeholder = "Unit";
-  design_target_value_unit.classList.add("form-control")
-  design_target_value_input.classList.add("design_target_value", "form-control");
-  design_target_value_container.classList.add("d-flex", 'gap-2')
-  design_target_value_container.appendChild(design_target_value_unit);
-  design_target_value_container.appendChild(design_target_value_input);
-  design_target_option_inner_container.appendChild(design_target_option_input_checkbox);
-  design_target_option_inner_container.appendChild(design_target_option_input);
+  // create html input element for design target option
+  const design_target_option_checkbox_input = document.createElement("input");
+  design_target_option_checkbox_input.classList.add("design_target_option", "custom_design_target_option");
+  design_target_option_checkbox_input.type = "checkbox";
+  design_target_option_checkbox_input.disabled = true
+  design_target_option_checkbox_input.value = "additional design target checkbox";
+  // create html input element for name of design target
+  const design_target_option_name_input = document.createElement("input");
+  design_target_option_name_input.classList.add("custom_design_target_option_name")
+  design_target_option_name_input.classList.add("form-control")
+  design_target_option_name_input.placeholder = "Name of the design target";
+  // add all html elements sequentially to container that wraps all design targets
+  design_target_option_inner_container.appendChild(design_target_option_checkbox_input);
+  design_target_option_inner_container.appendChild(design_target_option_name_input);
   design_target_option_container.appendChild(design_target_option_inner_container);
-  design_target_option_container.appendChild(design_target_value_container);
   container.appendChild(design_target_option_container);
+  // assign events to newly created html elements
   assignInputEventToDesignTargetForm();
   assignClickEventToDesignTargetForm();
 }
