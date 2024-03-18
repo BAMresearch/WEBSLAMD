@@ -10,17 +10,11 @@ import {assignClickEventToPowdersForm, handlePowdersSubmission} from "./powder.j
 import {assignClickEventToLiquidForm, handleAddingLiquid, handleLiquidSubmission} from "./liquid.js";
 import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} from "./other.js";
 import {assignInputEventToCommentForm, handleCommentSubmission} from "./comment.js";
-import {
-    handleDeleteDesignAssistantSession,
-    handleUploadDesignAssistantSession,
-    passClickToDAFileInput
-} from "./design_assistant_session.js"
+import {handleDeleteDesignAssistantSession} from "./design_assistant_session.js"
 
 
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
-    document.getElementById("da-button-upload").addEventListener("change", handleUploadDesignAssistantSession)
-    document.getElementById("upload_session_button").addEventListener("click", passClickToDAFileInput)
     assignClickEventToSubmitButton("delete_session_button", handleDeleteDesignAssistantSession);
     assignClickEventToTaskForm();
     assignClickEventToMaterialTypeField();

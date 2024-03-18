@@ -20,7 +20,7 @@ class DesignAssistantService:
             form.campaign_form = None
         if design_assistant_session:
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
-                cls.populate_task_form_with_session_value(form, 'zero_shot_learner')
+                cls._populate_task_form_with_session_value(form, 'zero_shot_learner')
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls._populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
@@ -120,10 +120,6 @@ class DesignAssistantService:
                 raise ValueNotSupportedException('Provided task is not supported.')
             DesignAssistantPersistence.update_session_for_task_key(value)
 
-        if key == 'import_selection':
-            # TODO: Story for Session Import
-            DesignAssistantPersistence.update_session_for_import_selection_key()
-
         if key == 'type':
             if value not in ['Concrete', 'Binder']:
                 raise ValueNotSupportedException('Provided type is not supported.')
@@ -177,26 +173,6 @@ class DesignAssistantService:
         DesignAssistantPersistence.delete_session_key('design_assistant')
 
     @classmethod
-    def convert_da_session_to_json_string(cls):
-        da_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
-        if not da_session:
-            raise ValueNotSupportedException('You can only save configurations of ongoing dialogs.')
-        return json.dumps(da_session)
-
-    @classmethod
-    def create_default_filename(cls):
-        return datetime.now().strftime('design_assistant_conversation_%Y-%m-%d_%H%M%S.json')
-
-    @classmethod
-    def upload_da_session(cls, file_as_string):
-        try:
-            session_data = json.loads(file_as_string)
-        except ValueError:
-            raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
-
-        cls.instantiate_da_session_on_upload(session_data)
-
-    @classmethod
     def instantiate_da_session_on_upload(cls, session_data):
         DesignAssistantPersistence.delete_session_key('design_assistant')
         DesignAssistantPersistence.init_session()
@@ -205,7 +181,5 @@ class DesignAssistantService:
                                                             'be supported simultaneously.')
         if 'zero_shot_learner' in list(session_data.keys()):
             DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
-        elif 'dataset' in list(session_data.keys()):
-            DesignAssistantPersistence.save(session_data, 'dataset')
         else:
             pass

@@ -5,25 +5,8 @@
 </head>
 {% extends 'index.html' %} {% block content %}
 <main class="mt-lg-2 ml-sm-auto px-md-2 py-2 container" style="height: 80%" id="chat-window-container">
-    <div class="btn-group d-flex justify-content-end mb-4" role="group">
-        <div class="me-1">
-            <a id="download_session_button" class="btn btn-secondary" href="/design_assistant/save">
-                Download conversation
-            </a>
-        </div>
-        <div class="me-1">
-            <form id="da-session-load-form" method="POST" enctype="multipart/form-data" action="design_assistant/session">
-                <!-- Note that this form relies on a csrf_token field existing somewhere else in the page, since it is not created -->
-                <!-- with WTForms. Most other pages contain WTForm forms that provide such a field. On pages that do not contain -->
-                <!-- forms, such as the landing page, it needs to be manually added. -->
-                <input type="file" id="da-button-upload" style="display: none" accept=".json"/>
-                <a type="button" class="btn btn-success text-white" id="upload_session_button" aria-controls="load"
-                   data-bs-placement="bottom">Upload conversation</a>
-            </form>
-        </div>
-        <div class="me-1">
-            <button id="delete_session_button" class="btn btn-danger">Reset conversation</button>
-        </div>
+    <div class="d-flex justify-content-end mb-4">
+        <button id="delete_session_button" class="btn btn-danger text-end">Reset conversation</button>
     </div>
     <div id="chat_window" class="p-4 h-100">
         {{ form.csrf_token }}
