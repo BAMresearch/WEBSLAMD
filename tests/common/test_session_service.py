@@ -11,8 +11,8 @@ from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.aggregates import Composition as AggregatesComposition
 from slamd.materials.processing.models.custom import Custom
-from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.liquid import Composition as LiquidComposition
+from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder, Structure
 from slamd.materials.processing.models.process import Process
 

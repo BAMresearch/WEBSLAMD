@@ -61,5 +61,4 @@ class DesignAssistantPersistence:
     @classmethod
     def save(cls, session_data, task):
         session['design_assistant'][task] = session_data[task]
-        session['design_assistant']['dataset'] = 'None'
         session['design_assistant']['type'] = session_data[task]['type']

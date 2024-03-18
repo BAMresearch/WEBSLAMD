@@ -1,7 +1,7 @@
 import pytest
 
 from slamd import create_app
-from slamd.common.error_handling import ValueNotSupportedException
+from slamd.common.error_handling import ValueNotSupportedException, SlamdUnprocessableEntityException
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 
@@ -216,3 +216,68 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_optio
                                        'blend_powders_field': 'yes', 'liquids_field': 'pure_water',
                                        'additional_liquid': None, 'other_field': None, 'additional_other': None,
                                        'comment_field': None, 'submit_button': False}
+
+
+def test_instantiate_da_session_on_upload_zero_shot_data_creation_mutually_exclusive(monkeypatch):
+    session_data = {
+        'zero_shot_learner': {},
+        'data_creation': {}
+    }
+
+    mock_delete_session_key_called_with = None
+
+    def mock_delete_session_key(key):
+        nonlocal mock_delete_session_key_called_with
+        mock_delete_session_key_called_with = key
+        return ""
+
+    mock_init_session_called_with = None
+
+    def mock_init_session():
+        nonlocal mock_init_session_called_with
+        mock_init_session_called_with = 'mock call'
+        return ""
+
+    monkeypatch.setattr(DesignAssistantPersistence, 'delete_session_key', mock_delete_session_key)
+    monkeypatch.setattr(DesignAssistantPersistence, 'init_session', mock_init_session)
+
+    with pytest.raises(SlamdUnprocessableEntityException):
+        DesignAssistantService.instantiate_da_session_on_upload(session_data)
+        assert mock_delete_session_key_called_with == 'design_assistant'
+        assert mock_init_session_called_with == 'mock call'
+
+
+def test_instantiate_da_session_on_upload_zero_shot_data(monkeypatch):
+    session_data = {
+        'zero_shot_learner': {},
+    }
+
+    mock_delete_session_key_called_with = None
+
+    def mock_delete_session_key(key):
+        nonlocal mock_delete_session_key_called_with
+        mock_delete_session_key_called_with = key
+        return ""
+
+    mock_init_session_called_with = None
+
+    def mock_init_session():
+        nonlocal mock_init_session_called_with
+        mock_init_session_called_with = 'mock call'
+        return ""
+
+    mock_save_called_with = None
+
+    def mock_save(session, task):
+        nonlocal mock_save_called_with
+        mock_save_called_with = session, task
+        return ""
+
+    monkeypatch.setattr(DesignAssistantPersistence, 'delete_session_key', mock_delete_session_key)
+    monkeypatch.setattr(DesignAssistantPersistence, 'init_session', mock_init_session)
+    monkeypatch.setattr(DesignAssistantPersistence, 'save', mock_save)
+
+    DesignAssistantService.instantiate_da_session_on_upload(session_data)
+    assert mock_delete_session_key_called_with == 'design_assistant'
+    assert mock_init_session_called_with == 'mock call'
+    assert mock_save_called_with == ({'zero_shot_learner': {}}, 'zero_shot_learner')
