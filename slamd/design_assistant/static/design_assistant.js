@@ -1,6 +1,5 @@
 import {assignClickEventToSubmitButton} from "./utils.js";
 import {assignClickEventToTaskForm} from "./task.js"
-import {assignClickEventToImportSelectionForm} from "./import_selection.js"
 import {assignClickEventToMaterialTypeField} from "./material_type.js";
 import {
     assignClickEventToDesignTargetForm,
@@ -24,7 +23,6 @@ window.addEventListener("load", function () {
     document.getElementById("upload_session_button").addEventListener("click", passClickToDAFileInput)
     assignClickEventToSubmitButton("delete_session_button", handleDeleteDesignAssistantSession);
     assignClickEventToTaskForm();
-    assignClickEventToImportSelectionForm();
     assignClickEventToMaterialTypeField();
     assignClickEventToSubmitButton("design_targets_submit_button", handleDesignTargetsSubmission);
     assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);

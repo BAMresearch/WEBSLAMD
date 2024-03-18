@@ -19,8 +19,6 @@ class DesignAssistantService:
         if design_assistant_session:
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls.populate_task_form_with_session_value(form, 'zero_shot_learner')
-            if 'dataset' in list(design_assistant_session.keys()):
-                cls.populate_import_selection_form_with_session_value(form, design_assistant_session)
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls.populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
@@ -30,10 +28,6 @@ class DesignAssistantService:
     @classmethod
     def populate_task_form_with_session_value(cls, form, session_value):
         form.task_form.task_field.data = session_value
-
-    @classmethod
-    def populate_import_selection_form_with_session_value(cls, form, design_assistant_session):
-        form.import_form.import_selection_field.data = design_assistant_session['dataset']
 
     @classmethod
     def populate_campaign_form_with_session_value(cls, form, design_assistant_session):
@@ -54,11 +48,6 @@ class DesignAssistantService:
     @classmethod
     def create_design_assistant_task_form(cls):
         form = DesignAssistantFactory.create_design_assistant_task_form()
-        return form
-
-    @classmethod
-    def create_design_assistant_import_selection_form(cls):
-        form = DesignAssistantFactory.create_design_assistant_import_selection_form()
         return form
 
     @classmethod

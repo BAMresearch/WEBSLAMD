@@ -28,14 +28,9 @@
     <div id="chat_window" class="p-4 h-100">
         {{ form.csrf_token }}
         <div id="task_selection_container" class="mb-4">{% include 'task.html' %}</div>
-        <div id="import_selection_container" class="mb-4">
-            {% if form.import_form is not none %}
-            {% include 'import_selection.html' %}
-            {% endif %}
-        </div>
         <div id="campaign_container">
             <div id="material_type_container" class="mb-4">
-                {% if form.campaign_form is not none and form.import_form.import_selection_field.data %}
+                {% if form.campaign_form is not none %}
                 {% include 'campaign_material_type.html' %}
                 {% endif %}
             </div>
