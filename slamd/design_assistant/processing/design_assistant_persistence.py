@@ -8,25 +8,6 @@ class DesignAssistantPersistence:
         session['design_assistant'] = {}
 
     @classmethod
-    def update_session(cls, value, key):
-        if key == 'task':
-            cls.update_session_for_task_key(value)
-        if key == 'import_selection':
-            cls.update_session_for_import_selection_key()
-        if key == 'type':
-            cls.update_session_for_material_type_key(value)
-        if key == 'design_targets':
-            cls.update_session_for_design_targets_key(value)
-        if key == 'powders':
-            cls.update_session_for_powders_key(value)
-        if key == 'liquid':
-            cls.update_session_for_liquid_key(value)
-        if key == 'other':
-            cls.update_session_for_other_key(value)
-        if key == 'comment':
-            cls.update_session_for_comment_key(value)
-
-    @classmethod
     def update_session_for_task_key(cls, value):
         session['design_assistant'][value] = {}
 
@@ -53,7 +34,8 @@ class DesignAssistantPersistence:
     def update_session_for_powders_key(cls, value_object):
         selected_powders = value_object['selected_powders']
         blend_powders = value_object['blend_powders']
-        session['design_assistant']['zero_shot_learner']['powders'] = {'selected': selected_powders,'blend': blend_powders}
+        session['design_assistant']['zero_shot_learner']['powders'] = {'selected': selected_powders,
+                                                                       'blend': blend_powders}
 
     @classmethod
     def update_session_for_liquid_key(cls, value):
