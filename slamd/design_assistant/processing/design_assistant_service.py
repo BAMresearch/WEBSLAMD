@@ -40,6 +40,7 @@ class DesignAssistantService:
                 cls._populate_material_type_field_with_session_value(form, value)
             if key == 'design_targets':
                 cls._populate_design_targets_field_with_session_value(form, value)
+                print(f'Populating campaign form with ${value}')
             if key == 'powders':
                 cls._populate_powders_field_with_session_value(form, value)
             if key == 'liquid':
@@ -59,7 +60,7 @@ class DesignAssistantService:
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
         for design_target in value:
-            form.campaign_form.design_targets.append_entry({'design_target_name_field': design_target["name"]})
+            form.campaign_form.design_targets.append_entry(design_target)
 
     @classmethod
     def _populate_material_type_field_with_session_value(cls, form, session_value):
@@ -97,8 +98,8 @@ class DesignAssistantService:
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
-        form = DesignAssistantFactory.create_design_assistant_campaign_form()
-        return form
+        form = cls.create_design_assistant_form()
+        return form.campaign_form
 
     @classmethod
     def init_design_assistant_session(cls):
@@ -123,12 +124,6 @@ class DesignAssistantService:
         if key == 'design_targets':
             if len(value) > 2:
                 raise ValueNotSupportedException('Only up to two target values are supported.')
-            DesignAssistantPersistence.update_session_for_design_targets_key(value)
-
-        if key == 'design_targets_values':
-            for design_target_value in value:
-                if not_numeric(design_target_value['value']):
-                    raise ValueNotSupportedException('Only numerical values are allowed.')
             DesignAssistantPersistence.update_session_for_design_targets_key(value)
 
         if key == 'powders':

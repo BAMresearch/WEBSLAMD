@@ -3,6 +3,7 @@ import { assignClickEventToTaskForm} from "./task.js"
 import { assignClickEventToImportSelectionForm } from "./import_selection.js"
 import { assignClickEventToMaterialTypeField } from "./material_type.js";
 import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingCustomDesignTarget } from "./design_targets.js";
+import { assignEventsToTargetValuesForm} from "./design_targets_values.js";
 import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
 import { assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid } from "./liquid.js";
 import { assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther } from "./other.js";
@@ -30,4 +31,5 @@ window.addEventListener("load", function () {
   assignClickEventToSubmitButton("submit_comment_button", handleCommentSubmission);
   assignInputEventToCommentForm()
   assignEventsToDesignKnowledge()
+  assignEventsToTargetValuesForm()
 });

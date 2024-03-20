@@ -21,10 +21,6 @@ class DesignAssistantPersistence:
         session['design_assistant']['zero_shot_learner']['design_targets'] = value
 
     @classmethod
-    def update_session_for_design_targets_values_key(cls, value):
-        pass
-
-    @classmethod
     def update_session_for_material_type_key(cls, value):
         session['design_assistant']['zero_shot_learner']['type'] = value
 

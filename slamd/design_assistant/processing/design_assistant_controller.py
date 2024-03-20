@@ -51,14 +51,13 @@ def handle_design_targets():
     DesignAssistantService.update_design_assistant_session(design_targets, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_design_targets_values.html', campaign_form=campaign_form)}
-    print(session)
     return make_response(jsonify(body), 200)
 
 
 @design_assistant.route('/zero_shot/design_targets_values', methods=['POST'])
 def handle_design_targets_values():
     design_targets_values = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets_values')
+    DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)

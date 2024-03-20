@@ -1,5 +1,5 @@
 import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
-import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
+import { assignEventsToTargetValuesForm} from "./design_targets_values.js";
 
 
 export function assignClickEventToDesignTargetForm() {
@@ -29,7 +29,6 @@ function assignInputEventToDesignTargetForm() {
 function handleCustomDesignTargetNaming(event) {
   const custom_design_target_option = event.target.closest("input").previousElementSibling;
   custom_design_target_option.value = event.target.value
-  event.target.disabled = true
   const design_target_options = document.querySelectorAll(".design_target_option")
   let count = countSelectedOptions(design_target_options);
   if (event.target.value){
@@ -66,14 +65,18 @@ export async function handleDesignTargetsSubmission(event) {
   const design_target_options = document.querySelectorAll(".design_target_option");
   design_target_options.forEach(function (design_target_option) {
     if (design_target_option.checked) {
-      design_targets.push({"name": design_target_option.value})
+      design_targets.push({"design_target_name_field": design_target_option.value})
     }
     design_target_option.disabled = true;
+  });
+  const design_target_options_names = document.querySelectorAll(".custom_design_target_option_name");
+  design_target_options_names.forEach(function (design_target_option_name) {
+    design_target_option_name.disabled = true
   });
   document.getElementById("additional_design_targets_button").disabled = true;
   document.getElementById("design_targets_submit_button").disabled = true;
   insertSpinnerInPlaceholder(
-    "powders_container",
+    "design_targets_values_container",
     true,
     CHATBOT_RESPONSE_SPINNER
   );
@@ -83,8 +86,7 @@ export async function handleDesignTargetsSubmission(event) {
       "design_targets_values_container",
       design_targets
     );
-    assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
-    assignClickEventToPowdersForm();
+    assignEventsToTargetValuesForm()
   }, 1000);
 }
 

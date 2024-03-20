@@ -1,93 +1,64 @@
-{#{% block content %}#}
-{#    {% from 'icons.html' import chatbot_icon %}#}
-{#    <div class="col d-flex gap-3">#}
-{#        {{ chatbot_icon(30, 30, "currentColor") }}#}
-{#        <div class="chat_message_container">#}
-{#            <div class="fw-bold mt-1 mb-2">Design Assistant</div>#}
-{#            <div class="chat_message border rounded p-2 d-inline-block">#}
-{#                <div id="design_target_options_container">#}
-{#                    <div>{{ campaign_form.design_targets_field.label(class = "mb-3") }}</div>#}
-{#                    {% for option in campaign_form.design_targets_field %}#}
-{#                        <div class="design_target_option_container d-flex justify-content-between">#}
-{#                            <div>#}
-{#                                {% if campaign_form.design_targets_field.data %}#}
-{#                                    {{ option(class_="design_target_option", disabled='disabled') }}#}
-{#                                {% else %}#}
-{#                                    {{ option(class_="design_target_option") }}#}
-{#                                {% endif %}#}
-{#                                {{ option.label.text }}#}
-{#                            </div>#}
-{#                            <div class="d-flex align-items-center">#}
-{#                                {% if loop.index == 1 %}#}
-{#                                    {{ campaign_form.target_strength_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}#}
-{#                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_strength_field" type="number" step="0.01"#}
-{#                                            {% if campaign_form.target_strength_field.data is not none %}#}
-{#                                           value="{{ campaign_form.target_strength_field.data }}"#}
-{#                                            {% endif %}#}
-{#                                           disabled/>#}
-{#                                {% elif loop.index == 2 %}#}
-{#                                    {{ campaign_form.target_workability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}#}
-{#                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_workability_field" type="number" step="0.01"#}
-{#                                            {% if campaign_form.target_workability_field.data is not none %}#}
-{#                                           value="{{ campaign_form.target_workability_field.data }}"#}
-{#                                            {% endif %}#}
-{#                                           disabled/>#}
-{#                                {% elif loop.index == 3 %}#}
-{#                                    {{ campaign_form.target_reactivity_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}#}
-{#                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_reactivity_field" type="number" step="0.01"#}
-{#                                            {% if campaign_form.target_reactivity_field.data is not none %}#}
-{#                                           value="{{ campaign_form.target_reactivity_field.data }}"#}
-{#                                            {% endif %}#}
-{#                                           disabled/>#}
-{#                                {% elif loop.index == 4 %}#}
-{#                                    {{ campaign_form.target_sustainability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}#}
-{#                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_sustainability_field" type="number" step="0.01"#}
-{#                                            {% if campaign_form.target_sustainability_field.data is not none %}#}
-{#                                           value="{{ campaign_form.target_sustainability_field.data }}"#}
-{#                                            {% endif %}#}
-{#                                           disabled/>#}
-{#                                {% elif loop.index == 5 %}#}
-{#                                    {{ campaign_form.target_cost_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}#}
-{#                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_cost_field" type="number" step="0.01"#}
-{#                                            {% if campaign_form.target_cost_field.data is not none %}#}
-{#                                           value="{{ campaign_form.target_cost_field.data }}"#}
-{#                                            {% endif %}#}
-{#                                           disabled/>#}
-{#                                {% endif %}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#                <div id="additional_design_targets_container">#}
-{#                    {% for additional_design_target in campaign_form.additional_design_targets %}#}
-{#                        <div class="design_target_option_container d-flex justify-content-between">#}
-{#                            <div>#}
-{#                                <input type="checkbox" checked#}
-{#                                        {% if additional_design_target.value is not none %}#}
-{#                                       disabled#}
-{#                                        {% endif %}/>#}
-{#                                {{ additional_design_target.name }}#}
-{#                            </div>#}
-{#                            <div>#}
-{#                                <input class="design_target_value ms-2" name="{{ additional_design_target.name }}"#}
-{#                                        {% if additional_design_target.value is not none %}#}
-{#                                       value="{{ additional_design_target.target_value }}"#}
-{#                                        {% endif %}#}
-{#                                       disabled/>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#                <div class="d-flex mt-2 gap-2">#}
-{#                    <button class="btn btn-secondary" id="additional_design_targets_button"#}
-{#                            {% if campaign_form.design_targets_field.data is not none %}#}
-{#                            disabled#}
-{#                            {% endif %}>#}
-{#                        Optimize other +#}
-{#                    </button>#}
-{#                    <button class="btn btn-primary" id="design_targets_submit_button" disabled>Save</button>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="chat_message_container">
+            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <div class="chat_message border rounded p-2 d-inline-block">
+                <div id="design_target_options_container">
+                    <div>Please add values for each of the selected design targets and specify whether you want to maximize or minimze them.</div>
+                    <div class="design_target_option_container d-flex flex-column justify-content-between mt-3">
+                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                            {% for design_target in campaign_form.design_targets %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link{% if loop.index == 1 %} active {% endif %} design_target_name" id="pills-{{ design_target.design_target_name_field.data }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ design_target.design_target_name_field.data }}" type="button" role="tab" aria-controls="pills-{{ design_target.design_target_name_field.data }}" aria-selected="false">{{ design_target.design_target_name_field.data }}</button>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            {% for design_target in campaign_form.design_targets %}
+                                <div class="tab-pane fade {% if loop.index == 1 %} show active {% endif %}" id="pills-{{ design_target.design_target_name_field.data }}" role="tabpanel">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div class="d-flex justify-content-between">
+                                            {{ design_target.design_target_value_field.label }}
+                                            {% if design_target.design_target_value_field.data %}
+                                                <input type="number" class="design_target_value" value="{{ design_target.design_target_value_field.data }}" disabled/>
+                                            {% else %}
+                                                <input type="number" class="design_target_value" />
+                                            {% endif %}
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            {{ design_target.design_target_unit_field.label }}
+                                            {% if design_target.design_target_unit_field.data %}
+                                                <input class="design_target_unit" value="{{ design_target.design_target_unit_field.data }}" disabled/>
+                                            {% else %}
+                                                <input class="design_target_unit" />
+                                            {% endif %}
+                                        </div>
+                                    <div class="d-flex justify-content-between">
+                                        {{ design_target.design_target_bound_field.label }}
+
+                                            {% if design_target.design_target_unit_field.data %}
+                                            <select class="w-auto form-select ml-auto design_target_bound_select" aria-label="Select bound" disabled>
+                                            {% else %}
+                                                <select class="w-auto form-select ml-auto design_target_bound_select" aria-label="Select bound">
+                                            {% endif %}
+                                            {% for value, label in design_target.design_target_bound_field.choices %}
+                                                 <option value="{{value}}" class="design_target_bound">{{ label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mt-2 gap-2">
+                    <button class="btn btn-primary" id="design_targets_values_submit_button" {% if campaign_form.design_targets %}
+                            {% if campaign_form.design_targets[0].design_target_value_field.data %} disabled {% endif %}{% endif %}>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
