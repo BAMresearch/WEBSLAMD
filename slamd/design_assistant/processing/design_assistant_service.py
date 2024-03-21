@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+
+from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
@@ -17,8 +21,6 @@ class DesignAssistantService:
         if design_assistant_session:
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls._populate_task_form_with_session_value(form, 'zero_shot_learner')
-            if 'dataset' in list(design_assistant_session.keys()):
-                cls._populate_import_selection_form_with_session_value(form, design_assistant_session)
             if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls._populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
@@ -28,10 +30,6 @@ class DesignAssistantService:
     @classmethod
     def _populate_task_form_with_session_value(cls, form, session_value):
         form.task_form.task_field.data = session_value
-
-    @classmethod
-    def _populate_import_selection_form_with_session_value(cls, form, design_assistant_session):
-        form.import_form.import_selection_field.data = design_assistant_session['dataset']
 
     @classmethod
     def _populate_campaign_form_with_session_value(cls, form, design_assistant_session):
@@ -48,11 +46,6 @@ class DesignAssistantService:
                 cls._populate_other_field_with_session_value(form, value)
             if key == 'comment':
                 cls._populate_comment_field_with_session_value(form, value)
-
-    @classmethod
-    def create_design_assistant_import_selection_form(cls):
-        form = DesignAssistantFactory.create_design_assistant_import_selection_form()
-        return form
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
@@ -127,10 +120,6 @@ class DesignAssistantService:
                 raise ValueNotSupportedException('Provided task is not supported.')
             DesignAssistantPersistence.update_session_for_task_key(value)
 
-        if key == 'import_selection':
-            # TODO: Story for Session Import
-            DesignAssistantPersistence.update_session_for_import_selection_key()
-
         if key == 'type':
             if value not in ['Concrete', 'Binder']:
                 raise ValueNotSupportedException('Provided type is not supported.')
@@ -182,3 +171,15 @@ class DesignAssistantService:
     @classmethod
     def delete_design_assistant_session(cls):
         DesignAssistantPersistence.delete_session_key('design_assistant')
+
+    @classmethod
+    def instantiate_da_session_on_upload(cls, session_data):
+        DesignAssistantPersistence.delete_session_key('design_assistant')
+        DesignAssistantPersistence.init_session()
+        if 'zero_shot_learner' in list(session_data.keys()) and 'data_creation' in list(session_data.keys()):
+            raise SlamdUnprocessableEntityException(message='Only one campaign, either zero shot or data creation can '
+                                                            'be supported simultaneously.')
+        if 'zero_shot_learner' in list(session_data.keys()):
+            DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
+        else:
+            pass

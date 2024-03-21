@@ -1,33 +1,32 @@
-import { assignClickEventToImportSelectionForm } from "./import_selection.js";
-
+import {assignClickEventToMaterialTypeField} from "./material_type.js";
 
 export function assignClickEventToTaskForm() {
-  const task_options = document.querySelectorAll(".task_field_option");
-  task_options.forEach((task_option) =>
-    task_option.addEventListener("click", handleTaskSelection)
-  );
+    const task_options = document.querySelectorAll(".task_field_option");
+    task_options.forEach((task_option) =>
+        task_option.addEventListener("click", handleTaskSelection)
+    );
 }
 
 export async function handleTaskSelection(event) {
-  const task = event.target.value;
-  insertSpinnerInPlaceholder(
-    "import_selection_container",
-    true,
-    CHATBOT_RESPONSE_SPINNER
-  );
-  setTimeout(async function handleSubmission() {
-    await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/task",
-      "import_selection_container",
-      task
+    const task = event.target.value;
+    insertSpinnerInPlaceholder(
+        "material_type_container",
+        true,
+        CHATBOT_RESPONSE_SPINNER
     );
-    assignClickEventToImportSelectionForm();
-  }, 1000);
+    setTimeout(async function handleSubmission() {
+        await postDataAndEmbedTemplateInPlaceholder(
+            "/design_assistant/task",
+            "material_type_container",
+            task
+        );
+        assignClickEventToMaterialTypeField();
+    }, 1000);
 
-  const task_options = document.querySelectorAll(".task_field_option");
-  task_options.forEach(function (other_option) {
-    if (other_option !== this) {
-      other_option.disabled = true;
-    }
-  });
+    const task_options = document.querySelectorAll(".task_field_option");
+    task_options.forEach(function (other_option) {
+        if (other_option !== this) {
+            other_option.disabled = true;
+        }
+    });
 }

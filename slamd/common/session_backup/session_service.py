@@ -4,6 +4,8 @@ from datetime import datetime
 import pandas as pd
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException
+from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
+from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 from slamd.discovery.processing.discovery_persistence import DiscoveryPersistence
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.materials.processing.material_factory import MaterialFactory
@@ -11,6 +13,7 @@ from slamd.materials.processing.materials_persistence import MaterialsPersistenc
 from slamd.materials.processing.strategies.process_strategy import ProcessStrategy
 
 JSON_MAT_PROC_KEY = 'Materials_and_Processes'
+JSON_DESIGN_ASSISTANT_KEY = 'design_assistant'
 JSON_DATA_KEY = 'Datasets'
 
 
@@ -24,10 +27,12 @@ class SessionService:
     def convert_session_to_json_string(cls):
         all_materials = MaterialsPersistence.find_all_materials()
         all_processes = MaterialsPersistence.find_all_processes()
+        da_assistant = DesignAssistantPersistence.get_session_for_property('design_assistant')
         #all_datasets = DiscoveryPersistence.find_all_datasets()
 
         full_json = {
             JSON_MAT_PROC_KEY: [],
+            JSON_DESIGN_ASSISTANT_KEY: []
             #JSON_DATA_KEY: []
         }
 
@@ -40,7 +45,8 @@ class SessionService:
             full_json['Materials_and_Processes'].extend(mat_dicts)
 
         process_dicts = [ProcessStrategy.convert_material_to_dict(proc) for proc in all_processes]
-        full_json['Materials_and_Processes'].extend(process_dicts)
+        full_json[JSON_MAT_PROC_KEY].extend(process_dicts)
+        full_json[JSON_DESIGN_ASSISTANT_KEY] = da_assistant
 
         #datasets_dicts = [cls._convert_dataset_to_dict(dataset) for dataset in all_datasets]
         #full_json['Datasets'].extend(datasets_dicts)
@@ -53,6 +59,10 @@ class SessionService:
             session_data = json.loads(session_data_string)
         except ValueError:
             raise SlamdUnprocessableEntityException(message='Not a valid JSON file')
+
+        if JSON_MAT_PROC_KEY not in session_data:
+            raise SlamdUnprocessableEntityException(message='Not a valid file for session upload.')
+
 
         # Collect all data first, then write into session, in case there is a problem while loading
         loaded_materials = []
@@ -74,6 +84,8 @@ class SessionService:
 
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
+
+        DesignAssistantService.instantiate_da_session_on_upload(session_data[JSON_DESIGN_ASSISTANT_KEY])
 
         #for dataset in loaded_datasets:
             #if DiscoveryPersistence.query_dataset_by_name(dataset.name):
@@ -98,6 +110,7 @@ class SessionService:
             DiscoveryPersistence.delete_dataset_by_name(dataset.name)
 
         DiscoveryPersistence.delete_tsne_plot_data()
+        DesignAssistantService.delete_design_assistant_session()
 
     @classmethod
     def _convert_dataset_to_dict(cls, dataset):
