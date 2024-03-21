@@ -1,11 +1,12 @@
-import json
-from datetime import datetime
+import os
 
-from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
+from slamd.common.error_handling import SlamdUnprocessableEntityException, FreeTrialLimitExhaustedException
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
+
+MAX_FREE_LLM_CALLS = 10
 
 
 class DesignAssistantService:
@@ -183,3 +184,13 @@ class DesignAssistantService:
             DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
         else:
             pass
+
+    @classmethod
+    def dummy_llm_call(cls):
+        count = DesignAssistantPersistence.get_remaining_free_llm_calls()
+        if count < MAX_FREE_LLM_CALLS:
+            token = os.getenv('OPENAI_API_TOKEN')
+            print(f'SIMULATED CALL with {token}')
+            DesignAssistantPersistence.update_remaining_free_llm_calls()
+        else:
+            raise FreeTrialLimitExhaustedException('Please provide your token.')

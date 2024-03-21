@@ -1,7 +1,7 @@
 import json
+
 from flask import Blueprint, render_template, request, make_response, jsonify, session
 
-from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
 from slamd.design_assistant.processing.design_assistant_service import DesignAssistantService
 
 design_assistant = Blueprint('design_assistant', __name__,
@@ -14,9 +14,10 @@ design_assistant = Blueprint('design_assistant', __name__,
 @design_assistant.route('/', methods=['GET'])
 def design_assistant_page():
     form = DesignAssistantService.create_design_assistant_form()
-    return render_template('design_assistant.html', form=form, task_form=form.task_form,
-
-                           campaign_form=form.campaign_form )
+    return render_template('design_assistant.html',
+                           form=form,
+                           task_form=form.task_form,
+                           campaign_form=form.campaign_form)
 
 
 @design_assistant.route('/task', methods=['POST'])
@@ -86,3 +87,13 @@ def handle_comment():
 def handle_delete_session():
     DesignAssistantService.delete_design_assistant_session()
     return jsonify({'message': 'Session deleted successfully'})
+
+
+@design_assistant.route('/dummy_call', methods=['GET'])
+def dummy_call():
+    DesignAssistantService.dummy_llm_call()
+    form = DesignAssistantService.create_design_assistant_form()
+    return render_template('design_assistant.html',
+                                  form=form,
+                                  task_form=form.task_form,
+                                  campaign_form=form.campaign_form)

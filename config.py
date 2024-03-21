@@ -4,6 +4,7 @@ import os
 class ConfigDevelopment:
     HOST = '127.0.0.1'
     PORT = '5001'
+    OPENAI_API_TOKEN = os.getenv('OPENAI_API_TOKEN')
     SECRET_KEY = os.getenv('SECRET_KEY')
     SESSION_TYPE = 'filesystem'
 
@@ -14,6 +15,7 @@ class ConfigTesting:
 
 
 class ConfigDemo:
+    OPENAI_API_TOKEN = os.getenv('OPENAI_API_TOKEN')
     SECRET_KEY = os.getenv('SECRET_KEY')
     SESSION_TYPE = 'filesystem'
 

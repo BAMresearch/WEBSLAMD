@@ -25,6 +25,10 @@ class SessionService:
 
     @classmethod
     def convert_session_to_json_string(cls):
+        """
+        We extract all but the key for counting free trials as it must be read-only
+        :return:
+        """
         all_materials = MaterialsPersistence.find_all_materials()
         all_processes = MaterialsPersistence.find_all_processes()
         da_assistant = DesignAssistantPersistence.get_session_for_property('design_assistant')
@@ -95,6 +99,10 @@ class SessionService:
 
     @classmethod
     def clear_session(cls):
+        """
+        We clear all but the key for counting free trials as it must be maintained
+        :return:
+        """
         all_materials = MaterialsPersistence.find_all_materials()
         all_processes = MaterialsPersistence.find_all_processes()
         all_datasets = DiscoveryPersistence.find_all_datasets()
