@@ -8,15 +8,13 @@ export function assignEventsToTargetValuesForm() {
 function handleDesignTargetsValuesSubmission(){
         const design_target_values_submission = []
         const design_target_values = document.querySelectorAll(".design_target_value");
-        const design_target_units = document.querySelectorAll(".design_target_unit")
-        const design_target_bound = document.querySelectorAll('.design_target_bound_select')
+        const design_target_optimizations = document.querySelectorAll('.design_target_optimization_select')
         const design_target_names = document.querySelectorAll(".design_target_name")
         for (let i = 0; i < design_target_values.length; i++) {
                 design_target_values_submission.push({
                         "design_target_name_field" : design_target_names[i].textContent.toLowerCase(),
-                        "design_target_value_field": Number(design_target_values[i].value),
-                        "design_target_unit_field": design_target_units[i].value,
-                        "design_target_bound_field": design_target_bound[i].value
+                        "design_target_value_field": design_target_values[i].value,
+                        "design_target_optimization_field": design_target_optimizations[i].value
                 });
         }
         setTimeout(async function handleSubmission() {
@@ -28,7 +26,12 @@ function handleDesignTargetsValuesSubmission(){
                 assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
                 assignClickEventToPowdersForm();
         }, 1000)
+        for (let i = 0; i < design_target_values.length; i++) {
+                design_target_values[i].disabled = true
+                design_target_optimizations[i].disabled = true
+        }
         document.getElementById("design_targets_values_submit_button").disabled = true
+
 }
 
 

@@ -40,7 +40,6 @@ class DesignAssistantService:
                 cls._populate_material_type_field_with_session_value(form, value)
             if key == 'design_targets':
                 cls._populate_design_targets_field_with_session_value(form, value)
-                print(f'Populating campaign form with ${value}')
             if key == 'powders':
                 cls._populate_powders_field_with_session_value(form, value)
             if key == 'liquid':

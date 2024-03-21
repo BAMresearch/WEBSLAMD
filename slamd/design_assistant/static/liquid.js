@@ -75,19 +75,20 @@ function handleCustomLiquidNaming(event) {
 
 export function handleAddingLiquid() {
     const liquids_container = document.getElementById("liquids_option_container");
-    const liquid_container = document.createElement("div");
-    const liquid_option_input = document.createElement("input");
-    const liquid_name_input = document.createElement("input");
-    liquid_container.classList.add("d-flex", "gap-2")
-    liquid_option_input.type = "radio";
-    liquid_option_input.name = "liquid_option";
-    liquid_option_input.classList.add("liquid_option", "custom_liquid_option");
-    liquid_name_input.classList.add("form-control", "w-25")
-    liquid_name_input.placeholder = "Name of liquid";
-    liquid_name_input.classList.add("liquid_option_name");
-    liquid_container.appendChild(liquid_option_input);
-    liquid_container.appendChild(liquid_name_input);
-    liquids_container.appendChild(liquid_container);
+    const custom_liquid_container = document.createElement("div");
+    const custom_liquid_option_input = document.createElement("input");
+    const custom_liquid_name_input = document.createElement("input");
+    custom_liquid_container.classList.add("d-flex", "gap-2")
+    custom_liquid_option_input.type = "radio";
+    custom_liquid_option_input.name = "custom_liquid_option";
+    custom_liquid_option_input.classList.add("liquid_option", "custom_liquid_option");
+    custom_liquid_name_input.classList.add("form-control", "w-25")
+    custom_liquid_name_input.placeholder = "Name of liquid";
+    custom_liquid_name_input.classList.add("liquid_option_name");
+    custom_liquid_name_input.name = 'custom_liquid_name'
+    custom_liquid_container.appendChild(custom_liquid_option_input);
+    custom_liquid_container.appendChild(custom_liquid_name_input);
+    liquids_container.appendChild(custom_liquid_container);
     assignClickEventToLiquidForm();
     assignInputEventToLiquidForm();
     document.getElementById("additional_liquid_button").disabled = true

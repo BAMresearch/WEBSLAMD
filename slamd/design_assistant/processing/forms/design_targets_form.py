@@ -6,8 +6,6 @@ class DesignTargetsForm(Form):
 
     design_target_name_field = StringField(label="Design Target Name")
 
-    design_target_value_field = DecimalField(label="Enter the target value")
+    design_target_value_field = StringField(label="Enter the target value bound and its unit")
 
-    design_target_unit_field = StringField(label="Enter the unit of the target value")
-
-    design_target_bound_field = RadioField(label='Should the target value be the maximum or minimum?',choices=[('maximum', 'Maximum'),('minimum','Minimum')])
+    design_target_optimization_field = RadioField(label='Should the target value be maximized or minimized?',choices=[('maximized', 'Maximized'),('minimized','Minimized')])

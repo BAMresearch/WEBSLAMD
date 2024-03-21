@@ -5,21 +5,21 @@
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
             <div class="chat_message border rounded p-2 d-inline-block" id="import_choices">
-                {{ import_form.import_selection_field.label(class = "mb-3") }}
-                {% for option in import_form.import_selection_field %}
-                    <div>
-                        <input class="import_selection_option" value="{{ option.data }}"
+                <div class = "mb-3">{{ import_form.import_selection_field.label.text }}</div>
+                {% for choice in import_form.import_selection_field %}
+                    <div class="d-flex gap-2">
+                        <input class="import_selection_choice" value="{{ choice.data }}" name="import_choice"
                                type="radio"
-                                {% if option.data == import_form.import_selection_field.data %}
+                                {% if choice.data == import_form.import_selection_field.data %}
                                checked
                                 {% endif %}
                                 {% if import_form.import_selection_field.data %}
                                disabled
                                 {% endif %}
-                                {% if option.data == 'import_data' %}
+                                {% if choice.data == 'import_data' %}
                                disabled
                                 {% endif %} />
-                        <label for="{{ option.id }}">{{ option.label.text }}</label>
+                        <div>{{ choice.label.text }}</div>
                     </div>
                 {% endfor %}
             </div>

@@ -20,31 +20,22 @@
                                 <div class="tab-pane fade {% if loop.index == 1 %} show active {% endif %}" id="pills-{{ design_target.design_target_name_field.data }}" role="tabpanel">
                                     <div class="d-flex flex-column gap-2">
                                         <div class="d-flex justify-content-between">
-                                            {{ design_target.design_target_value_field.label }}
+                                            <div>{{ design_target.design_target_value_field.label.text }}</div>
                                             {% if design_target.design_target_value_field.data %}
-                                                <input type="number" class="design_target_value" value="{{ design_target.design_target_value_field.data }}" disabled/>
+                                            <input class="design_target_value" value="{{ design_target.design_target_value_field.data }}" name="design_target_value" disabled/>
                                             {% else %}
-                                                <input type="number" class="design_target_value" />
-                                            {% endif %}
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            {{ design_target.design_target_unit_field.label }}
-                                            {% if design_target.design_target_unit_field.data %}
-                                                <input class="design_target_unit" value="{{ design_target.design_target_unit_field.data }}" disabled/>
-                                            {% else %}
-                                                <input class="design_target_unit" />
+                                            <input class="design_target_value" value=" " placeholder="i.e. 100 EUR/KG" name="design_target_value"/>
                                             {% endif %}
                                         </div>
                                     <div class="d-flex justify-content-between">
-                                        {{ design_target.design_target_bound_field.label }}
-
-                                            {% if design_target.design_target_unit_field.data %}
-                                            <select class="w-auto form-select ml-auto design_target_bound_select" aria-label="Select bound" disabled>
+                                            <div>{{ design_target.design_target_optimization_field.label.text }}</div>
+                                            {% if design_target.design_target_value_field.data %}
+                                            <select class="w-auto form-select ml-auto design_target_optimization_select" aria-label="Select optimization" name="design_target_optimization_select" disabled>
                                             {% else %}
-                                                <select class="w-auto form-select ml-auto design_target_bound_select" aria-label="Select bound">
+                                            <select class="w-auto form-select ml-auto design_target_optimization_select" aria-label="Select optimization" name="design_target_optimization_select">
                                             {% endif %}
-                                            {% for value, label in design_target.design_target_bound_field.choices %}
-                                                 <option value="{{value}}" class="design_target_bound">{{ label }}</option>
+                                            {% for value, label in design_target.design_target_optimization_field.choices %}
+                                            <option value="{{value}}" class="design_target_optimization" name="design_target_optimization">{{ label }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

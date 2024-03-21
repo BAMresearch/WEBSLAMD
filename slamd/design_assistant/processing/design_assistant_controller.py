@@ -12,6 +12,7 @@ design_assistant = Blueprint('design_assistant', __name__,
 @design_assistant.route('/', methods=['GET'])
 def design_assistant_page():
     form = DesignAssistantService.create_design_assistant_form()
+    print(session)
     return render_template('design_assistant.html', form=form, task_form=form.task_form, import_form=form.import_form,
                            campaign_form=form.campaign_form)
 
@@ -59,6 +60,7 @@ def handle_design_targets_values():
     design_targets_values = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    print(session)
     body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 

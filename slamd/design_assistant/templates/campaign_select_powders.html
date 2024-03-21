@@ -5,7 +5,7 @@
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
             <div class="chat_message border rounded p-2 d-inline-block">
-                <div>{{ campaign_form.select_powders_field.label(class = "mb-3") }}</div>
+                <div class="mb-3">{{ campaign_form.select_powders_field.label.text }}</div>
                 <div>
                     {% for option in campaign_form.select_powders_field %}
                         <div>
@@ -17,7 +17,7 @@
                             {{ option.label.text }}
                         </div>
                     {% endfor %}
-                    <div>{{ campaign_form.blend_powders_field.label }}</div>
+                    <div class="mt-2 mb-1">{{ campaign_form.blend_powders_field.label.text }}</div>
                     {% for option in campaign_form.blend_powders_field %}
                         {% if campaign_form.blend_powders_field.data == option.data %}
                             {{ option(class='blend_powder_option', checked='true', disabled='disabled', value="{{ option.data }}") }}

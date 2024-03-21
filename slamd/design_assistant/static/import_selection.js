@@ -2,9 +2,9 @@ import { assignClickEventToMaterialTypeField } from "./material_type.js";
 
 
 export function assignClickEventToImportSelectionForm() {
-  const import_options = document.querySelectorAll(".import_selection_option");
-  import_options.forEach((import_option) =>
-    import_option.addEventListener("click", handleImportSelection)
+  const import_choices = document.querySelectorAll(".import_selection_choice");
+  import_choices.forEach((import_choice) =>
+    import_choice.addEventListener("click", handleImportSelection)
   );
 }
 
@@ -23,10 +23,10 @@ async function handleImportSelection(event) {
     );
     assignClickEventToMaterialTypeField();
   }, 1000);
-  const import_options = document.querySelectorAll(".import_selection_option");
-  import_options.forEach(function (other_option) {
-    if (other_option !== this) {
-      other_option.disabled = true;
+  const import_choices = document.querySelectorAll(".import_selection_choice");
+  import_choices.forEach(function (other_choice) {
+    if (other_choice !== this) {
+      other_choice.disabled = true;
     }
   });
 }

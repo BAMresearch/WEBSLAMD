@@ -1,4 +1,4 @@
-import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
+import { countSelectedOptions } from "./utils.js";
 import { assignEventsToTargetValuesForm} from "./design_targets_values.js";
 
 
@@ -131,11 +131,13 @@ export function handleAddingCustomDesignTarget() {
   design_target_option_checkbox_input.type = "checkbox";
   design_target_option_checkbox_input.disabled = true
   design_target_option_checkbox_input.value = "additional design target checkbox";
+  design_target_option_checkbox_input.name = "custom_design_target_option"
   // create html input element for name of design target
   const design_target_option_name_input = document.createElement("input");
   design_target_option_name_input.classList.add("custom_design_target_option_name")
   design_target_option_name_input.classList.add("form-control")
   design_target_option_name_input.placeholder = "Name of the design target";
+  design_target_option_name_input.name = "custom_design_target_option"
   // add all html elements sequentially to container that wraps all design targets
   design_target_option_inner_container.appendChild(design_target_option_checkbox_input);
   design_target_option_inner_container.appendChild(design_target_option_name_input);
