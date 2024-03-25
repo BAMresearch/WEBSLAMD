@@ -20,10 +20,11 @@ def design_assistant_page():
                            campaign_form=form.campaign_form)
 
 
+# TODO: move token logic to knowledge creation and prediction
 @design_assistant.route('/task', methods=['POST'])
 def handle_task():
-    task = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(task, 'task')
+    data = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(data['task'], 'task', data['token'])
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_material_type.html', campaign_form=campaign_form, session=session)}
     return make_response(jsonify(body), 200)
@@ -87,13 +88,3 @@ def handle_comment():
 def handle_delete_session():
     DesignAssistantService.delete_design_assistant_session()
     return jsonify({'message': 'Session deleted successfully'})
-
-
-@design_assistant.route('/dummy_call', methods=['GET'])
-def dummy_call():
-    DesignAssistantService.dummy_llm_call()
-    form = DesignAssistantService.create_design_assistant_form()
-    return render_template('design_assistant.html',
-                                  form=form,
-                                  task_form=form.task_form,
-                                  campaign_form=form.campaign_form)

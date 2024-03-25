@@ -7,8 +7,10 @@ export function assignClickEventToTaskForm() {
     );
 }
 
+// TODO: remove token logic and move it to knowledge creation and recipe proposal
 export async function handleTaskSelection(event) {
     const task = event.target.value;
+    const token = document.getElementById("token_form-token").value
     insertSpinnerInPlaceholder(
         "material_type_container",
         true,
@@ -18,7 +20,7 @@ export async function handleTaskSelection(event) {
         await postDataAndEmbedTemplateInPlaceholder(
             "/design_assistant/task",
             "material_type_container",
-            task
+            {"task": task, "token": token}
         );
         assignClickEventToMaterialTypeField();
     }, 1000);

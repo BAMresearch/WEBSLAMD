@@ -115,7 +115,11 @@ class DesignAssistantService:
         DesignAssistantPersistence.init_session()
 
     @classmethod
-    def update_design_assistant_session(cls, value, key=None):
+    def update_design_assistant_session(cls, value, key=None, token=None):
+        # TODO: move token logic to knowledge creation and prediction
+        if not token:
+            DesignAssistantService.call_llm()
+
         if key == 'task':
             if value not in ['zero_shot_learner', 'data_creation']:
                 raise ValueNotSupportedException('Provided task is not supported.')
@@ -186,11 +190,12 @@ class DesignAssistantService:
             pass
 
     @classmethod
-    def dummy_llm_call(cls):
+    def call_llm(cls):
         count = DesignAssistantPersistence.get_remaining_free_llm_calls()
         if count < MAX_FREE_LLM_CALLS:
             token = os.getenv('OPENAI_API_TOKEN')
-            print(f'SIMULATED CALL with {token}')
+            # TODO: Replace with real llm logic and pass token to API
+            print(f'SIMULATED CALL -> count: {count}')
             DesignAssistantPersistence.update_remaining_free_llm_calls()
         else:
             raise FreeTrialLimitExhaustedException('Please provide your token.')
