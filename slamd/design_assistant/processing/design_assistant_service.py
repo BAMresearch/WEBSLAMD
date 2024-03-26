@@ -152,6 +152,7 @@ class DesignAssistantService:
 
         if key == 'design_knowledge':
             DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
+    
     @classmethod
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']
@@ -168,4 +169,5 @@ class DesignAssistantService:
 
     @classmethod
     def generate_design_knowledge(cls):
-        LLMService.generate_design_knowledge()
+        design_knowledge = LLMService.generate_design_knowledge()
+        return design_knowledge

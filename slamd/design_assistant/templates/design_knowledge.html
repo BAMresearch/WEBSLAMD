@@ -4,9 +4,9 @@
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div id="knowledge_chat_message_container" class="chat_message_container">
             <div class="chat_message border rounded p-2 d-inline-block">
-                <div>Alright, let's generate the design knowledge! If you are not satisfied with the result, you may edit it or generate it again.</div>
-                <div id="llm_response_container">
-                    <textarea id="llm_response" class="form-control mb-2 {% if campaign_form.design_knowledge_field.data is none %}d-none{% endif %}" disabled>{% if campaign_form.design_knowledge_field.data %}{{ campaign_form.design_knowledge_field.data }}{% endif %}</textarea>
+                <div class="mb-3">Alright, let's generate the design knowledge! If you are not satisfied with the result, you may edit it or generate it again.</div>
+                <div id="llm_response_container" class="mb-3">
+                    <textarea id="llm_response" style="min-height: 300px;" class="form-control min-h-50 {% if campaign_form.design_knowledge_field.data is none %}d-none{% endif %}" disabled>{% if campaign_form.design_knowledge_field.data %}{{ campaign_form.design_knowledge_field.data }}{% endif %}</textarea>
                 </div>
                 <button class="btn btn-primary" id="generate_design_knowledge_button"{% if campaign_form.design_knowledge_field.data %}disabled{% endif %} >
                     Generate Knowledge

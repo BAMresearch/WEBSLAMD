@@ -11,10 +11,20 @@ function handleDesignTargetsValuesSubmission(){
         const design_target_optimizations = document.querySelectorAll('.design_target_optimization_select')
         const design_target_names = document.querySelectorAll(".design_target_name")
         for (let i = 0; i < design_target_values.length; i++) {
+                let design_target_value;
+                let design_target_optimization;
+                if (design_target_values[i].value == ''){
+                        design_target_value = 'No target value'
+                        design_target_optimization = 'No optimization'
+                }
+                else {
+                        design_target_value = design_target_values[i].value
+                        design_target_optimization = design_target_optimizations[i].value
+                }
                 design_target_values_submission.push({
-                        "design_target_name_field" : design_target_names[i].textContent.toLowerCase(),
-                        "design_target_value_field": design_target_values[i].value,
-                        "design_target_optimization_field": design_target_optimizations[i].value
+                        "design_target_name_field" : design_target_names[i].textContent,
+                        "design_target_value_field": design_target_value,
+                        "design_target_optimization_field": design_target_optimization
                 });
         }
         setTimeout(async function handleSubmission() {

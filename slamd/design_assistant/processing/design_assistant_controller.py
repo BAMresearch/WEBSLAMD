@@ -60,7 +60,6 @@ def handle_design_targets_values():
     design_targets_values = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    print(session)
     body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
 
@@ -104,7 +103,6 @@ def handle_comment():
 @design_assistant.route('/zero_shot/generate_design_knowledge', methods=['GET'])
 def handle_generating_design_knowledge():
     design_knowledge = DesignAssistantService.generate_design_knowledge()
-    design_knowledge_test = 'This is a test response from the LLM'
     body = {'template': design_knowledge}
     return make_response(jsonify(body), 200)
 

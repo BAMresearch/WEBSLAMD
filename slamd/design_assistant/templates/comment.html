@@ -7,7 +7,7 @@
                 <div>
                     <div class="mb-3">{{ campaign_form.comment_field.label.text }}</div>
                     <div>
-                        <textarea class="form-control mb-2" id="comment"{% if campaign_form.comment_field.data is not none %}disabled{% endif %}>{% if campaign_form.comment_field.data is not none %}{{ campaign_form.comment_field.data }}{% endif %}</textarea>
+                        <textarea class="form-control mb-2" placeholder="Consider addtionally that..." id="comment"{% if campaign_form.comment_field.data is not none %}disabled{% endif %}>{% if campaign_form.comment_field.data is not none %}{{ campaign_form.comment_field.data }}{% endif %}</textarea>
                     </div>
                 </div>
                 <button class="btn btn-primary" id="submit_comment_button"{% if campaign_form.comment_field.data is not none%}disabled{% endif %}>
