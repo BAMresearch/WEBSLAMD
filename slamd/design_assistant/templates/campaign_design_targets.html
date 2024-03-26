@@ -6,83 +6,27 @@
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
             <div class="chat_message border rounded p-2 d-inline-block">
                 <div id="design_target_options_container">
-                    <div>{{ campaign_form.design_targets_field.label(class = "mb-3") }}</div>
-                    {% for option in campaign_form.design_targets_field %}
-                        <div class="design_target_option_container d-flex justify-content-between">
+                    <div class = "mb-3">{{ campaign_form.standard_design_targets_field.label.text }}</div>
+                    <div class="design_target_option_container d-flex flex-column justify-content-between">
+                    {% if campaign_form.design_targets %}
+                        {% for design_target in campaign_form.design_targets %}
                             <div>
-                                {% if campaign_form.design_targets_field.data %}
-                                    {{ option(class_="design_target_option", disabled='disabled') }}
-                                {% else %}
-                                    {{ option(class_="design_target_option") }}
-                                {% endif %}
-                                {{ option.label.text }}
+                                <input type="checkbox" checked="checked" name="design_target_name" disabled/>
+                                {{ design_target.design_target_name_field.data }}
                             </div>
-                            <div class="d-flex align-items-center">
-                                {% if loop.index == 1 %}
-                                    {{ campaign_form.target_strength_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
-                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_strength_field" type="number" step="0.01"
-                                            {% if campaign_form.target_strength_field.data is not none %}
-                                            value="{{ campaign_form.target_strength_field.data }}"
-                                            {% endif %}
-                                           disabled/>
-                                {% elif loop.index == 2 %}
-                                    {{ campaign_form.target_workability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
-                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_workability_field" type="number" step="0.01"
-                                            {% if campaign_form.target_workability_field.data is not none %}
-                                            value="{{ campaign_form.target_workability_field.data }}"
-                                            {% endif %}
-                                            disabled/>
-                                {% elif loop.index == 3 %}
-                                    {{ campaign_form.target_reactivity_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
-                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_reactivity_field" type="number" step="0.01"
-                                            {% if campaign_form.target_reactivity_field.data is not none %}
-                                            value="{{ campaign_form.target_reactivity_field.data }}"
-                                            {% endif %}
-                                            disabled/>
-                                {% elif loop.index == 4 %}
-                                    {{ campaign_form.target_sustainability_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
-                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_sustainability_field" type="number" step="0.01"
-                                            {% if campaign_form.target_sustainability_field.data is not none %}
-                                            value="{{ campaign_form.target_sustainability_field.data }}"
-                                            {% endif %}
-                                            disabled/>
-                                {% elif loop.index == 5 %}
-                                    {{ campaign_form.target_cost_field.label(class = "flex-grow-0 flex-shrink-0 mb-3") }}
-                                    <input class="design_target_value ms-2 form-control mb-3" name="{{ option.data }}" id="campaign_form-target_cost_field" type="number" step="0.01"
-                                            {% if campaign_form.target_cost_field.data is not none %}
-                                            value="{{ campaign_form.target_cost_field.data }}"
-                                            {% endif %}
-                                            disabled/>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div id="additional_design_targets_container">
-                    {% for additional_design_target in campaign_form.additional_design_targets %}
-                        <div class="design_target_option_container d-flex justify-content-between">
+                        {% endfor %}
+                    {% else %}
+                        {% for standard_design_target in campaign_form.standard_design_targets_field %}
                             <div>
-                                <input type="checkbox" checked
-                                        {% if additional_design_target.value is not none %}
-                                        disabled
-                                        {% endif %}/>
-                                {{ additional_design_target.name }}
+                            {{ standard_design_target(class_="design_target_option") }}
+                            {{ standard_design_target.label.text }}
                             </div>
-                            <div>
-                                <input class="design_target_value ms-2" name="{{ additional_design_target.name }}"
-                                        {% if additional_design_target.value is not none %}
-                                        value="{{ additional_design_target.target_value }}"
-                                        {% endif %}
-                                        disabled/>
-                            </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    </div>
                 </div>
                 <div class="d-flex mt-2 gap-2">
-                    <button class="btn btn-secondary" id="additional_design_targets_button"
-                            {% if campaign_form.design_targets_field.data is not none %}
-                            disabled
-                            {% endif %}>
+                    <button class="btn btn-secondary" id="additional_design_targets_button" {% if campaign_form.design_targets %}disabled{% endif %}>
                         Optimize other +
                     </button>
                     <button class="btn btn-primary" id="design_targets_submit_button" disabled>Save</button>

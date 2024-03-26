@@ -9,6 +9,15 @@ export function assignClickEventToOtherForm() {
   });
 }
 
+function assignInputEventToOtherForm(){
+  const custom_other_option = document.querySelector(".custom_other_option_name")
+  custom_other_option.addEventListener("input", handleCustomOtherNaming);
+}
+
+function handleCustomOtherNaming(event){
+  const custom_other_option = event.target.previousElementSibling;
+  custom_other_option.value = event.target.value
+}
 export async function handleOtherSubmission() {
   const submit_other_button = document.getElementById("submit_other_button");
   submit_other_button.disabled = "true";
@@ -64,13 +73,15 @@ export function handleAddingOther() {
   const other_name_input = document.createElement("input");
   const other_option_input = document.createElement("input");
   other_option_input.type = "radio";
-  other_option_input.name = "other_option";
+  other_option_input.name = "custom_other_option";
   other_option_input.classList.add("other_option", "custom_other_option");
   other_name_input.placeholder = "Name of other";
-  other_name_input.classList.add("other_option_name","form-control", "w-25");
+  other_name_input.classList.add("custom_other_option_name","form-control", "w-25");
+  other_name_input.name = "custom_other_name"
   other_container.appendChild(other_option_input);
   other_container.appendChild(other_name_input);
   others_container.appendChild(other_container);
   assignClickEventToOtherForm();
+  assignInputEventToOtherForm();
   document.getElementById('additional_other_button').disabled = true
 }

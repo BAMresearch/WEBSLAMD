@@ -55,7 +55,7 @@ def test_update_design_assistant_session_calls_persistence_with_targets(monkeypa
 
     monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_design_targets_key',
                         mock_update_session_for_targets)
-    mock_targets = {'x1': 1, 'x2': 2}
+    mock_targets = [{'design_target_name_field': 'Workability'}, {'design_target_name_field': 'Reactivity'}]
     DesignAssistantService.update_design_assistant_session(mock_targets, 'design_targets')
 
     assert mock_update_session_called_with == mock_targets
@@ -63,13 +63,17 @@ def test_update_design_assistant_session_calls_persistence_with_targets(monkeypa
 
 def test_update_design_assistant_session_raises_error_on_too_many_design_targets():
     with pytest.raises(ValueNotSupportedException):
-        mock_targets = {'x1': 1, 'x2': 2, 'x3': 3}
+        mock_targets = [{'design_target_name_field': 'Workability'},
+                        {'design_target_name_field': 'Reactivity'},
+                        {'design_target_name_field': 'too many'}]
         DesignAssistantService.update_design_assistant_session(mock_targets, 'design_targets')
 
 
-def test_update_design_assistant_session_raises_error_when_values_are_not_numeric():
+def test_update_design_assistant_session_raises_error_when_value_is_too_long():
     with pytest.raises(ValueNotSupportedException):
-        mock_targets = {'x1': '', 'x2': 'not numeric'}
+        mock_targets = [{'design_target_name_field': 'Workability',
+                         'design_target_value_field': 'this value field is way too long and therefore not supported',
+                         'design_target_optimization_field': 'maximize'}]
         DesignAssistantService.update_design_assistant_session(mock_targets, 'design_targets')
 
 
@@ -154,14 +158,17 @@ def test_update_design_assistant_session_raises_error_when_other_is_too_long():
         DesignAssistantService.update_design_assistant_session(mock_liquid, 'other')
 
 
-def test_create_design_assistant_form_creates_properly_populated_form_without_optional_targets(monkeypatch):
+def test_create_design_assistant_form_creates_properly_populated_form_with_targets(monkeypatch):
     mock_get_session_called_with = None
 
     def mock_get_session_for_property(input):
         nonlocal mock_get_session_called_with
         mock_get_session_called_with = input
         return {'dataset': 'None',
-                'zero_shot_learner': {'design_targets': [{'reactivity': ''}, {'cost': ''}], 'liquid': 'dhiwq',
+                'zero_shot_learner': {'design_targets': [{'design_target_name_field': 'Workability',
+                                                          'design_target_value_field': '10 MPa',
+                                                          'design_target_optimization_field': 'maximize'}],
+                                      'liquid': 'dhiwq',
                                       'powders': {'blend': 'yes', 'selected': ['opc', 'fly_ash']}, 'type': 'Binder'}}
 
     def mock_get_progress(task):
@@ -178,58 +185,20 @@ def test_create_design_assistant_form_creates_properly_populated_form_without_op
     assert progress == 3
     assert mock_get_session_called_with == 'design_assistant'
     assert form.task_form['task_field'].data == 'zero_shot_learner'
-    assert form.campaign_form.data == {'additional_design_targets': [],
-                                       'additional_liquid': 'dhiwq',
+    assert form.campaign_form.data == {'additional_liquid': 'dhiwq',
                                        'additional_other': None,
                                        'blend_powders_field': 'yes',
                                        'comment_field': None,
-                                       'design_targets_field': ['reactivity', 'cost'],
+                                       'design_knowledge_field': None,
+                                       'design_targets': [{'design_target_name_field': 'Workability',
+                                                           'design_target_optimization_field': 'maximize',
+                                                           'design_target_value_field': '10 MPa'}],
                                        'liquids_field': None,
                                        'material_type_field': 'Binder',
                                        'other_field': None,
                                        'select_powders_field': ['opc', 'fly_ash'],
-                                       'submit_button': False,
-                                       'target_cost_field': '',
-                                       'target_reactivity_field': '',
-                                       'target_strength_field': None,
-                                       'target_sustainability_field': None,
-                                       'target_workability_field': None}
-
-
-def test_create_design_assistant_form_creates_properly_populated_form_with_optional_targets(monkeypatch):
-    mock_get_session_called_with = None
-
-    def mock_get_session_for_property(input):
-        nonlocal mock_get_session_called_with
-        mock_get_session_called_with = input
-        return {'dataset': 'None',
-                'zero_shot_learner': {'design_targets': [{'workability': '11.3'}, {'fc28d': '50'}],
-                                      'liquid': 'pure_water',
-                                      'powders': {'blend': 'yes', 'selected': ['fly_ash', 'ggbfs']},
-                                      'type': 'Concrete'}}
-
-    def mock_get_progress(task):
-        if task == 'zero_shot_learner':
-            return 6
-        return None
-
-    app = create_app('testing', with_session=False)
-    with app.test_request_context('/design_assistant'):
-        monkeypatch.setattr(DesignAssistantPersistence, 'get_session_for_property', mock_get_session_for_property)
-        monkeypatch.setattr(DesignAssistantPersistence, 'get_progress', mock_get_progress)
-        form, progress = DesignAssistantService.create_design_assistant_form()
-
-    assert progress == 6
-    assert mock_get_session_called_with == 'design_assistant'
-    assert form.task_form['task_field'].data == 'zero_shot_learner'
-    assert form.campaign_form.data == {'material_type_field': 'Concrete',
-                                       'design_targets_field': ['workability', 'fc28d'], 'target_strength_field': None,
-                                       'target_workability_field': '11.3', 'target_reactivity_field': None,
-                                       'target_sustainability_field': None, 'target_cost_field': None,
-                                       'additional_design_targets': [], 'select_powders_field': ['fly_ash', 'ggbfs'],
-                                       'blend_powders_field': 'yes', 'liquids_field': 'pure_water',
-                                       'additional_liquid': None, 'other_field': None, 'additional_other': None,
-                                       'comment_field': None, 'submit_button': False}
+                                       'standard_design_targets_field': None,
+                                       'submit_button': False}
 
 
 def test_instantiate_da_session_on_upload_zero_shot_data_creation_mutually_exclusive(monkeypatch):

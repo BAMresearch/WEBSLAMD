@@ -1,5 +1,6 @@
 from flask import render_template
-from werkzeug.exceptions import NotFound, BadRequest, RequestEntityTooLarge, UnprocessableEntity
+from werkzeug.exceptions import NotFound, BadRequest, RequestEntityTooLarge, UnprocessableEntity, Forbidden, \
+    RequestTimeout
 
 
 def handle_404(err):
@@ -28,6 +29,20 @@ def handle_422(err):
         return render_template('422.html', message=err.message), 422
     except AttributeError:
         return render_template('422.html', message='Cannot process provided entity or data.'), 422
+
+
+def handle_403(err):
+    try:
+        return render_template('403.html', message=err.message), 403
+    except AttributeError:
+        return render_template('403.html', message='Free tier exhausted. Please provide your token.'), 403
+
+
+def handle_408(err):
+    try:
+        return render_template('408.html', message=err.message), 408
+    except AttributeError:
+        return render_template('408.html', message='LLM not available.'), 408
 
 
 class MaterialNotFoundException(NotFound):
@@ -71,6 +86,18 @@ class SequentialLearningException(UnprocessableEntity):
 
 
 class SlamdUnprocessableEntityException(UnprocessableEntity):
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
+
+class FreeTrialLimitExhaustedException(Forbidden):
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
+
+class LLMNotRespondingException(RequestTimeout):
     def __init__(self, message):
         super().__init__()
         self.message = message

@@ -1,0 +1,12 @@
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div id="knowledge_chat_message_container" class="chat_message_container">
+            <div class="chat_message border rounded p-2 d-inline-block">
+                <div>Below is your final design prompt</div>
+                <div>{{ prompt }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
