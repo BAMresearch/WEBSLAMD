@@ -102,9 +102,9 @@ function insertSpinnerInPlaceholder(placeholderId, append = false, spinner = SPI
   }
 }
 
-function removeSpinnerInPlaceholder(placeholderId) {
+function removeSpinnerInPlaceholder(placeholderId, spinner = SPINNER) {
   const placeholder = document.getElementById(placeholderId);
-  placeholder.innerHTML = placeholder.innerHTML.replace(SPINNER, "");
+  placeholder.innerHTML = placeholder.innerHTML.replace(spinner, "");
 }
 
 function collectSelection(placeholder) {

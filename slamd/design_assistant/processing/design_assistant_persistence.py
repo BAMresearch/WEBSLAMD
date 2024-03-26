@@ -18,13 +18,7 @@ class DesignAssistantPersistence:
 
     @classmethod
     def update_session_for_design_targets_key(cls, value):
-        if isinstance(value, dict):
-            design_targets = []
-            for k, v in value.items():
-                design_targets.append({k: v})
-            session['design_assistant']['zero_shot_learner']['design_targets'] = design_targets
-        if isinstance(value, list):
-            session['design_assistant']['zero_shot_learner']['design_targets'] = value
+        session['design_assistant']['zero_shot_learner']['design_targets'] = value
 
     @classmethod
     def update_session_for_material_type_key(cls, value):
@@ -48,6 +42,10 @@ class DesignAssistantPersistence:
     @classmethod
     def update_session_for_comment_key(cls, value):
         session['design_assistant']['zero_shot_learner']['comment'] = value
+
+    @classmethod
+    def update_session_for_design_knowledge_key(cls, value):
+        session['design_assistant']['zero_shot_learner']['design_knowledge'] = value
 
     @classmethod
     def get_session_for_property(cls, key):

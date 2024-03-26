@@ -22,9 +22,16 @@
                 {% include 'campaign_design_targets.html' %}
                 {% endif %}
             </div>
+                <div id="design_targets_values_container" class="mb-4">
+                    {% if form.campaign_form is not none and form.campaign_form.design_targets %}
+                        {% include 'campaign_design_targets_values.html' %}
+                    {% endif %}
+                </div>
             <div id="powders_container" class="mb-4">
-                {% if form.campaign_form is not none and form.campaign_form.design_targets_field.data %}
-                {% include 'campaign_select_powders.html' %}
+                {% if form.campaign_form is not none and form.campaign_form.design_targets %}
+                        {% if form.campaign_form.design_targets[0].design_target_value_field.data %}
+                    {% include 'campaign_select_powders.html' %}
+                        {% endif %}
                 {% endif %}
             </div>
             <div id="liquids_container" class="mb-4">
@@ -46,7 +53,12 @@
             </div>
             <div id="knowledge_container" class="mb-4">
                 {% if form.campaign_form is not none and form.campaign_form.comment_field.data %}
-                {% include 'knowledge.html' %}
+                {% include 'design_knowledge.html' %}
+                    {% endif %}
+                </div>
+                <div id="prompt_container" class="mb-4">
+                    {% if form.campaign_form is not none and form.campaign_form.design_knowledge_field.data %}
+                        {% include 'prompt.html' %}
                 {% endif %}
             </div>
         </div>
