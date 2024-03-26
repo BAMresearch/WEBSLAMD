@@ -1,3 +1,5 @@
+import {assignEventsToDesignKnowledge} from './design_knowledge.js'
+
 export function assignInputEventToCommentForm() {
   const comment_input = document.getElementById("comment");
   if (comment_input) {
@@ -16,6 +18,13 @@ function handleCommentInput(event) {
 
 export async function handleCommentSubmission() {
   const comment_input = document.getElementById("comment");
+  let comment;
+  if (comment_input.value == ''){
+    comment = "No additional comment"
+  }
+  else {
+    comment = comment_input.value
+  }
   comment_input.disabled = "true";
   const submit_comment_button = document.getElementById("submit_comment_button");
   submit_comment_button.disabled = "true";
@@ -26,9 +35,10 @@ export async function handleCommentSubmission() {
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
-        "/design_assistant/zero_shotcomment",
+        "/design_assistant/zero_shot/comment",
         "knowledge_container",
-        comment_input.value
+        comment
     );
+  assignEventsToDesignKnowledge()
   }, 1000);
 }

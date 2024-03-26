@@ -1,10 +1,11 @@
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 import os
 
 from slamd.common.error_handling import SlamdUnprocessableEntityException, FreeTrialLimitExhaustedException
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
+from slamd.design_assistant.processing.llm_service import LLMService
 
 MAX_FREE_LLM_CALLS = 10
 
@@ -47,33 +48,13 @@ class DesignAssistantService:
                 cls._populate_other_field_with_session_value(form, value)
             if key == 'comment':
                 cls._populate_comment_field_with_session_value(form, value)
+            if key == 'design_knowledge':
+                cls._populate_design_knowledge_field_with_session_value(form, value)
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
-        design_target_options = []
         for design_target in value:
-            design_target_option = list(design_target.keys())[0]
-            design_target_options.append(design_target_option)
-            design_target_value = list(design_target.values())[0]
-            if design_target_option in ['strength', 'workability', 'reactivity', 'sustainability', 'cost']:
-                if design_target_option == 'strength':
-                    form.campaign_form.target_strength_field.data = design_target_value
-                if design_target_option == 'workability':
-                    form.campaign_form.target_workability_field.data = design_target_value
-                if design_target_option == 'reactivity':
-                    form.campaign_form.target_reactivity_field.data = design_target_value
-                if design_target_option == 'sustainability':
-                    form.campaign_form.target_sustainability_field.data = design_target_value
-                if design_target_option == 'cost':
-                    form.campaign_form.target_cost_field.data = design_target_value
-            else:
-                if form.campaign_form.additional_design_targets:
-                    form.campaign_form.additional_design_targets.append(
-                        {'name': design_target_option, 'target_value': design_target_value})
-                else:
-                    form.campaign_form.additional_design_targets = [
-                        {'name': design_target_option, 'target_value': design_target_value}]
-        form.campaign_form.design_targets_field.data = design_target_options
+            form.campaign_form.design_targets.append_entry(design_target)
 
     @classmethod
     def _populate_material_type_field_with_session_value(cls, form, session_value):
@@ -106,9 +87,13 @@ class DesignAssistantService:
         form.campaign_form.comment_field.data = value
 
     @classmethod
+    def _populate_design_knowledge_field_with_session_value(cls, form, value):
+        form.campaign_form.design_knowledge_field.data = value
+
+    @classmethod
     def create_design_assistant_campaign_form(cls):
-        form = DesignAssistantFactory.create_design_assistant_campaign_form()
-        return form
+        form = cls.create_design_assistant_form()
+        return form.campaign_form
 
     @classmethod
     def init_design_assistant_session(cls):
@@ -131,12 +116,8 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_material_type_key(value)
 
         if key == 'design_targets':
-            target_values = value.values()
-            if len(target_values) > 2:
-                raise ValueNotSupportedException('Only up to two target values are supported.')
-            for item in target_values:
-                if not_empty(item) and not_numeric(item):
-                    raise ValueNotSupportedException('Only numerical values ar allowed.')
+            if not cls._valid_targets_selection(value):
+                raise ValueNotSupportedException('Invalid target selection.')
             DesignAssistantPersistence.update_session_for_design_targets_key(value)
 
         if key == 'powders':
@@ -149,7 +130,7 @@ class DesignAssistantService:
             # For now: Naive Check for the inputs length
             if value not in ['pure_water', 'activator_liquid'] and len(value) > 20:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters')
+                                                 'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
 
         if key == 'other':
@@ -157,12 +138,15 @@ class DesignAssistantService:
             # For now: Naive Check for the inputs length
             if value not in ['scm', 'super_plasticizer'] and len(value) > 20:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters')
+                                                 'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
             # TODO: implement AI-based check that input string is sensible
             DesignAssistantPersistence.update_session_for_comment_key(value)
+
+        if key == 'design_knowledge':
+            DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
 
     @classmethod
     def _valid_powder_selection(cls, value):
@@ -172,6 +156,21 @@ class DesignAssistantService:
             if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['yes', 'no']:
                 return True
         return False
+
+    @classmethod
+    def _valid_targets_selection(cls, value):
+        if len(value) > 2:
+            return False
+        for item in value:
+            design_target_value_field = item.get('design_target_value_field', None)
+            design_target_optimization_field = item.get('design_target_optimization_field', None)
+            if design_target_value_field and len(design_target_value_field) > 20:
+                return False
+            if design_target_optimization_field and design_target_optimization_field not in ['maximized',
+                                                                                             'minimized',
+                                                                                             'No optimization']:
+                return False
+        return True
 
     @classmethod
     def delete_design_assistant_session(cls):
@@ -199,3 +198,8 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_remaining_free_llm_calls()
         else:
             raise FreeTrialLimitExhaustedException('Please provide your token.')
+
+    @classmethod
+    def generate_design_knowledge(cls):
+        design_knowledge = LLMService.generate_design_knowledge()
+        return design_knowledge

@@ -40,9 +40,18 @@ def handle_material():
 
 
 @design_assistant.route('/zero_shot/design_targets', methods=['POST'])
-def handle_target_values():
+def handle_design_targets():
     design_targets = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets, 'design_targets')
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {'template': render_template('campaign_design_targets_values.html', campaign_form=campaign_form)}
+    return make_response(jsonify(body), 200)
+
+
+@design_assistant.route('/zero_shot/design_targets_values', methods=['POST'])
+def handle_design_targets_values():
+    design_targets_values = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
@@ -80,7 +89,23 @@ def handle_comment():
     comment = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(comment, 'comment')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('knowledge.html', campaign_form=campaign_form)}
+    body = {'template': render_template('design_knowledge.html', campaign_form=campaign_form)}
+    return make_response(jsonify(body), 200)
+
+
+@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['GET'])
+def handle_generating_design_knowledge():
+    design_knowledge = DesignAssistantService.generate_design_knowledge()
+    body = {'template': design_knowledge}
+    return make_response(jsonify(body), 200)
+
+
+@design_assistant.route('/zero_shot/generate_prompt', methods=['POST'])
+def handle_generating_prompt():
+    design_knowledge = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(design_knowledge, 'design_knowledge')
+    prompt = 'This is a test prompt from the LLM'
+    body = {'template': render_template('prompt.html', prompt=prompt)}
     return make_response(jsonify(body), 200)
 
 

@@ -1,11 +1,11 @@
 import { assignClickEventToSubmitButton } from "./utils.js";
-import {assignClickEventToDesignTargetForm, handleAddingDesignTargets, handleDesignTargetsSubmission,} from "./target.js";
+import {assignClickEventToDesignTargetForm, handleAddingCustomDesignTarget, handleDesignTargetsSubmission,} from "./design_targets.js";
 
 
 export function assignClickEventToMaterialTypeField() {
-  const material_type_options = document.querySelectorAll(".material_type_field_option");
-  material_type_options.forEach((material_type_option) =>
-    material_type_option.addEventListener("click", handleMaterialTypeSelection)
+  const material_type_choices = document.querySelectorAll(".material_type_field_choice");
+  material_type_choices.forEach((material_type_choice) =>
+    material_type_choice.addEventListener("click", handleMaterialTypeSelection)
   );
 }
 
@@ -24,14 +24,14 @@ async function handleMaterialTypeSelection(event) {
     );
     assignClickEventToSubmitButton("design_targets_submit_button", handleDesignTargetsSubmission);
     assignClickEventToDesignTargetForm();
-    assignClickEventToSubmitButton("additional_design_targets_button", handleAddingDesignTargets);
+    assignClickEventToSubmitButton("additional_design_targets_button", handleAddingCustomDesignTarget);
   }, 1000);
-  const material_type_options = document.querySelectorAll(
-    ".material_type_field_option"
+  const material_type_choices = document.querySelectorAll(
+    ".material_type_field_choice"
   );
-  material_type_options.forEach(function (other_option) {
-    if (other_option !== this) {
-      other_option.disabled = true;
+  material_type_choices.forEach(function (other_choice) {
+    if (other_choice !== this) {
+      other_choice.disabled = true;
     }
   });
 }

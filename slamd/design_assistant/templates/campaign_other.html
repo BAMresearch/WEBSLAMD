@@ -5,9 +5,9 @@
         <div class="chat_message_container">
             <div class="chat_message border rounded p-2 d-inline-block">
                 <div id="other_option_container">
-                    {{ campaign_form.other_field.label(class = "mb-3") }}
+                    <div class="mb-3">{{ campaign_form.other_field.label.text }}</div>
                     {% for option in  campaign_form.other_field %}
-                        <div>
+                        <div class="d-flex gap-2">
                             <input
                                     type="radio"
                                     name="other_option"
@@ -19,10 +19,11 @@
                                     {% if option.checked %}
                                     checked
                                     {% endif %}/>
-                            <label for="{{ option.id }}">{{ option.label.text }}</label>
+                            <div>{{ option.label.text }}</div>
                         </div>
                     {% endfor %}
                     {% if  campaign_form.additional_other.data %}
+                    <div class="d-flex gap-2">
                         <input
                                 type="radio"
                                 name="other_option"
@@ -30,7 +31,8 @@
                                 value="{{ campaign_form.additional_other.data }}"
                                 checked
                                 disabled/>
-                        <label>{{ campaign_form.additional_other.data }}</label>
+                        <div>{{ campaign_form.additional_other.data }}</div>
+                    </div>
                     {% endif %}
                 </div>
                 <div class="d-flex mt-2 gap-2">

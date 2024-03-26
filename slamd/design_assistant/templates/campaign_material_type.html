@@ -5,17 +5,17 @@
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
             <div class="chat_message border rounded p-2 d-inline-block">
-                {{ campaign_form.material_type_field.label(class = "mb-3") }}
-                {% for option in  campaign_form.material_type_field %}
-                <div>
-                    <input class="material_type_field_option" type="radio" value="{{ option.data }}"
-                           {% if option.data == campaign_form.material_type_field.data %}
+                <div class = "mb-3">{{ campaign_form.material_type_field.label.text }}</div>
+                {% for choice in campaign_form.material_type_field %}
+                <div class="d-flex gap-2">
+                    <input class="material_type_field_choice" type="radio" value="{{ choice.data }}" name="material_type_choice"
+                           {% if choice.data == campaign_form.material_type_field.data %}
                            checked
                            {% endif %}
                            {% if campaign_form.material_type_field.data %}
                            disabled
                            {% endif %}/>
-                    <label>{{ option.label.text }}</label>
+                    <div>{{ choice.label.text }}</div>
                 </div>
             {% endfor %}
             </div>
