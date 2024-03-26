@@ -136,7 +136,7 @@ export function handleAddingCustomDesignTarget() {
   const design_target_option_name_input = document.createElement("input");
   design_target_option_name_input.classList.add("custom_design_target_option_name")
   design_target_option_name_input.classList.add("form-control")
-  design_target_option_name_input.placeholder = "Name of the design target";
+  design_target_option_name_input.placeholder = "Required: Name target";
   design_target_option_name_input.name = "custom_design_target_option"
   // add all html elements sequentially to container that wraps all design targets
   design_target_option_inner_container.appendChild(design_target_option_checkbox_input);

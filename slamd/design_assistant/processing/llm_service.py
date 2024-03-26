@@ -38,7 +38,7 @@ class LLMService:
         design_targets_prompt_excerpt = cls._generate_design_targets_prompt_excerpt(zero_shot_learner_session)
         user_prompt = material_type_prompt_excerpt + '////Components: \n' + powders_prompt_excerpt + liquid_prompt_excerpt + other_prompt_excerpt + comment_prompt_excerpt + design_targets_prompt_excerpt
         # combine user prompt with system prompt and instruction to build final prompt
-        system_prompt = "You have performed thousands of experiments in the laboratory. You have extensive design proficiency in the compressive strength of FA/GGBFS-based geopolymer concrete. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than 8 concise sentences, each containing quantitative facts and trade-offs that relate only to the compressive strength. You always answer directly, e.g., the change in (parameter) between (lower) and (upper) range has ( effect) due to (influence).  Let’s work this out in a step-by-step way to be sure we have the right answer. Consider the following scenario:\n";
+        system_prompt = "You have performed thousands of experiments in the laboratory. You have extensive design proficiency in the compressive strength of FA/GGBFS-based geopolymer concrete. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than 8 concise sentences, each containing quantitative facts and trade-offs that relate only to the compressive strength. You always answer directly, e.g., the change in (parameter) between (lower) and (upper) range has (effect) due to (influence).  Let’s work this out in a step-by-step way to be sure we have the right answer. Consider the following scenario:\n";
         instruction = f'What is the best design knowledge you have for finding concrete formulations, that consist of the specified components, adhere to the specified design targets and have the highest possible compressive strength?'
         prompt = system_prompt + user_prompt + instruction
         return prompt
@@ -53,8 +53,7 @@ class LLMService:
     def _generate_powders_prompt_excerpt(cls, zero_shot_learner_session):
         powders = zero_shot_learner_session['powders']['selected']
         blend_powders = zero_shot_learner_session['powders']['blend']
-        if len(powders) > 1:
-            powders = ', '.join(powders)
+        powders = ', '.join(powders)
         if blend_powders == 'yes':
             powders = f'blend of {powders}'
         else:
@@ -90,9 +89,9 @@ class LLMService:
         design_target_optimization = ''
         for idx, design_target in enumerate(design_targets):
             if design_target["design_target_optimization_field"] == 'minimized':
-                design_target_optimization = 'with a maximum of'
+                design_target_optimization = ' with a maximum of '
             if design_target["design_target_optimization_field"] == 'maximized':
-                design_target_optimization = 'with at least'
+                design_target_optimization = ' with at least '
             if design_target["design_target_optimization_field"] == 'No optimization':
                 design_target_optimization = ''
             if design_target["design_target_value_field"] == 'No target value':
