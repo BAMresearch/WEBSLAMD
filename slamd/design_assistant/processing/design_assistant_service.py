@@ -1,13 +1,8 @@
 from slamd.common.error_handling import SlamdUnprocessableEntityException
-import os
-
-from slamd.common.error_handling import SlamdUnprocessableEntityException, FreeTrialLimitExhaustedException
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 from slamd.design_assistant.processing.llm_service import LLMService
-
-MAX_FREE_LLM_CALLS = 10
 
 
 class DesignAssistantService:
@@ -100,11 +95,7 @@ class DesignAssistantService:
         DesignAssistantPersistence.init_session()
 
     @classmethod
-    def update_design_assistant_session(cls, value, key=None, token=None):
-        # TODO: move token logic to knowledge creation and prediction
-        if not token:
-            DesignAssistantService.call_llm()
-
+    def update_design_assistant_session(cls, value, key=None):
         if key == 'task':
             if value not in ['zero_shot_learner', 'data_creation']:
                 raise ValueNotSupportedException('Provided task is not supported.')
@@ -189,17 +180,6 @@ class DesignAssistantService:
             pass
 
     @classmethod
-    def call_llm(cls):
-        count = DesignAssistantPersistence.get_remaining_free_llm_calls()
-        if count < MAX_FREE_LLM_CALLS:
-            token = os.getenv('OPENAI_API_TOKEN')
-            # TODO: Replace with real llm logic and pass token to API
-            print(f'SIMULATED CALL -> count: {count}')
-            DesignAssistantPersistence.update_remaining_free_llm_calls()
-        else:
-            raise FreeTrialLimitExhaustedException('Please provide your token.')
-
-    @classmethod
-    def generate_design_knowledge(cls):
-        design_knowledge = LLMService.generate_design_knowledge()
+    def generate_design_knowledge(cls, token):
+        design_knowledge = LLMService.generate_design_knowledge(token)
         return design_knowledge

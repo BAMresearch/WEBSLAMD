@@ -3,9 +3,9 @@ export function assignEventsToDesignKnowledge() {
     assignClickEventToContinueButton()
 }
 
-export function assignClickEventToGenerateDesignKnowledgeButton(){
+export function assignClickEventToGenerateDesignKnowledgeButton() {
     const generate_design_knowledge_button = document.getElementById("generate_design_knowledge_button")
-    if (generate_design_knowledge_button){
+    if (generate_design_knowledge_button) {
         generate_design_knowledge_button.addEventListener('click', async function () {
             insertSpinnerInPlaceholder(
                 "llm_response_container",
@@ -13,7 +13,11 @@ export function assignClickEventToGenerateDesignKnowledgeButton(){
                 CHATBOT_RESPONSE_SPINNER
             );
             setTimeout(async function handleSubmission() {
-                await fetchDataAndEmbedTemplateInPlaceholder('/design_assistant/zero_shot/generate_design_knowledge', 'llm_response')
+                await postDataAndEmbedTemplateInPlaceholder(
+                    "/design_assistant/zero_shot/generate_design_knowledge",
+                    "llm_response",
+                    {"token": document.getElementById("token_form-token").value}
+                );
                 removeSpinnerInPlaceholder("llm_response_container", CHATBOT_RESPONSE_SPINNER)
                 document.getElementById("llm_response").classList.remove('d-none')
             }, 1000);
@@ -24,7 +28,7 @@ export function assignClickEventToGenerateDesignKnowledgeButton(){
     }
 }
 
-export function assignClickEventToContinueButton(){
+export function assignClickEventToContinueButton() {
     const continue_design_knowledge_button = document.getElementById("continue_design_knowledge_button")
     if (continue_design_knowledge_button) {
         continue_design_knowledge_button.addEventListener('click', function () {

@@ -64,7 +64,7 @@ class DesignAssistantPersistence:
             session['design_assistant']['type'] = session_data[task]['type']
 
     @classmethod
-    def get_remaining_free_llm_calls(cls):
+    def get_free_llm_calls_count(cls):
         return session.get('count_llm_calls', 0)
 
     @classmethod

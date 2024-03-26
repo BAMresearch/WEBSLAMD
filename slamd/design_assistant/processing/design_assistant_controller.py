@@ -20,11 +20,10 @@ def design_assistant_page():
                            campaign_form=form.campaign_form)
 
 
-# TODO: move token logic to knowledge creation and prediction
 @design_assistant.route('/task', methods=['POST'])
 def handle_task():
-    data = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(data['task'], 'task', data['token'])
+    task = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(task, 'task')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_material_type.html', campaign_form=campaign_form, session=session)}
     return make_response(jsonify(body), 200)
@@ -93,9 +92,10 @@ def handle_comment():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['GET'])
+@design_assistant.route('/zero_shot/generate_design_knowledge', methods=['POST'])
 def handle_generating_design_knowledge():
-    design_knowledge = DesignAssistantService.generate_design_knowledge()
+    data = json.loads(request.data)
+    design_knowledge = DesignAssistantService.generate_design_knowledge(data['token'])
     body = {'template': design_knowledge}
     return make_response(jsonify(body), 200)
 
