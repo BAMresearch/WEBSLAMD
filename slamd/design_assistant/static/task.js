@@ -1,5 +1,4 @@
-import { assignClickEventToImportSelectionForm } from "./import_selection.js";
-
+import {assignClickEventToMaterialTypeField} from "./material_type.js";
 
 export function assignClickEventToTaskForm() {
   const task_choices = document.querySelectorAll(".task_field_choice");
@@ -9,20 +8,20 @@ export function assignClickEventToTaskForm() {
 }
 
 export async function handleTaskSelection(event) {
-  const task = event.target.value;
-  insertSpinnerInPlaceholder(
-    "import_selection_container",
-    true,
-    CHATBOT_RESPONSE_SPINNER
-  );
-  setTimeout(async function handleSubmission() {
-    await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/task",
-      "import_selection_container",
-      task
+    const task = event.target.value;
+    insertSpinnerInPlaceholder(
+        "material_type_container",
+        true,
+        CHATBOT_RESPONSE_SPINNER
     );
-    assignClickEventToImportSelectionForm();
-  }, 1000);
+    setTimeout(async function handleSubmission() {
+        await postDataAndEmbedTemplateInPlaceholder(
+            "/design_assistant/task",
+            "material_type_container",
+            task
+        );
+        assignClickEventToMaterialTypeField();
+    }, 1000);
 
   const task_choices = document.querySelectorAll(".task_field_choice");
   task_choices.forEach(function (other_choice) {

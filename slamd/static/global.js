@@ -146,7 +146,6 @@ async function autoUploadSessionFile() {
   const submitURL = `${window.location.protocol}//${window.location.host}/session`;
   const formData = new FormData();
   formData.append("file", selectedFile);
-  formData.append("name", "test");
   const response = await fetch(submitURL, {
     method: "POST",
     body: formData,
