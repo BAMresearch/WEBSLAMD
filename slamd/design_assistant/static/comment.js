@@ -1,3 +1,5 @@
+import {scrollDown} from "./utils.js";
+
 export function assignInputEventToCommentForm() {
   const comment_input = document.getElementById("comment");
   if (comment_input) {
@@ -30,5 +32,6 @@ export async function handleCommentSubmission() {
         "knowledge_container",
         comment_input.value
     );
+    scrollDown()
   }, 1000);
 }

@@ -1,4 +1,5 @@
 import {assignClickEventToMaterialTypeField} from "./material_type.js";
+import {scrollDown} from "./utils.js";
 
 export function assignClickEventToTaskForm() {
     const task_options = document.querySelectorAll(".task_field_option");
@@ -21,6 +22,7 @@ export async function handleTaskSelection(event) {
             task
         );
         assignClickEventToMaterialTypeField();
+        scrollDown()
     }, 1000);
 
     const task_options = document.querySelectorAll(".task_field_option");

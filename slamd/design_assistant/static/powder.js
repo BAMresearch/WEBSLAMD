@@ -1,4 +1,4 @@
-import { assignClickEventToSubmitButton } from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown} from "./utils.js";
 import { countSelectedOptions } from "./utils.js";
 import {assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid,} from "./liquid.js";
 
@@ -52,6 +52,7 @@ export async function handlePowdersSubmission() {
     assignClickEventToSubmitButton("submit_liquid_button", handleLiquidSubmission);
     assignClickEventToSubmitButton("additional_liquid_button", handleAddingLiquid);
     assignClickEventToLiquidForm();
+    scrollDown()
   }, 1000);
 }
 

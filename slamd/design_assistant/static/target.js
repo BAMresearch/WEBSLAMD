@@ -1,4 +1,4 @@
-import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
+import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown} from "./utils.js";
 import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
 
 
@@ -53,6 +53,7 @@ export async function handleDesignTargetsSubmission(event) {
     );
     assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
     assignClickEventToPowdersForm();
+    scrollDown()
   }, 1000);
 }
 

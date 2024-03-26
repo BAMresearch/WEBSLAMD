@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-end mb-4">
         <button id="delete_session_button" class="btn btn-danger text-end">Reset conversation</button>
     </div>
-    <div id="chat_window" class="p-4 h-100">
+    <div id="chat_window" class="p-4 h-100" style="overflow-y: auto">
         {{ form.csrf_token }}
         <div id="task_selection_container" class="mb-4">{% include 'task.html' %}</div>
         <div id="campaign_container">
