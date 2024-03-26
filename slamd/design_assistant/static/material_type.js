@@ -1,4 +1,4 @@
-import {assignClickEventToSubmitButton, scrollDown} from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./utils.js";
 import {assignClickEventToDesignTargetForm, handleAddingDesignTargets, handleDesignTargetsSubmission,} from "./target.js";
 
 
@@ -25,6 +25,7 @@ async function handleMaterialTypeSelection(event) {
     assignClickEventToSubmitButton("design_targets_submit_button", handleDesignTargetsSubmission);
     assignClickEventToDesignTargetForm();
     assignClickEventToSubmitButton("additional_design_targets_button", handleAddingDesignTargets);
+    updateProgress()
     scrollDown()
   }, 1000);
   const material_type_options = document.querySelectorAll(

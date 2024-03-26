@@ -1,4 +1,4 @@
-import {scrollDown} from "./utils.js";
+import {scrollDown, updateProgress} from "./utils.js";
 
 export function assignInputEventToCommentForm() {
   const comment_input = document.getElementById("comment");
@@ -32,6 +32,7 @@ export async function handleCommentSubmission() {
         "knowledge_container",
         comment_input.value
     );
+    updateProgress()
     scrollDown()
   }, 1000);
 }

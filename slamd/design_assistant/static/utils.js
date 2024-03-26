@@ -19,3 +19,8 @@ export function scrollDown() {
     let chatWindow = document.getElementById('chat_window');
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
+
+export function updateProgress() {
+    let progressBar = document.getElementById('chat_progress');
+    progressBar.value = progressBar.value + 1;
+}
