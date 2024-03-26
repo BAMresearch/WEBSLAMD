@@ -1,12 +1,9 @@
-import json
-from datetime import datetime
-
-from slamd.common.error_handling import SlamdUnprocessableEntityException, ValueNotSupportedException
+from slamd.common.error_handling import SlamdUnprocessableEntityException
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.common.slamd_utils import not_empty, not_numeric
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 from slamd.design_assistant.processing.llm_service import LLMService
+
 
 class DesignAssistantService:
 
@@ -112,6 +109,13 @@ class DesignAssistantService:
         if key == 'design_targets':
             if len(value) > 2:
                 raise ValueNotSupportedException('Only up to two target values are supported.')
+            for item in value:
+                design_target_value_field = item.get('design_target_value_field', None)
+                design_target_optimization_field = item.get('design_target_optimization_field', None)
+                if design_target_value_field and len(design_target_value_field) > 20:
+                    raise ValueNotSupportedException('Value and Unit cannot be longer than 20 characters')
+                if design_target_optimization_field and len(design_target_optimization_field) > 20:
+                    raise ValueNotSupportedException('Invalid optimization strategy.')
             DesignAssistantPersistence.update_session_for_design_targets_key(value)
 
         if key == 'powders':
@@ -166,7 +170,6 @@ class DesignAssistantService:
             DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
         else:
             pass
-
 
     @classmethod
     def generate_design_knowledge(cls):
