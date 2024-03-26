@@ -29,7 +29,6 @@ export function assignClickEventToContinueButton(){
     if (continue_design_knowledge_button) {
         continue_design_knowledge_button.addEventListener('click', function () {
             const design_knowledge = document.getElementById("llm_response").innerHTML
-            console.log((design_knowledge))
             insertSpinnerInPlaceholder(
                 "prompt_container",
                 true,
