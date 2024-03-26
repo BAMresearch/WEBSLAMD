@@ -1,28 +1,49 @@
 import openai
 import os
-from dotenv import load_dotenv
+
+from slamd.common.error_handling import FreeTrialLimitExhaustedException, ValueNotSupportedException, \
+    LLMNotRespondingException
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
-load_dotenv()
+MAX_FREE_LLM_CALLS = 10
 
 
 class LLMService:
 
     @classmethod
-    def generate_design_knowledge(cls):
+    def generate_design_knowledge(cls, token):
         prompt = cls._generate_design_knowledge_prompt()
         user_message = {"role": "user", "content": prompt}
-        generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo')
+        generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
         return generated_design_knowledge
 
     @classmethod
-    def _generate_openai_llm_response(cls, messages, model):
-        client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-        model_response = client.chat.completions.create(
-            messages=messages,
-            model=model
-        )
-        return model_response.choices[0].message.content
+    def _generate_openai_llm_response(cls, messages, model, token):
+        if token:
+            api_key = token
+        else:
+            api_key = cls.use_free_tier_token()
+        client = openai.OpenAI(api_key=api_key)
+        try:
+            model_response = client.chat.completions.create(
+                messages=messages,
+                model=model
+            )
+            return model_response.choices[0].message.content
+        except openai.AuthenticationError:
+            raise ValueNotSupportedException('Invalid Token. Generate one from OpenAI.')
+        except Exception:
+            raise LLMNotRespondingException('LLM is currently not available.')
+
+    @classmethod
+    def use_free_tier_token(cls):
+        count = DesignAssistantPersistence.get_free_llm_calls_count()
+        if count < MAX_FREE_LLM_CALLS:
+            token = os.getenv('OPENAI_API_TOKEN')
+            DesignAssistantPersistence.update_remaining_free_llm_calls()
+            return token
+        else:
+            raise FreeTrialLimitExhaustedException('Please provide your token.')
 
     @classmethod
     def _generate_design_knowledge_prompt(cls):

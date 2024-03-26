@@ -9,7 +9,6 @@ import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} f
 import {assignInputEventToCommentForm, handleCommentSubmission} from "./comment.js";
 import {handleDeleteDesignAssistantSession} from "./design_assistant_session.js"
 import { assignEventsToDesignKnowledge } from './design_knowledge.js'
-
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
     assignClickEventToSubmitButton("delete_session_button", handleDeleteDesignAssistantSession);

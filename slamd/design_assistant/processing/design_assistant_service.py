@@ -180,6 +180,6 @@ class DesignAssistantService:
             pass
 
     @classmethod
-    def generate_design_knowledge(cls):
-        design_knowledge = LLMService.generate_design_knowledge()
+    def generate_design_knowledge(cls, token):
+        design_knowledge = LLMService.generate_design_knowledge(token)
         return design_knowledge

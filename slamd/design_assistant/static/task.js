@@ -1,10 +1,10 @@
 import {assignClickEventToMaterialTypeField} from "./material_type.js";
 
 export function assignClickEventToTaskForm() {
-  const task_choices = document.querySelectorAll(".task_field_choice");
-  task_choices.forEach((task_choice) =>
-    task_choice.addEventListener("click", handleTaskSelection)
-  );
+    const task_choices = document.querySelectorAll(".task_field_choice");
+    task_choices.forEach((task_choice) =>
+        task_choice.addEventListener("click", handleTaskSelection)
+    );
 }
 
 export async function handleTaskSelection(event) {
@@ -23,10 +23,10 @@ export async function handleTaskSelection(event) {
         assignClickEventToMaterialTypeField();
     }, 1000);
 
-  const task_choices = document.querySelectorAll(".task_field_choice");
-  task_choices.forEach(function (other_choice) {
-    if (other_choice !== this) {
-      other_choice.disabled = true;
-    }
-  });
+    const task_choices = document.querySelectorAll(".task_field_choice");
+    task_choices.forEach(function (other_choice) {
+        if (other_choice !== this) {
+            other_choice.disabled = true;
+        }
+    });
 }
