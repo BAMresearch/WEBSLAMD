@@ -107,15 +107,8 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_material_type_key(value)
 
         if key == 'design_targets':
-            if len(value) > 2:
-                raise ValueNotSupportedException('Only up to two target values are supported.')
-            for item in value:
-                design_target_value_field = item.get('design_target_value_field', None)
-                design_target_optimization_field = item.get('design_target_optimization_field', None)
-                if design_target_value_field and len(design_target_value_field) > 20:
-                    raise ValueNotSupportedException('Value and Unit cannot be longer than 20 characters')
-                if design_target_optimization_field and len(design_target_optimization_field) > 20:
-                    raise ValueNotSupportedException('Invalid optimization strategy.')
+            if not cls._valid_targets_selection(value):
+                raise ValueNotSupportedException('Invalid target selection.')
             DesignAssistantPersistence.update_session_for_design_targets_key(value)
 
         if key == 'powders':
@@ -128,7 +121,7 @@ class DesignAssistantService:
             # For now: Naive Check for the inputs length
             if value not in ['pure_water', 'activator_liquid'] and len(value) > 20:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters')
+                                                 'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
 
         if key == 'other':
@@ -136,7 +129,7 @@ class DesignAssistantService:
             # For now: Naive Check for the inputs length
             if value not in ['scm', 'super_plasticizer'] and len(value) > 20:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters')
+                                                 'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
@@ -145,7 +138,7 @@ class DesignAssistantService:
 
         if key == 'design_knowledge':
             DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
-    
+
     @classmethod
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']
@@ -154,6 +147,21 @@ class DesignAssistantService:
             if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['yes', 'no']:
                 return True
         return False
+
+    @classmethod
+    def _valid_targets_selection(cls, value):
+        if len(value) > 2:
+            return False
+        for item in value:
+            design_target_value_field = item.get('design_target_value_field', None)
+            design_target_optimization_field = item.get('design_target_optimization_field', None)
+            if design_target_value_field and len(design_target_value_field) > 20:
+                return False
+            if design_target_optimization_field and design_target_optimization_field not in ['maximized',
+                                                                                             'minimized',
+                                                                                             'No optimization']:
+                return False
+        return True
 
     @classmethod
     def delete_design_assistant_session(cls):
