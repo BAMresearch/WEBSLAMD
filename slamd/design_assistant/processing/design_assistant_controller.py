@@ -14,9 +14,7 @@ design_assistant = Blueprint('design_assistant', __name__,
 @design_assistant.route('/', methods=['GET'])
 def design_assistant_page():
     form = DesignAssistantService.create_design_assistant_form()
-    return render_template('design_assistant.html', form=form, task_form=form.task_form,
-
-                           campaign_form=form.campaign_form )
+    return render_template('design_assistant.html', form=form, task_form=form.task_form,campaign_form=form.campaign_form )
 
 
 @design_assistant.route('/task', methods=['POST'])

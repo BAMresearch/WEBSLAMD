@@ -46,6 +46,8 @@ class DesignAssistantService:
                 cls._populate_other_field_with_session_value(form, value)
             if key == 'comment':
                 cls._populate_comment_field_with_session_value(form, value)
+            if key == 'design_knowledge':
+                cls._populate_design_knowledge_field_with_session_value(form, value)
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
