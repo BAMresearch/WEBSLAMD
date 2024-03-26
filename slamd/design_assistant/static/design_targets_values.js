@@ -1,4 +1,4 @@
-import { assignClickEventToSubmitButton } from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./utils.js";
 import {assignClickEventToPowdersForm, handlePowdersSubmission} from "./powder.js";
 
 export function assignEventsToTargetValuesForm() {
@@ -35,6 +35,8 @@ function handleDesignTargetsValuesSubmission(){
                 );
                 assignClickEventToSubmitButton("powders_submit_button", handlePowdersSubmission);
                 assignClickEventToPowdersForm();
+                updateProgress()
+                scrollDown()
         }, 1000)
         for (let i = 0; i < design_target_values.length; i++) {
                 design_target_values[i].disabled = true

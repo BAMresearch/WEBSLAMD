@@ -98,7 +98,7 @@ class DesignAssistantService:
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
-        form = cls.create_design_assistant_form()
+        form, _ = cls.create_design_assistant_form()
         return form.campaign_form
 
     @classmethod
