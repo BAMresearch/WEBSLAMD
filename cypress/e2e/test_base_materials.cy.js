@@ -28,7 +28,7 @@ describe("Test creating base materials", () => {
 
     // Fill out composition properties
     cy.findByText("4 - Composition").click();
-    cy.findByText("Molecular composition").scrollIntoView();
+    cy.findByText("Oxide composition").scrollIntoView();
     cy.fillForm({
       "Fe₂O₃ (m%)": "12.3",
       "SiO₂ (m%)": "23.4",
