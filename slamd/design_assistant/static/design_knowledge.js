@@ -1,3 +1,5 @@
+import { assignEventsToPromptForm } from "./prompt.js"
+
 export function assignEventsToDesignKnowledge() {
     assignClickEventToGenerateDesignKnowledgeButton()
     assignClickEventToContinueButton()
@@ -40,7 +42,7 @@ export function assignClickEventToContinueButton() {
             );
             setTimeout(async function handleSubmission() {
                 await postDataAndEmbedTemplateInPlaceholder(
-                    "/design_assistant/zero_shot/generate_prompt",
+                    "/design_assistant/zero_shot/prompt",
                     "prompt_container",
                     design_knowledge
                 );
@@ -48,6 +50,7 @@ export function assignClickEventToContinueButton() {
                 document.getElementById("generate_design_knowledge_button").disabled = true
                 document.getElementById("llm_response").disabled = true
             }, 1000);
+        assignEventsToPromptForm()
         });
     }
 }

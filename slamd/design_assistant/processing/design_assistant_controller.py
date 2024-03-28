@@ -100,14 +100,18 @@ def handle_generating_design_knowledge():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route('/zero_shot/generate_prompt', methods=['POST'])
-def handle_generating_prompt():
+@design_assistant.route('/zero_shot/prompt', methods=['POST'])
+def handle_prompt():
     design_knowledge = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_knowledge, 'design_knowledge')
-    prompt = 'This is a test prompt from the LLM'
-    body = {'template': render_template('prompt.html', prompt=prompt)}
+    body = {'template': render_template('prompt.html')}
     return make_response(jsonify(body), 200)
 
+@design_assistant.route('/zero_shot/generate_prompt', methods=['GET'])
+def handle_generating_prompt():
+    zero_shot_learner_prompt = DesignAssistantService.generate_zero_shot_learner_prompt() 
+    body = {'template': zero_shot_learner_prompt}
+    return make_response((jsonify(body)))
 
 @design_assistant.route('/session', methods=['DELETE'])
 def handle_delete_session():

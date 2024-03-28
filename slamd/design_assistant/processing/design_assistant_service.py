@@ -183,3 +183,8 @@ class DesignAssistantService:
     def generate_design_knowledge(cls, token):
         design_knowledge = LLMService.generate_design_knowledge(token)
         return design_knowledge
+    
+    @classmethod
+    def generate_zero_shot_learner_prompt(cls):
+        zero_shot_learner_prompt = LLMService.generate_zero_shot_learner_prompt()
+        return zero_shot_learner_prompt
