@@ -1,4 +1,4 @@
-import {assignEventsToDesignKnowledge} from './design_knowledge.js'
+import {assignEventsToDesignKnowledgeForm} from './design_knowledge.js'
 
 export function assignInputEventToCommentForm() {
   const comment_input = document.getElementById("comment");
@@ -29,16 +29,16 @@ export async function handleCommentSubmission() {
   const submit_comment_button = document.getElementById("submit_comment_button");
   submit_comment_button.disabled = "true";
   insertSpinnerInPlaceholder(
-      "knowledge_container",
+      "design_knowledge_container",
       true,
       CHATBOT_RESPONSE_SPINNER
   );
   setTimeout(async function handleSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
         "/design_assistant/zero_shot/comment",
-        "knowledge_container",
+        "design_knowledge_container",
         comment
     );
-  assignEventsToDesignKnowledge()
+  assignEventsToDesignKnowledgeForm()
   }, 1000);
 }

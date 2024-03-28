@@ -69,4 +69,6 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
+    formulation_field = StringField(label="Alright, based on all the information your provided me with, this is my suggestions: ")
+
     submit_button = SubmitField("Save")

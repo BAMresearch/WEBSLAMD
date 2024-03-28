@@ -11,7 +11,6 @@ class DesignAssistantPersistence:
     def update_session_for_task_key(cls, value):
         session['design_assistant'][value] = {}
 
-
     @classmethod
     def update_session_for_import_selection_key(cls):
         session['design_assistant']['dataset'] = 'None'
@@ -46,6 +45,10 @@ class DesignAssistantPersistence:
     @classmethod
     def update_session_for_design_knowledge_key(cls, value):
         session['design_assistant']['zero_shot_learner']['design_knowledge'] = value
+
+    @classmethod
+    def update_session_for_formulation_key(cls, value):
+        session['design_assistant']['zero_shot_learner']['formulation'] = value
 
     @classmethod
     def get_session_for_property(cls, key):

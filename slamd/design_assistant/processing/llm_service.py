@@ -11,6 +11,13 @@ MAX_FREE_LLM_CALLS = 10
 class LLMService:
 
     @classmethod
+    def generate_formulation(cls, design_knowledge, token):
+        prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
+        user_message = {"role": "user", "content": prompt}
+        formulation = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
+        return formulation
+
+    @classmethod
     def generate_design_knowledge(cls, token):
         prompt = cls._generate_design_knowledge_prompt()
         user_message = {"role": "user", "content": prompt}
@@ -18,10 +25,9 @@ class LLMService:
         return generated_design_knowledge
     
     @classmethod
-    def generate_zero_shot_learner_prompt(cls):
+    def _generate_zero_shot_learner_prompt(cls, design_knowledge):
         design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
-        zero_shot_learner_session = design_assistant_session['zero_shot_learner'] 
-        design_knowledge_prompt_excerpt = zero_shot_learner_session["design_knowledge"]
+        design_knowledge_prompt_excerpt = design_knowledge
         instruction_prompt_excerpt = "////You are a powerful concrete formulation prediction model tasked with finding the best concrete formulation that maximizes compressive strength. Your predictions will be validated in the Laboratory and you will receive the real-world performance. You will learn from the feedback provided to improve your previous suggestions to find a perfect mix design. Make sure that every formulation lies on this parameter grid: //powder content in kg: 360, 370, 380, 390,400, 410, 420, 430, 440, 450 //water-to-cement (WC) ratio: 0.45, 0.5, 0.55, 0.6 //Materials: Fly-Ash/GGBFS at a ratio: 0.7/0.3, 0.6/0.4, 0.5/0.5 //curing: Ambient curing/Heat curing  ////You are able to incorporate General design knowledge and lab validations to improve your predictions. You can only answer in this exact format with no additional explanations or context: 'The formulation is Powderkg = {your estimate}, wc = {your estimate}, materials = {your estimate}, curing = {your estimate}'\n"
         zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge_prompt_excerpt
         return zero_shot_learner_prompt

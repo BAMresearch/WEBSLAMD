@@ -45,6 +45,8 @@ class DesignAssistantService:
                 cls._populate_comment_field_with_session_value(form, value)
             if key == 'design_knowledge':
                 cls._populate_design_knowledge_field_with_session_value(form, value)
+            if key == 'formulation':
+                cls._populate_formulation_field_with_session_value(form, value)
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
@@ -84,6 +86,10 @@ class DesignAssistantService:
     @classmethod
     def _populate_design_knowledge_field_with_session_value(cls, form, value):
         form.campaign_form.design_knowledge_field.data = value
+    
+    @classmethod
+    def _populate_formulation_field_with_session_value(cls, form, value):
+        form.campaign_form.formulation_field.data = value
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
@@ -138,6 +144,9 @@ class DesignAssistantService:
 
         if key == 'design_knowledge':
             DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
+        
+        if key == "formulation":
+            DesignAssistantPersistence.update_session_for_formulation_key(value)
 
     @classmethod
     def _valid_powder_selection(cls, value):
@@ -188,3 +197,8 @@ class DesignAssistantService:
     def generate_zero_shot_learner_prompt(cls):
         zero_shot_learner_prompt = LLMService.generate_zero_shot_learner_prompt()
         return zero_shot_learner_prompt
+
+    @classmethod
+    def generate_formulation(cls, design_knowledge, token):
+        formulations = LLMService.generate_formulation(design_knowledge, token) 
+        return formulations

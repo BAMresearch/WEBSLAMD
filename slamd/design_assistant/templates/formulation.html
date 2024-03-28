@@ -1,0 +1,13 @@
+{% block content %}
+    {% from 'icons.html' import chatbot_icon %}
+    <div class="col d-flex gap-3">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div id="formulation_chat_message_container" class="chat_message_container">
+            <div class="chat_message border rounded p-2 d-inline-block">
+                <div class="mb-3">{{ campaign_form.formulation_field.label.text }}</div>
+                <div id="formulation" class="form-control mb-3">{% if campaign_form.formulation_field.data %} {{ campaign_form.formulation_field.data }} {% else %} {{ formulation }} {% endif %} </div>
+                <button class="btn btn-success" id="save_formulation_button" {% if campaign_form.formulation_field.data %} disabled {% endif %}>Save Formulation</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

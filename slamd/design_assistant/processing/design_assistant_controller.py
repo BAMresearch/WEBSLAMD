@@ -100,18 +100,29 @@ def handle_generating_design_knowledge():
     return make_response(jsonify(body), 200)
 
 
-@design_assistant.route('/zero_shot/prompt', methods=['POST'])
-def handle_prompt():
+@design_assistant.route('/zero_shot/design_knowledge', methods=['POST'])
+def handle_design_knowledge():
     design_knowledge = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_knowledge, 'design_knowledge')
     body = {'template': render_template('prompt.html')}
     return make_response(jsonify(body), 200)
 
-@design_assistant.route('/zero_shot/generate_prompt', methods=['GET'])
-def handle_generating_prompt():
-    zero_shot_learner_prompt = DesignAssistantService.generate_zero_shot_learner_prompt() 
-    body = {'template': zero_shot_learner_prompt}
+@design_assistant.route('/zero_shot/generate_formulation', methods=['POST'])
+def handle_generating_formulation():
+    data = json.loads(request.data)
+    formulation = DesignAssistantService.generate_formulation(data['design_knowledge'], data['token']) 
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {'template': render_template('formulation.html', campaign_form=campaign_form, formulation=formulation)}
     return make_response((jsonify(body)))
+
+@design_assistant.route('zero_shot/save_formulation', methods=['POST'])
+def handle_saving_formulation():
+    data = json.loads(request.data)
+    DesignAssistantService.update_design_assistant_session(data['design_knowledge'], 'design_knowledge')
+    DesignAssistantService.update_design_assistant_session(data['formulation'], 'formulation')
+    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
+    body = {'template': render_template('formulation.html', campaign_form=campaign_form)}
+    return make_response((jsonify(body))) 
 
 @design_assistant.route('/session', methods=['DELETE'])
 def handle_delete_session():

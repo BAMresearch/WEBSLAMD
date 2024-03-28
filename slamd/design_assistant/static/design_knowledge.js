@@ -1,58 +1,42 @@
-import { assignEventsToPromptForm } from "./prompt.js"
+import { assignClickEventToSubmitButton } from "./utils.js"
+import { assignEventsToFormulation } from "./formulation.js";
 
-export function assignEventsToDesignKnowledge() {
-    assignClickEventToGenerateDesignKnowledgeButton()
-    assignClickEventToContinueButton()
+export function assignEventsToDesignKnowledgeForm() {
+    assignClickEventToSubmitButton("generate_design_knowledge_button", handleGeneratingDesignKnowledge)
+    assignClickEventToSubmitButton("continue_design_knowledge_button", handleGeneratingFormulation)
 }
 
-export function assignClickEventToGenerateDesignKnowledgeButton() {
-    const generate_design_knowledge_button = document.getElementById("generate_design_knowledge_button")
-    if (generate_design_knowledge_button) {
-        generate_design_knowledge_button.addEventListener('click', async function () {
-            insertSpinnerInPlaceholder(
-                "llm_response_container",
-                true,
-                CHATBOT_RESPONSE_SPINNER
-            );
-            setTimeout(async function handleSubmission() {
-                await postDataAndEmbedTemplateInPlaceholder(
-                    "/design_assistant/zero_shot/generate_design_knowledge",
-                    "llm_response",
-                    {"token": document.getElementById("token_form-token").value}
-                );
-                removeSpinnerInPlaceholder("llm_response_container", CHATBOT_RESPONSE_SPINNER)
-                document.getElementById("llm_response").classList.remove('d-none')
-            }, 1000);
-            document.getElementById("continue_design_knowledge_button").disabled = false
-            document.getElementById("llm_response").disabled = false
+async function handleGeneratingDesignKnowledge(){
+    insertSpinnerInPlaceholder("design_knowledge_inner_container",true,CHATBOT_RESPONSE_SPINNER);
+    setTimeout(async function handleSubmission() {
+        await postDataAndEmbedTemplateInPlaceholder(
+            "/design_assistant/zero_shot/generate_design_knowledge",
+            "design_knowledge",
+            {"token": document.getElementById("token_form-token").value}
+        );
+        removeSpinnerInPlaceholder("design_knowledge_inner_container", CHATBOT_RESPONSE_SPINNER)
+        document.getElementById("design_knowledge").classList.remove('d-none')
+    }, 1000);
+    document.getElementById("continue_design_knowledge_button").disabled = false
 
-        })
+}
+
+async function handleGeneratingFormulation(){
+    const design_knowledge = document.getElementById("design_knowledge").innerHTML
+    const formulation_chat_message_container = document.getElementById("formulation_chat_message_container")
+    if (!formulation_chat_message_container) {
+        insertSpinnerInPlaceholder("formulation_container", true, CHATBOT_RESPONSE_SPINNER);
     }
-}
-
-export function assignClickEventToContinueButton() {
-    const continue_design_knowledge_button = document.getElementById("continue_design_knowledge_button")
-    if (continue_design_knowledge_button) {
-        continue_design_knowledge_button.addEventListener('click', function () {
-            const design_knowledge = document.getElementById("llm_response").innerHTML
-            insertSpinnerInPlaceholder(
-                "prompt_container",
-                true,
-                CHATBOT_RESPONSE_SPINNER
-            );
-            setTimeout(async function handleSubmission() {
-                await postDataAndEmbedTemplateInPlaceholder(
-                    "/design_assistant/zero_shot/prompt",
-                    "prompt_container",
-                    design_knowledge
-                );
-                document.getElementById("continue_design_knowledge_button").disabled = true
-                document.getElementById("generate_design_knowledge_button").disabled = true
-                document.getElementById("llm_response").disabled = true
-            }, 1000);
-        assignEventsToPromptForm()
-        });
+    else {
+        insertSpinnerInPlaceholder("formulation", false, CHATBOT_RESPONSE_SPINNER);
     }
+    setTimeout(async function handleSubmission() {
+        await postDataAndEmbedTemplateInPlaceholder(
+            "/design_assistant/zero_shot/generate_formulation",
+            "formulation_container",
+            {"design_knowledge" : design_knowledge ,"token": document.getElementById("token_form-token").value}
+        );
+        removeSpinnerInPlaceholder("formulation_container", CHATBOT_RESPONSE_SPINNER)
+        assignEventsToFormulation()
+    }, 1000);
 }
-
-
