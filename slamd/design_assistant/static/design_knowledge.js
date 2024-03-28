@@ -3,7 +3,7 @@ import { assignEventsToFormulation } from "./formulation.js";
 
 export function assignEventsToDesignKnowledgeForm() {
     assignClickEventToSubmitButton("generate_design_knowledge_button", handleGeneratingDesignKnowledge)
-    assignClickEventToSubmitButton("continue_design_knowledge_button", handleGeneratingFormulation)
+    assignClickEventToSubmitButton("generate_formulation_button", handleGeneratingFormulation)
 }
 
 async function handleGeneratingDesignKnowledge(){
@@ -17,7 +17,7 @@ async function handleGeneratingDesignKnowledge(){
         removeSpinnerInPlaceholder("design_knowledge_inner_container", CHATBOT_RESPONSE_SPINNER)
         document.getElementById("design_knowledge").classList.remove('d-none')
     }, 1000);
-    document.getElementById("continue_design_knowledge_button").disabled = false
+    document.getElementById("generate_formulation_button").disabled = false
 
 }
 
