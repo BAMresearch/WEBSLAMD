@@ -1,3 +1,5 @@
+import {scrollDown, updateProgress} from "./utils.js";
+
 export function assignEventsToDesignKnowledge() {
     assignClickEventToGenerateDesignKnowledgeButton()
     assignClickEventToContinueButton()
@@ -47,6 +49,8 @@ export function assignClickEventToContinueButton() {
                 document.getElementById("continue_design_knowledge_button").disabled = true
                 document.getElementById("generate_design_knowledge_button").disabled = true
                 document.getElementById("llm_response").disabled = true
+                updateProgress()
+                scrollDown()
             }, 1000);
         });
     }

@@ -10,6 +10,7 @@ class DesignAssistantService:
     @classmethod
     def create_design_assistant_form(cls):
         design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        progress = cls._extract_progress(design_assistant_session)
         form = DesignAssistantFactory.create_design_assistant_form()
         if not design_assistant_session:
             cls.init_design_assistant_session()
@@ -22,7 +23,17 @@ class DesignAssistantService:
                 cls._populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
                 form.campaign_form = None
-        return form
+        return form, progress
+
+    @classmethod
+    def _extract_progress(cls, design_assistant_session):
+        if design_assistant_session:
+            if design_assistant_session.get('zero_shot_learner', None):
+                return DesignAssistantPersistence.get_progress('zero_shot_learner')
+            elif design_assistant_session.get('data_creation', None):
+                return DesignAssistantPersistence.get_progress('data_creation')
+            return 0
+        return 0
 
     @classmethod
     def _populate_task_form_with_session_value(cls, form, session_value):
@@ -87,7 +98,7 @@ class DesignAssistantService:
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
-        form = cls.create_design_assistant_form()
+        form, _ = cls.create_design_assistant_form()
         return form.campaign_form
 
     @classmethod

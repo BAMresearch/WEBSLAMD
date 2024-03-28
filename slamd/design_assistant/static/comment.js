@@ -1,3 +1,5 @@
+import {scrollDown, updateProgress} from "./utils.js";
+
 import {assignEventsToDesignKnowledge} from './design_knowledge.js'
 
 export function assignInputEventToCommentForm() {
@@ -39,6 +41,8 @@ export async function handleCommentSubmission() {
         "knowledge_container",
         comment
     );
-  assignEventsToDesignKnowledge()
+    updateProgress()
+    scrollDown()
+    assignEventsToDesignKnowledge()
   }, 1000);
 }

@@ -171,11 +171,18 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
                                       'liquid': 'dhiwq',
                                       'powders': {'blend': 'yes', 'selected': ['opc', 'fly_ash']}, 'type': 'Binder'}}
 
+    def mock_get_progress(task):
+        if task == 'zero_shot_learner':
+            return 3
+        return None
+
     app = create_app('testing', with_session=False)
     with app.test_request_context('/design_assistant'):
         monkeypatch.setattr(DesignAssistantPersistence, 'get_session_for_property', mock_get_session_for_property)
-        form = DesignAssistantService.create_design_assistant_form()
+        monkeypatch.setattr(DesignAssistantPersistence, 'get_progress', mock_get_progress)
+        form, progress = DesignAssistantService.create_design_assistant_form()
 
+    assert progress == 3
     assert mock_get_session_called_with == 'design_assistant'
     assert form.task_form['task_field'].data == 'zero_shot_learner'
     assert form.campaign_form.data == {'additional_liquid': 'dhiwq',
