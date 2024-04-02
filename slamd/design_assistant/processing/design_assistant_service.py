@@ -168,8 +168,8 @@ class DesignAssistantService:
             design_target_optimization_field = item.get('design_target_optimization_field', None)
             if design_target_value_field and len(design_target_value_field) > 20:
                 return False
-            if design_target_optimization_field and design_target_optimization_field not in ['maximized',
-                                                                                             'minimized',
+            if design_target_optimization_field and design_target_optimization_field not in ['increase',
+                                                                                             'decrease',
                                                                                              'No optimization']:
                 return False
         return True

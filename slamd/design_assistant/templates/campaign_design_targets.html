@@ -4,6 +4,17 @@
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <div class="chat_message border rounded p-2 d-inline-block mb-3">
+                <p>{{ campaign_form.targ_intro_text }}</p>
+                <p>{{ campaign_form.targ_process_overview }}</p>
+                <ul>
+                    <li>{{ campaign_form.targ_step_one }}</li>
+                    <li>{{ campaign_form.targ_step_two }}</li>
+                    <li>{{ campaign_form.targ_step_three }}</li>
+            </div>
+            <!-- Material type selection -->
+
+
             <div class="chat_message border rounded p-2 d-inline-block">
                 <div id="design_target_options_container">
                     <div class = "mb-3">{{ campaign_form.standard_design_targets_field.label.text }}</div>
@@ -27,9 +38,9 @@
                 </div>
                 <div class="d-flex mt-2 gap-2">
                     <button class="btn btn-secondary" id="additional_design_targets_button" {% if campaign_form.design_targets %}disabled{% endif %}>
-                        Optimize other +
+                        Add target +
                     </button>
-                    <button class="btn btn-primary" id="design_targets_submit_button" disabled>Save</button>
+                    <button class="btn btn-primary" id="design_targets_submit_button" disabled>Submit</button>
                 </div>
             </div>
         </div>

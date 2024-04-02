@@ -6,12 +6,12 @@
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
             <div class="chat_message border rounded p-2 d-inline-block">
                 <div id="design_target_options_container">
-                    <div>Please add values for each of the selected design targets and specify whether you want to maximize or minimze them.</div>
+                    <div>Specify your design goals by entering the target value with its unit and whether you wish to increase or decrease the value.</div>
                     <div class="design_target_option_container d-flex flex-column justify-content-between mt-3">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             {% for design_target in campaign_form.design_targets %}
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link{% if loop.index == 1 %} active {% endif %} design_target_name" id="pills-{{ design_target.design_target_name_field.data }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ design_target.design_target_name_field.data }}" type="button" role="tab" aria-controls="pills-{{ design_target.design_target_name_field.data }}" aria-selected="false">{{ design_target.design_target_name_field.data }}</button>
+                                <button class="nav-link{% if loop.index == 1 %} active {% endif %} design_target_name btn btn-success" id="pills-{{ design_target.design_target_name_field.data }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ design_target.design_target_name_field.data }}" type="button" role="tab" aria-controls="pills-{{ design_target.design_target_name_field.data }}" aria-selected="false">{{ design_target.design_target_name_field.data }}</button>
                             </li>
                             {% endfor %}
                         </ul>
@@ -24,7 +24,7 @@
                                             {% if design_target.design_target_value_field.data %}
                                             <input class="design_target_value" value="{{ design_target.design_target_value_field.data }}" name="design_target_value" disabled/>
                                             {% else %}
-                                            <input class="design_target_value" placeholder="e.g. 100 EUR/KG" name="design_target_value"/>
+                                            <input class="design_target_value" placeholder="e.g. 35 MPa" name="design_target_value"/>
                                             {% endif %}
                                         </div>
                                     <div class="d-flex justify-content-between">
@@ -48,7 +48,7 @@
                 </div>
                 <div class="d-flex mt-2 gap-2">
                     <button class="btn btn-primary" id="design_targets_values_submit_button" {% if campaign_form.design_targets %}
-                            {% if campaign_form.design_targets[0].design_target_value_field.data %} disabled {% endif %}{% endif %}>Save</button>
+                            {% if campaign_form.design_targets[0].design_target_value_field.data %} disabled {% endif %}{% endif %}>Submit</button>
                 </div>
             </div>
         </div>
