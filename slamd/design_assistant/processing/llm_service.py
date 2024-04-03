@@ -11,28 +11,6 @@ MAX_FREE_LLM_CALLS = 10
 class LLMService:
 
     @classmethod
-    def generate_formulation(cls, design_knowledge, token):
-        prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
-        user_message = {"role": "user", "content": prompt}
-        formulation = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
-        return formulation
-
-    @classmethod
-    def generate_design_knowledge(cls, token):
-        prompt = cls._generate_design_knowledge_prompt()
-        user_message = {"role": "user", "content": prompt}
-        generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
-        return generated_design_knowledge
-    
-    @classmethod
-    def _generate_zero_shot_learner_prompt(cls, design_knowledge):
-        design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
-        design_knowledge_prompt_excerpt = design_knowledge
-        instruction_prompt_excerpt = "////You are a powerful concrete formulation prediction model tasked with finding the best concrete formulation that maximizes compressive strength. Your predictions will be validated in the Laboratory and you will receive the real-world performance. You will learn from the feedback provided to improve your previous suggestions to find a perfect mix design. Make sure that every formulation lies on this parameter grid: //powder content in kg: 360, 370, 380, 390,400, 410, 420, 430, 440, 450 //water-to-cement (WC) ratio: 0.45, 0.5, 0.55, 0.6 //Materials: Fly-Ash/GGBFS at a ratio: 0.7/0.3, 0.6/0.4, 0.5/0.5 //curing: Ambient curing/Heat curing  ////You are able to incorporate General design knowledge and lab validations to improve your predictions. You can only answer in this exact format with no additional explanations or context: 'The formulation is Powderkg = {your estimate}, wc = {your estimate}, materials = {your estimate}, curing = {your estimate}'\n"
-        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge_prompt_excerpt
-        return zero_shot_learner_prompt
-
-    @classmethod
     def _generate_openai_llm_response(cls, messages, model, token):
         if token:
             api_key = token
@@ -59,6 +37,30 @@ class LLMService:
             return token
         else:
             raise FreeTrialLimitExhaustedException('Please provide your token.')
+        
+    @classmethod
+    def generate_formulation(cls, design_knowledge, token):
+        prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
+        user_message = {"role": "user", "content": prompt}
+        formulation = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
+        return formulation
+
+    @classmethod
+    def generate_design_knowledge(cls, token):
+        prompt = cls._generate_design_knowledge_prompt()
+        print('design knowledge prompt: ', prompt)
+        user_message = {"role": "user", "content": prompt}
+        generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
+        return generated_design_knowledge
+    
+    @classmethod
+    def _generate_zero_shot_learner_prompt(cls, design_knowledge):
+        design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+        zero_shot_learner_session = design_assistant_session['zero_shot_learner']
+        design_knowledge_prompt_excerpt = design_knowledge
+        instruction_prompt_excerpt = cls._generate_zero_shot_learner_instruction_excerpt(zero_shot_learner_session)
+        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge_prompt_excerpt
+        return zero_shot_learner_prompt
 
     @classmethod
     def _generate_design_knowledge_prompt(cls):
@@ -66,27 +68,55 @@ class LLMService:
         design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
         zero_shot_learner_session = design_assistant_session['zero_shot_learner']
         # generate prompt excerpts and combine them to user prompt
-        material_type_prompt_excerpt = cls._generate_material_type_prompt_excerpt(zero_shot_learner_session)
-        powders_prompt_excerpt = cls._generate_powders_prompt_excerpt(zero_shot_learner_session)
-        liquid_prompt_excerpt = cls._generate_liquids_prompt_excerpt(zero_shot_learner_session)
-        other_prompt_excerpt = cls._generate_other_prompt_excerpt(zero_shot_learner_session)
-        comment_prompt_excerpt = cls._generate_comment_prompt_excerpt(zero_shot_learner_session)
-        design_targets_prompt_excerpt = cls._generate_design_targets_prompt_excerpt(zero_shot_learner_session)
-        user_prompt = material_type_prompt_excerpt + '////Components: \n' + powders_prompt_excerpt + liquid_prompt_excerpt + other_prompt_excerpt + comment_prompt_excerpt + design_targets_prompt_excerpt
+        material_type_excerpt = cls._generate_material_type_excerpt(zero_shot_learner_session)
+        powders_excerpt = cls._generate_powders_excerpt(zero_shot_learner_session)
+        liquid_excerpt = cls._generate_liquids_excerpt(zero_shot_learner_session)
+        other_excerpt = cls._generate_other_excerpt(zero_shot_learner_session)
+        comment_excerpt = cls._generate_comment_excerpt(zero_shot_learner_session)
+        design_targets_excerpt = cls._generate_design_targets_excerpt(zero_shot_learner_session)
+        user_excerpt = material_type_excerpt + '////Components: \n' + powders_excerpt + liquid_excerpt + other_excerpt + comment_excerpt + design_targets_excerpt
         # combine user prompt with system prompt and instruction to build final prompt
-        system_prompt = "You have performed thousands of experiments in the laboratory. You have extensive design proficiency in the compressive strength of FA/GGBFS-based geopolymer concrete. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than 8 concise sentences, each containing quantitative facts and trade-offs that relate only to the compressive strength. You always answer directly, e.g., the change in (parameter) between (lower) and (upper) range has (effect) due to (influence).  Let’s work this out in a step-by-step way to be sure we have the right answer. Consider the following scenario:\n";
-        instruction = f'What is the best design knowledge you have for finding concrete formulations, that consist of the specified components, adhere to the specified design targets and have the highest possible compressive strength?'
-        prompt = system_prompt + user_prompt + instruction
-        return prompt
+        system_excerpt = cls._generate_design_knowledge_system_excerpt(zero_shot_learner_session)
+        material_type = zero_shot_learner_session['type']
+        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations, that consist of the specified components, adhere to the specified design targets and have the highest possible compressive strength?'
+        design_knowledge_prompt = system_excerpt + user_excerpt + instruction_excerpt
+        return design_knowledge_prompt
 
     @classmethod
-    def _generate_material_type_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_design_knowledge_system_excerpt(cls, zero_shot_learner_session):
+        design_targets = zero_shot_learner_session['design_targets']
+        design_targets_names = [design_target["design_target_name_field"] for design_target in design_targets]
+        if len(design_targets_names) > 1:
+            design_targets_names = ' and '.join(design_targets_names)
+        system_excerpt =  f"You have performed thousands of experiments in the laboratory. You have extensive design proficiency in the compressive strength of cementitious materials. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than 8 concise sentences, each containing quantitative facts and trade-offs that relate only to the {design_targets_names}. You always answer directly, e.g., the change in (parameter) between (lower) and (upper) range has (effect) due to (influence).  Let’s work this out in a step-by-step way to be sure we have the right answer. Consider the following scenario:\n";
+        return system_excerpt
+    
+    @classmethod
+    def _generate_zero_shot_learner_instruction_excerpt(cls, zero_shot_learner_session):
+        material_type_excerpt = zero_shot_learner_session['type']
+        powders = zero_shot_learner_session["powders"]['selected']
+        powders_blend = zero_shot_learner_session["powders"]['blend']
+        powders_excerpt = ''
+        if len(powders) > 1:
+            if powders_blend == 'yes':
+                powders_excerpt = '/'.join(powders) 
+            if powders_blend == 'no':
+                powders_excerpt = ', '.join(powders)   
+        other = zero_shot_learner_session['other']
+        if not other == 'None':
+            other_design_space_excerpt = f'//Additional components: {other}'
+            other_output_excerpt = f', {other} = {{your estimate}}'
+        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that maximizes compressive strength. Your predictions will be validated in the Laboratory and you will receive the real-world performance. You will learn from the feedback provided to improve your previous suggestions to find a perfect mix design. Make sure that every formulation lies on this parameter grid: //powder content in kg: 360, 370, 380, 390, 400, 410, 420, 430, 440, 450 //water-to-cement (WC) ratio: 0.45, 0.5, 0.55, 0.6 //Materials: {powders_excerpt} at a ratio: 0.7/0.3, 0.6/0.4, 0.5/0.5 //curing: Ambient curing, Heat curing {other_design_space_excerpt}////You are able to incorporate General design knowledge and lab validations to improve your predictions. You can only answer in this exact format with no additional explanations or context: 'The formulation is Powderkg = {{your estimate}}, wc = {{your estimate}}, materials = {{your estimate}}, curing = {{your estimate}} {other_output_excerpt}'\n"
+        return instruction_prompt_excerpt
+
+    @classmethod
+    def _generate_material_type_excerpt(cls, zero_shot_learner_session):
         material_type = zero_shot_learner_session['type']
         material_type_prompt_excerpt = f'You want to design {material_type.capitalize()} formulations with the highest possible compressive strength consisting of the following components: \n'
         return material_type_prompt_excerpt
 
     @classmethod
-    def _generate_powders_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_powders_excerpt(cls, zero_shot_learner_session):
         powders = zero_shot_learner_session['powders']['selected']
         blend_powders = zero_shot_learner_session['powders']['blend']
         powders = ', '.join(powders)
@@ -98,13 +128,13 @@ class LLMService:
         return powders_prompt_excerpt
 
     @classmethod
-    def _generate_liquids_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_liquids_excerpt(cls, zero_shot_learner_session):
         liquid = zero_shot_learner_session['liquid']
         liquid_prompt_excerpt = f'//Liquid : {liquid} \n'
         return liquid_prompt_excerpt
 
     @classmethod
-    def _generate_other_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_other_excerpt(cls, zero_shot_learner_session):
         other = zero_shot_learner_session['other']
         other_prompt_excerpt = ''
         if not other == 'None':
@@ -112,14 +142,14 @@ class LLMService:
         return other_prompt_excerpt
 
     @classmethod
-    def _generate_comment_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_comment_excerpt(cls, zero_shot_learner_session):
         comment = zero_shot_learner_session['comment']
         if comment.strip():
             comment_prompt_excerpt = f'//Additional design information : {comment} \n'
         return comment_prompt_excerpt
 
     @classmethod
-    def _generate_design_targets_prompt_excerpt(cls, zero_shot_learner_session):
+    def _generate_design_targets_excerpt(cls, zero_shot_learner_session):
         design_targets = zero_shot_learner_session['design_targets']
         design_targets_formatted = ''
         design_target_optimization = ''

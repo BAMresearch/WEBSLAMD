@@ -10,4 +10,5 @@ async function handleSavingFormulation(){
     await postDataAndEmbedTemplateInPlaceholder("/design_assistant/zero_shot/save_formulation", "formulation_container", {"design_knowledge": design_knowledge, "formulation" : formulation});
     document.getElementById("generate_design_knowledge_button").disabled = false
     document.getElementById("generate_formulation_button").disabled = false
+    document.getElementById("design_knowledge").disabled = true
 }

@@ -152,8 +152,8 @@ class DesignAssistantService:
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']
         selected_powders = value['selected_powders']
-        if all(x in ['opc', 'geopolymer', 'ggbfs', 'fly_ash'] for x in selected_powders):
-            if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['yes', 'no']:
+        if all(x in ['OPC', 'Geopolymer', 'GGBFS', 'Fly Ash'] for x in selected_powders):
+            if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['Yes', 'No']:
                 return True
         return False
 

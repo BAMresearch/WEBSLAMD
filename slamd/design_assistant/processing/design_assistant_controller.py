@@ -107,6 +107,7 @@ def handle_design_knowledge():
     body = {'template': render_template('prompt.html')}
     return make_response(jsonify(body), 200)
 
+
 @design_assistant.route('/zero_shot/generate_formulation', methods=['POST'])
 def handle_generating_formulation():
     data = json.loads(request.data)
@@ -114,6 +115,7 @@ def handle_generating_formulation():
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('formulation.html', campaign_form=campaign_form, formulation=formulation)}
     return make_response((jsonify(body)))
+
 
 @design_assistant.route('zero_shot/save_formulation', methods=['POST'])
 def handle_saving_formulation():
@@ -123,6 +125,7 @@ def handle_saving_formulation():
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('formulation.html', campaign_form=campaign_form)}
     return make_response((jsonify(body))) 
+
 
 @design_assistant.route('/session', methods=['DELETE'])
 def handle_delete_session():
