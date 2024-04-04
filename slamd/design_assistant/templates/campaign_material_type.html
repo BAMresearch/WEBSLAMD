@@ -4,20 +4,26 @@
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <!-- Inserting the guiding texts here -->
+            <div class="chat_message border rounded p-2 d-inline-block mb-3">
+                <p>{{ campaign_form.init_intro_text }}</p>
+                <p>{{ campaign_form.init_process_overview }}</p>
+                <ul>
+                    <li>{{ campaign_form.init_step_one }}</li>
+                    <li>{{ campaign_form.init_step_two }}</li>
+                    <li>{{ campaign_form.init_step_three }}</li>
+            </div>
+            <!-- Material type selection -->
             <div class="chat_message border rounded p-2 d-inline-block">
-                <div class = "mb-3">{{ campaign_form.material_type_field.label.text }}</div>
+                <div class="mb-3">{{ campaign_form.material_type_field.label.text }}</div>
                 {% for choice in campaign_form.material_type_field %}
                 <div class="d-flex gap-2">
                     <input class="material_type_field_choice" type="radio" value="{{ choice.data }}" name="material_type_choice"
-                           {% if choice.data == campaign_form.material_type_field.data %}
-                           checked
-                           {% endif %}
-                           {% if campaign_form.material_type_field.data %}
-                           disabled
-                           {% endif %}/>
+                           {% if choice.data == campaign_form.material_type_field.data %} checked {% endif %}
+                           {% if campaign_form.material_type_field.data %} disabled {% endif %}/>
                     <div>{{ choice.label.text }}</div>
                 </div>
-            {% endfor %}
+                {% endfor %}
             </div>
         </div>
     </div>

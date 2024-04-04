@@ -4,20 +4,18 @@
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="chat_message_container">
             <div class="fw-bold mt-1 mb-2">Design Assistant</div>
+            <!-- Instructions rendering -->
+            <div class="chat_message border rounded p-2 d-inline-block mb-3">
+                {{ task_form.instructions|replace('\n', '<br>')|safe }}
+            </div>
+            <!-- Tasks selection -->
             <div class="chat_message border rounded p-2 d-inline-block" id="tasks">
-                <div class = "mb-3">{{ task_form.task_field.label.text }}</div>
+                <div class="mb-3">{{ task_form.task_field.label.text }}</div>
                 {% for choice in task_form.task_field %}
                 <div class="d-flex gap-2">
                     <input class="task_field_choice" type="radio" value="{{ choice.data }}" name="task_choice"
-                            {% if choice.data == task_form.task_field.data %}
-                           checked
-                            {% endif %}
-                            {% if  task_form.task_field.data %}
-                           disabled
-                            {% endif %}
-                            {% if choice.data == 'data_creation' %}
-                           disabled
-                            {% endif %}/>
+                            {% if choice.data == task_form.task_field.data %}checked{% endif %}
+                            {% if task_form.task_field.data or choice.data == 'data_creation' %}disabled{% endif %}/>
                     <div>{{ choice.label.text }}</div>
                 </div>
                 {% endfor %}

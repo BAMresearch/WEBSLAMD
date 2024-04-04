@@ -67,7 +67,10 @@ class DesignAssistantPersistence:
 
     @classmethod
     def get_progress(cls, task):
-        return session['design_assistant'][task]["progress"]
+        progress = session['design_assistant'][task].get("progress", None)
+        if progress:
+            return session['design_assistant'][task]["progress"]
+        return 0
 
     @classmethod
     def get_free_llm_calls_count(cls):

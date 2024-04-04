@@ -5,8 +5,8 @@ from wtforms import DecimalField, RadioField, validators
 class FieldConfigurationForm(Form):
 
     max_or_min = RadioField(
-        label='Maximize or minimize target',
-        validators=[validators.DataRequired(message='Target column must be either maximized or minimized')],
+        label='Design target',
+        validators=[validators.DataRequired(message='Target column must be either increased or decreased')],
         default='max',
         choices=[
             ('max', 'Maximize'),
