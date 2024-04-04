@@ -86,7 +86,7 @@ def test_update_design_assistant_session_calls_persistence_with_powders(monkeypa
         return None
 
     monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_powders_key', mock_update_session_for_powders)
-    mock_powders = {'blend_powders': 'no', 'selected_powders': ['opc']}
+    mock_powders = {'blend_powders': 'No', 'selected_powders': ['OPC']}
     DesignAssistantService.update_design_assistant_session(mock_powders, 'powders')
 
     assert mock_update_session_called_with == mock_powders
@@ -169,7 +169,7 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
                                                           'design_target_value_field': '10 MPa',
                                                           'design_target_optimization_field': 'maximize'}],
                                       'liquid': 'dhiwq',
-                                      'powders': {'blend': 'yes', 'selected': ['opc', 'fly_ash']}, 'type': 'Binder'}}
+                                      'powders': {'blend': 'Yes', 'selected': ['OPC', 'Fly Ash']}, 'type': 'Binder'}}
 
     app = create_app('testing', with_session=False)
     with app.test_request_context('/design_assistant'):
@@ -180,7 +180,7 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
     assert form.task_form['task_field'].data == 'zero_shot_learner'
     assert form.campaign_form.data == {'additional_liquid': 'dhiwq',
                                        'additional_other': None,
-                                       'blend_powders_field': 'yes',
+                                       'blend_powders_field': 'Yes',
                                        'comment_field': None,
                                        'design_knowledge_field': None,
                                        'design_targets': [{'design_target_name_field': 'Workability',
@@ -190,7 +190,7 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
                                        'liquids_field': None,
                                        'material_type_field': 'Binder',
                                        'other_field': None,
-                                       'select_powders_field': ['opc', 'fly_ash'],
+                                       'select_powders_field': ['OPC', 'Fly Ash'],
                                        'standard_design_targets_field': None,
                                        'submit_button': False}
 

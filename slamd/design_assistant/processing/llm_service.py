@@ -48,7 +48,6 @@ class LLMService:
     @classmethod
     def generate_design_knowledge(cls, token):
         prompt = cls._generate_design_knowledge_prompt()
-        print('design knowledge prompt: ', prompt)
         user_message = {"role": "user", "content": prompt}
         generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
         return generated_design_knowledge
@@ -104,9 +103,12 @@ class LLMService:
                 powders_excerpt = ', '.join(powders)   
         other = zero_shot_learner_session['other']
         if not other == 'None':
-            other_design_space_excerpt = f'//Additional components: {other}'
+            other_design_space_excerpt = f' //Additional components: {other}'
             other_output_excerpt = f', {other} = {{your estimate}}'
-        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that maximizes compressive strength. Your predictions will be validated in the Laboratory and you will receive the real-world performance. You will learn from the feedback provided to improve your previous suggestions to find a perfect mix design. Make sure that every formulation lies on this parameter grid: //powder content in kg: 360, 370, 380, 390, 400, 410, 420, 430, 440, 450 //water-to-cement (WC) ratio: 0.45, 0.5, 0.55, 0.6 //Materials: {powders_excerpt} at a ratio: 0.7/0.3, 0.6/0.4, 0.5/0.5 //curing: Ambient curing, Heat curing {other_design_space_excerpt}////You are able to incorporate General design knowledge and lab validations to improve your predictions. You can only answer in this exact format with no additional explanations or context: 'The formulation is Powderkg = {{your estimate}}, wc = {{your estimate}}, materials = {{your estimate}}, curing = {{your estimate}} {other_output_excerpt}'\n"
+        else:
+            other_output_excerpt = ''
+            other_design_space_excerpt = ''
+        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that maximizes compressive strength. Your predictions will be validated in the Laboratory and you will receive the real-world performance. You will learn from the feedback provided to improve your previous suggestions to find a perfect mix design. Make sure that every formulation lies on this parameter grid: //powder content in kg: 360, 370, 380, 390, 400, 410, 420, 430, 440, 450 //water-to-cement (WC) ratio: 0.45, 0.5, 0.55, 0.6 //Materials: {powders_excerpt} at a ratio: 0.7/0.3, 0.6/0.4, 0.5/0.5 //curing: Ambient curing, Heat curing{other_design_space_excerpt}////You are able to incorporate General design knowledge and lab validations to improve your predictions. You can only answer in this exact format with no additional explanations or context: 'The formulation is Powderkg = {{your estimate}}, wc = {{your estimate}}, materials = {{your estimate}}, curing = {{your estimate}} {other_output_excerpt}'\n"
         return instruction_prompt_excerpt
 
     @classmethod

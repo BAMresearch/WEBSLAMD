@@ -67,14 +67,14 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_liquids_field_with_session_value(cls, form, value):
-        if value in ['pure_water', 'activator_liquid']:
+        if value in ['Pure Water', 'Activator Liquid (H2O, NaOH, Na2SiO3)']:
             form.campaign_form.liquids_field.data = value
         else:
             form.campaign_form.additional_liquid.data = value
 
     @classmethod
     def _populate_other_field_with_session_value(cls, form, value):
-        if value in ['scm', 'super_plasticizer']:
+        if value in ['SCM', 'Super Plasticizer']:
             form.campaign_form.other_field.data = value
         else:
             form.campaign_form.additional_other.data = value
@@ -125,7 +125,7 @@ class DesignAssistantService:
         if key == 'liquid':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['pure_water', 'activator_liquid'] and len(value) > 20:
+            if value not in ['Pure Water', 'Activator Liquid (H2O, NaOH, Na2SiO3)'] and len(value) > 20:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
@@ -133,7 +133,7 @@ class DesignAssistantService:
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['scm', 'super_plasticizer'] and len(value) > 20:
+            if value not in ['SCM', 'Super Plasticizer'] and len(value) > 20:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
@@ -153,7 +153,7 @@ class DesignAssistantService:
         blend = value['blend_powders']
         selected_powders = value['selected_powders']
         if all(x in ['OPC', 'Geopolymer', 'GGBFS', 'Fly Ash'] for x in selected_powders):
-            if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['Yes', 'No']:
+            if len(selected_powders) == 1 and blend == 'No' or len(selected_powders) == 2 and blend in ['Yes', 'No']:
                 return True
         return False
 
