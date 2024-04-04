@@ -10,6 +10,7 @@ class DesignAssistantService:
     @classmethod
     def create_design_assistant_form(cls):
         design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        progress = cls._extract_progress(design_assistant_session)
         form = DesignAssistantFactory.create_design_assistant_form()
         if not design_assistant_session:
             cls.init_design_assistant_session()
@@ -22,7 +23,17 @@ class DesignAssistantService:
                 cls._populate_campaign_form_with_session_value(form, design_assistant_session)
             else:
                 form.campaign_form = None
-        return form
+        return form, progress
+
+    @classmethod
+    def _extract_progress(cls, design_assistant_session):
+        if design_assistant_session:
+            if design_assistant_session.get('zero_shot_learner', None):
+                return DesignAssistantPersistence.get_progress('zero_shot_learner')
+            elif design_assistant_session.get('data_creation', None):
+                return DesignAssistantPersistence.get_progress('data_creation')
+            return 0
+        return 0
 
     @classmethod
     def _populate_task_form_with_session_value(cls, form, session_value):
@@ -93,7 +104,7 @@ class DesignAssistantService:
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
-        form = cls.create_design_assistant_form()
+        form, _ = cls.create_design_assistant_form()
         return form.campaign_form
 
     @classmethod
@@ -125,7 +136,7 @@ class DesignAssistantService:
         if key == 'liquid':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['Pure Water', 'Activator Liquid (H2O, NaOH, Na2SiO3)'] and len(value) > 20:
+            if value not in ['pure_water', 'activator_liquid'] and len(value) > 30:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
@@ -133,7 +144,7 @@ class DesignAssistantService:
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['SCM', 'Super Plasticizer'] and len(value) > 20:
+            if value not in ['biochar', 'recycled_aggregates', 'limestone', 'recycled_glass_fines', 'super_plasticizer'] and len(value) > 30:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
@@ -166,8 +177,8 @@ class DesignAssistantService:
             design_target_optimization_field = item.get('design_target_optimization_field', None)
             if design_target_value_field and len(design_target_value_field) > 20:
                 return False
-            if design_target_optimization_field and design_target_optimization_field not in ['maximized',
-                                                                                             'minimized',
+            if design_target_optimization_field and design_target_optimization_field not in ['increase',
+                                                                                             'decrease',
                                                                                              'No optimization']:
                 return False
         return True
@@ -191,7 +202,6 @@ class DesignAssistantService:
     @classmethod
     def generate_design_knowledge(cls, token):
         design_knowledge = LLMService.generate_design_knowledge(token)
-        return design_knowledge
     
     @classmethod
     def generate_zero_shot_learner_prompt(cls):

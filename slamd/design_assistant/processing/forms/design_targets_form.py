@@ -8,4 +8,4 @@ class DesignTargetsForm(Form):
     design_target_value_field = StringField(label="Enter the target value bound and its unit")
 
     design_target_optimization_field = RadioField(label='Should the target value be maximized or minimized?',
-                                                  choices=[('maximized', 'Maximized'), ('minimized', 'Minimized')])
+                                                  choices=[('increase', 'Increase'), ('decrease', 'Decrease')])

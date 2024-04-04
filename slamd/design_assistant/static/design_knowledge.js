@@ -1,3 +1,5 @@
+import {scrollDown, updateProgress} from "./utils.js";
+
 import { assignClickEventToSubmitButton } from "./utils.js"
 import { assignEventsToFormulation } from "./formulation.js";
 
@@ -38,5 +40,7 @@ async function handleGeneratingFormulation(){
         );
         removeSpinnerInPlaceholder("formulation_container", CHATBOT_RESPONSE_SPINNER)
         assignEventsToFormulation()
+                updateProgress()
+                scrollDown()
     }, 1000);
 }

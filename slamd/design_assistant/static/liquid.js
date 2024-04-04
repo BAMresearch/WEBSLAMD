@@ -1,76 +1,76 @@
 import {assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther} from "./other.js";
-import { assignClickEventToSubmitButton, countSelectedOptions } from "./utils.js";
+import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown, updateProgress} from "./utils.js";
 
 
 function assignInputEventToLiquidForm() {
-  const custom_liquid_name_field = document.querySelector(".liquid_option_name")
-  custom_liquid_name_field.addEventListener("input",handleCustomLiquidNaming);
+    const custom_liquid_name_field = document.querySelector(".liquid_option_name")
+    custom_liquid_name_field.addEventListener("input", handleCustomLiquidNaming);
 }
 
 export function assignClickEventToLiquidForm() {
-  const liquid_options = document.querySelectorAll(".liquid_option");
-  liquid_options.forEach(function (liquid_option) {
-    liquid_option.addEventListener("click", handleLiquidSelection);
-  });
+    const liquid_options = document.querySelectorAll(".liquid_option");
+    liquid_options.forEach(function (liquid_option) {
+        liquid_option.addEventListener("click", handleLiquidSelection);
+    });
 }
 
 export function handleLiquidSelection(event) {
-  const submit_liquid_button = document.getElementById("submit_liquid_button");
-  if (event.target.classList.contains("custom_liquid_option")) {
-    const custom_liquid_option_name = event.target.nextElementSibling;
-    if (custom_liquid_option_name.value) {
-      submit_liquid_button.disabled = false;
+    const submit_liquid_button = document.getElementById("submit_liquid_button");
+    if (event.target.classList.contains("custom_liquid_option")) {
+        const custom_liquid_option_name = event.target.nextElementSibling;
+        if (custom_liquid_option_name.value) {
+            submit_liquid_button.disabled = false;
+        } else {
+            submit_liquid_button.disabled = true;
+        }
     } else {
-    submit_liquid_button.disabled = true;
+        submit_liquid_button.disabled = false;
     }
-  }
-  else {
-    submit_liquid_button.disabled = false;
-  }
 }
 
 export async function handleLiquidSubmission() {
-  const submit_liquid_button = document.getElementById("submit_liquid_button");
-  submit_liquid_button.disabled = "true";
-  const additional_liquid_button = document.getElementById(
-    "additional_liquid_button"
-  );
-  additional_liquid_button.disabled = "true";
-  const liquid_options = document.querySelectorAll(".liquid_option");
-  let liquid;
-  liquid_options.forEach(function (liquid_option) {
-    if (liquid_option.checked) {
-      liquid = liquid_option.value;
-    }
-    liquid_option.disabled = "true";
-  });
-  insertSpinnerInPlaceholder("other_container", true, CHATBOT_RESPONSE_SPINNER);
-  setTimeout(async function handleSubmission() {
-    await postDataAndEmbedTemplateInPlaceholder(
-      "/design_assistant/zero_shot/liquid",
-      "other_container",
-      liquid
+    const submit_liquid_button = document.getElementById("submit_liquid_button");
+    submit_liquid_button.disabled = "true";
+    const additional_liquid_button = document.getElementById(
+        "additional_liquid_button"
     );
-    assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
-    assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
-    assignClickEventToOtherForm();
-  }, 1000);
+    additional_liquid_button.disabled = "true";
+    const liquid_options = document.querySelectorAll(".liquid_option");
+    let liquid;
+    liquid_options.forEach(function (liquid_option) {
+        if (liquid_option.checked) {
+            liquid = liquid_option.value;
+        }
+        liquid_option.disabled = "true";
+    });
+    insertSpinnerInPlaceholder("other_container", true, CHATBOT_RESPONSE_SPINNER);
+    setTimeout(async function handleSubmission() {
+        await postDataAndEmbedTemplateInPlaceholder(
+            "/design_assistant/zero_shot/liquid",
+            "other_container",
+            liquid
+        );
+        assignClickEventToSubmitButton("submit_other_button", handleOtherSubmission);
+        assignClickEventToSubmitButton("additional_other_button", handleAddingOther);
+        assignClickEventToOtherForm();
+        updateProgress()
+        scrollDown()
+    }, 1000);
 }
 
 function handleCustomLiquidNaming(event) {
-  const submit_liquid_button = document.getElementById("submit_liquid_button");
-  const liquid_options = document.querySelectorAll('.liquid_option')
-  const custom_liquid_option = event.target.previousElementSibling;
-  const count = countSelectedOptions(liquid_options)
-  custom_liquid_option.value = event.target.value;
-  if (custom_liquid_option.checked) {
-    if (event.target.value){
-      submit_liquid_button.disabled = false
+    const submit_liquid_button = document.getElementById("submit_liquid_button");
+    const liquid_options = document.querySelectorAll('.liquid_option')
+    const custom_liquid_option = event.target.previousElementSibling;
+    const count = countSelectedOptions(liquid_options)
+    custom_liquid_option.value = event.target.value;
+    if (custom_liquid_option.checked) {
+        if (event.target.value) {
+            submit_liquid_button.disabled = false
+        } else {
+            submit_liquid_button.disabled = true
+        }
     }
-    else {
-      submit_liquid_button.disabled = true
-    }
-  }
 }
 
 export function handleAddingLiquid() {
