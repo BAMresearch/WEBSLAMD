@@ -21,17 +21,19 @@ class CampaignForm(Form):
 
     material_type_field = RadioField(
         label="Let's start with a basic question: What type of material are we working on?",
-        choices=[("Concrete", "Concrete Formulation"), ("Binder","Binder Formulation")],
+        choices=[("Concrete", "Concrete Formulation"), ("Binder", "Binder Formulation")],
         validators=[validators.DataRequired(message="Please make a selection!")],
     )
 
     standard_design_targets_field = SelectMultipleField(
         label="What are the most important design targets?",
-        choices=[("Strenght", "Compressive Strength"), ("Workability", "Workability"), ("CarbonationResistance", "Carbonation Resistance"), ("Costs", "Costs")],
+        choices=[("Compressive Strength", "Compressive Strength"), ("Workability", "Workability"),
+                 ("Carbonation Resistance", "Carbonation Resistance"), ("Costs", "Costs")],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Select at least one target!")],
     )
+
     design_targets = FieldList(FormField(DesignTargetsForm), min_entries=0, max_entries=2)
 
     select_powders_field = SelectMultipleField(
@@ -56,7 +58,8 @@ class CampaignForm(Form):
         label="Now, select your mixing liquid:",
         choices=[
             ("water", "Water"),
-            ("activator_liquid", "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)"),
+            ("activator_liquid",
+             "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)"),
         ],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
@@ -78,7 +81,8 @@ class CampaignForm(Form):
 
     additional_other = StringField()
 
-    comment_field = StringField(label="Great! To ensure we tailor the mix design perfectly to your needs, is there any additional information or specific requirements you'd like to share? For example, resource availability, important boundary conditions, desired performance characteristics, sustainability goals, or any other details that may influence the mix design. Feel free to provide as much detail as you'd like!")
+    comment_field = StringField(
+        label="Great! To ensure we tailor the mix design perfectly to your needs, is there any additional information or specific requirements you'd like to share? For example, resource availability, important boundary conditions, desired performance characteristics, sustainability goals, or any other details that may influence the mix design. Feel free to provide as much detail as you'd like!")
 
     design_knowledge_field = StringField(
         label="Design knowledge",

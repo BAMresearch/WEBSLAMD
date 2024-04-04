@@ -65,7 +65,7 @@ export async function handleDesignTargetsSubmission(event) {
   const design_target_options = document.querySelectorAll(".design_target_option");
   design_target_options.forEach(function (design_target_option) {
     if (design_target_option.checked) {
-      design_targets.push({"design_target_name_field": design_target_option.value.replace(/ /g,'')})
+      design_targets.push({"design_target_name_field": design_target_option.value})
     }
     design_target_option.disabled = true;
   });

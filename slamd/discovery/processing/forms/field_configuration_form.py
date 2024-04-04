@@ -9,8 +9,8 @@ class FieldConfigurationForm(Form):
         validators=[validators.DataRequired(message='Target column must be either increased or decreased')],
         default='max',
         choices=[
-            ('max', 'Increase'),
-            ('min', 'Decrease')
+            ('max', 'Maximize'),
+            ('min', 'Minimize')
         ]
     )
 
