@@ -9,7 +9,7 @@ function handleDesignTargetsValuesSubmission(){
         const design_target_values_submission = []
         const design_target_values = document.querySelectorAll(".design_target_value");
         const design_target_optimizations = document.querySelectorAll('.design_target_optimization_select')
-        const design_target_names = document.querySelectorAll(".design_target_name")
+        const design_target_options = document.querySelectorAll(".design_target_option")
         for (let i = 0; i < design_target_values.length; i++) {
                 let design_target_value;
                 let design_target_optimization;
@@ -22,7 +22,7 @@ function handleDesignTargetsValuesSubmission(){
                         design_target_optimization = design_target_optimizations[i].value
                 }
                 design_target_values_submission.push({
-                        "design_target_name_field" : design_target_names[i].textContent,
+                        "design_target_name_field" : design_target_options[i].value,
                         "design_target_value_field": design_target_value,
                         "design_target_optimization_field": design_target_optimization
                 });

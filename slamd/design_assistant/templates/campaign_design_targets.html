@@ -12,9 +12,6 @@
                     <li>{{ campaign_form.targ_step_two }}</li>
                     <li>{{ campaign_form.targ_step_three }}</li>
             </div>
-            <!-- Material type selection -->
-
-
             <div class="chat_message border rounded p-2 d-inline-block">
                 <div id="design_target_options_container">
                     <div class = "mb-3">{{ campaign_form.standard_design_targets_field.label.text }}</div>
@@ -22,7 +19,7 @@
                     {% if campaign_form.design_targets %}
                         {% for design_target in campaign_form.design_targets %}
                             <div>
-                                <input type="checkbox" checked="checked" name="design_target_name" disabled/>
+                                <input class="design_target_option" type="checkbox" checked="checked" name="design_target_name" value="{{ design_target.design_target_name_field.data }}" disabled/>
                                 {{ design_target.design_target_name_field.data }}
                             </div>
                         {% endfor %}

@@ -58,7 +58,6 @@ class LLMService:
         instruction_excerpt = cls._generate_design_knowledge_instruction_excerpt(zero_shot_learner_session)
         # combine user excerpt with system excerpt and instruction excerpt to build final design knowledge prompt
         design_knowledge_prompt = system_excerpt + user_input_excerpt + instruction_excerpt
-        print(design_knowledge_prompt)
         return design_knowledge_prompt
 
     @classmethod
@@ -84,7 +83,7 @@ class LLMService:
                     design_target_optimization = 'optimizing '
                 if (len(design_targets) > 1) and (idx == 0):
                     excerpt_and = ' and '
-                design_target_name = design_target["design_target_name_field"].rstrip().lower()
+                design_target_name = design_target["design_target_name_field"]
                 design_targets_system_excerpt += design_target_optimization + design_target_name + excerpt_and
             design_targets_system_excerpt += ' during the design'
         return design_targets_system_excerpt
@@ -111,7 +110,7 @@ class LLMService:
                 design_target_optimization = 'optimizing '
             if len(design_targets) > 1 and idx == 0:
                 excerpt_and = ' and '
-            design_target_name = design_target["design_target_name_field"].rstrip().lower()
+            design_target_name = design_target["design_target_name_field"]
             design_targets_instruction_excerpt += design_target_optimization + design_target_name + excerpt_and
         return design_targets_instruction_excerpt
     
@@ -180,7 +179,7 @@ class LLMService:
                 design_target_optimization = ''
             if not design_target["design_target_value_field"] == 'No target value':
                 design_target_value = design_target["design_target_value_field"]
-            design_target_name = design_target["design_target_name_field"].rstrip()
+            design_target_name = design_target["design_target_name_field"]
             design_targets_formatted = design_targets_formatted + '//' + design_target_name + design_target_optimization + design_target_value + '\n'
         design_targets_prompt_excerpt = '////Design Targets: ' + "The design must optimize for the following design targets:\n" + design_targets_formatted
         return design_targets_prompt_excerpt
@@ -188,7 +187,6 @@ class LLMService:
     @classmethod
     def generate_formulation(cls, design_knowledge, token):
         prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
-        print(prompt)
         user_message = {"role": "user", "content": prompt}
         formulation = cls._generate_openai_llm_response([user_message], MODEL, token)
         return formulation
@@ -222,9 +220,7 @@ class LLMService:
                 design_target_optimization = 'optimizes '
             if len(design_targets) > 1 and idx == 0:
                 excerpt_and = ' and '
-            design_target_name = design_target["design_target_name_field"].rstrip().lower()
+            design_target_name = design_target["design_target_name_field"]
             design_target_value = ' of ' + design_target["design_target_value_field"]
             design_targets_instruction_excerpt += design_target_optimization + design_target_name + design_target_value + excerpt_and
         return design_targets_instruction_excerpt    
-
-    

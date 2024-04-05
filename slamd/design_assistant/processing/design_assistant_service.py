@@ -78,7 +78,7 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_liquids_field_with_session_value(cls, form, value):
-        if value in ['Pure Water', 'Activator Liquid (H2O, NaOH, Na2SiO3)']:
+        if value in ['Water', 'Activator Liquid','Activator Solution']:
             form.campaign_form.liquids_field.data = value
         else:
             form.campaign_form.additional_liquid.data = value
