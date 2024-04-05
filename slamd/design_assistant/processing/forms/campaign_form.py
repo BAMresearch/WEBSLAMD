@@ -52,9 +52,10 @@ class CampaignForm(Form):
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
-    liquids_field = RadioField(
+    liquids_field = SelectMultipleField(
         label="Now, select your mixing liquid:",
         choices=[ ("Water", "Water"), ("Activator Liquid", "Activator Liquid"), ("Activator Solution", "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)")],
+        option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 

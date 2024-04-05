@@ -48,7 +48,7 @@ class DesignAssistantService:
                 cls._populate_design_targets_field_with_session_value(form, value)
             if key == 'powders':
                 cls._populate_powders_field_with_session_value(form, value)
-            if key == 'liquid':
+            if key == 'liquids':
                 cls._populate_liquids_field_with_session_value(form, value)
             if key == 'other':
                 cls._populate_other_field_with_session_value(form, value)
@@ -78,10 +78,14 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_liquids_field_with_session_value(cls, form, value):
-        if value in ['Water', 'Activator Liquid','Activator Solution']:
+        liquids = []
+        for liquid in value:
+            if liquid in ['Water', 'Activator Liquid','Activator Solution']:
+                liquids.append(liquid)
+            else:
+                form.campaign_form.additional_liquid.data = liquid
+        if liquids:
             form.campaign_form.liquids_field.data = value
-        else:
-            form.campaign_form.additional_liquid.data = value
 
     @classmethod
     def _populate_other_field_with_session_value(cls, form, value):
@@ -133,13 +137,14 @@ class DesignAssistantService:
                 raise ValueNotSupportedException('Powder selection is not valid.')
             DesignAssistantPersistence.update_session_for_powders_key(value)
 
-        if key == 'liquid':
+        if key == 'liquids':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
-                raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters.')
-            DesignAssistantPersistence.update_session_for_liquid_key(value)
+            for liquid in value:
+                if liquid not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
+                    raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
+                                                    'shall be given, it cannot be longer than 20 characters.')
+            DesignAssistantPersistence.update_session_for_liquids_key(value)
 
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible

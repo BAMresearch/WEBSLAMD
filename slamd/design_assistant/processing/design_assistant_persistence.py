@@ -31,8 +31,8 @@ class DesignAssistantPersistence:
         session['design_assistant']['zero_shot_learner']["progress"] += 1
 
     @classmethod
-    def update_session_for_liquid_key(cls, value):
-        session['design_assistant']['zero_shot_learner']['liquid'] = value
+    def update_session_for_liquids_key(cls, value):
+        session['design_assistant']['zero_shot_learner']['liquids'] = value
         session['design_assistant']['zero_shot_learner']["progress"] += 1
 
     @classmethod

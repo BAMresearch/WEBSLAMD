@@ -66,7 +66,7 @@ def handle_powders():
 @design_assistant.route('/zero_shot/liquid', methods=['POST'])
 def handle_liquids():
     liquid = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(liquid, 'liquid')
+    DesignAssistantService.update_design_assistant_session(liquid, 'liquids')
     campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
     body = {'template': render_template('campaign_other.html', campaign_form=campaign_form)}
     return make_response(jsonify(body), 200)
