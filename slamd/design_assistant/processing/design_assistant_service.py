@@ -136,7 +136,7 @@ class DesignAssistantService:
         if key == 'liquid':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['pure_water', 'activator_liquid'] and len(value) > 30:
+            if value not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
                 raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquid_key(value)
@@ -144,7 +144,7 @@ class DesignAssistantService:
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['biochar', 'recycled_aggregates', 'limestone', 'recycled_glass_fines', 'super_plasticizer'] and len(value) > 30:
+            if value not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
                 raise ValueNotSupportedException('Other selection is not valid. If a custom name '
                                                  'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
@@ -202,11 +202,7 @@ class DesignAssistantService:
     @classmethod
     def generate_design_knowledge(cls, token):
         design_knowledge = LLMService.generate_design_knowledge(token)
-    
-    @classmethod
-    def generate_zero_shot_learner_prompt(cls):
-        zero_shot_learner_prompt = LLMService.generate_zero_shot_learner_prompt()
-        return zero_shot_learner_prompt
+        return design_knowledge
 
     @classmethod
     def generate_formulation(cls, design_knowledge, token):

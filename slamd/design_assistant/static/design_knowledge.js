@@ -1,5 +1,4 @@
 import {scrollDown, updateProgress} from "./utils.js";
-
 import { assignClickEventToSubmitButton } from "./utils.js"
 import { assignEventsToFormulation } from "./formulation.js";
 
@@ -9,7 +8,7 @@ export function assignEventsToDesignKnowledgeForm() {
 }
 
 async function handleGeneratingDesignKnowledge(){
-    insertSpinnerInPlaceholder("design_knowledge_inner_container",true,CHATBOT_RESPONSE_SPINNER);
+    insertSpinnerInPlaceholder("design_knowledge_inner_container", true, CHATBOT_RESPONSE_SPINNER);
     setTimeout(async function handleSubmission() {
         await postDataAndEmbedTemplateInPlaceholder(
             "/design_assistant/zero_shot/generate_design_knowledge",
@@ -20,7 +19,6 @@ async function handleGeneratingDesignKnowledge(){
         document.getElementById("design_knowledge").classList.remove('d-none')
     }, 1000);
     document.getElementById("generate_formulation_button").disabled = false
-
 }
 
 async function handleGeneratingFormulation(){
@@ -39,8 +37,8 @@ async function handleGeneratingFormulation(){
             {"design_knowledge" : design_knowledge ,"token": document.getElementById("token_form-token").value}
         );
         removeSpinnerInPlaceholder("formulation_container", CHATBOT_RESPONSE_SPINNER)
+        updateProgress()
+        scrollDown()
         assignEventsToFormulation()
-                updateProgress()
-                scrollDown()
     }, 1000);
 }

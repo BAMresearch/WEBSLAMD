@@ -6,7 +6,7 @@ from slamd.common.error_handling import FreeTrialLimitExhaustedException, ValueN
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
 MAX_FREE_LLM_CALLS = 10
-
+MODELNAME = 'gpt-3.5-turbo'
 
 class LLMService:
 
@@ -42,23 +42,22 @@ class LLMService:
     def generate_formulation(cls, design_knowledge, token):
         prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
         user_message = {"role": "user", "content": prompt}
-        formulation = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
+        formulation = cls._generate_openai_llm_response([user_message], MODELNAME, token)
         return formulation
 
     @classmethod
     def generate_design_knowledge(cls, token):
         prompt = cls._generate_design_knowledge_prompt()
         user_message = {"role": "user", "content": prompt}
-        generated_design_knowledge = cls._generate_openai_llm_response([user_message], 'gpt-3.5-turbo', token)
+        generated_design_knowledge = cls._generate_openai_llm_response([user_message], MODELNAME, token)
         return generated_design_knowledge
     
     @classmethod
     def _generate_zero_shot_learner_prompt(cls, design_knowledge):
         design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
         zero_shot_learner_session = design_assistant_session['zero_shot_learner']
-        design_knowledge_prompt_excerpt = design_knowledge
         instruction_prompt_excerpt = cls._generate_zero_shot_learner_instruction_excerpt(zero_shot_learner_session)
-        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge_prompt_excerpt
+        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge
         return zero_shot_learner_prompt
 
     @classmethod
@@ -77,7 +76,7 @@ class LLMService:
         # combine user prompt with system prompt and instruction to build final prompt
         system_excerpt = cls._generate_design_knowledge_system_excerpt(zero_shot_learner_session)
         material_type = zero_shot_learner_session['type']
-        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations, that consist of the specified components, adhere to the specified design targets and have the highest possible compressive strength?'
+        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations, that consist of the specified components, adhere to the specified design targets and ?'
         design_knowledge_prompt = system_excerpt + user_excerpt + instruction_excerpt
         return design_knowledge_prompt
 
@@ -97,9 +96,9 @@ class LLMService:
         powders_blend = zero_shot_learner_session["powders"]['blend']
         powders_excerpt = ''
         if len(powders) > 1:
-            if powders_blend == 'yes':
+            if powders_blend == 'Yes':
                 powders_excerpt = '/'.join(powders) 
-            if powders_blend == 'no':
+            if powders_blend == 'No':
                 powders_excerpt = ', '.join(powders)   
         other = zero_shot_learner_session['other']
         if not other == 'None':
@@ -156,14 +155,13 @@ class LLMService:
         design_targets_formatted = ''
         design_target_optimization = ''
         for idx, design_target in enumerate(design_targets):
-            if design_target["design_target_optimization_field"] == 'minimized':
+            design_target_value = ''
+            if design_target["design_target_optimization_field"] == 'decrease':
                 design_target_optimization = ' with a maximum of '
-            if design_target["design_target_optimization_field"] == 'maximized':
+            if design_target["design_target_optimization_field"] == 'increase':
                 design_target_optimization = ' with at least '
             if design_target["design_target_optimization_field"] == 'No optimization':
                 design_target_optimization = ''
-            if design_target["design_target_value_field"] == 'No target value':
-                design_target_value = ''
             if not design_target["design_target_value_field"] == 'No target value':
                 design_target_value = design_target["design_target_value_field"]
             design_targets_formatted = design_targets_formatted + f'//{design_target["design_target_name_field"].capitalize()}' + design_target_optimization + design_target_value + '\n'

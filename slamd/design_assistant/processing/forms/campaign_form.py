@@ -27,8 +27,7 @@ class CampaignForm(Form):
 
     standard_design_targets_field = SelectMultipleField(
         label="What are the most important design targets?",
-        choices=[("Compressive Strength", "Compressive Strength"), ("Workability", "Workability"),
-                 ("Carbonation Resistance", "Carbonation Resistance"), ("Costs", "Costs")],
+        choices=["Compressive Strength", "Workability", "Carbonation Resistance", "Costs"],
         widget=ListWidget(prefix_label=False),
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Select at least one target!")],
@@ -39,10 +38,9 @@ class CampaignForm(Form):
     select_powders_field = SelectMultipleField(
         label="Great! Now, let's select the types of powders for your mix. Please choose from the following options:",
         choices=[
-            ("opc", "OPC (Ordinary Portland Cement)"),
-            ("fly_ash", "Fly Ash"),
-            ("ggbfs", "GGBFS (Ground Granulated Blast Furnace Slag)"),
-            ("geopolymer", "Geopolymer (e.g. industrial byproducts)"),
+            ("OPC", "OPC (Ordinary Portland Cement)"), ("Fly Ash", "Fly Ash"),
+            ("GGBFS", "GGBFS (Ground Granulated Blast Furnace Slag)"),
+            ("Geopolymer", "Geopolymer (e.g. industrial byproducts)"),
         ],
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Select at least one powder!")],
@@ -50,17 +48,13 @@ class CampaignForm(Form):
 
     blend_powders_field = RadioField(
         label="Do you want to blend powders? Note: Blending requires selecting a minimum of two powders.",
-        choices=[("yes", "Yes"), ("no", "No")],
+        choices=[ "Yes","No"],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
     liquids_field = RadioField(
         label="Now, select your mixing liquid:",
-        choices=[
-            ("water", "Water"),
-            ("activator_liquid",
-             "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)"),
-        ],
+        choices=[ ("Water", "Water"), ("Activator Liquid", "Activator Liquid"), ("Activator Solution", "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)")],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
@@ -68,14 +62,7 @@ class CampaignForm(Form):
 
     other_field = RadioField(
         label="Anything else? (optional)",
-        choices=[
-            ("biochar", "Biochar"),
-            ("rice_husk_ash", "Rice Husk Ash"),
-            ("recycled_aggregates", "Recycled Aggregates"),
-            ("limestone", "Limestone Powder"),
-            ("recycled_glass_fines", "Recycled Glass Fines"),
-            ("super_plasticizer", "Super Plasticizer"),
-        ],
+        choices=[ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
