@@ -76,7 +76,7 @@ class LLMService:
         # combine user prompt with system prompt and instruction to build final prompt
         system_excerpt = cls._generate_design_knowledge_system_excerpt(zero_shot_learner_session)
         material_type = zero_shot_learner_session['type']
-        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations, that consist of the specified components, adhere to the specified design targets and ?'
+        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations, that consist of the specified components and adhere to the specified design targets?'
         design_knowledge_prompt = system_excerpt + user_excerpt + instruction_excerpt
         return design_knowledge_prompt
 
@@ -113,7 +113,7 @@ class LLMService:
     @classmethod
     def _generate_material_type_excerpt(cls, zero_shot_learner_session):
         material_type = zero_shot_learner_session['type']
-        material_type_prompt_excerpt = f'You want to design {material_type.capitalize()} formulations with the highest possible compressive strength consisting of the following components: \n'
+        material_type_prompt_excerpt = f'You want to design {material_type.capitalize()} formulations that adhere to the design targets and consist of the following components: \n'
         return material_type_prompt_excerpt
 
     @classmethod
@@ -121,7 +121,7 @@ class LLMService:
         powders = zero_shot_learner_session['powders']['selected']
         blend_powders = zero_shot_learner_session['powders']['blend']
         powders = ', '.join(powders)
-        if blend_powders == 'yes':
+        if blend_powders == 'Yes':
             powders = f'blend of {powders}'
         else:
             powders = f'{powders}, not blended'
