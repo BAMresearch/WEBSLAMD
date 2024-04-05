@@ -19,23 +19,16 @@ function handleCustomOtherNaming(event){
   custom_other_option.value = event.target.value
 }
 export async function handleOtherSubmission() {
-  const submit_other_button = document.getElementById("submit_other_button");
-  submit_other_button.disabled = "true";
-  const additional_other_button = document.getElementById(
-    "additional_other_button"
-  );
-  additional_other_button.disabled = "true";
+  let other_selection = []
+  document.getElementById("submit_other_button").disabled = true;
+  document.getElementById("additional_other_button").disabled = true;
   const other_options = document.querySelectorAll(".other_option");
-  let other;
   other_options.forEach(function (other_option) {
     if (other_option.checked) {
-      other = other_option.value;
+      other_selection.push(other_option.value);
     }
     other_option.disabled = "true";
   });
-  if (!other){
-    other = 'None'
-  }
   insertSpinnerInPlaceholder(
     "comment_container",
     true,
@@ -45,7 +38,7 @@ export async function handleOtherSubmission() {
     await postDataAndEmbedTemplateInPlaceholder(
       "/design_assistant/zero_shot/other",
       "comment_container",
-      other
+      other_selection
     );
     assignClickEventToSubmitButton("submit_comment_button", handleCommentSubmission);
     assignInputEventToCommentForm()
@@ -72,7 +65,7 @@ export function handleAddingOther() {
   other_container.classList.add("d-flex", "gap-2")
   const other_name_input = document.createElement("input");
   const other_option_input = document.createElement("input");
-  other_option_input.type = "radio";
+  other_option_input.type = "checkbox";
   other_option_input.name = "custom_other_option";
   other_option_input.classList.add("other_option", "custom_other_option");
   other_name_input.placeholder = "Name of other";

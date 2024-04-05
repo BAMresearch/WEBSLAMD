@@ -61,9 +61,10 @@ class CampaignForm(Form):
 
     additional_liquid = StringField()
 
-    other_field = RadioField(
+    other_field = SelectMultipleField(
         label="Anything else? (optional)",
         choices=[ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"],
+        option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 

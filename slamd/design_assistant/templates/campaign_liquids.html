@@ -18,7 +18,7 @@
    
         {% if campaign_form.additional_liquid.data %}
         <div class="d-flex gap-2">
-            <input type="radio" name="liquid_option" class="liquid_option" value="{{ campaign_form.additional_liquid.data }}" checked disabled/>
+            <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ campaign_form.additional_liquid.data }}" checked disabled/>
             <div>{{ campaign_form.additional_liquid.data }}</div>
         </div>
         {% endif %}

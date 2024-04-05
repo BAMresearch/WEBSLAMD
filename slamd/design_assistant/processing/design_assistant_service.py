@@ -89,10 +89,13 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_other_field_with_session_value(cls, form, value):
-        if value in ['SCM', 'Super Plasticizer']:
-            form.campaign_form.other_field.data = value
-        else:
-            form.campaign_form.additional_other.data = value
+        others = []
+        for other in value:
+            if other in [ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"]:
+                others.append(other)
+            else:
+                form.campaign_form.additional_other.data = other
+        form.campaign_form.other_field.data = others
 
     @classmethod
     def _populate_comment_field_with_session_value(cls, form, value):
@@ -149,9 +152,10 @@ class DesignAssistantService:
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
-                raise ValueNotSupportedException('Other selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters.')
+            for other in value:
+                if other not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
+                    raise ValueNotSupportedException('Other selection is not valid. If a custom name '
+                                                    'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':

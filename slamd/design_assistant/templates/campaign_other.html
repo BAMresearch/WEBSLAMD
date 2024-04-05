@@ -9,7 +9,7 @@
                     {% for option in  campaign_form.other_field %}
                         <div class="d-flex gap-2">
                             <input
-                                    type="radio"
+                                    type="checkbox"
                                     name="other_option"
                                     class="other_option"
                                     value="{{ option.data }}"
@@ -22,10 +22,10 @@
                             <div>{{ option.label.text }}</div>
                         </div>
                     {% endfor %}
-                    {% if  campaign_form.additional_other.data %}
+                    {% if campaign_form.additional_other.data %}
                     <div class="d-flex gap-2">
                         <input
-                                type="radio"
+                                type="checkbox"
                                 name="other_option"
                                 class="other_option"
                                 value="{{ campaign_form.additional_other.data }}"
