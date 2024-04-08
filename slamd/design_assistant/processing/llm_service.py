@@ -145,7 +145,7 @@ class LLMService:
 
     @classmethod
     def _generate_liquids_user_input_excerpt(cls, zero_shot_learner_session):
-        liquid = zero_shot_learner_session['liquid']
+        liquid = zero_shot_learner_session['liquids']
         liquid_prompt_excerpt = f'//Liquid : {liquid} \n'
         return liquid_prompt_excerpt
 
@@ -203,7 +203,7 @@ class LLMService:
     def _generate_zero_shot_learner_instruction_excerpt(cls, zero_shot_learner_session):
         material_type_excerpt = zero_shot_learner_session['type']
         design_targets_excerpt = cls._generate_formulation_design_targets_instruction_excerpt(zero_shot_learner_session)
-        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate General design knowledge and lab validations to improve your predictions.'\n"
+        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design knowledge to improve your predictions.'\n"
         return instruction_prompt_excerpt
     
     @classmethod
