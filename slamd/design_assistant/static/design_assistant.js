@@ -8,7 +8,8 @@ import {assignClickEventToLiquidForm, handleAddingLiquid, handleLiquidSubmission
 import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} from "./other.js";
 import {assignInputEventToCommentForm, handleCommentSubmission} from "./comment.js";
 import {handleDeleteDesignAssistantSession} from "./design_assistant_session.js"
-import { assignEventsToDesignKnowledge } from './design_knowledge.js'
+import { assignEventsToDesignKnowledgeForm } from "./design_knowledge.js"
+
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
     assignClickEventToSubmitButton("delete_session_button", handleDeleteDesignAssistantSession);
@@ -27,6 +28,6 @@ window.addEventListener("load", function () {
     assignClickEventToOtherForm();
     assignClickEventToSubmitButton("submit_comment_button", handleCommentSubmission);
     assignInputEventToCommentForm()
-  assignEventsToDesignKnowledge()
-  assignEventsToTargetValuesForm()
+    assignEventsToDesignKnowledgeForm()
+    assignEventsToTargetValuesForm()
 });

@@ -59,9 +59,7 @@ export async function handlePowdersSubmission() {
 function handlePowdersSelection() {
     const powders_options = document.querySelectorAll(".powder_option");
     const count = countSelectedOptions(powders_options);
-    const blend_powder_options = document.querySelectorAll(".blend_powder_option"
-    );
-
+    const blend_powder_options = document.querySelectorAll(".blend_powder_option");
     blend_powder_options.forEach(function (blend_powder_option) {
         if (count >= 2) {
             blend_powder_option.disabled = false;
@@ -76,6 +74,15 @@ function handlePowdersSelection() {
             document.getElementById("powders_submit_button").disabled = true;
         }
     });
+    powders_options.forEach(function (powder_option) {
+        if (!powder_option.checked){
+            if (count == 2){
+                powder_option.disabled = true
+            } else if (count < 2){
+                powder_option.disabled = false
+            }
+        } 
+    })
 }
 
 function handleBlendPowdersSelection() {

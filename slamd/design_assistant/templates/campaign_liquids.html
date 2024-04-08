@@ -7,21 +7,18 @@
         <div class="chat_message border rounded p-2 d-inline-block">
         <div id="liquids_option_container">
         <div class="mb-3">{{ campaign_form.liquids_field.label.text }}</div>
+
             {% for option in campaign_form.liquids_field %}
-            <div class="d-flex gap-2">
-                <input type="radio" name="liquid_option" class="liquid_option" value="{{ option.data }}"
-                        {% if campaign_form.liquids_field.data is not none%}
-                            disabled
-                        {% endif %}
-                        {% if option.checked %}
-                            checked
-                        {% endif %}/>
-              <div>{{ option.label.text }}</div>
-            </div>
+                <div class="d-flex gap-2">
+                
+                <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ option.data }}"{% if campaign_form.liquids_field.data %} {% if option.data in campaign_form.liquids_field.data %} disabled checked {% endif %} {% endif %}/>
+                <div>{{ option.label.text }}</div>
+                </div>
             {% endfor %}
+   
         {% if campaign_form.additional_liquid.data %}
         <div class="d-flex gap-2">
-            <input type="radio" name="liquid_option" class="liquid_option" value="{{ campaign_form.additional_liquid.data }}" checked disabled/>
+            <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ campaign_form.additional_liquid.data }}" checked disabled/>
             <div>{{ campaign_form.additional_liquid.data }}</div>
         </div>
         {% endif %}

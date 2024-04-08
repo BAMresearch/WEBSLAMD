@@ -86,7 +86,7 @@ def test_update_design_assistant_session_calls_persistence_with_powders(monkeypa
         return None
 
     monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_powders_key', mock_update_session_for_powders)
-    mock_powders = {'blend_powders': 'no', 'selected_powders': ['opc']}
+    mock_powders = {'blend_powders': 'No', 'selected_powders': ['OPC']}
     DesignAssistantService.update_design_assistant_session(mock_powders, 'powders')
 
     assert mock_update_session_called_with == mock_powders
@@ -124,9 +124,9 @@ def test_update_design_assistant_session_calls_persistence_with_liquid(monkeypat
         mock_update_session_called_with = input
         return None
 
-    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_liquid_key', mock_update_session_for_liquid)
-    mock_liquid = 'valid name'
-    DesignAssistantService.update_design_assistant_session(mock_liquid, 'liquid')
+    monkeypatch.setattr(DesignAssistantPersistence, 'update_session_for_liquids_key', mock_update_session_for_liquid)
+    mock_liquid = ['valid name']
+    DesignAssistantService.update_design_assistant_session(mock_liquid, 'liquids')
 
     assert mock_update_session_called_with == mock_liquid
 
@@ -134,7 +134,7 @@ def test_update_design_assistant_session_calls_persistence_with_liquid(monkeypat
 def test_update_design_assistant_session_raises_error_when_liquid_is_too_long():
     with pytest.raises(ValueNotSupportedException):
         mock_liquid = 'This liquid name is way too long and thus invalid'
-        DesignAssistantService.update_design_assistant_session(mock_liquid, 'liquid')
+        DesignAssistantService.update_design_assistant_session(mock_liquid, 'liquids')
 
 
 def test_update_design_assistant_session_calls_persistence_with_other(monkeypatch):
@@ -168,8 +168,8 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
                 'zero_shot_learner': {'design_targets': [{'design_target_name_field': 'Workability',
                                                           'design_target_value_field': '10 MPa',
                                                           'design_target_optimization_field': 'maximize'}],
-                                      'liquid': 'dhiwq',
-                                      'powders': {'blend': 'yes', 'selected': ['opc', 'fly_ash']}, 'type': 'Binder'}}
+                                      'liquids': ['dhiwq'],
+                                      'powders': {'blend': 'Yes', 'selected': ['OPC', 'Fly Ash']}, 'type': 'Binder'}}
 
     def mock_get_progress(task):
         if task == 'zero_shot_learner':
@@ -187,16 +187,17 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
     assert form.task_form['task_field'].data == 'zero_shot_learner'
     assert form.campaign_form.data == {'additional_liquid': 'dhiwq',
                                        'additional_other': None,
-                                       'blend_powders_field': 'yes',
+                                       'blend_powders_field': 'Yes',
                                        'comment_field': None,
                                        'design_knowledge_field': None,
                                        'design_targets': [{'design_target_name_field': 'Workability',
                                                            'design_target_optimization_field': 'maximize',
                                                            'design_target_value_field': '10 MPa'}],
+                                       'formulation_field': None,
                                        'liquids_field': None,
                                        'material_type_field': 'Binder',
                                        'other_field': None,
-                                       'select_powders_field': ['opc', 'fly_ash'],
+                                       'select_powders_field': ['OPC', 'Fly Ash'],
                                        'standard_design_targets_field': None,
                                        'submit_button': False}
 

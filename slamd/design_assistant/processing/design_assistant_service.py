@@ -48,7 +48,7 @@ class DesignAssistantService:
                 cls._populate_design_targets_field_with_session_value(form, value)
             if key == 'powders':
                 cls._populate_powders_field_with_session_value(form, value)
-            if key == 'liquid':
+            if key == 'liquids':
                 cls._populate_liquids_field_with_session_value(form, value)
             if key == 'other':
                 cls._populate_other_field_with_session_value(form, value)
@@ -56,6 +56,8 @@ class DesignAssistantService:
                 cls._populate_comment_field_with_session_value(form, value)
             if key == 'design_knowledge':
                 cls._populate_design_knowledge_field_with_session_value(form, value)
+            if key == 'formulation':
+                cls._populate_formulation_field_with_session_value(form, value)
 
     @classmethod
     def _populate_design_targets_field_with_session_value(cls, form, value):
@@ -76,17 +78,24 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_liquids_field_with_session_value(cls, form, value):
-        if value in ['pure_water', 'activator_liquid']:
+        liquids = []
+        for liquid in value:
+            if liquid in ['Water', 'Activator Liquid','Activator Solution']:
+                liquids.append(liquid)
+            else:
+                form.campaign_form.additional_liquid.data = liquid
+        if liquids:
             form.campaign_form.liquids_field.data = value
-        else:
-            form.campaign_form.additional_liquid.data = value
 
     @classmethod
     def _populate_other_field_with_session_value(cls, form, value):
-        if value in ['scm', 'super_plasticizer']:
-            form.campaign_form.other_field.data = value
-        else:
-            form.campaign_form.additional_other.data = value
+        others = []
+        for other in value:
+            if other in [ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"]:
+                others.append(other)
+            else:
+                form.campaign_form.additional_other.data = other
+        form.campaign_form.other_field.data = others
 
     @classmethod
     def _populate_comment_field_with_session_value(cls, form, value):
@@ -95,6 +104,10 @@ class DesignAssistantService:
     @classmethod
     def _populate_design_knowledge_field_with_session_value(cls, form, value):
         form.campaign_form.design_knowledge_field.data = value
+    
+    @classmethod
+    def _populate_formulation_field_with_session_value(cls, form, value):
+        form.campaign_form.formulation_field.data = value
 
     @classmethod
     def create_design_assistant_campaign_form(cls):
@@ -127,20 +140,22 @@ class DesignAssistantService:
                 raise ValueNotSupportedException('Powder selection is not valid.')
             DesignAssistantPersistence.update_session_for_powders_key(value)
 
-        if key == 'liquid':
+        if key == 'liquids':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['pure_water', 'activator_liquid'] and len(value) > 30:
-                raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters.')
-            DesignAssistantPersistence.update_session_for_liquid_key(value)
+            for liquid in value:
+                if liquid not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
+                    raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
+                                                    'shall be given, it cannot be longer than 20 characters.')
+            DesignAssistantPersistence.update_session_for_liquids_key(value)
 
         if key == 'other':
             # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
-            if value not in ['biochar', 'recycled_aggregates', 'limestone', 'recycled_glass_fines', 'super_plasticizer'] and len(value) > 30:
-                raise ValueNotSupportedException('Other selection is not valid. If a custom name '
-                                                 'shall be given, it cannot be longer than 20 characters.')
+            for other in value:
+                if other not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
+                    raise ValueNotSupportedException('Other selection is not valid. If a custom name '
+                                                    'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
@@ -149,13 +164,16 @@ class DesignAssistantService:
 
         if key == 'design_knowledge':
             DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
+        
+        if key == "formulation":
+            DesignAssistantPersistence.update_session_for_formulation_key(value)
 
     @classmethod
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']
         selected_powders = value['selected_powders']
-        if all(x in ['opc', 'geopolymer', 'ggbfs', 'fly_ash'] for x in selected_powders):
-            if len(selected_powders) == 1 and blend == 'no' or len(selected_powders) == 2 and blend in ['yes', 'no']:
+        if all(x in ['OPC', 'Geopolymer', 'GGBFS', 'Fly Ash'] for x in selected_powders):
+            if len(selected_powders) == 1 and blend == 'No' or len(selected_powders) == 2 and blend in ['Yes', 'No']:
                 return True
         return False
 
@@ -194,3 +212,8 @@ class DesignAssistantService:
     def generate_design_knowledge(cls, token):
         design_knowledge = LLMService.generate_design_knowledge(token)
         return design_knowledge
+
+    @classmethod
+    def generate_formulation(cls, design_knowledge, token):
+        formulations = LLMService.generate_formulation(design_knowledge, token) 
+        return formulations

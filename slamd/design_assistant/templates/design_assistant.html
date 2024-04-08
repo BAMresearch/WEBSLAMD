@@ -60,14 +60,14 @@
                 {% include 'comment.html' %}
                 {% endif %}
             </div>
-            <div id="knowledge_container" class="mb-4">
+            <div id="design_knowledge_container" class="mb-4">
                 {% if form.campaign_form is not none and form.campaign_form.comment_field.data %}
                 {% include 'design_knowledge.html' %}
-                    {% endif %}
+                {% endif %}
                 </div>
-                <div id="prompt_container" class="mb-4">
-                    {% if form.campaign_form is not none and form.campaign_form.design_knowledge_field.data %}
-                        {% include 'prompt.html' %}
+            <div id="formulation_container" class="mb-4">
+                {% if form.campaign_form is not none and form.campaign_form.design_knowledge_field.data %}
+                {% include 'formulation.html' %}
                 {% endif %}
             </div>
         </div>
