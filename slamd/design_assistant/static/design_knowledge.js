@@ -8,15 +8,15 @@ export function assignEventsToDesignKnowledgeForm() {
 }
 
 async function handleGeneratingDesignKnowledge(){
-    insertSpinnerInPlaceholder("design_knowledge_inner_container", true, CHATBOT_RESPONSE_SPINNER);
+    insertSpinnerInPlaceholder("bot_message_spinner", true, CHATBOT_RESPONSE_SPINNER);
     setTimeout(async function handleSubmission() {
         await postDataAndEmbedTemplateInPlaceholder(
             "/design_assistant/zero_shot/generate_design_knowledge",
             "design_knowledge",
             {"token": document.getElementById("token_form-token").value}
         );
-        removeSpinnerInPlaceholder("design_knowledge_inner_container", CHATBOT_RESPONSE_SPINNER)
-        document.getElementById("design_knowledge").classList.remove('d-none')
+        removeSpinnerInPlaceholder("bot_message_spinner", CHATBOT_RESPONSE_SPINNER)
+        document.getElementById("bot_message_container_design_knowledge").classList.remove('d-none')
     }, 1000);
     document.getElementById("generate_formulation_button").disabled = false
 }

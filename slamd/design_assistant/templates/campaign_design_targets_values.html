@@ -9,66 +9,45 @@
     </div>
     <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
         <div class="chat_message border rounded p-3 d-inline-block">
-        <div class="design_target_option_container d-flex flex-column justify-content-between" id="design_target_options_container">
-                    <ul class="nav nav-pills mb-3 m" id="pills-tab" role="tablist">
-                        {% for design_target in campaign_form.design_targets %}
-                        <li class="nav-item pr-3" role="presentation">
-                            <button class="nav-link{% if loop.index == 1 %} active {% endif %} design_target_name"
-                                    id="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}-tab"
-                                    data-bs-toggle="pill"
-                                    data-bs-target="#pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}"
-                                    type="button" role="tab"
-                                    aria-controls="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}"
-                                    aria-selected="false">{{ design_target.design_target_name_field.data }}
-                            </button>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content" id="pills-tabContent">
-                        {% for design_target in campaign_form.design_targets %}
-                        <div class="tab-pane fade {% if loop.index == 1 %} show active {% endif %}"
-                             id="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}"
-                             role="tabpanel"
-                             aria-labelledby="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}-tab">
+            <div class="design_target_option_container d-flex flex-column justify-content-between" id="design_target_options_container">
+                <ul class="nav nav-pills mb-3 m" id="pills-tab" role="tablist">
+                    {% for design_target in campaign_form.design_targets %}
+                    <li class="nav-item pr-3" role="presentation">
+                        <button class="nav-link{% if loop.index == 1 %} active {% endif %} design_target_name" id="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}" type="button" role="tab" aria-controls="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}" aria-selected="false">{{ design_target.design_target_name_field.data }}</button>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    {% for design_target in campaign_form.design_targets %}
+                        <div class="tab-pane fade {% if loop.index == 1 %} show active {% endif %}" id="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}" role="tabpanel" aria-labelledby="pills-{{ design_target.design_target_name_field.data|replace(' ', '') }}-tab">
                             <div class="d-flex flex-column gap-2">
                                 <div class="d-flex align-items-center justify-content-between gap-3">
                                     <div>{{ design_target.design_target_value_field.label.text }}</div>
-                                    {% if design_target.design_target_value_field.data %}
-                                    <input class="design_target_value w-auto form-control"
-                                           value="{{ design_target.design_target_value_field.data }}"
-                                           name="design_target_value" disabled/>
+                                        {% if design_target.design_target_value_field.data %}
+                                    <input class="design_target_value w-auto form-control" value="{{ design_target.design_target_value_field.data }}" name="design_target_value" disabled/>
                                     {% else %}
-                                    <input class="design_target_value w-auto form-control" placeholder="e.g. 35 MPa"
-                                           name="design_target_value"/>
+                                        <input class="design_target_value w-auto form-control" placeholder="e.g. 35 MPa" name="design_target_value"/>
                                     {% endif %}
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between gap-3">
                                     <div>{{ design_target.design_target_optimization_field.label.text }}</div>
                                     {% if design_target.design_target_value_field.data %}
-                                    <select class="w-auto form-select ml-auto design_target_optimization_select"
-                                            aria-label="Select optimization" name="design_target_optimization_select"
-                                            disabled>
-                                        <option value="{{ design_target.design_target_optimization_field.data }}">{{
-                                            design_target.design_target_optimization_field.data}}
-                                        </option>
-                                        {% else %}
-                                        <select class="w-auto form-select ml-auto design_target_optimization_select"
-                                                aria-label="Select optimization"
-                                                name="design_target_optimization_select">
+                                        <select class="w-auto form-select ml-auto design_target_optimization_select" aria-label="Select optimization" name="design_target_optimization_select" disabled>
+                                            <option value="{{ design_target.design_target_optimization_field.data }}">{{ design_target.design_target_optimization_field.data}}</option>
+                                        </select>
+                                    {% else %}
+                                        <select class="w-auto form-select ml-auto design_target_optimization_select" aria-label="Select optimization" name="design_target_optimization_select">
                                             {% endif %}
-                                            {% for value, label in
-                                            design_target.design_target_optimization_field.choices %}
-                                            <option value="{{value}}" class="design_target_optimization"
-                                                    name="design_target_optimization">{{ label }}
-                                            </option>
-                                            {% endfor %}
+                                            {% for value, label in design_target.design_target_optimization_field.choices %}
+                                            <option value="{{value}}" class="design_target_optimization" name="design_target_optimization">{{ label }}</option> 
+                                            {% endfor %}   
                                         </select>
                                 </div>
                             </div>
                         </div>
-                        {% endfor %}
-                    </div>
+                    {% endfor %}
                 </div>
+            </div>
             <div class="d-flex mt-2 gap-2 justify-content-end">
                 <button class="btn btn-primary" id="design_targets_values_submit_button" {% if
                         campaign_form.design_targets %}

@@ -5,11 +5,11 @@
             {{ chatbot_icon(30, 30, "currentColor") }}
             <div class="bot_message border rounded p-3 d-inline-block mb-4">
                 {{ campaign_form.formulation_field.label.text }}
+                <div id="formulation" class="form-control mt-3">{% if campaign_form.formulation_field.data %} {{ campaign_form.formulation_field.data }} {% else %} {{ formulation }} {% endif %} </div>
             </div>
         </div>
         <div id="formulation_chat_message_container" class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
             <div class="chat_message border rounded p-3 d-inline-block">
-                <div id="formulation" class="form-control mb-3">{% if campaign_form.formulation_field.data %} {{ campaign_form.formulation_field.data }} {% else %} {{ formulation }} {% endif %} </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-success" id="save_formulation_button" {% if campaign_form.formulation_field.data %} disabled {% endif %}>Save Formulation</button>
                 </div>

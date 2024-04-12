@@ -27,6 +27,11 @@ function handleDesignTargetsValuesSubmission(){
                         "design_target_optimization_field": design_target_optimization
                 });
         }
+        insertSpinnerInPlaceholder(
+                "powders_container",
+                true,
+                CHATBOT_RESPONSE_SPINNER
+        );
         setTimeout(async function handleSubmission() {
                 await postDataAndEmbedTemplateInPlaceholder(
                     "/design_assistant/zero_shot/design_targets_values",
