@@ -81,11 +81,11 @@ export function handleAddingLiquid() {
     const custom_liquid_container = document.createElement("div");
     const custom_liquid_option_input = document.createElement("input");
     const custom_liquid_name_input = document.createElement("input");
-    custom_liquid_container.classList.add("d-flex", "gap-2")
+    custom_liquid_container.classList.add("d-flex", "gap-2", "justify-content-between")
     custom_liquid_option_input.type = "checkbox";
     custom_liquid_option_input.name = "custom_liquid_option";
     custom_liquid_option_input.classList.add("liquid_option", "custom_liquid_option");
-    custom_liquid_name_input.classList.add("form-control", "w-25")
+    custom_liquid_name_input.classList.add("w-auto", "form-control")
     custom_liquid_name_input.placeholder = "Name of liquid";
     custom_liquid_name_input.classList.add("liquid_option_name");
     custom_liquid_name_input.name = 'custom_liquid_name'

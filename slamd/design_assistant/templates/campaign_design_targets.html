@@ -1,45 +1,46 @@
 {% block content %}
-    {% from 'icons.html' import chatbot_icon %}
-    <div class="col d-flex gap-3">
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
         {{ chatbot_icon(30, 30, "currentColor") }}
-        <div class="chat_message_container">
-            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
-            <div class="chat_message border rounded p-2 d-inline-block mb-3">
-                <p>{{ campaign_form.targ_intro_text }}</p>
-                <p>{{ campaign_form.targ_process_overview }}</p>
-                <ul>
-                    <li>{{ campaign_form.targ_step_one }}</li>
-                    <li>{{ campaign_form.targ_step_two }}</li>
-                    <li>{{ campaign_form.targ_step_three }}</li>
-            </div>
-            <div class="chat_message border rounded p-2 d-inline-block">
-                <div id="design_target_options_container">
-                    <div class = "mb-3">{{ campaign_form.standard_design_targets_field.label.text }}</div>
-                    <div class="design_target_option_container d-flex flex-column justify-content-between">
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">
+            <p>{{ campaign_form.targ_intro_text }}</p>
+            <p>{{ campaign_form.targ_process_overview }}</p>
+            <ul>
+                <li>{{ campaign_form.targ_step_one }}</li>
+                 <li>{{ campaign_form.targ_step_two }}</li>
+                <li>{{ campaign_form.targ_step_three }}</li>
+            </ul>
+            <div class = "mb-3">{{ campaign_form.standard_design_targets_field.label.text }}</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div id="design_target_options_container" class="design_target_option_container">
                     {% if campaign_form.design_targets %}
                         {% for design_target in campaign_form.design_targets %}
-                            <div>
-                                <input class="design_target_option" type="checkbox" checked="checked" name="design_target_name" value="{{ design_target.design_target_name_field.data }}" disabled/>
+                            <div class="d-flex gap-4 justify-content-between">
                                 {{ design_target.design_target_name_field.data }}
+                                <input class="design_target_option" type="checkbox" checked="checked" name="design_target_name" value="{{ design_target.design_target_name_field.data }}" disabled/>
                             </div>
                         {% endfor %}
                     {% else %}
                         {% for standard_design_target in campaign_form.standard_design_targets_field %}
-                            <div>
-                            {{ standard_design_target(class_="design_target_option") }}
-                            {{ standard_design_target.label.text }}
+                            <div class="d-flex gap-4 justify-content-between">
+                                {{ standard_design_target.label.text }}
+                                {{ standard_design_target(class_="design_target_option") }}
                             </div>
                         {% endfor %}
                     {% endif %}
-                    </div>
-                </div>
-                <div class="d-flex mt-2 gap-2">
-                    <button class="btn btn-secondary" id="additional_design_targets_button" {% if campaign_form.design_targets %}disabled{% endif %}>
-                        Add target +
-                    </button>
-                    <button class="btn btn-primary" id="design_targets_submit_button" disabled>Submit</button>
-                </div>
             </div>
-        </div>
+            <div class="d-flex mt-2 gap-3">
+                <button class="btn btn-secondary" id="additional_design_targets_button" {% if campaign_form.design_targets %}disabled{% endif %}>
+                    Add target +
+                </button>
+                <button class="btn btn-primary" id="design_targets_submit_button" disabled>Submit</button>
+            </div>
+        </div>  
+        {{ user_icon(30, 30, "currentColor") }}             
     </div>
+</div>
 {% endblock %}

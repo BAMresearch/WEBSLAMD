@@ -1,13 +1,18 @@
 {% block content %}
-    {% from 'icons.html' import chatbot_icon %}
-    <div class="col d-flex gap-3">
-        {{ chatbot_icon(30, 30, "currentColor") }}
-        <div class="chat_message_container">
-            <div class="chat_message border rounded p-2 d-inline-block">
+    {% from 'icons.html' import chatbot_icon, user_icon %}
+    <div class="chat_container">
+        <div class="bot_message_container d-flex gap-3 mx-auto">
+            {{ chatbot_icon(30, 30, "currentColor") }}
+            <div class="bot_message border rounded p-3 d-inline-block mb-4">
+                {{ campaign_form.other_field.label.text }}
+            </div>
+        </div>
+        <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+            <div class="chat_message border rounded p-3 d-inline-block">
                 <div id="other_option_container">
-                    <div class="mb-3">{{ campaign_form.other_field.label.text }}</div>
                     {% for option in  campaign_form.other_field %}
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-4 justify-content-between">
+                            <div>{{ option.label.text }}</div>
                             <input
                                     type="checkbox"
                                     name="other_option"
@@ -19,11 +24,11 @@
                                     {% if option.checked %}
                                     checked
                                     {% endif %}/>
-                            <div>{{ option.label.text }}</div>
                         </div>
                     {% endfor %}
                     {% if campaign_form.additional_other.data %}
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-4 justify-content-between">
+                        <div>{{ campaign_form.additional_other.data }}</div>
                         <input
                                 type="checkbox"
                                 name="other_option"
@@ -31,7 +36,6 @@
                                 value="{{ campaign_form.additional_other.data }}"
                                 checked
                                 disabled/>
-                        <div>{{ campaign_form.additional_other.data }}</div>
                     </div>
                     {% endif %}
                 </div>
@@ -51,6 +55,7 @@
                     </button>
                 </div>
             </div>
+            {{ user_icon(30, 30, "currentColor") }}
         </div>
     </div>
 {% endblock %}

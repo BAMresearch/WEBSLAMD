@@ -129,12 +129,20 @@
     background-color: #f2f2f22e
 }
 
-.chat_message_container {
+.chat_container {
     width: 100%;
 }
 
+.chat_message_container, .bot_message_container {
+    width: 100%;
+}
+
+.chat_message, .bot_message {
+    width: fit-content;
+}
+
 .chat_message {
-    width: 85%;
+    background-color: #0075ff9c;
 }
 
 .design_target_option_container .nav-link.active {

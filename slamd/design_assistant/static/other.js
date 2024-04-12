@@ -69,10 +69,10 @@ export function handleAddingOther() {
   other_option_input.name = "custom_other_option";
   other_option_input.classList.add("other_option", "custom_other_option");
   other_name_input.placeholder = "Name of other";
-  other_name_input.classList.add("custom_other_option_name","form-control", "w-25");
+  other_name_input.classList.add("custom_other_option_name","form-control");
   other_name_input.name = "custom_other_name"
-  other_container.appendChild(other_option_input);
   other_container.appendChild(other_name_input);
+  other_container.appendChild(other_option_input);
   others_container.appendChild(other_container);
   assignClickEventToOtherForm();
   assignInputEventToOtherForm();

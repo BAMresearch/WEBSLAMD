@@ -1,36 +1,43 @@
 {% block content %}
-    {% from 'icons.html' import chatbot_icon %}
-    <div class="col d-flex gap-3">
-        {{ chatbot_icon(30, 30, "currentColor") }}
-        <div class="chat_message_container">
-            <div class="fw-bold mt-1 mb-2">Design Assistant</div>
-            <div class="chat_message border rounded p-2 d-inline-block">
-                <div class="mb-3">{{ campaign_form.select_powders_field.label.text }}</div>
+{% from 'icons.html' import chatbot_icon, user_icon %}
+    <div class="chat_container">
+        <div class="bot_message_container d-flex gap-3 mx-auto">
+            {{ chatbot_icon(30, 30, "currentColor") }}
+            <div class="bot_message border rounded p-3 d-inline-block mb-4">
+                {{ campaign_form.select_powders_field.label.text }}
+            </div>
+        </div>
+        <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+            <div class="chat_message border rounded p-3 d-inline-block">
                 <div>
                     {% for option in campaign_form.select_powders_field %}
-                        <div>
+                        <div class="d-flex gap-4 justify-content-between">
+                            {{ option.label.text }}
                             {% if campaign_form.select_powders_field.data %}
                                 {{ option(class_="powder_option", disabled='disabled') }}
                             {% else %}
                                 {{ option(class_="powder_option") }}
                             {% endif %}
-                            {{ option.label.text }}
                         </div>
                     {% endfor %}
                     <div class="mt-2 mb-1">{{ campaign_form.blend_powders_field.label.text }}</div>
-                    {% for option in campaign_form.blend_powders_field %}
+                    <div class="text-end">
+
+                        {% for option in campaign_form.blend_powders_field %}
                         {% if campaign_form.blend_powders_field.data == option.data %}
-                            {{ option(class='blend_powder_option', checked='true', disabled='disabled', value="{{ option.data }}") }}
+                        {{ option(class='blend_powder_option', checked='true', disabled='disabled', value="{{ option.data }}") }}
                         {% else %}
-                            {{ option(class='blend_powder_option', disabled='disabled') }}
+                        {{ option(class='blend_powder_option', disabled='disabled') }}
                         {% endif %}
                         {{ option.label }}
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="mt-2">
+                <div class="mt-2 text-end">
                     <button class="btn btn-primary" id="powders_submit_button" disabled>Submit</button>
                 </div>
             </div>
+            {{ user_icon(30, 30, "currentColor") }}
         </div>
     </div>
 {% endblock %}
