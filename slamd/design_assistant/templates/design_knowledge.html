@@ -1,19 +1,30 @@
 {% block content %}
-    {% from 'icons.html' import chatbot_icon %}
-    <div class="col d-flex gap-3">
-        {{ chatbot_icon(30, 30, "currentColor") }}
-        <div id="knowledge_chat_message_container" class="chat_message_container">
-            <div class="chat_message border rounded p-2 d-inline-block">
-                <div class="mb-3">Alright, let's generate the design knowledge! If you are not satisfied with the result, you may generate it again.</div>
-                <div id="design_knowledge_inner_container" class="mb-3">
-                    <textarea id="design_knowledge" class="form-control {% if campaign_form.design_knowledge_field.data is none %} d-none {% endif %}" style="min-height: 300px; overflow: scroll;" {% if campaign_form.design_knowledge_field.data %} disabled {% endif %}>{{ campaign_form.design_knowledge_field.data }}</textarea>
-                </div>
+    {% from 'icons.html' import chatbot_icon, user_icon %}
+    <div class="chat_container">
+        <div class="bot_message_container d-flex gap-3 mx-auto">
+            {{ chatbot_icon(30, 30, "currentColor") }}
+            <div class="bot_message border rounded p-3 d-inline-block mb-4">
+                Alright, let's generate the design knowledge! If you are not satisfied with the result, you may generate it again.
+            </div>
+        </div>
+        <div id="knowledge_chat_message_container" class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+            <div class="chat_message border rounded p-3 d-inline-block">
                 <button class="btn btn-primary" id="generate_design_knowledge_button"{% if campaign_form.formulation_field.data %} disabled {% endif %} >
                     Generate Knowledge
                 </button>
                 <button class="btn btn-success" id="generate_formulation_button"{% if campaign_form.formulation_field.data %} disabled {% endif %} >
                     Generate Formulation
                 </button>
+            </div>
+            {{ user_icon(30, 30, "currentColor") }}
+        </div>
+        <div id="bot_message_spinner"></div>
+        <div id="bot_message_container_design_knowledge" class="bot_message_container d-flex gap-3 mx-auto mt-4 {% if campaign_form.design_knowledge_field.data is none %} d-none {% endif %}">
+            {{ chatbot_icon(30, 30, "currentColor") }}
+            <div class="bot_message border rounded p-3 d-inline-block "> 
+                <div id="design_knowledge_inner_container ">
+                    <textarea rows="5" cols="100" id="design_knowledge" class="form-control mb-3" style="min-height: 300px" {% if campaign_form.design_knowledge_field.data %} disabled {% endif %}>{{ campaign_form.design_knowledge_field.data }}</textarea>
+                </div>
             </div>
         </div>
     </div>

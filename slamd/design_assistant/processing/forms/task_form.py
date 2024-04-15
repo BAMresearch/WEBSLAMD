@@ -7,8 +7,8 @@ class TaskForm(Form):
     task_field = RadioField(
         label="Please select:",
         choices=[
-            ("data_creation", "🧑‍🚀Start a new SLAMD Project"),
-            ("zero_shot_learner", "🤖Zero-shot Designs using LLMs"),
+            ("data_creation", "🧑‍🚀 Start a new SLAMD Project"),
+            ("zero_shot_learner", "🤖 Zero-shot Designs using LLMs"),
         ],
         validators=[validators.DataRequired(message="Service cannot be empty!")],
     )
@@ -23,4 +23,4 @@ class TaskForm(Form):
                     "2. 🤖Zero-shot Designs using LLMs \n"
                     " Need quick insights without the hassle of collecting training data? "
                     "Let's jump straight into using language models to output formulations using mankind's collective knowledge. "
-                    "I will assist you in crafting a structured prompt to unlock high-performance predictions. Perfect for when time is of the essence!")
+                    "I will assist you in crafting a structured prompt to unlock high-performance predictions. Perfect for when time is of the essence! \n\n")

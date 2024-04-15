@@ -27,7 +27,7 @@ function assignInputEventToDesignTargetForm() {
 }
 
 function handleCustomDesignTargetNaming(event) {
-  const custom_design_target_option = event.target.closest("input").previousElementSibling;
+  const custom_design_target_option = event.target.closest("input").nextElementSibling;
   custom_design_target_option.value = event.target.value
   const design_target_options = document.querySelectorAll(".design_target_option")
   let count = countSelectedOptions(design_target_options);
@@ -104,7 +104,7 @@ export function handleDesignTargetsSelection(event) {
         design_target_option.disabled = false;
       }
       if (design_target_option.classList.contains('custom_design_target_option')) {
-        const custom_design_target_option_input = design_target_option.nextElementSibling
+        const custom_design_target_option_input = design_target_option.previousElementSibling
         if (custom_design_target_option_input.value) {
           design_target_option.disabled = false;
         }
@@ -141,8 +141,8 @@ export function handleAddingCustomDesignTarget() {
   design_target_option_name_input.placeholder = "Required: Name target";
   design_target_option_name_input.name = "custom_design_target_option"
   // add all html elements sequentially to container that wraps all design targets
-  design_target_option_inner_container.appendChild(design_target_option_checkbox_input);
   design_target_option_inner_container.appendChild(design_target_option_name_input);
+  design_target_option_inner_container.appendChild(design_target_option_checkbox_input);
   design_target_option_container.appendChild(design_target_option_inner_container);
   container.appendChild(design_target_option_container);
   // assign events to newly created html elements
