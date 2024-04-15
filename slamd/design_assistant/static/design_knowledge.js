@@ -17,6 +17,7 @@ async function handleGeneratingDesignKnowledge(){
         );
         removeSpinnerInPlaceholder("bot_message_spinner", CHATBOT_RESPONSE_SPINNER)
         document.getElementById("bot_message_container_design_knowledge").classList.remove('d-none')
+        scrollDown()
     }, 1000);
     document.getElementById("generate_formulation_button").disabled = false
 }
