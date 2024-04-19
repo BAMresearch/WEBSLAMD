@@ -147,8 +147,8 @@ The clear guidance provided in this paper allows immediate adoption into practic
 #### Data
 - **SLAMD session data and an alkali-activated concrete data set** which contains ground truth data and for the AI optimization of SLAMD. This data has been created for teaching purposes: [SLAMD example data](https://github.com/BAMcvoelker/Praktikum_MD)
 - ***A comprehensive alkali-activated concrete data set*** for Sustainable Building Materials: [DOI: 10.5281/zenodo.7693719](https://doi.org/10.5281/zenodo.7693719).
-- **9 ML-ready data extracted from the comprehensive data set** and used in references 2) and 3): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
-- **ML-ready data** used in reference 4): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
+- **9 ML-ready data extracted from the comprehensive data set** and used in references 3) and 4): [GitHub Repository](https://github.com/BAMcvoelker/Green-building-materials-a-new-frontier-in-data-driven-sustainable-concrete-design/tree/main/Data_and_Code/Data_sets).
+- **ML-ready data** used in reference 5): [GitHub Repository](https://github.com/BAMcvoelker/Sequential-Learning-for-AAB-discovery/blob/main/AAC_data_Publish.xlsx).
 
 
 #### Videos
