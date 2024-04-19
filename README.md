@@ -95,10 +95,10 @@ Furthermore, make sure that on Unix-based systems you set execution permissions 
 
 Now execute the corresponding script from the root directory of this project as follows.
 
-- `run.bat <KEY>` (Windows)
-- `./run.sh <KEY>` (Unix / Mac)
+- `run.bat <KEY> <OpenAI_API_Key>` (Windows)
+- `./run.sh <KEY> <OpenAI_API_Key>` (Unix / Mac)
 
-In a local deployment `<KEY>` can be replaced by `ABC`, i.e. `run.bat ABC` or `./run.sh ABC`
+In a local deployment `<KEY>` can be replaced by `ABC`, i.e. `run.bat ABC` or `./run.sh ABC`. The <OpenAI_API_Key>is a required, enabling authentication and access to OpenAI's services to incorporate LLM functionalities locally. If no API key is available simple type ABC, i.e. `run.bat ABC ABC` or `./run.sh ABC ABC`
 The console should now show that the app is running. You can now open http://127.0.0.1:5001 in your browser to
 access the running application.
 
@@ -134,15 +134,15 @@ Find the documentation here: https://github.com/BAMresearch/SLAMD_Doku. It expla
 #### Articles
 
 1. **Presenting SLAMD - A Sequential Learning-based Software for the Inverse Design of Sustainable Cementitious Materials .** Christoph Völker, Benjami Moreno Torres, Ghezal Ahmad Zia, Rafia Firdous, Tehseen Rug, Felix Böhmer, Dietmar Stephan, and Sabine Kruschwitz. NanoWorld  Journal, 2023. This paper introduces SLAMD, a bespoke software that leverages inverse design to identify ideal sustainable building materials. This paper does not aim to benchmark ID as a methodology, but rather to introduce SLAMD as an innovative tool that brings the ID approach within the grasp of the wider building chemistry community. It elucidates the design concepts behind the software and provides a walkthrough of its workflow, aiming to empower professionals in the field to harness this potent tool in their work. [Available in NanoWorld Journal](https://jnanoworld.com/2023/09/27/presenting-slamd-a-sequential-learning-based-software-for-the-inverse-design-of-sustainable-cementitious-materials/).
-2. **Data driven design of Alkali-activated concrete using Sequential Learning.** Christoph Völker, Benjami Moreno Torres, Tehseen Rug, Rafia Firdous, Ghezal Ahmad Jan Zia, Stefan Lüders, Horacio Lisdero Scaffino, Michael Höpler, Felix Böhmer, Matthias Pfaff, Dietmar Stephan, and Sabine Kruschwitz. Journal of Cleaner Production, 2023. 
+2. **Beyond Theory: Pioneering AI-Driven Materials Design in the Sustainable Building Material Lab.** Christoph Völker, Elisabeth John, Rafia Firdous, Tamino Hirsch, Daria Kaczmarek,Kevin Ziesak, Anja Buchwald, Dietmar Stephan, Sabine Kruschwitz (Preprint). Our study explores the use of SLAMD to enhance the sustainability and performance of building materials. We compare SLAMD's data-driven approach with traditional Design of Experiments (DOE) in creating high-performance, alkali-activated materials, demonstrating that AI significantly outperforms traditional methods in speed and quality of development. This research highlights AI’s potential to revolutionize sustainable materials science, providing vital insights into its application in real-world settings. [Available on ResearchGate.net](https://www.researchgate.net/publication/378544585_Beyond_Theory_Pioneering_AI-Driven_Materials_Design_in_the_Sustainable_Building_Material_Lab).
+3. **Data driven design of Alkali-activated concrete using Sequential Learning.** Christoph Völker, Benjami Moreno Torres, Tehseen Rug, Rafia Firdous, Ghezal Ahmad Jan Zia, Stefan Lüders, Horacio Lisdero Scaffino, Michael Höpler, Felix Böhmer, Matthias Pfaff, Dietmar Stephan, and Sabine Kruschwitz. Journal of Cleaner Production, 2023. 
 The authors present a large-scale case study that demonstrates the potential of sequential learning for concrete mix designs. This work challenges common practices in data-driven materials development for building materials:
    - Our results show training data required for data-driven design may be much less than commonly suggested.
    - Further, it is more important to establish a practical design framework than to develop more accurate models.
 The clear guidance provided in this paper allows immediate adoption into practical applications and suggests that this can be translated into significant advances in sustainable building materials development. [Available in Journal of Cleaner Production](https://doi.org/10.1016/j.jclepro.2023.138221).
-3. **Accelerating the search for alkali-activated cements with sequential learning.** Christoph Völker, Sabine Kruschwitz, Benjami Moreno Torres, Rafia Firdous, Ghezal Ahmad Jan Zia, and Dietmar Stephan. Proceedings of FIB Conference 2022, Oslo, Norway, 2022. This paper investigates the use of sequential learning methods for accelerating the discovery of alkali-activated cements. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal cements. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.33502.92480/1).
-4. **Sequential learning to accelerate discovery of alkali-activated binders.** Christoph Völker, Rafia Firdous, Dietmar Stephan, et al. Journal of Materials Science, vol. 56, no. 21, 2021, pp. 15859-15881. This paper presents a study on the use of sequential learning to accelerate the discovery of alkali-activated binders. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal binders, leading to faster discovery and development of sustainable building materials. [Available in Journal of Materials Science](https://doi.org/10.1007/s10853-021-06324-z).
-
-
+4. **Accelerating the search for alkali-activated cements with sequential learning.** Christoph Völker, Sabine Kruschwitz, Benjami Moreno Torres, Rafia Firdous, Ghezal Ahmad Jan Zia, and Dietmar Stephan. Proceedings of FIB Conference 2022, Oslo, Norway, 2022. This paper investigates the use of sequential learning methods for accelerating the discovery of alkali-activated cements. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal cements. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.33502.92480/1).
+5. **Sequential learning to accelerate discovery of alkali-activated binders.** Christoph Völker, Rafia Firdous, Dietmar Stephan, et al. Journal of Materials Science, vol. 56, no. 21, 2021, pp. 15859-15881. This paper presents a study on the use of sequential learning to accelerate the discovery of alkali-activated binders. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal binders, leading to faster discovery and development of sustainable building materials. [Available in Journal of Materials Science](https://doi.org/10.1007/s10853-021-06324-z).
+   
 
 #### Data
 - **SLAMD session data and an alkali-activated concrete data set** which contains ground truth data and for the AI optimization of SLAMD. This data has been created for teaching purposes: [SLAMD example data](https://github.com/BAMcvoelker/Praktikum_MD)
@@ -163,7 +163,7 @@ The clear guidance provided in this paper allows immediate adoption into practic
 
 
 **Homepage:** [https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html](https://www.bam.de/Content/EN/Projects/SLAMD/slamd.html)  
-**Contact:** [Christoph.Voelker@bam.de](mailto:Christoph.Voelker@bam.de)
+**Contact:** [Sabine Kruschwitz](mailto:Sabine.Kruschwitz@bam.de)
 
 Feel free to reach out to us if you have any questions or would like to learn more about SLAMD!
 
