@@ -35,9 +35,9 @@ class DiscoveryForm(Form):
     curiosity = DecimalRangeField(
         label='Curiosity (to control the weight of model uncertainty on predicted utility) *',
         default=0.00,
-        places=2,
+        places=1,
         validators=[
-            validators.NumberRange(min=-1, max=5, message='The curiosity value should be between 0 and 10')
+            validators.NumberRange(min=-2, max=2, message='The curiosity value should be between 0 and 10')
         ]
     )
 

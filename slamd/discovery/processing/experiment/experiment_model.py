@@ -3,8 +3,8 @@ import os
 
 
 class ExperimentModel(Enum):
-    GAUSSIAN_PROCESS = 'Gaussian Process Regression (Statistics-based model)'
     RANDOM_FOREST = 'lolo Random Forest (AI model)'
+    GAUSSIAN_PROCESS = 'Gaussian Process Regression (Statistics-based model)'
     PCA_GAUSSIAN_PROCESS = 'Gaussian Process Regression with PCA'
     PCA_RANDOM_FOREST = 'lolo Random Forest with PCA'
     TUNED_GAUSSIAN_PROCESS = 'tuned Gaussian Process Regression (under development)'

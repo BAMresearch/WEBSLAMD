@@ -2,7 +2,7 @@ const DISCOVERY_URL = `${window.location.protocol}//${window.location.host}/mate
 
 function updateCuriosityValue(curiosity) {
     const value = parseFloat(curiosity);
-    document.getElementById("selected-range").value = parseFloat(value.toFixed(2));
+    document.getElementById("selected-range").value = parseFloat(value.toFixed(1));
 }
 
 async function deleteDataset(datasetName) {
