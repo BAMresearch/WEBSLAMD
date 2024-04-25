@@ -3,28 +3,28 @@
 <div class="chat_container">
     <div class="bot_message_container d-flex gap-3 mx-auto">
         {{ chatbot_icon(30, 30, "currentColor")}}
-        <div class="bot_message border rounded p-3 d-inline-block mb-4">{{ campaign_form.liquids_field.label.text }}</div>
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">{{ form.campaign_form.liquids_field.label.text }}</div>
     </div>
     <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
         <div class="chat_message border rounded p-3 d-inline-block">
             <div id="liquids_option_container">
-                {% for option in campaign_form.liquids_field %}
+                {% for option in form.campaign_form.liquids_field %}
                 <div class="d-flex gap-4 justify-content-between">
                     <div>{{ option.label.text }}</div>
-                    <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ option.data }}"{% if campaign_form.liquids_field.data %} {% if option.data in campaign_form.liquids_field.data %} disabled checked {% endif %} {% endif %}/>
+                    <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ option.data }}"{% if form.campaign_form.liquids_field.data %} {% if option.data in form.campaign_form.liquids_field.data %} disabled checked {% endif %} {% endif %}/>
                 </div>
                 {% endfor %}
-                {% if campaign_form.additional_liquid.data %}
+                {% if form.campaign_form.additional_liquid.data %}
                 <div class="d-flex gap-4 justify-content-between">
-                    <div>{{ campaign_form.additional_liquid.data }}</div>
-                    <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ campaign_form.additional_liquid.data }}" checked disabled/>
+                    <div>{{ form.campaign_form.additional_liquid.data }}</div>
+                    <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ form.campaign_form.additional_liquid.data }}" checked disabled/>
                 </div>
                 {% endif %}
             </div>
             <div class="d-flex mt-2 gap-2">
                 <button class="btn btn-secondary ms-auto"
                 id="additional_liquid_button"
-                {% if campaign_form.liquids_field.data is not none or campaign_form.additional_liquid.data is not none %}
+                {% if form.campaign_form.liquids_field.data is not none or form.campaign_form.additional_liquid.data is not none %}
                  disabled
                 {% endif %}>
                 Add other +

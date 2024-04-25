@@ -4,18 +4,18 @@
     <div class="bot_message_container d-flex gap-3 mx-auto">
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="bot_message border rounded p-3 d-inline-block mb-4">      
-                {{ task_form.instructions|replace('\n', '<br>')|safe }}
-            {{ task_form.task_field.label.text }}
+                {{ form.task_form.instructions|replace('\n', '<br>')|safe }}
+            {{ form.task_form.task_field.label.text }}
         </div>
     </div>
     <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
         <div class="chat_message border rounded p-3 d-inline-block" id="tasks">
-            {% for choice in task_form.task_field %}
+            {% for choice in form.task_form.task_field %}
                 <div class="d-flex gap-4 justify-content-between">
                     <div>{{ choice.label.text }}</div>
                     <input class="task_field_choice" type="radio" value="{{ choice.data }}" name="task_choice"
-                    {% if choice.data == task_form.task_field.data %}checked{% endif %}
-                    {% if task_form.task_field.data or choice.data == 'data_creation' %}disabled{% endif %}/>
+                    {% if choice.data == form.task_form.task_field.data %}checked{% endif %}
+                    {% if form.task_form.task_field.data %}disabled{% endif %}/>
                 </div>
                 {% endfor %}
         </div>

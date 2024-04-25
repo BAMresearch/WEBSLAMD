@@ -7,7 +7,6 @@ export function assignClickEventToTaskForm() {
         task_choice.addEventListener("click", handleTaskSelection)
     );
 }
-
 export async function handleTaskSelection(event) {
     const task = event.target.value;
     insertSpinnerInPlaceholder(

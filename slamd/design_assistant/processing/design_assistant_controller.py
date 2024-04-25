@@ -14,16 +14,15 @@ design_assistant = Blueprint('design_assistant', __name__,
 @design_assistant.route('/', methods=['GET'])
 def design_assistant_page():
     form, progress = DesignAssistantService.create_design_assistant_form()
-    return render_template('design_assistant.html', form=form, task_form=form.task_form,
-                           campaign_form=form.campaign_form, progress=progress)
+    return render_template('design_assistant.html', form=form, progress=progress)
 
 
 @design_assistant.route('/task', methods=['POST'])
 def handle_task():
     task = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(task, 'task')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_material_type.html', campaign_form=campaign_form, session=session)}
+    form, progress = DesignAssistantService.create_design_assistant_form() 
+    body = {'template': render_template( "campaign_material_type.html", form=form, session=session)} 
     return make_response(jsonify(body), 200)
 
 
@@ -31,8 +30,9 @@ def handle_task():
 def handle_material():
     material_type = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(material_type, 'type')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_design_targets.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form() 
+    template = DesignAssistantService.return_template_of_selected_task()
+    body = {'template': render_template(template, form=form)} 
     return make_response(jsonify(body), 200)
 
 
@@ -40,8 +40,8 @@ def handle_material():
 def handle_design_targets():
     design_targets = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets, 'design_targets')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_design_targets_values.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('campaign_design_targets_values.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -49,8 +49,8 @@ def handle_design_targets():
 def handle_design_targets_values():
     design_targets_values = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_select_powders.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('campaign_select_powders.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -58,8 +58,8 @@ def handle_design_targets_values():
 def handle_powders():
     powders = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(powders, 'powders')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_liquids.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('campaign_liquids.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -67,8 +67,8 @@ def handle_powders():
 def handle_liquids():
     liquid = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(liquid, 'liquids')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('campaign_other.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('campaign_other.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -76,8 +76,8 @@ def handle_liquids():
 def handle_other():
     other = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(other, 'other')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('comment.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('comment.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -85,8 +85,8 @@ def handle_other():
 def handle_comment():
     comment = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(comment, 'comment')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('design_knowledge.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('design_knowledge.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -110,8 +110,8 @@ def handle_design_knowledge():
 def handle_generating_formulation():
     data = json.loads(request.data)
     formulation = DesignAssistantService.generate_formulation(data['design_knowledge'], data['token']) 
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('formulation.html', campaign_form=campaign_form, formulation=formulation)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('formulation.html', form=form, formulation=formulation)}
     return make_response((jsonify(body)))
 
 
@@ -120,8 +120,16 @@ def handle_saving_formulation():
     data = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(data['design_knowledge'], 'design_knowledge')
     DesignAssistantService.update_design_assistant_session(data['formulation'], 'formulation')
-    campaign_form = DesignAssistantService.create_design_assistant_campaign_form()
-    body = {'template': render_template('formulation.html', campaign_form=campaign_form)}
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('formulation.html', form=form)}
+    return make_response((jsonify(body))) 
+
+
+@design_assistant.route('new_project/create_powders', methods=['POST'])
+def handle_creating_powders():
+    data = json.loads(request.data)
+    form = ''
+    body = {'template': render_template('create_powders.html', form=form)}
     return make_response((jsonify(body))) 
 
 
