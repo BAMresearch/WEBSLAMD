@@ -19,7 +19,11 @@ class DesignAssistantPersistence:
 
     @classmethod
     def update_session_for_material_type_key(cls, value):
-        session['design_assistant']['zero_shot_learner']['type'] = value
+        design_assistant_session = session['design_assistant']
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            session['design_assistant']['zero_shot_learner']['type'] = value
+        if 'data_creation' in list(design_assistant_session.keys()):
+            session['design_assistant']['data_creation']['type'] = value
         cls._update_progress()
 
     @classmethod

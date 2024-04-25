@@ -3,7 +3,7 @@ from slamd.common.error_handling import ValueNotSupportedException
 from slamd.design_assistant.processing.design_assistant_factory import DesignAssistantFactory
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 from slamd.design_assistant.processing.llm_service import LLMService
-
+from flask import render_template
 
 class DesignAssistantService:
 
@@ -12,17 +12,22 @@ class DesignAssistantService:
         design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
         progress = cls._extract_progress(design_assistant_session)
         form = DesignAssistantFactory.create_design_assistant_form()
+        if design_assistant_session:
+            if 'zero_shot_learner' in list(design_assistant_session.keys()):             
+                cls._populate_task_form_with_session_value(form, 'zero_shot_learner')
+                cls._populate_material_type_form_with_session_value(form, design_assistant_session, 'zero_shot_learner')
+                cls._populate_campaign_form_with_session_value(form, design_assistant_session)
+                form.new_project_form = None
+            if 'data_creation' in list(design_assistant_session.keys()):
+                cls._populate_task_form_with_session_value(form, 'data_creation') 
+                cls._populate_material_type_form_with_session_value(form, design_assistant_session, 'data_creation')
+                form.campaign_form = None
         if not design_assistant_session:
             cls.init_design_assistant_session()
-            form.import_form = None
+            form = DesignAssistantFactory.create_design_assistant_form()
+            form.material_type_form = None
             form.campaign_form = None
-        if design_assistant_session:
-            if 'zero_shot_learner' in list(design_assistant_session.keys()):
-                cls._populate_task_form_with_session_value(form, 'zero_shot_learner')
-            if 'zero_shot_learner' in list(design_assistant_session.keys()):
-                cls._populate_campaign_form_with_session_value(form, design_assistant_session)
-            else:
-                form.campaign_form = None
+            form.new_project_form = None
         return form, progress
 
     @classmethod
@@ -38,12 +43,16 @@ class DesignAssistantService:
     @classmethod
     def _populate_task_form_with_session_value(cls, form, session_value):
         form.task_form.task_field.data = session_value
+    
+    @classmethod
+    def _populate_material_type_form_with_session_value(cls, form, design_assistant_session, task):
+        for key, value in design_assistant_session[task].items():
+            if key == 'type':
+                form.material_type_form.material_type_field.data = value
 
     @classmethod
     def _populate_campaign_form_with_session_value(cls, form, design_assistant_session):
         for key, value in design_assistant_session['zero_shot_learner'].items():
-            if key == 'type':
-                cls._populate_material_type_field_with_session_value(form, value)
             if key == 'design_targets':
                 cls._populate_design_targets_field_with_session_value(form, value)
             if key == 'powders':
@@ -63,10 +72,6 @@ class DesignAssistantService:
     def _populate_design_targets_field_with_session_value(cls, form, value):
         for design_target in value:
             form.campaign_form.design_targets.append_entry(design_target)
-
-    @classmethod
-    def _populate_material_type_field_with_session_value(cls, form, session_value):
-        form.campaign_form.material_type_field.data = session_value
 
     @classmethod
     def _populate_powders_field_with_session_value(cls, form, value):
@@ -115,6 +120,10 @@ class DesignAssistantService:
         return form.campaign_form
 
     @classmethod
+    def create_design_assistant_new_project_form(cls):
+        pass
+
+    @classmethod
     def init_design_assistant_session(cls):
         DesignAssistantPersistence.init_session()
 
@@ -124,7 +133,6 @@ class DesignAssistantService:
             if value not in ['zero_shot_learner', 'data_creation']:
                 raise ValueNotSupportedException('Provided task is not supported.')
             DesignAssistantPersistence.update_session_for_task_key(value)
-
         if key == 'type':
             if value not in ['Concrete', 'Binder']:
                 raise ValueNotSupportedException('Provided type is not supported.')
@@ -217,3 +225,32 @@ class DesignAssistantService:
     def generate_formulation(cls, design_knowledge, token):
         formulations = LLMService.generate_formulation(design_knowledge, token) 
         return formulations
+    
+    @classmethod
+    def get_template_of_selected_task(cls):
+        template = ''
+        design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        if 'data_creation' in list(design_assistant_session.keys()): 
+            template = 'create_powders.html'
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            template = 'campaign_design_targets.html'
+        return template
+    
+    @classmethod
+    def get_form_of_selected_task(cls):
+        form = None
+        design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        if 'data_creation' in list(design_assistant_session.keys()): 
+            form = cls.create_design_assistant_new_project_form()
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            form = cls.create_design_assistant_campaign_form()    
+        return form 
+    
+    @classmethod
+    def return_template_of_selected_task(cls):
+        design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
+        if 'data_creation' in list(design_assistant_session.keys()): 
+            template = 'create_powders.html'
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            template = 'campaign_design_targets.html'
+        return template 
