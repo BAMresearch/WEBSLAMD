@@ -1,4 +1,4 @@
-import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown, updateProgress} from "./utils.js";
+import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown, updateProgress} from "./../utils.js";
 import { assignClickEventToPowdersForm, handlePowdersSubmission } from "./powder.js";
 
 

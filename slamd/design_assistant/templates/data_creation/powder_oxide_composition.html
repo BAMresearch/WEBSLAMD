@@ -1,0 +1,35 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+                <div>Please specify the powders’ molecular composition</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_powder_form.ca_o.label.text}}</div>
+                    <input class="powder_oxide_composition_input w-auto form-control text-end" name="powder_oxide_composition_ca_o" {% if form.new_project_form.create_powder_form.ca_o.data %} value="{{ form.new_project_form.create_powder_form.ca_o.data }}"  {% endif %} type="number" {% if progress >= 5 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_powder_form.al2_o3.label.text}}</div>
+                    <input class="powder_oxide_composition_input w-auto form-control text-end" name="powder_oxide_composition_al2_o3" {% if form.new_project_form.create_powder_form.al2_o3.data %} value="{{ form.new_project_form.create_powder_form.al2_o3.data }}"  {% endif %} type="number" {% if progress >= 5 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_powder_form.si_o2.label.text}}</div>
+                    <input class="powder_oxide_composition_input w-auto form-control text-end" name="powder_oxide_composition_si_o2" {% if form.new_project_form.create_powder_form.si_o2.data %} value="{{ form.new_project_form.create_powder_form.si_o2.data }}"  {% endif %} type="number" {% if progress >= 5 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_powder_form.Fe_2O_3.label.text}}</div>
+                    <input class="powder_oxide_composition_input w-auto form-control text-end"  name="powder_oxide_composition_Fe_2O_3" {% if form.new_project_form.create_powder_form.Fe_2O_3.data %} value="{{ form.new_project_form.create_powder_form.Fe_2O_3.data }}" {% endif %} type="number" {% if progress >= 5 %} disabled {% endif %}/>
+                </div>
+            </div>
+            <div class="text-end mt-2"><button class="powder_oxide_composition_button btn btn-primary" id="powder_oxide_composition_button" {% if progress >= 5 %} disabled {% endif %}>Save</button></div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}

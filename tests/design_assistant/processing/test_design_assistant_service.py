@@ -195,7 +195,6 @@ def test_create_design_assistant_form_creates_properly_populated_form_with_targe
                                                            'design_target_value_field': '10 MPa'}],
                                        'formulation_field': None,
                                        'liquids_field': None,
-                                       'material_type_field': 'Binder',
                                        'other_field': None,
                                        'select_powders_field': ['OPC', 'Fly Ash'],
                                        'standard_design_targets_field': None,

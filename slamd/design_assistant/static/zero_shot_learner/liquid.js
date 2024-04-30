@@ -1,5 +1,5 @@
 import {assignClickEventToOtherForm, handleOtherSubmission, handleAddingOther} from "./other.js";
-import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown, updateProgress} from "./utils.js";
+import {assignClickEventToSubmitButton, countSelectedOptions, scrollDown, updateProgress} from "./../utils.js";
 
 
 function assignInputEventToLiquidForm() {
