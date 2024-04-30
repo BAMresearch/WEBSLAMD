@@ -1,11 +1,32 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import StringField, DecimalField, validators
+from wtforms import StringField, DecimalField, SelectMultipleField, validators
 
 
 class CreatePowderForm(Form):
 
-    name = StringField(label="Great! We start by creating powders. What kind of powder do you want to add?")
+    name_field = StringField(label="Great! We start by creating powders. What kind of powder do you want to add?")
 
+    cost_CO_2 = DecimalField(
+        'CO2 footprint (kg/ton):',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    cost_EUR = DecimalField(
+        'Costs (€/ton):',
+        validators=[
+            validators.Optional()
+        ]
+    ) 
+
+    cost_delivery_time = DecimalField(
+        'Delivery time (days):',
+        validators=[
+            validators.Optional()
+        ]
+    ) 
+    
     ca_o = DecimalField(
         label='CaO (m%)',
         validators=[
@@ -20,7 +41,7 @@ class CreatePowderForm(Form):
         ]
     )
 
-    sio_2 = DecimalField(
+    si_o2 = DecimalField(
         label='SiO₂',
         validators=[
             validators.Optional()
@@ -29,6 +50,20 @@ class CreatePowderForm(Form):
     
     Fe_2O_3 = DecimalField(
         label='Fe₂O₃',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    fines_modulus = DecimalField(
+        label='Fines Modulus (m^2/kg):',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    specific_gravity = DecimalField(
+        label='Specific Gravity (m%):',
         validators=[
             validators.Optional()
         ]

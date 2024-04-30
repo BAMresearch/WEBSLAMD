@@ -21,7 +21,7 @@ def design_assistant_page():
 def handle_task():
     task = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(task, 'task')
-    form, progress = DesignAssistantService.create_design_assistant_form() 
+    form, _ = DesignAssistantService.create_design_assistant_form() 
     body = {'template': render_template( "campaign_material_type.html", form=form, session=session)} 
     return make_response(jsonify(body), 200)
 
@@ -31,7 +31,7 @@ def handle_material():
     material_type = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(material_type, 'type')
     form, progress = DesignAssistantService.create_design_assistant_form() 
-    template = DesignAssistantService.return_template_of_selected_task()
+    template = DesignAssistantService.get_template_of_selected_task()
     body = {'template': render_template(template, form=form)} 
     return make_response(jsonify(body), 200)
 
@@ -40,8 +40,8 @@ def handle_material():
 def handle_design_targets():
     design_targets = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets, 'design_targets')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('campaign_design_targets_values.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/campaign_design_targets_values.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -49,8 +49,8 @@ def handle_design_targets():
 def handle_design_targets_values():
     design_targets_values = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(design_targets_values, 'design_targets')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('campaign_select_powders.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/campaign_select_powders.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -58,8 +58,8 @@ def handle_design_targets_values():
 def handle_powders():
     powders = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(powders, 'powders')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('campaign_liquids.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/campaign_liquids.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -67,8 +67,8 @@ def handle_powders():
 def handle_liquids():
     liquid = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(liquid, 'liquids')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('campaign_other.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/campaign_other.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -76,8 +76,8 @@ def handle_liquids():
 def handle_other():
     other = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(other, 'other')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('comment.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/comment.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -86,7 +86,7 @@ def handle_comment():
     comment = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(comment, 'comment')
     form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('design_knowledge.html', form=form)}
+    body = {'template': render_template('zero_shot_learner/design_knowledge.html', form=form)}
     return make_response(jsonify(body), 200)
 
 
@@ -97,39 +97,32 @@ def handle_generating_design_knowledge():
     body = {'template': design_knowledge}
     return make_response(jsonify(body), 200)
 
-
-@design_assistant.route('/zero_shot/design_knowledge', methods=['POST'])
-def handle_design_knowledge():
-    design_knowledge = json.loads(request.data)
-    DesignAssistantService.update_design_assistant_session(design_knowledge, 'design_knowledge')
-    body = {'template': render_template('prompt.html')}
-    return make_response(jsonify(body), 200)
-
-
 @design_assistant.route('/zero_shot/generate_formulation', methods=['POST'])
 def handle_generating_formulation():
     data = json.loads(request.data)
     formulation = DesignAssistantService.generate_formulation(data['design_knowledge'], data['token']) 
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('formulation.html', form=form, formulation=formulation)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/formulation.html', form=form, formulation=formulation)}
     return make_response((jsonify(body)))
 
 
-@design_assistant.route('zero_shot/save_formulation', methods=['POST'])
+@design_assistant.route('/zero_shot/save_formulation', methods=['POST'])
 def handle_saving_formulation():
     data = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(data['design_knowledge'], 'design_knowledge')
     DesignAssistantService.update_design_assistant_session(data['formulation'], 'formulation')
-    form, progress = DesignAssistantService.create_design_assistant_form()
-    body = {'template': render_template('formulation.html', form=form)}
+    form, _ = DesignAssistantService.create_design_assistant_form()
+    body = {'template': render_template('/zero_shot_learner/formulation.html', form=form)}
     return make_response((jsonify(body))) 
 
 
-@design_assistant.route('new_project/create_powders', methods=['POST'])
-def handle_creating_powders():
+@design_assistant.route('/new_project/<material_type>', methods=['POST'])
+def handle_saving_powder_name(material_type):
     data = json.loads(request.data)
-    form = ''
-    body = {'template': render_template('create_powders.html', form=form)}
+    DesignAssistantService.update_design_assistant_session(data, material_type)
+    form, progress = DesignAssistantService.create_design_assistant_form()
+    template = DesignAssistantService.get_template_of_next_step(material_type, progress)
+    body = {'template' : render_template(template, form=form, progress=progress)}
     return make_response((jsonify(body))) 
 
 

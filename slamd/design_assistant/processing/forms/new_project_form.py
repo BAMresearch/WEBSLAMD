@@ -5,4 +5,4 @@ from slamd.design_assistant.processing.forms.task_form import TaskForm
 from slamd.design_assistant.processing.forms.create_powder_form import CreatePowderForm
 
 class NewProjectForm(Form):
-    create_powder_form = FieldList(FormField(CreatePowderForm), min_entries=1)
+    create_powder_form = FormField(CreatePowderForm)

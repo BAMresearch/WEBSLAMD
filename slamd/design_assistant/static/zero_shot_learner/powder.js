@@ -1,4 +1,4 @@
-import {assignClickEventToSubmitButton, scrollDown, updateProgress, countSelectedOptions} from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown, updateProgress, countSelectedOptions} from "./../utils.js";
 import {assignClickEventToLiquidForm, handleLiquidSubmission, handleAddingLiquid,} from "./liquid.js";
 
 

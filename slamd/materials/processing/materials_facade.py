@@ -4,6 +4,7 @@ from slamd.common.slamd_utils import not_empty
 from slamd.materials.processing.material_factory import MaterialFactory
 from slamd.materials.processing.material_type import MaterialType
 from slamd.materials.processing.materials_persistence import MaterialsPersistence
+from slamd.materials.processing.base_materials_service import BaseMaterialService
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.custom import Custom
@@ -94,3 +95,17 @@ class MaterialsFacade:
 
         full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
         return full_dict, types, names
+
+    
+    @classmethod
+    def save_powder(cls, powder):
+        powder_uuid = BaseMaterialService.save_and_return_id(powder)
+        return powder_uuid
+
+    @classmethod
+    def edit_powder(cls, uuid, powder):
+        BaseMaterialService.do_edit('powder', str(uuid), powder)
+
+    @classmethod
+    def get_powder_from_session(cls, uuid):
+        return MaterialsPersistence.query_by_type_and_uuid('Powder', str(uuid))

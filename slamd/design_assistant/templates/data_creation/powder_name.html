@@ -1,0 +1,23 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+            <div>{{ form.new_project_form.create_powder_form.name_field.label.text }}</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-end align-items-center gap-2">
+                    <div>Name of the powder: </div>
+                    <input class="powder_name_input w-auto form-control text-end"  name="powder_name" id="powder_name_input" {% if form.new_project_form.create_powder_form.name_field.data %} value="{{ form.new_project_form.create_powder_form.name_field.data }}" disabled  {% endif %}"/>
+                </div>
+                <div class="text-end"><button class="powder_name_button btn btn-primary" id="powder_name_button" disabled>Save</button></div>
+            </div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}

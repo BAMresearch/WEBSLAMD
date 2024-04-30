@@ -43,29 +43,28 @@ class PowderStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            fe3_o2=float_if_not_empty(submitted_material['fe3_o2']),
-            si_o2=float_if_not_empty(submitted_material['si_o2']),
-            al2_o3=float_if_not_empty(submitted_material['al2_o3']),
-            ca_o=float_if_not_empty(submitted_material['ca_o']),
-            mg_o=float_if_not_empty(submitted_material['mg_o']),
-            na2_o=float_if_not_empty(submitted_material['na2_o']),
-            k2_o=float_if_not_empty(submitted_material['k2_o']),
-            s_o3=float_if_not_empty(submitted_material['s_o3']),
-            ti_o2=float_if_not_empty(submitted_material['ti_o2']),
-            p2_o5=float_if_not_empty(submitted_material['p2_o5']),
-            sr_o=float_if_not_empty(submitted_material['sr_o']),
-            mn2_o3=float_if_not_empty(submitted_material['mn2_o3']),
-            loi=float_if_not_empty(submitted_material['loi'])
+            fe3_o2=float_if_not_empty(submitted_material.get('fe3_o2', None)),
+            si_o2=float_if_not_empty(submitted_material.get('si_o2', None)),
+            al2_o3=float_if_not_empty(submitted_material.get('al2_o3', None)),
+            ca_o=float_if_not_empty(submitted_material.get('ca_o', None)),
+            mg_o=float_if_not_empty(submitted_material.get('mg_o', None)),
+            na2_o=float_if_not_empty(submitted_material.get('na2_o', None)),
+            k2_o=float_if_not_empty(submitted_material.get('k2_o', None)),
+            s_o3=float_if_not_empty(submitted_material.get('s_o3', None)),
+            ti_o2=float_if_not_empty(submitted_material.get('ti_o2', None)),
+            p2_o5=float_if_not_empty(submitted_material.get('p2_o5', None)),
+            sr_o=float_if_not_empty(submitted_material.get('sr_o', None)),
+            mn2_o3=float_if_not_empty(submitted_material.get('mn2_o3', None)),
+            loi=float_if_not_empty(submitted_material.get('loi', None))
         )
 
         structure = Structure(
-            gravity=float_if_not_empty(submitted_material['gravity']),
-            fine=float_if_not_empty(submitted_material['fine'])
+            gravity=float_if_not_empty(submitted_material.get('gravity', None)),
+            fine=float_if_not_empty(submitted_material.get('fine', None))
         )
-
         return Powder(
-            name=submitted_material['material_name'],
-            type=submitted_material['material_type'],
+            name=submitted_material.get('material_name', None),
+            type=submitted_material.get('material_type', None),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,

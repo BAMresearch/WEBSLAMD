@@ -1,4 +1,4 @@
-import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./../utils.js";
 
 export function assignEventsToFormulation() {
     assignClickEventToSubmitButton("save_formulation_button", handleSavingFormulation)

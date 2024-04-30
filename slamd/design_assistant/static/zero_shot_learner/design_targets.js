@@ -1,4 +1,4 @@
-import {countSelectedOptions, scrollDown, updateProgress} from "./utils.js";
+import {countSelectedOptions, scrollDown, updateProgress} from "./../utils.js";
 import { assignEventsToTargetValuesForm} from "./design_targets_values.js";
 
 
