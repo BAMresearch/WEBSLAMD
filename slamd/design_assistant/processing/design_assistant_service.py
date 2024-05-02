@@ -24,7 +24,7 @@ class DesignAssistantService:
                 cls._populate_material_type_form_with_session_value(form, design_assistant_session, 'data_creation')
                 cls._populate_create_project_form_with_session_value(form)
                 form.campaign_form = None
-        if not design_assistant_session:
+        else:
             cls.init_design_assistant_session()
             form = DesignAssistantFactory.create_design_assistant_form()
             form.material_type_form = None
@@ -57,8 +57,8 @@ class DesignAssistantService:
         session = DesignAssistantPersistence.get_session()
         for key in list(session['design_assistant']['data_creation'].keys()):
             if key == 'materials':
-                for key, value in session['design_assistant']['data_creation']['materials'].items():
-                    if key == 'powder':
+                for material, material_id in session['design_assistant']['data_creation']['materials'].items():
+                    if material == 'powder':
                         cls._populate_create_powder_form_with_session_value(session, form)
 
     @classmethod          
@@ -213,7 +213,6 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_formulation_key(value)
         
         if key == 'powder':
-            # DesignAssistantPersistence.update_session_for_materials_key('powder', uuid)
             design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
             materials = design_assistant_session['data_creation'].get('materials', None)
             if materials:
@@ -285,7 +284,7 @@ class DesignAssistantService:
         return template 
     
     @classmethod
-    def get_template_of_next_step(cls, material_type, progress):
+    def get_template_of_next_new_project_step(cls, progress):
         template = ''
         if progress == 3:
             template = 'data_creation/powder_costs.html'

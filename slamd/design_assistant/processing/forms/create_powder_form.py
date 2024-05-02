@@ -63,7 +63,7 @@ class CreatePowderForm(Form):
     )
 
     specific_gravity = DecimalField(
-        label='Specific Gravity (m%):',
+        label='Specific Gravity:',
         validators=[
             validators.Optional()
         ]

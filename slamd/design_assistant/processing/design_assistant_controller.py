@@ -122,7 +122,7 @@ def handle_saving_powder_name(material_type):
     data = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(data, material_type)
     form, progress = DesignAssistantService.create_design_assistant_form()
-    template = DesignAssistantService.get_template_of_next_step(material_type, progress)
+    template = DesignAssistantService.get_template_of_next_new_project_step(progress)
     body = {'template': render_template(template, form=form, progress=progress)}
     return make_response((jsonify(body)))
 
