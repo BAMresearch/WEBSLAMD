@@ -15,12 +15,16 @@ class DesignAssistantPersistence:
     @classmethod
     def update_session_for_design_targets_key(cls, value):
         session['design_assistant']['zero_shot_learner']['design_targets'] = value
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_material_type_key(cls, value):
-        session['design_assistant']['zero_shot_learner']['type'] = value
-        cls._update_progress()
+        design_assistant_session = session['design_assistant']
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            session['design_assistant']['zero_shot_learner']['type'] = value
+        if 'data_creation' in list(design_assistant_session.keys()):
+            session['design_assistant']['data_creation']['type'] = value
+        cls.update_progress()
 
     @classmethod
     def update_session_for_powders_key(cls, value_object):
@@ -28,36 +32,45 @@ class DesignAssistantPersistence:
         blend_powders = value_object['blend_powders']
         session['design_assistant']['zero_shot_learner']['powders'] = {'selected': selected_powders,
                                                                        'blend': blend_powders}
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_liquids_key(cls, value):
         session['design_assistant']['zero_shot_learner']['liquids'] = value
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_other_key(cls, value):
         session['design_assistant']['zero_shot_learner']['other'] = value
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_comment_key(cls, value):
         session['design_assistant']['zero_shot_learner']['comment'] = value
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_design_knowledge_key(cls, value):
         session['design_assistant']['zero_shot_learner']['design_knowledge'] = value
-        cls._update_progress()
+        cls.update_progress()
 
     @classmethod
     def update_session_for_formulation_key(cls, value):
         session['design_assistant']['zero_shot_learner']['formulation'] = value
-        cls._update_progress()
+        cls.update_progress()
+    
+    @classmethod
+    def update_session_for_materials_key(cls, material, value):
+        session['design_assistant']['data_creation']['materials'] = { material : value }
+        cls.update_progress()
 
     @classmethod
     def get_session_for_property(cls, key):
         return session.get(key)
+    
+    @classmethod
+    def get_session(cls):
+        return session
 
     @classmethod
     def delete_session_key(cls, key):
@@ -79,10 +92,17 @@ class DesignAssistantPersistence:
         return 0
 
     @classmethod
-    def _update_progress(cls):
-        current_progress = session['design_assistant']['zero_shot_learner']["progress"]
+    def update_progress(cls):
+        task = ''
+        design_assistant_session = session["design_assistant"]
+        if 'data_creation' in list(design_assistant_session.keys()):
+            current_progress = session['design_assistant']['data_creation']["progress"]
+            task = 'data_creation'
+        if 'zero_shot_learner' in list(design_assistant_session.keys()):
+            current_progress = session['design_assistant']['zero_shot_learner']["progress"]
+            task = 'zero_shot_learner'
         if current_progress < 10:
-            session['design_assistant']['zero_shot_learner']["progress"] += 1
+            session['design_assistant'][task]["progress"] += 1
 
     @classmethod
     def get_free_llm_calls_count(cls):

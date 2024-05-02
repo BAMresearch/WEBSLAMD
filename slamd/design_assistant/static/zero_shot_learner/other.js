@@ -1,5 +1,5 @@
 import { assignInputEventToCommentForm,  handleCommentSubmission} from "./comment.js";
-import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./utils.js";
+import {assignClickEventToSubmitButton, scrollDown, updateProgress} from "./../utils.js";
 
 
 export function assignClickEventToOtherForm() {

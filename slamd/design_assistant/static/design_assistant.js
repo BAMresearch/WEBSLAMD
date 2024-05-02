@@ -1,14 +1,18 @@
 import {assignClickEventToSubmitButton} from "./utils.js";
 import {assignClickEventToTaskForm} from "./task.js"
 import {assignClickEventToMaterialTypeField} from "./material_type.js";
-import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingCustomDesignTarget} from "./design_targets.js";
-import { assignEventsToTargetValuesForm} from "./design_targets_values.js";
-import {assignClickEventToPowdersForm, handlePowdersSubmission} from "./powder.js";
-import {assignClickEventToLiquidForm, handleAddingLiquid, handleLiquidSubmission} from "./liquid.js";
-import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} from "./other.js";
-import {assignInputEventToCommentForm, handleCommentSubmission} from "./comment.js";
+import { assignClickEventToDesignTargetForm, handleDesignTargetsSubmission, handleAddingCustomDesignTarget} from "./zero_shot_learner/design_targets.js";
+import { assignEventsToTargetValuesForm} from "./zero_shot_learner/design_targets_values.js";
+import {assignClickEventToPowdersForm, handlePowdersSubmission} from "./zero_shot_learner/powder.js";
+import {assignClickEventToLiquidForm, handleAddingLiquid, handleLiquidSubmission} from "./zero_shot_learner/liquid.js";
+import {assignClickEventToOtherForm, handleAddingOther, handleOtherSubmission} from "./zero_shot_learner/other.js";
+import {assignInputEventToCommentForm, handleCommentSubmission} from "./zero_shot_learner/comment.js";
 import {handleDeleteDesignAssistantSession} from "./design_assistant_session.js"
-import { assignEventsToDesignKnowledgeForm } from "./design_knowledge.js"
+import { assignEventsToDesignKnowledgeForm } from "./zero_shot_learner/design_knowledge.js"
+import { assignEventsToNamePowderStep } from "./data_creation/powder_name.js";
+import { assignEventsToCostsPowderStep } from './data_creation/powder_costs.js'
+import { assignEventsToOxideCompositionPowderStep } from './data_creation/powder_oxide_composition.js'
+import { assignEventsToStructuralCompositionPowderStep } from "./data_creation/powder_structural_composition.js";
 
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
@@ -30,4 +34,8 @@ window.addEventListener("load", function () {
     assignInputEventToCommentForm()
     assignEventsToDesignKnowledgeForm()
     assignEventsToTargetValuesForm()
+    assignEventsToNamePowderStep()
+    assignEventsToCostsPowderStep() 
+    assignEventsToOxideCompositionPowderStep()
+    assignEventsToStructuralCompositionPowderStep()
 });

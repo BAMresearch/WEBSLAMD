@@ -136,9 +136,9 @@ class MaterialStrategy(ABC):
     @classmethod
     def extract_cost_properties(cls, submitted_material):
         return Costs(
-            co2_footprint=float_if_not_empty(submitted_material['co2_footprint']),
-            costs=float_if_not_empty(submitted_material['costs']),
-            delivery_time=float_if_not_empty(submitted_material['delivery_time'])
+            co2_footprint=float_if_not_empty(submitted_material.get('co2_footprint', None)),
+            costs=float_if_not_empty(submitted_material.get('costs', None)),
+            delivery_time=float_if_not_empty(submitted_material.get('delivery_time', None))
         )
 
     @classmethod
@@ -185,7 +185,7 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def _extract_additional_property_by_label(cls, submitted_material, label):
-        return [submitted_material[k] for k in sorted(submitted_material) if
+        return [submitted_material.get(k, None) for k in sorted(submitted_material) if
                 'additional_properties' in k and label in k]
 
     @classmethod

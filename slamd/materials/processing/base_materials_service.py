@@ -74,6 +74,20 @@ class BaseMaterialService(MaterialsService):
             strategy.save_model(model)
             return True, None
         return False, form
+   
+    @classmethod
+    def save_and_return_id(cls, submitted_material):
+        strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
+        model = strategy.create_model(submitted_material)
+        strategy.save_model(model)
+        return model.uuid 
+    
+    @classmethod
+    def do_edit(cls, material_type, uuid, submitted_material):
+        cls.delete_material(material_type, uuid)
+        strategy = MaterialFactory.create_strategy(submitted_material['material_type'].lower())
+        model = strategy.edit_model(uuid, submitted_material)
+        strategy.save_model(model)
 
     @classmethod
     def delete_material(cls, material_type, uuid):

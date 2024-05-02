@@ -1,4 +1,4 @@
-import {scrollDown, updateProgress} from "./utils.js";
+import {scrollDown, updateProgress} from "./../utils.js";
 import {assignEventsToDesignKnowledgeForm} from './design_knowledge.js'
 
 export function assignInputEventToCommentForm() {

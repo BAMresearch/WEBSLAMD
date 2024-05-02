@@ -1,0 +1,20 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+    <div class="chat_container">
+        <div class="bot_message_container d-flex gap-3 mx-auto">
+            {{ chatbot_icon(30, 30, "currentColor") }}
+            <div class="bot_message border rounded p-3 d-inline-block mb-4">{{ form.campaign_form.comment_field.label.text }}</div>
+        </div>
+        <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+            <div class="chat_message border rounded p-3 d-inline-block">
+                <div>
+                    <textarea rows="5" cols="100" class="form-control mb-3" placeholder="Consider additionally that..." id="comment"{% if form.campaign_form.comment_field.data is not none %}disabled{% endif %}>{% if form.campaign_form.comment_field.data is not none %}{{ form.campaign_form.comment_field.data }}{% endif %}</textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary ms-auto" id="submit_comment_button"{% if form.campaign_form.comment_field.data is not none%}disabled{% endif %}>Submit</button>
+                </div>
+            </div>
+            {{ user_icon(30, 30, "currentColor") }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,5 +1,4 @@
-import {scrollDown, updateProgress} from "./utils.js";
-import { assignClickEventToSubmitButton } from "./utils.js"
+import {scrollDown, updateProgress, assignClickEventToSubmitButton} from "./../utils.js";
 import { assignEventsToFormulation } from "./formulation.js";
 
 export function assignEventsToDesignKnowledgeForm() {

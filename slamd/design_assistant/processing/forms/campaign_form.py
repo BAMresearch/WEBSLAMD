@@ -7,23 +7,13 @@ from slamd.design_assistant.processing.forms.design_targets_form import DesignTa
 
 class CampaignForm(Form):
     # Breaking down the guidance into separate attributes
-    init_intro_text = "I will guide you through the process of framing your design problem as a structured prompt for the LLM."
-    init_process_overview = "Here's how we'll proceed:"
-    init_step_one = "Our goal is to guide the LLM output to meet the rules and standards relevant to your project."
-    init_step_two = "First, we will explore your design problem and gather all the key requirements."
-    init_step_three = "Later, you will have the opportunity to provide detailed context, such as the objectives of your project and the specific conditions that need to be considered."
+
 
     targ_intro_text = "Let's define the objectives of your design to align the LLM's outputs with your specific needs."
     targ_process_overview = "Please keep in mind:"
     targ_step_one = "Your choices here will steer the direction of our upcoming steps in formulating the ideal mix design."
     targ_step_two = "You are encouraged to select up to two primary objectives"
     targ_step_three = "For each selected objective, you'll have the opportunity to specify target values in the subsequent step."
-
-    material_type_field = RadioField(
-        label="Let's start with a basic question: What type of material are we working on?",
-        choices=[("Concrete", "Concrete Formulation"), ("Binder", "Binder Formulation")],
-        validators=[validators.DataRequired(message="Please make a selection!")],
-    )
 
     standard_design_targets_field = SelectMultipleField(
         label="What are the most important design targets?",
