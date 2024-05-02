@@ -218,7 +218,7 @@ class DesignAssistantService:
             if materials:
                 uuid = design_assistant_session['data_creation']['materials']['powder']
                 MaterialsFacade.edit_powder(uuid, value)
-                DesignAssistantPersistence._update_progress()
+                DesignAssistantPersistence.update_progress()
             else:
                 uuid = MaterialsFacade.save_powder(value)
                 DesignAssistantPersistence.update_session_for_materials_key('powder', uuid)
