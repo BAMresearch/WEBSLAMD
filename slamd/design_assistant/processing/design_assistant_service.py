@@ -188,7 +188,6 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_powders_key(value)
 
         if key == 'liquids':
-            # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
             for liquid in value:
                 if liquid not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
@@ -197,7 +196,6 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_liquids_key(value)
 
         if key == 'other':
-            # TODO: implement AI-based check that input string is sensible
             # For now: Naive Check for the inputs length
             for other in value:
                 if other not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
@@ -206,7 +204,6 @@ class DesignAssistantService:
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
-            # TODO: implement AI-based check that input string is sensible
             DesignAssistantPersistence.update_session_for_comment_key(value)
 
         if key == 'design_knowledge':
