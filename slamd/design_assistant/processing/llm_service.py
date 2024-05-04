@@ -92,7 +92,7 @@ class LLMService:
     def _generate_design_knowledge_instruction_excerpt(cls, zero_shot_learner_session):
         material_type = zero_shot_learner_session['type']
         design_knowledge_design_targets_instruction_excerpt = cls._generate_design_knowledge_design_targets_instruction_excerpt(zero_shot_learner_session)
-        instruction_excerpt = f'You have performed thousands of experiments in the laboratory. You have extensive design proficiency in the compressive strength of FA/GGBFS-based geopolymer concrete. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than six crucial sentences captuaring the pivotal design rules of the field, each containing quantitative facts and trade-offs that relate only to the compressive strength. You always answer in a direct manner, e.g., the change in (parameter) between (lower) and (upper) range has ( effect) due to (influence). What is the best design knowledge you have for finding {material_type} formulations{design_knowledge_design_targets_instruction_excerpt}?'
+        instruction_excerpt = f'You have performed thousands of experiments in the laboratory. You have extensive design proficiency for cementitious materials. You always answer with no more than six crucial sentences captuaring pivotal and quantitative formulation design rules. They must contain quantitative facts, i.e. the specific range of material fractions and and trade-offs that relate to the design target. You always answer in a direct manner, e.g., the change in (parameter) between (lower) and (upper) range has ( effect) due to (influence). Your answer is well-structered in bullet-points. What is the best quantitatvie formulation design estimates you have for finding {material_type} formulations{design_knowledge_design_targets_instruction_excerpt}?'
         return instruction_excerpt
          
     @classmethod
@@ -181,7 +181,7 @@ class LLMService:
                 design_target_value = design_target["design_target_value_field"]
             design_target_name = design_target["design_target_name_field"]
             design_targets_formatted = design_targets_formatted + '//' + design_target_name + design_target_optimization + design_target_value + '\n'
-        design_targets_prompt_excerpt = '////Design Targets: ' + "It is extremly important that the design must be complete and executable in tabular format, i.e. no fuzzy rules. Optimize for the following design targets:\n" + design_targets_formatted
+        design_targets_prompt_excerpt = '////Design Targets: ' + "It is extremly important that the design must be complete and executable in tabular format, i.e. no fuzzy rules but weight fractions for each component. Optimize for the following design targets:\n" + design_targets_formatted
         return design_targets_prompt_excerpt
     
     @classmethod
