@@ -50,22 +50,15 @@ class LLMService:
         # load session data to construct prompt excerpts       
         design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
         zero_shot_learner_session = design_assistant_session['zero_shot_learner']
-        # generate system excerpt
-        system_excerpt = cls._generate_design_knowledge_system_excerpt(zero_shot_learner_session)
         # generate user excerpt
         user_input_excerpt = cls._generate_design_knowledge_user_input_excerpt(zero_shot_learner_session)
         # generate instruction excerpt
         instruction_excerpt = cls._generate_design_knowledge_instruction_excerpt(zero_shot_learner_session)
         # combine user excerpt with system excerpt and instruction excerpt to build final design knowledge prompt
-        design_knowledge_prompt = system_excerpt + user_input_excerpt + instruction_excerpt
+        design_knowledge_prompt = instruction_excerpt + user_input_excerpt
+        print(design_knowledge_prompt)
         return design_knowledge_prompt
 
-    @classmethod
-    def _generate_design_knowledge_system_excerpt(cls, zero_shot_learner_session):
-        design_knowledge_designs_targets_system_excerpt = cls._generate_design_knowledge_design_targets_system_excerpt(zero_shot_learner_session)
-        system_excerpt =  f"You have performed thousands of experiments in the laboratory. You have extensive proficiency in {design_knowledge_designs_targets_system_excerpt} of cementitious materials. You can answer questions succinctly because you know that each question relates to only one part of the big picture. You always answer with no more than 8 concise sentences, each containing quantitative facts and trade-offs that relate only to {design_knowledge_designs_targets_system_excerpt}. You always answer directly, e.g., the change in (parameter) between (lower) and (upper) range has (effect) due to (influence).  Let’s work this out in a step-by-step way to be sure we have the right answer. Consider the following scenario:\n";
-        return system_excerpt
-    
     @classmethod
     def _generate_design_knowledge_design_targets_system_excerpt(cls, zero_shot_learner_session):
         design_targets = zero_shot_learner_session["design_targets"]
@@ -92,7 +85,16 @@ class LLMService:
     def _generate_design_knowledge_instruction_excerpt(cls, zero_shot_learner_session):
         material_type = zero_shot_learner_session['type']
         design_knowledge_design_targets_instruction_excerpt = cls._generate_design_knowledge_design_targets_instruction_excerpt(zero_shot_learner_session)
-        instruction_excerpt = f'What is the best design knowledge you have for finding {material_type} formulations{design_knowledge_design_targets_instruction_excerpt}?'
+        instruction_excerpt = (f'You have performed thousands of experiments in the laboratory. You have extensive design proficiency '
+                               f'for cementitious materials. You always answer with no more than six crucial sentences captuaring pivotal and '
+                               f'quantitative formulation design rules. They must contain quantitative facts, i.e. the specific range of material '
+                               f'fractions and trade-offs that relate to the design target. You always answer in a direct manner, e.g., the change in '
+                               f'(parameter) between (lower) and (upper) range has (effect) due to (influence). The upper and lower ranges across all'
+                               f'material fractions should be consistent in the sense that e.g. cementitious materials in a formulation could add up'
+                               f'to 100%.'
+                               f'Your answer is well-structered in bullet-points. '
+                               f'What is the best quantitative formulation design estimates you have for finding {material_type} '
+                               f'formulations{design_knowledge_design_targets_instruction_excerpt}?')
         return instruction_excerpt
          
     @classmethod
@@ -181,12 +183,13 @@ class LLMService:
                 design_target_value = design_target["design_target_value_field"]
             design_target_name = design_target["design_target_name_field"]
             design_targets_formatted = design_targets_formatted + '//' + design_target_name + design_target_optimization + design_target_value + '\n'
-        design_targets_prompt_excerpt = '////Design Targets: ' + "The design must optimize for the following design targets:\n" + design_targets_formatted
+        design_targets_prompt_excerpt = '////Design Targets: \n' + design_targets_formatted
         return design_targets_prompt_excerpt
     
     @classmethod
     def generate_formulation(cls, design_knowledge, token):
         prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
+        print(prompt)
         user_message = {"role": "user", "content": prompt}
         formulation = cls._generate_openai_llm_response([user_message], MODEL, token)
         return formulation
@@ -196,14 +199,31 @@ class LLMService:
         design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
         zero_shot_learner_session = design_assistant_session['zero_shot_learner']
         instruction_prompt_excerpt = cls._generate_zero_shot_learner_instruction_excerpt(zero_shot_learner_session)
-        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge
+
+        output_format_excerpt = cls._create_output_format_excerpt()
+        zero_shot_learner_prompt = instruction_prompt_excerpt + '////General design knowledge //' + design_knowledge + "\n " + output_format_excerpt
         return zero_shot_learner_prompt
-    
+
     @classmethod
     def _generate_zero_shot_learner_instruction_excerpt(cls, zero_shot_learner_session):
         material_type_excerpt = zero_shot_learner_session['type']
         design_targets_excerpt = cls._generate_formulation_design_targets_instruction_excerpt(zero_shot_learner_session)
-        instruction_prompt_excerpt = f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best {material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design knowledge to improve your predictions.'\n"
+        instruction_prompt_excerpt = (f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best "
+                                      f"{material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design "
+                                      f"knowledge to improve your predictions.'\n "
+                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists the ratios or percentages of the "
+                                      f"various components involved.\n")
+
+        material_type_excerpt = cls._generate_material_type_user_input_excerpt(zero_shot_learner_session)
+        powders_excerpt = cls._generate_powders_user_input_excerpt(zero_shot_learner_session)
+        liquid_excerpt = cls._generate_liquids_user_input_excerpt(zero_shot_learner_session)
+        other_excerpt = cls._generate_other_user_input_excerpt(zero_shot_learner_session)
+        comment_excerpt = cls._generate_comment_user_input_excerpt(zero_shot_learner_session)
+
+        components = material_type_excerpt + powders_excerpt + liquid_excerpt + other_excerpt + comment_excerpt
+
+        instruction_prompt_excerpt += (f"Note that you only want to look for formulations that contain the following components: \n {components}. "
+                                       f"In case that you do not want to blend the powders (not blended) it is extremely important to only include one of the powders in your formulation.")
         return instruction_prompt_excerpt
     
     @classmethod
@@ -223,4 +243,39 @@ class LLMService:
             design_target_name = design_target["design_target_name_field"]
             design_target_value = ' of ' + design_target["design_target_value_field"]
             design_targets_instruction_excerpt += design_target_optimization + design_target_name + design_target_value + excerpt_and
-        return design_targets_instruction_excerpt    
+        return design_targets_instruction_excerpt
+
+
+    @classmethod
+    def _create_output_format_excerpt(cls):
+        return """
+In your recipe, make sure that the ratios and percentages of the components of all considered materials are consistent.
+For examples, if you put out all components in units of percent they must add up to 100%.
+
+All the components of the recipe should be listed in a comma-seperated way. Each component should follow the following pattern.
+
+////
+- NAME_OF_THE_COMPONENT: VALUE
+
+For you orientation, here are some examples (note that these are just examples and must not be included in the general knowledge provided; further make sure to use units that are conventional for the components you are proposing):
+
+Example 1:
+Water to Cement Ratio: 0.5
+
+Example 2:
+Fly Ash: 20%
+
+The full output format thus must look as follows:
+
+NAME_OF_THE_COMPONENT 1: VALUE 1, NAME_OF_THE_COMPONENT 2: VALUE 2, NAME_OF_THE_COMPONENT 3: VALUE 3
+
+and so on until all components are included. Make sure to stick to exactly this format!
+
+Thus, a full recipe could look as follows:
+
+Fly Ash: 30%, GGBFS: 70%, Water to Cement Ratio: 0.4
+
+Another example could be:
+
+Geopolymer: 30%, Water: 60%, Recycled Aggregates: 10%
+"""
