@@ -10,17 +10,19 @@ export function assignEventsToOxideCompositionPowderStep(){
 }
 
 function handleSubmittingPowderOxideComposition(event){
-    const powder_oxide_composition_inputs = document.querySelectorAll(".powder_oxide_composition_input")
-    const powder_oxide_composition_ca_o = powder_oxide_composition_inputs[0].value
-    const powder_oxide_composition_al2_o3 = powder_oxide_composition_inputs[1].value
-    const powder_oxide_composition_si_o2 = powder_oxide_composition_inputs[2].value
-    const powder_oxide_composition_fe3_o2 = powder_oxide_composition_inputs[3].value
-    const powder_cost_inputs = document.querySelectorAll(".powder_cost_input") 
-    const powder_name = document.getElementById("powder_name_input").value
-    const powder_cost_CO_2 = powder_cost_inputs[0].value
-    const powder_cost_EUR = powder_cost_inputs[1].value
-    const powder_cost_delivery_time = powder_cost_inputs[2].value
-    const powder = { 'material_type':'Powder', 'material_name' : powder_name,  "co2_footprint" : powder_cost_CO_2, "costs" : powder_cost_EUR, "delivery_time" : powder_cost_delivery_time, "fe3_o2" : powder_oxide_composition_fe3_o2, "si_o2" : powder_oxide_composition_si_o2, "al2_o3" : powder_oxide_composition_al2_o3, "ca_o" : powder_oxide_composition_ca_o }
+    const powder_oxide_composition_inputs = document.querySelectorAll(".powder_oxide_composition_input") 
+    const powder_cost_inputs = document.querySelectorAll(".powder_cost_input")
+    const powder = { 
+        'material_type':'Powder', 
+        'material_name' : document.getElementById("powder_name_input").value,
+        "co2_footprint" : powder_cost_inputs[0].value,
+        "costs" : powder_cost_inputs[1].value,
+        "delivery_time" : powder_cost_inputs[2].value, 
+        "ca_o" : powder_oxide_composition_inputs[0].value, 
+        "al2_o3" : powder_oxide_composition_inputs[1].value, 
+        "si_o2" : powder_oxide_composition_inputs[2].value, 
+        "fe3_o2" : powder_oxide_composition_inputs[3].value 
+    }
     powder_oxide_composition_inputs.forEach((powder_oxide_composition_input) => {
         powder_oxide_composition_input.disabled = true
     })

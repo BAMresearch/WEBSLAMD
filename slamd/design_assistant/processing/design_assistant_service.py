@@ -60,11 +60,13 @@ class DesignAssistantService:
                 for material, material_id in session['design_assistant']['data_creation']['materials'].items():
                     if material == 'powder':
                         cls._populate_create_powder_form_with_session_value(session, form)
+                    if material == 'liquid':
+                        cls._populate_create_liquid_form_with_session_value(session, form)
 
     @classmethod          
     def _populate_create_powder_form_with_session_value(cls, session, form):
         powder_uuid = session['design_assistant']['data_creation']['materials']['powder']
-        powder = MaterialsFacade.get_powder_from_session(powder_uuid)
+        powder = MaterialsFacade.get_material_from_session('Powder', powder_uuid)
         if powder.name:
             cls._populate_create_powder_name_field_with_session_value(form, powder.name)
         if powder.costs:
@@ -74,8 +76,36 @@ class DesignAssistantService:
         if powder.structure:
             cls._populate_create_powder_structure_fields_with_session_value(form, powder.structure)
 
+    @classmethod          
+    def _populate_create_liquid_form_with_session_value(cls, session, form):
+        liquid_uuid = session['design_assistant']['data_creation']['materials']['liquid']
+        liquid = MaterialsFacade.get_material_from_session('Liquid', liquid_uuid)
+        if liquid.name:
+            cls._populate_create_liquid_name_field_with_session_value(form, liquid.name)
+        if liquid.costs:
+            cls._populate_create_liquid_cost_fields_with_session_value(form, liquid.costs)
+        if liquid.composition:
+            cls._populate_create_liquid_composition_fields_with_session_value(form, liquid.composition)
 
+    @classmethod
+    def _populate_create_liquid_name_field_with_session_value(cls, form, liquid_name):
+        form.new_project_form.create_liquid_form.name_field.data = liquid_name
 
+    @classmethod
+    def _populate_create_liquid_cost_fields_with_session_value(cls, form, liquid_costs):
+        form.new_project_form.create_liquid_form.cost_CO_2.data = liquid_costs.co2_footprint
+        form.new_project_form.create_liquid_form.cost_EUR.data = liquid_costs.costs
+        form.new_project_form.create_liquid_form.cost_delivery_time.data = liquid_costs.delivery_time
+
+    @classmethod
+    def _populate_create_liquid_composition_fields_with_session_value(cls, form, liquid_composition):
+        form.new_project_form.create_liquid_form.h2_O.data = liquid_composition.h2_o
+        form.new_project_form.create_liquid_form.h2_O_mol.data = liquid_composition.h2_o_mol
+        form.new_project_form.create_liquid_form.na2_si_o3.data = liquid_composition.na2_si_o3
+        form.new_project_form.create_liquid_form.na2_si_o3_mol.data = liquid_composition.na2_si_o3_mol
+        form.new_project_form.create_liquid_form.na_o_h.data = liquid_composition.na_o_h
+        form.new_project_form.create_liquid_form.na_o_h_mol.data =  liquid_composition.na_o_h_mol
+    
     @classmethod
     def _populate_create_powder_name_field_with_session_value(cls, form, powder_name):
         form.new_project_form.create_powder_form.name_field.data = powder_name
@@ -217,12 +247,24 @@ class DesignAssistantService:
             materials = design_assistant_session['data_creation'].get('materials', None)
             if materials:
                 uuid = design_assistant_session['data_creation']['materials']['powder']
-                MaterialsFacade.edit_powder(uuid, value)
+                MaterialsFacade.edit_material(uuid, value)
                 DesignAssistantPersistence.update_progress()
             else:
-                uuid = MaterialsFacade.save_powder(value)
-                DesignAssistantPersistence.update_session_for_materials_key('powder', uuid)
-            
+                uuid = MaterialsFacade.save_material(value)
+                materials = {'powder' : uuid }
+                DesignAssistantPersistence.update_session_for_materials_key(materials)
+
+        if key == 'liquid':
+            design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+            materials = design_assistant_session['data_creation'].get('materials', None)  
+            uuid = design_assistant_session['data_creation']['materials'].get('liquid', None)
+            if uuid:
+                MaterialsFacade.edit_material(uuid, value)
+                DesignAssistantPersistence.update_progress()
+            else:
+                uuid = MaterialsFacade.save_material(value)
+                materials['liquid'] = uuid
+                DesignAssistantPersistence.update_session_for_materials_key(materials)        
 
     @classmethod
     def _valid_powder_selection(cls, value):
@@ -294,5 +336,11 @@ class DesignAssistantService:
             template = 'data_creation/powder_structural_composition.html'
         if progress == 6:
             template = 'data_creation/liquid_name.html'
+        if progress == 7:
+            template = 'data_creation/liquid_costs.html'
+        if progress == 8:
+            template = 'data_creation/liquid_oxide_composition.html'
+        if progress == 9:
+            template = 'data_creation/aggregate_name.html'
         return template
 

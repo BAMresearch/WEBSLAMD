@@ -13,6 +13,10 @@ import { assignEventsToNamePowderStep } from "./data_creation/powder_name.js";
 import { assignEventsToCostsPowderStep } from './data_creation/powder_costs.js'
 import { assignEventsToOxideCompositionPowderStep } from './data_creation/powder_oxide_composition.js'
 import { assignEventsToStructuralCompositionPowderStep } from "./data_creation/powder_structural_composition.js";
+import { assignEventsToNameLiquidStep } from "./data_creation/liquid_name.js";
+import { assignEventsToCostsLiquidStep } from "./data_creation/liquid_costs.js";
+import { assignEventsToOxideCompositionLiquidStep } from "./data_creation/liquid_oxide_composition.js";
+
 
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
@@ -38,4 +42,7 @@ window.addEventListener("load", function () {
     assignEventsToCostsPowderStep() 
     assignEventsToOxideCompositionPowderStep()
     assignEventsToStructuralCompositionPowderStep()
+    assignEventsToNameLiquidStep()
+    assignEventsToCostsLiquidStep()
+    assignEventsToOxideCompositionLiquidStep()
 });

@@ -60,8 +60,8 @@ class DesignAssistantPersistence:
         cls.update_progress()
     
     @classmethod
-    def update_session_for_materials_key(cls, material, value):
-        session['design_assistant']['data_creation']['materials'] = { material : value }
+    def update_session_for_materials_key(cls, materials):
+        session['design_assistant']['data_creation']['materials'] = materials
         cls.update_progress()
 
     @classmethod

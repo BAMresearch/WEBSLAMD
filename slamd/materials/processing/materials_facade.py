@@ -96,16 +96,15 @@ class MaterialsFacade:
         full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
         return full_dict, types, names
 
-    
     @classmethod
-    def save_powder(cls, powder):
-        powder_uuid = BaseMaterialService.save_and_return_id(powder)
-        return powder_uuid
+    def save_material(cls, material):
+        material_uuid = BaseMaterialService.save_and_return_id(material)
+        return material_uuid
 
     @classmethod
-    def edit_powder(cls, uuid, powder):
-        BaseMaterialService.do_edit('powder', str(uuid), powder)
+    def edit_material(cls, uuid, material):
+        BaseMaterialService.do_edit(material['material_type'].lower(), str(uuid), material)
 
     @classmethod
-    def get_powder_from_session(cls, uuid):
-        return MaterialsPersistence.query_by_type_and_uuid('Powder', str(uuid))
+    def get_material_from_session(cls, material, uuid):
+        return MaterialsPersistence.query_by_type_and_uuid(material, str(uuid))

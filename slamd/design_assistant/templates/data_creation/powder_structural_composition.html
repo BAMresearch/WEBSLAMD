@@ -12,11 +12,11 @@
             <div class="d-flex flex-column gap-2 align-items-center">
                 <div class="d-flex w-100 justify-content-end align-items-center gap-3">
                     <div>{{ form.new_project_form.create_powder_form.fines_modulus.label.text}}</div>
-                    <input class="powder_structural_composition_input w-auto form-control text-end" name="powder_structural_composition_fines_modulus" {% if form.new_project_form.create_powder_form.fines_modulus.data %} value="{{ form.new_project_form.create_powder_form.fines_modulus.data }}"  {% endif %} type="number" {% if progress == 6 %} disabled {% endif %}/>
+                    <input class="powder_structural_composition_input w-auto form-control text-end" name="powder_structural_composition_fines_modulus" {% if form.new_project_form.create_powder_form.fines_modulus.data %} value="{{ form.new_project_form.create_powder_form.fines_modulus.data }}"  {% endif %} type="number" {% if progress >= 6 %} disabled {% endif %}/>
                 </div>
                 <div class="d-flex w-100 justify-content-end align-items-center gap-3">
                     <div>{{ form.new_project_form.create_powder_form.specific_gravity.label.text}}</div>
-                    <input class="powder_structural_composition_input w-auto form-control text-end" name="powder_oxide_composition_specific_gravity" {% if form.new_project_form.create_powder_form.specific_gravity.data %} value="{{ form.new_project_form.create_powder_form.specific_gravity.data }}"  {% endif %} type="number" {% if progress == 6 %} disabled {% endif %}/>
+                    <input class="powder_structural_composition_input w-auto form-control text-end" name="powder_oxide_composition_specific_gravity" {% if form.new_project_form.create_powder_form.specific_gravity.data %} value="{{ form.new_project_form.create_powder_form.specific_gravity.data }}"  {% endif %} type="number" {% if progress >= 6 %} disabled {% endif %}/>
                 </div>
             </div>
             <div class="text-end mt-2"><button class="powder_structural_composition_button btn btn-primary" id="powder_structural_composition_button" {% if progress >= 6 %} disabled {% endif %}>Save</button></div>
