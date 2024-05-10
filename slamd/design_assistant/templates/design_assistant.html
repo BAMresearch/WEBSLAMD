@@ -6,16 +6,33 @@
 {% extends 'index.html' %} {% block content %}
 <main class="mt-lg-2 ml-sm-auto px-md-2 py-2 container" style="height: 80%" id="chat-window-container">
     <div class="row g-3 mb-3 justify-content-end align-items-center">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed explanation-header" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"
+                        data-bs-parent="#accordion-discovery-explanation">
+                    Show / hide design assistant explanation
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+                <div class="accordion-body explanation-body" role="tooltip">
+                    The design assistant can be used for creating new materials in a step-by-step fashion or for predicting
+                    new materials. Note that the latter is experimental. It uses GenAI to find high-quality formulations.<br>
+                    Note that you have a free tier for using the zero-shot assistant. When it is exhausted you need to pass
+                    your own Open AI Token in the field below.
+                </div>
+            </div>
+        </div>
         <div class="col-sm-6 col-md-3 col-lg-3">
             {{ form.token_form.token(class_="form-control", placeholder="Insert you Open AI Token here") }}
         </div>
         <div class="col-sm-6 col-md-3 col-lg-3">
-            <button id="delete_session_button" class="btn btn-danger form-control">Reset conversation</button>
+            <button id="delete_session_button" class="btn btn-danger form-control" data-bs-toggle="tooltip" data-bs-placement="bottom" title="When resetting the conversation you need to insert your key again.">Reset conversation</button>
         </div>
     </div>
 
     <div class="d-flex justify-content-center mb-4">
-        <progress id="chat_progress" style="width: 75%; height: 20px" value={{ progress }} max="10"></progress>
+        <progress id="chat_progress" style="width: 100%; height: 20px" value={{ progress }} max="10"></progress>
     </div>
     <div id="chat_window" class="p-4 h-100" style="overflow-y: auto">
         {{ form.csrf_token }}
