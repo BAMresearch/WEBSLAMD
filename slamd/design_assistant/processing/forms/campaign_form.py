@@ -38,13 +38,13 @@ class CampaignForm(Form):
 
     blend_powders_field = RadioField(
         label="Do you want to blend powders? Note: Blending requires selecting a minimum of two powders.",
-        choices=[ "Yes","No"],
+        choices=["Yes","No"],
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
 
     liquids_field = SelectMultipleField(
         label="Now, select your mixing liquid:",
-        choices=[ ("Water", "Water"), ("Activator Liquid", "Activator Liquid"), ("Activator Solution", "Activator Solution (Triggers the chemical reaction in geopolymer concrete, using water mixed with sodium hydroxide and sodium silicate)")],
+        choices=[("Water", "Water"), ("Activator Liquid", "Activator Liquid")],
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )
@@ -53,7 +53,7 @@ class CampaignForm(Form):
 
     other_field = SelectMultipleField(
         label="Anything else? (optional)",
-        choices=[ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"],
+        choices=["Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"],
         option_widget=CheckboxInput(),
         validators=[validators.DataRequired(message="Selection cannot be empty!")],
     )

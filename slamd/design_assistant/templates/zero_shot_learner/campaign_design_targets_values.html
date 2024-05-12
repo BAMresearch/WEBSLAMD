@@ -37,11 +37,11 @@
                                         </select>
                                     {% else %}
                                         <select class="w-auto form-select ml-auto design_target_optimization_select" aria-label="Select optimization" name="design_target_optimization_select">
-                                            {% endif %}
                                             {% for value, label in design_target.design_target_optimization_field.choices %}
-                                            <option value="{{value}}" class="design_target_optimization" name="design_target_optimization">{{ label }}</option> 
-                                            {% endfor %}   
+                                            <option value="{{value}}" class="design_target_optimization" name="design_target_optimization">{{ label }}</option>
+                                            {% endfor %}
                                         </select>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

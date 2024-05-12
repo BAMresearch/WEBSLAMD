@@ -22,7 +22,6 @@
                     {% endfor %}
                     <div class="mt-2 mb-1">{{ form.campaign_form.blend_powders_field.label.text }}</div>
                     <div class="text-end">
-
                         {% for option in form.campaign_form.blend_powders_field %}
                         {% if form.campaign_form.blend_powders_field.data == option.data %}
                         {{ option(class='blend_powder_option', checked='true', disabled='disabled', value="{{ option.data }}") }}
