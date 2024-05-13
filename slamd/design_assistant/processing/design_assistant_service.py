@@ -14,13 +14,13 @@ class DesignAssistantService:
         progress = cls._extract_progress(design_assistant_session)
         form = DesignAssistantFactory.create_design_assistant_form()
         if design_assistant_session:
-            if 'zero_shot_learner' in list(design_assistant_session.keys()):             
+            if 'zero_shot_learner' in list(design_assistant_session.keys()):
                 cls._populate_task_form_with_session_value(form, 'zero_shot_learner')
                 cls._populate_material_type_form_with_session_value(form, design_assistant_session, 'zero_shot_learner')
                 cls._populate_campaign_form_with_session_value(form, design_assistant_session)
                 form.new_project_form = None
             if 'data_creation' in list(design_assistant_session.keys()):
-                cls._populate_task_form_with_session_value(form, 'data_creation') 
+                cls._populate_task_form_with_session_value(form, 'data_creation')
                 cls._populate_material_type_form_with_session_value(form, design_assistant_session, 'data_creation')
                 cls._populate_create_project_form_with_session_value(form)
                 form.campaign_form = None
@@ -45,7 +45,7 @@ class DesignAssistantService:
     @classmethod
     def _populate_task_form_with_session_value(cls, form, session_value):
         form.task_form.task_field.data = session_value
-    
+
     @classmethod
     def _populate_material_type_form_with_session_value(cls, form, design_assistant_session, task):
         for key, value in design_assistant_session[task].items():
@@ -54,18 +54,18 @@ class DesignAssistantService:
 
     @classmethod
     def _populate_create_project_form_with_session_value(cls, form):
-        session = DesignAssistantPersistence.get_session()
-        for key in list(session['design_assistant']['data_creation'].keys()):
+        dc_session = DesignAssistantPersistence.get_data_creation_session()
+        for key in list(dc_session.keys()):
             if key == 'materials':
-                for material, material_id in session['design_assistant']['data_creation']['materials'].items():
+                for material, material_id in dc_session['materials'].items():
                     if material == 'powder':
-                        cls._populate_create_powder_form_with_session_value(session, form)
+                        cls._populate_create_powder_form_with_session_value(dc_session, form)
                     if material == 'liquid':
-                        cls._populate_create_liquid_form_with_session_value(session, form)
+                        cls._populate_create_liquid_form_with_session_value(dc_session, form)
 
-    @classmethod          
-    def _populate_create_powder_form_with_session_value(cls, session, form):
-        powder_uuid = session['design_assistant']['data_creation']['materials']['powder']
+    @classmethod
+    def _populate_create_powder_form_with_session_value(cls, dc_session, form):
+        powder_uuid = dc_session['materials']['powder']
         powder = MaterialsFacade.get_material_from_session('Powder', powder_uuid)
         if powder.name:
             cls._populate_create_powder_name_field_with_session_value(form, powder.name)
@@ -76,9 +76,9 @@ class DesignAssistantService:
         if powder.structure:
             cls._populate_create_powder_structure_fields_with_session_value(form, powder.structure)
 
-    @classmethod          
-    def _populate_create_liquid_form_with_session_value(cls, session, form):
-        liquid_uuid = session['design_assistant']['data_creation']['materials']['liquid']
+    @classmethod
+    def _populate_create_liquid_form_with_session_value(cls, dc_session, form):
+        liquid_uuid = dc_session['materials']['liquid']
         liquid = MaterialsFacade.get_material_from_session('Liquid', liquid_uuid)
         if liquid.name:
             cls._populate_create_liquid_name_field_with_session_value(form, liquid.name)
@@ -104,8 +104,8 @@ class DesignAssistantService:
         form.new_project_form.create_liquid_form.na2_si_o3.data = liquid_composition.na2_si_o3
         form.new_project_form.create_liquid_form.na2_si_o3_mol.data = liquid_composition.na2_si_o3_mol
         form.new_project_form.create_liquid_form.na_o_h.data = liquid_composition.na_o_h
-        form.new_project_form.create_liquid_form.na_o_h_mol.data =  liquid_composition.na_o_h_mol
-    
+        form.new_project_form.create_liquid_form.na_o_h_mol.data = liquid_composition.na_o_h_mol
+
     @classmethod
     def _populate_create_powder_name_field_with_session_value(cls, form, powder_name):
         form.new_project_form.create_powder_form.name_field.data = powder_name
@@ -163,7 +163,7 @@ class DesignAssistantService:
     def _populate_liquids_field_with_session_value(cls, form, value):
         liquids = []
         for liquid in value:
-            if liquid in ['Water', 'Activator Liquid','Activator Solution']:
+            if liquid in ['Water', 'Activator Liquid', 'Activator Solution']:
                 liquids.append(liquid)
             else:
                 form.campaign_form.additional_liquid.data = liquid
@@ -174,7 +174,8 @@ class DesignAssistantService:
     def _populate_other_field_with_session_value(cls, form, value):
         others = []
         for other in value:
-            if other in [ "Biochar", "Rice Husk Ash", "Recycled Aggregates" , "Limestone Powder", "Recycled Glass Fines", "Super Plasticizer"]:
+            if other in ["Biochar", "Rice Husk Ash", "Recycled Aggregates", "Limestone Powder", "Recycled Glass Fines",
+                         "Super Plasticizer"]:
                 others.append(other)
             else:
                 form.campaign_form.additional_other.data = other
@@ -187,7 +188,7 @@ class DesignAssistantService:
     @classmethod
     def _populate_design_knowledge_field_with_session_value(cls, form, value):
         form.campaign_form.design_knowledge_field.data = value
-    
+
     @classmethod
     def _populate_formulation_field_with_session_value(cls, form, value):
         form.campaign_form.formulation_field.data = value
@@ -222,15 +223,16 @@ class DesignAssistantService:
             for liquid in value:
                 if liquid not in ['Water', 'Activator Liquid', 'Activator Solution'] and len(value) > 30:
                     raise ValueNotSupportedException('Liquid selection is not valid. If a custom name '
-                                                    'shall be given, it cannot be longer than 20 characters.')
+                                                     'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_liquids_key(value)
 
         if key == 'other':
             # For now: Naive Check for the inputs length
             for other in value:
-                if other not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines', 'Super Plasticizer'] and len(value) > 30:
+                if other not in ['Biochar', 'Recycled Aggregates', 'Limestone', 'Recycled Glass Fines',
+                                 'Super Plasticizer'] and len(value) > 30:
                     raise ValueNotSupportedException('Other selection is not valid. If a custom name '
-                                                    'shall be given, it cannot be longer than 20 characters.')
+                                                     'shall be given, it cannot be longer than 20 characters.')
             DesignAssistantPersistence.update_session_for_other_key(value)
 
         if key == 'comment':
@@ -238,10 +240,10 @@ class DesignAssistantService:
 
         if key == 'design_knowledge':
             DesignAssistantPersistence.update_session_for_design_knowledge_key(value)
-        
+
         if key == "formulation":
             DesignAssistantPersistence.update_session_for_formulation_key(value)
-        
+
         if key == 'powder':
             design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
             materials = design_assistant_session['data_creation'].get('materials', None)
@@ -251,12 +253,12 @@ class DesignAssistantService:
                 DesignAssistantPersistence.update_progress()
             else:
                 uuid = MaterialsFacade.save_material(value)
-                materials = {'powder' : uuid }
+                materials = {'powder': uuid}
                 DesignAssistantPersistence.update_session_for_materials_key(materials)
 
         if key == 'liquid':
             design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
-            materials = design_assistant_session['data_creation'].get('materials', None)  
+            materials = design_assistant_session['data_creation'].get('materials', None)
             uuid = design_assistant_session['data_creation']['materials'].get('liquid', None)
             if uuid:
                 MaterialsFacade.edit_material(uuid, value)
@@ -264,7 +266,7 @@ class DesignAssistantService:
             else:
                 uuid = MaterialsFacade.save_material(value)
                 materials['liquid'] = uuid
-                DesignAssistantPersistence.update_session_for_materials_key(materials)        
+                DesignAssistantPersistence.update_session_for_materials_key(materials)
 
     @classmethod
     def _valid_powder_selection(cls, value):
@@ -313,18 +315,18 @@ class DesignAssistantService:
 
     @classmethod
     def generate_formulation(cls, design_knowledge, token):
-        formulations = LLMService.generate_formulation(design_knowledge, token) 
+        formulations = LLMService.generate_formulation(design_knowledge, token)
         return formulations
-    
+
     @classmethod
     def get_template_of_selected_task(cls):
         design_assistant_session = DesignAssistantPersistence.get_session_for_property('design_assistant')
-        if 'data_creation' in list(design_assistant_session.keys()): 
+        if 'data_creation' in list(design_assistant_session.keys()):
             template = '/data_creation/powder_name.html'
         if 'zero_shot_learner' in list(design_assistant_session.keys()):
             template = '/zero_shot_learner/campaign_design_targets.html'
-        return template 
-    
+        return template
+
     @classmethod
     def get_template_of_next_new_project_step(cls, progress):
         template = ''
@@ -343,4 +345,3 @@ class DesignAssistantService:
         if progress == 9:
             template = 'data_creation/aggregate_name.html'
         return template
-

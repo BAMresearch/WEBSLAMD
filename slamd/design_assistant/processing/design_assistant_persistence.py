@@ -69,8 +69,8 @@ class DesignAssistantPersistence:
         return session.get(key)
     
     @classmethod
-    def get_session(cls):
-        return session
+    def get_data_creation_session(cls):
+        return session['design_assistant']['data_creation']
 
     @classmethod
     def delete_session_key(cls, key):
