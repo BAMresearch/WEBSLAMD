@@ -1,0 +1,43 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+                <div>Please specify the liquids’ oxide composition</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.h2_O.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_h2_O" {% if form.new_project_form.create_liquid_form.h2_O.data %} value="{{ form.new_project_form.create_liquid_form.h2_O.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.h2_O_mol.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_h2_O_mol" {% if form.new_project_form.create_liquid_form.h2_O_mol.data %} value="{{ form.new_project_form.create_liquid_form.h2_O_mol.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.na_o_h.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_na_o_h" {% if form.new_project_form.create_liquid_form.na_o_h_mol.data %} value="{{ form.new_project_form.create_liquid_form.na_o_h.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.na_o_h_mol.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_na_o_h_mol" {% if form.new_project_form.create_liquid_form.na_o_h_mol.data %} value="{{ form.new_project_form.create_liquid_form.na_o_h_mol.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.na2_si_o3.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_na2_si_o3" {% if form.new_project_form.create_liquid_form.na2_si_o3_mol.data %} value="{{ form.new_project_form.create_liquid_form.na2_si_o3.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.na2_si_o3_mol.label.text}}</div>
+                    <input class="liquid_oxide_composition_input w-auto form-control text-end" name="liquid_oxide_composition_na2_si_o3_mol" {% if form.new_project_form.create_liquid_form.na2_si_o3_mol.data %} value="{{ form.new_project_form.create_liquid_form.na2_si_o3_mol.data }}"  {% endif %} type="number" {% if progress >= 9 %} disabled {% endif %}/>
+                </div>
+            </div>
+            <div class="text-end mt-2"><button class="liquid_oxide_composition_button btn btn-primary" id="liquid_oxide_composition_button" {% if progress >= 9 %} disabled {% endif %}>Save</button></div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}

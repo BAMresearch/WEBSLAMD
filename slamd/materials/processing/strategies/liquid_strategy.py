@@ -35,21 +35,21 @@ class LiquidStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            na2_si_o3=float_if_not_empty(submitted_material['na2_si_o3']),
-            na_o_h=float_if_not_empty(submitted_material['na_o_h']),
-            na2_si_o3_mol=float_if_not_empty(submitted_material['na2_si_o3_mol']),
-            na_o_h_mol=float_if_not_empty(submitted_material['na_o_h_mol']),
-            na2_o=float_if_not_empty(submitted_material['na2_o']),
-            si_o2=float_if_not_empty(submitted_material['si_o2']),
-            h2_o=float_if_not_empty(submitted_material['h2_o']),
-            na2_o_mol=float_if_not_empty(submitted_material['na2_o_mol']),
-            si_o2_mol=float_if_not_empty(submitted_material['si_o2_mol']),
-            h2_o_mol=float_if_not_empty(submitted_material['h2_o_mol'])
+            na2_si_o3=float_if_not_empty(submitted_material.get('na2_si_o3', None)),
+            na_o_h=float_if_not_empty(submitted_material.get('na_o_h', None)),
+            na2_si_o3_mol=float_if_not_empty(submitted_material.get('na2_si_o3_mol', None)),
+            na_o_h_mol=float_if_not_empty(submitted_material.get('na_o_h_mol', None)),
+            na2_o=float_if_not_empty(submitted_material.get('na2_o', None)),
+            si_o2=float_if_not_empty(submitted_material.get('si_o2', None)),
+            h2_o=float_if_not_empty(submitted_material.get('h2_o', None)),
+            na2_o_mol=float_if_not_empty(submitted_material.get('na2_o_mol', None)),
+            si_o2_mol=float_if_not_empty(submitted_material.get('si_o2_mol', None)),
+            h2_o_mol=float_if_not_empty(submitted_material.get('h2_o_mol', None))
         )
 
         return Liquid(
-            name=submitted_material['material_name'],
-            type=submitted_material['material_type'],
+            name=submitted_material.get('material_name', None),
+            type=submitted_material.get('material_type', None),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)
