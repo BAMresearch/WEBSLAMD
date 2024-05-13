@@ -253,7 +253,7 @@ class DesignAssistantService:
                 DesignAssistantPersistence.update_progress()
             else:
                 uuid = MaterialsFacade.save_material(value)
-                materials = {'powder': uuid}
+                materials = {'powder': str(uuid)}
                 DesignAssistantPersistence.update_session_for_materials_key(materials)
 
         if key == 'liquid':
@@ -265,7 +265,7 @@ class DesignAssistantService:
                 DesignAssistantPersistence.update_progress()
             else:
                 uuid = MaterialsFacade.save_material(value)
-                materials['liquid'] = uuid
+                materials['liquid'] = str(uuid)
                 DesignAssistantPersistence.update_session_for_materials_key(materials)
 
     @classmethod
@@ -305,6 +305,8 @@ class DesignAssistantService:
                                                             'be supported simultaneously.')
         if 'zero_shot_learner' in list(session_data.keys()):
             DesignAssistantPersistence.save(session_data, 'zero_shot_learner')
+        elif 'data_creation' in list(session_data.keys()):
+            DesignAssistantPersistence.save(session_data, 'data_creation')
         else:
             pass
 
