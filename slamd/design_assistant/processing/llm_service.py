@@ -8,6 +8,7 @@ from slamd.design_assistant.processing.design_assistant_persistence import Desig
 MAX_FREE_LLM_CALLS = 10
 MODEL = 'gpt-3.5-turbo'
 
+
 class LLMService:
 
     @classmethod
@@ -87,13 +88,10 @@ class LLMService:
         design_knowledge_design_targets_instruction_excerpt = cls._generate_design_knowledge_design_targets_instruction_excerpt(zero_shot_learner_session)
         instruction_excerpt = (f'You have performed thousands of experiments in the laboratory. You have extensive design proficiency '
                                f'for cementitious materials. You always answer with no more than six crucial sentences captuaring pivotal and '
-                               f'quantitative formulation design rules. They must contain quantitative facts, i.e. the specific range of material '
-                               f'fractions and trade-offs that relate to the design target. You always answer in a direct manner, e.g., the change in '
-                               f'(parameter) between (lower) and (upper) range has (effect) due to (influence). The upper and lower ranges across all'
-                               f'material fractions should be consistent in the sense that e.g. cementitious materials in a formulation could add up'
-                               f'to 100%.'
+                               f'quantitative formulation design rules. You always answer in a direct manner, e.g., the change in '
+                               f'(parameter) has (effect) due to (influence).'
                                f'Your answer is well-structered in bullet-points. '
-                               f'What is the best quantitative formulation design estimates you have for finding {material_type} '
+                               f'What is the best formulation design knowledge you have for finding {material_type} '
                                f'formulations{design_knowledge_design_targets_instruction_excerpt}?')
         return instruction_excerpt
          
@@ -269,13 +267,16 @@ The full output format thus must look as follows:
 
 NAME_OF_THE_COMPONENT 1: VALUE 1, NAME_OF_THE_COMPONENT 2: VALUE 2, NAME_OF_THE_COMPONENT 3: VALUE 3
 
-and so on until all components are included. Make sure to stick to exactly this format!
+and so on until all components are included. Make sure to stick to exactly this format! Here are examples:
 
-Thus, a full recipe could look as follows:
+Example 1:
 
 Fly Ash: 30%, GGBFS: 70%, Water to Cement Ratio: 0.4
 
-Another example could be:
+Example 2:
 
 Geopolymer: 30%, Water: 60%, Recycled Aggregates: 10%
+
+Example 3:
+Fly Ash: 40%, Water: 25%, Biochar: 10%, Rice Husk Ash: 10%, Recycled Glass Fines: 10%, Super Plasticizer: 5%
 """

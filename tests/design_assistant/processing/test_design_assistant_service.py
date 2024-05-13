@@ -264,3 +264,39 @@ def test_instantiate_da_session_on_upload_zero_shot_data(monkeypatch):
     assert mock_delete_session_key_called_with == 'design_assistant'
     assert mock_init_session_called_with == 'mock call'
     assert mock_save_called_with == ({'zero_shot_learner': {}}, 'zero_shot_learner')
+
+
+def test_instantiate_da_session_on_upload_data_creation_data(monkeypatch):
+    session_data = {
+        'data_creation': {},
+    }
+
+    mock_delete_session_key_called_with = None
+
+    def mock_delete_session_key(key):
+        nonlocal mock_delete_session_key_called_with
+        mock_delete_session_key_called_with = key
+        return ""
+
+    mock_init_session_called_with = None
+
+    def mock_init_session():
+        nonlocal mock_init_session_called_with
+        mock_init_session_called_with = 'mock call'
+        return ""
+
+    mock_save_called_with = None
+
+    def mock_save(session, task):
+        nonlocal mock_save_called_with
+        mock_save_called_with = session, task
+        return ""
+
+    monkeypatch.setattr(DesignAssistantPersistence, 'delete_session_key', mock_delete_session_key)
+    monkeypatch.setattr(DesignAssistantPersistence, 'init_session', mock_init_session)
+    monkeypatch.setattr(DesignAssistantPersistence, 'save', mock_save)
+
+    DesignAssistantService.instantiate_da_session_on_upload(session_data)
+    assert mock_delete_session_key_called_with == 'design_assistant'
+    assert mock_init_session_called_with == 'mock call'
+    assert mock_save_called_with == ({'data_creation': {}}, 'data_creation')
