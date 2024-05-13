@@ -118,7 +118,7 @@ def handle_saving_formulation():
 
 
 @design_assistant.route('/new_project/<material_type>', methods=['POST'])
-def handle_saving_powder_name(material_type):
+def handle_saving_material(material_type):
     data = json.loads(request.data)
     DesignAssistantService.update_design_assistant_session(data, material_type)
     form, progress = DesignAssistantService.create_design_assistant_form()

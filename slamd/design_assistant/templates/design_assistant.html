@@ -60,7 +60,28 @@
                         {% include 'data_creation/liquid_name.html' %}
                     {% endif %}
                 {% endif %}
-            </div> 
+            </div>
+            <div id="liquid_costs_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_powder_form %}
+                    {% if progress >= 7 %}
+                        {% include 'data_creation/liquid_costs.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="liquid_oxide_composition_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_powder_form %}
+                    {% if progress >= 8 %}
+                        {% include 'data_creation/liquid_oxide_composition.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="aggregate_name_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_powder_form %}
+                    {% if progress >= 9 %}
+                        {% include 'data_creation/aggregate_name.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
         <div id="campaign_container">
             <div id="design_targets_container" class="mb-4">
