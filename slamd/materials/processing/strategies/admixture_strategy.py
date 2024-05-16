@@ -14,8 +14,8 @@ class AdmixtureStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         return Admixture(
-            name=submitted_material['material_name'],
-            type=submitted_material['material_type'],
+            name=submitted_material.get('material_name', None),
+            type=submitted_material.get('material_type', None),
             costs=cls.extract_cost_properties(submitted_material),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )

@@ -14,6 +14,7 @@ design_assistant = Blueprint('design_assistant', __name__,
 @design_assistant.route('/', methods=['GET'])
 def design_assistant_page():
     form, progress = DesignAssistantService.create_design_assistant_form()
+    print(session)
     return render_template('design_assistant.html', form=form, progress=progress)
 
 
@@ -123,6 +124,7 @@ def handle_saving_material(material_type):
     DesignAssistantService.update_design_assistant_session(data, material_type)
     form, progress = DesignAssistantService.create_design_assistant_form()
     template = DesignAssistantService.get_template_of_next_new_project_step(progress)
+    print('current progress', progress)
     body = {'template': render_template(template, form=form, progress=progress)}
     return make_response((jsonify(body)))
 

@@ -39,7 +39,7 @@ function handleSubmittingAggregateComposition(event){
             aggregate
         );
         document.getElementById("aggregate_composition_button").disabled = true
-        // assignEventsToNameAggregateStep()
+        assignEventsToNameAggregateStep()
         updateProgress()
         scrollDown()
     }, 1000);

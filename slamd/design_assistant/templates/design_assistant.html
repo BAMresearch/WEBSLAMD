@@ -127,6 +127,34 @@
                     {% endif %}
                 {% endif %}
             </div>
+            <div id="process_name_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 14 %}
+                        {% include 'data_creation/process_name.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="process_costs_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 15 %}
+                        {% include 'data_creation/process_costs.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="process_information_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 16 %}
+                        {% include 'data_creation/process_information.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="data_creation_formulation_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_process_form %}
+                    {% if progress >= 17 %}
+                        {% include 'data_creation/formulation.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
         <div id="campaign_container">
             <div id="design_targets_container" class="mb-4">
