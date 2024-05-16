@@ -4,7 +4,7 @@ from wtforms import StringField, DecimalField, validators
 
 class CreateAdmixtureForm(Form):
 
-    name_field = StringField(label="What kind of aggregate do you want to add?")
+    name_field = StringField(label="What kind of admixture do you want to add?")
 
     cost_CO_2 = DecimalField(
         'CO2 footprint (kg/ton):',
