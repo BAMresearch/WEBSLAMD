@@ -1,0 +1,31 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+                <div>Please provide additional information about the process</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.duration.label.text}}</div>
+                    <input id="process_information_duration" class="process_information_input w-auto form-control text-end" name="process_information_duration"  {% if form.new_project_form.create_process_form.duration.data %} value="{{ form.new_project_form.create_process_form.duration.data }}" disabled {% endif %} {% if progress >= 17 %} disabled {% endif %} type="number"/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.temperature.label.text}}</div>
+                    <input id="process_information_temperature" class="process_information_input w-auto form-control text-end" name="process_information_temperature"  {% if form.new_project_form.create_process_form.temperature.data %} value="{{ form.new_project_form.create_process_form.temperature.data }}" disabled {% endif %} {% if progress >= 17 %} disabled {% endif %} type="number"/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.relative_humidity.label.text}}</div>
+                    <input id="process_information_relative_humidity" class="process_information_input w-auto form-control text-end" name="process_information_relative_humidity" {% if form.new_project_form.create_process_form.relative_humidity.data %} value="{{ form.new_project_form.create_process_form.relative_humidity.data }}" disabled {% endif %} {% if progress >= 17 %} disabled {% endif %} type="number"/>
+                </div>
+            </div>
+            <div class="text-end mt-2"><button class="process_information_button btn btn-primary" id="process_information_button" {% if progress >= 17 %} disabled {% endif %}>Save</button></div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}

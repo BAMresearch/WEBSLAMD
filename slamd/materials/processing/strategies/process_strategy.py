@@ -16,12 +16,12 @@ class ProcessStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         return Process(
-            name=submitted_material['material_name'],
-            type=submitted_material['material_type'],
+            name=submitted_material.get('material_name', None),
+            type=submitted_material.get('material_type', None),
             costs=cls.extract_cost_properties(submitted_material),
-            duration=float_if_not_empty(submitted_material['duration']),
-            temperature=float_if_not_empty(submitted_material['temperature']),
-            relative_humidity=float_if_not_empty(submitted_material['relative_humidity']),
+            duration=float_if_not_empty(submitted_material.get('duration', None)),
+            temperature=float_if_not_empty(submitted_material.get('temperature', None)),
+            relative_humidity=float_if_not_empty(submitted_material.get('relative_humidity', None)),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
 

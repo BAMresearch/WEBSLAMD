@@ -8,7 +8,6 @@ export function assignEventsToCostsPowderStep(){
     }
 }
 
-
 function handleSubmittingPowderCosts(event){
     const powder_cost_inputs = document.querySelectorAll(".powder_cost_input") 
     const powder_name = document.getElementById("powder_name_input").value

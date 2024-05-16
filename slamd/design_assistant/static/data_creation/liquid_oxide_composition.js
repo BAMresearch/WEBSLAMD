@@ -1,5 +1,5 @@
 import { updateProgress, scrollDown } from '../utils.js'
-
+import { assignEventsToNameAggregateStep } from './aggregate_name.js'
 
 export function assignEventsToOxideCompositionLiquidStep(){
     const liquid_oxide_composition_button = document.getElementById("liquid_oxide_composition_button")
@@ -39,6 +39,7 @@ function handleSubmittingLiquidOxideComposition(event){
             liquid
         );
         document.getElementById("liquid_oxide_composition_button").disabled = true
+        assignEventsToNameAggregateStep()
         updateProgress()
         scrollDown()
     }, 1000);
