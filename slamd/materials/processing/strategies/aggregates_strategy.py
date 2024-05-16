@@ -35,12 +35,12 @@ class AggregatesStrategy(MaterialStrategy):
     @classmethod
     def create_model(cls, submitted_material):
         composition = Composition(
-            fine_aggregates=float_if_not_empty(submitted_material['fine_aggregates']),
-            coarse_aggregates=float_if_not_empty(submitted_material['coarse_aggregates']),
-            gravity=float_if_not_empty(submitted_material['gravity']),
-            bulk_density=float_if_not_empty(submitted_material['bulk_density']),
-            fineness_modulus=float_if_not_empty(submitted_material['fineness_modulus']),
-            water_absorption=float_if_not_empty(submitted_material['water_absorption'])
+            fine_aggregates=float_if_not_empty(submitted_material.get('fine_aggregates', None)),
+            coarse_aggregates=float_if_not_empty(submitted_material.get('coarse_aggregates', None)),
+            gravity=float_if_not_empty(submitted_material.get('gravity', None)),
+            bulk_density=float_if_not_empty(submitted_material.get('bulk_density', None)),
+            fineness_modulus=float_if_not_empty(submitted_material.get('fineness_modulus', None)),
+            water_absorption=float_if_not_empty(submitted_material.get('water_absorption', None))
         )
 
         return Aggregates(

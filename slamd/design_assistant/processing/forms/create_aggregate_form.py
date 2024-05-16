@@ -2,9 +2,9 @@ from flask_wtf import FlaskForm as Form
 from wtforms import StringField, DecimalField, validators
 
 
-class CreatePowderForm(Form):
+class CreateAggregateForm(Form):
 
-    name_field = StringField(label="Great! We start by creating powders. What kind of powder do you want to add?")
+    name_field = StringField(label="What kind of aggregate do you want to add?")
 
     cost_CO_2 = DecimalField(
         'CO2 footprint (kg/ton):',
@@ -12,7 +12,7 @@ class CreatePowderForm(Form):
             validators.Optional()
         ]
     )
-
+    
     cost_EUR = DecimalField(
         'Costs (€/ton):',
         validators=[
@@ -25,45 +25,45 @@ class CreatePowderForm(Form):
         validators=[
             validators.Optional()
         ]
-    ) 
-    
-    ca_o = DecimalField(
-        label='CaO (m%)',
+    )
+
+    fine_aggregates = DecimalField(
+        label='Fine Aggregates (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    al2_o3 = DecimalField(
-        label='Al₂O₃ (m%)',
+    coarse_aggregates = DecimalField(
+        label='Coarse Aggregates (m%)',
         validators=[
             validators.Optional()
         ]
     )
 
-    si_o2 = DecimalField(
-        label='SiO₂',
-        validators=[
-            validators.Optional()
-        ]
-    )
-    
-    Fe_2O_3 = DecimalField(
-        label='Fe₂O₃',
+    gravity = DecimalField(
+        label='Specific gravity',
         validators=[
             validators.Optional()
         ]
     )
 
-    fines_modulus = DecimalField(
-        label='Fines Modulus (m^2/kg):',
+    bulk_density = DecimalField(
+        label='Bulk density (kg/m³)',
         validators=[
             validators.Optional()
         ]
     )
 
-    specific_gravity = DecimalField(
-        label='Specific Gravity:',
+    fineness_modulus = DecimalField(
+        label='Fineness modulus (m³/kg)',
+        validators=[
+            validators.Optional()
+        ]
+    )
+
+    water_absorption = DecimalField(
+        label='Water absorption (m%)',
         validators=[
             validators.Optional()
         ]

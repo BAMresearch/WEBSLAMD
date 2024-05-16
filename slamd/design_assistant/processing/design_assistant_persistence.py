@@ -101,7 +101,7 @@ class DesignAssistantPersistence:
         if 'zero_shot_learner' in list(design_assistant_session.keys()):
             current_progress = session['design_assistant']['zero_shot_learner']["progress"]
             task = 'zero_shot_learner'
-        if current_progress < 10:
+        if current_progress < 30:
             session['design_assistant'][task]["progress"] += 1
 
     @classmethod

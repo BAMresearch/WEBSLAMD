@@ -1,0 +1,43 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+                <div>Please specify the aggregates’ oxide composition</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.fine_aggregates.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_fine_aggregates" {% if form.new_project_form.create_aggregate_form.fine_aggregates.data %} value="{{ form.new_project_form.create_aggregate_form.fine_aggregates.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.coarse_aggregates.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_coarse_aggregates" {% if form.new_project_form.create_aggregate_form.coarse_aggregates.data %} value="{{ form.new_project_form.create_aggregate_form.coarse_aggregates.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.gravity.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_gravity" {% if form.new_project_form.create_aggregate_form.gravity.data %} value="{{ form.new_project_form.create_aggregate_form.gravity.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.bulk_density.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_bulk_density" {% if form.new_project_form.create_aggregate_form.gravity.data %} value="{{ form.new_project_form.create_aggregate_form.bulk_density.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.fineness_modulus.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_fineness_modulus" {% if form.new_project_form.create_aggregate_form.fineness_modulus.data %} value="{{ form.new_project_form.create_aggregate_form.fineness_modulus.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.water_absorption.label.text}}</div>
+                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_water_absorption" {% if form.new_project_form.create_aggregate_form.water_absorption.data %} value="{{ form.new_project_form.create_aggregate_form.water_absorption.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
+                </div>
+            </div>
+            <div class="text-end mt-2"><button class="aggregate_composition_button btn btn-primary" id="aggregate_composition_button" {% if progress >= 12 %} disabled {% endif %}>Save</button></div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}
