@@ -1,6 +1,3 @@
-import {assignClickEventToMaterialTypeField} from "./material_type.js";
-import {scrollDown, updateProgress} from "./utils.js";
-
 export function assignClickEventToTaskForm() {
     const task_choices = document.querySelectorAll(".task_field_choice");
     task_choices.forEach((task_choice) =>
@@ -20,9 +17,7 @@ export async function handleTaskSelection(event) {
             "material_type_container",
             task
         );
-        assignClickEventToMaterialTypeField();
-        updateProgress()
-        scrollDown()
+        window.location.reload();
     }, 1000);
 
     const task_choices = document.querySelectorAll(".task_field_choice");

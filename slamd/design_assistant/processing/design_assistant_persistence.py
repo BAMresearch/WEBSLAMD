@@ -1,5 +1,8 @@
 from flask import session
 
+ZERO_SHOT_STEPS = 10
+DATA_CREATION_STEPS = 17
+
 
 class DesignAssistantPersistence:
 
@@ -93,16 +96,17 @@ class DesignAssistantPersistence:
 
     @classmethod
     def update_progress(cls):
-        task = ''
         design_assistant_session = session["design_assistant"]
         if 'data_creation' in list(design_assistant_session.keys()):
             current_progress = session['design_assistant']['data_creation']["progress"]
             task = 'data_creation'
+            if current_progress < DATA_CREATION_STEPS:
+                session['design_assistant'][task]["progress"] += 1
         if 'zero_shot_learner' in list(design_assistant_session.keys()):
             current_progress = session['design_assistant']['zero_shot_learner']["progress"]
             task = 'zero_shot_learner'
-        if current_progress < 30:
-            session['design_assistant'][task]["progress"] += 1
+            if current_progress < ZERO_SHOT_STEPS:
+                session['design_assistant'][task]["progress"] += 1
 
     @classmethod
     def get_free_llm_calls_count(cls):
