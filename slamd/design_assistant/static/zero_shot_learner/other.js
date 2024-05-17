@@ -15,7 +15,7 @@ function assignInputEventToOtherForm(){
 }
 
 function handleCustomOtherNaming(event){
-  const custom_other_option = event.target.previousElementSibling;
+  const custom_other_option = event.target.nextElementSibling;
   custom_other_option.value = event.target.value
 }
 export async function handleOtherSubmission() {
@@ -26,6 +26,7 @@ export async function handleOtherSubmission() {
   other_options.forEach(function (other_option) {
     if (other_option.checked) {
       other_selection.push(other_option.value);
+      other_option.previousElementSibling.disabled = true
     }
     other_option.disabled = "true";
   });
@@ -50,7 +51,7 @@ export async function handleOtherSubmission() {
 export function handleOtherSelection(event) {
   const submit_other_button = document.getElementById("submit_other_button");
   if (event.target.classList.contains("custom_other_option")) {
-    const custom_other_option_name = event.target.nextElementSibling;
+    const custom_other_option_name = event.target.previousElementSibling;
     if (custom_other_option_name.value) {
       submit_other_button.disabled = false;
     }

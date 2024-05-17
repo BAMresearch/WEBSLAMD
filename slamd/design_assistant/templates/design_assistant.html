@@ -32,7 +32,7 @@
     </div>
 
     <div class="d-flex justify-content-center mb-4">
-        <progress id="chat_progress" style="width: 100%; height: 20px" value={{ progress }} max="10"></progress>
+        <progress id="chat_progress" style="width: 100%; height: 20px" value={{ progress }} {% if form.new_project_form %} max="17" {% else %} max="10" {% endif %}></progress>
     </div>
     <div id="chat_window" class="p-4 h-100" style="overflow-y: auto">
         {{ form.csrf_token }}
@@ -93,9 +93,65 @@
                 {% endif %}
             </div>
             <div id="aggregate_name_container" class="mb-4">
-                {% if form.new_project_form and form.new_project_form.create_powder_form %}
+                {% if form.new_project_form and form.new_project_form.create_liquid_form %}
                     {% if progress >= 9 %}
                         {% include 'data_creation/aggregate_name.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="aggregate_costs_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_liquid_form %}
+                    {% if progress >= 10 %}
+                        {% include 'data_creation/aggregate_costs.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="aggregate_composition_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_liquid_form %}
+                    {% if progress >= 11 %}
+                        {% include 'data_creation/aggregate_composition.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="admixture_name_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_aggregate_form %}
+                    {% if progress >= 12 %}
+                        {% include 'data_creation/admixture_name.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="admixture_costs_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_aggregate_form %}
+                    {% if progress >= 13 %}
+                        {% include 'data_creation/admixture_costs.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="process_name_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 14 %}
+                        {% include 'data_creation/process_name.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="process_costs_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 15 %}
+                        {% include 'data_creation/process_costs.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="process_information_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_admixture_form %}
+                    {% if progress >= 16 %}
+                        {% include 'data_creation/process_information.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div id="data_creation_formulation_container" class="mb-4">
+                {% if form.new_project_form and form.new_project_form.create_process_form %}
+                    {% if progress >= 17 %}
+                        {% include 'data_creation/formulation.html' %}
                     {% endif %}
                 {% endif %}
             </div>

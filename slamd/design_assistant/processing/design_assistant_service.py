@@ -62,6 +62,12 @@ class DesignAssistantService:
                         cls._populate_create_powder_form_with_session_value(dc_session, form)
                     if material == 'liquid':
                         cls._populate_create_liquid_form_with_session_value(dc_session, form)
+                    if material == 'aggregate':
+                        cls._populate_create_aggregate_form_with_session_value(dc_session, form)
+                    if material == 'admixture':
+                        cls._populate_create_admixture_form_with_session_value(dc_session, form)
+                    if material == 'process':
+                        cls._populate_create_process_form_with_session_value(dc_session, form)
 
     @classmethod
     def _populate_create_powder_form_with_session_value(cls, dc_session, form):
@@ -86,25 +92,39 @@ class DesignAssistantService:
             cls._populate_create_liquid_cost_fields_with_session_value(form, liquid.costs)
         if liquid.composition:
             cls._populate_create_liquid_composition_fields_with_session_value(form, liquid.composition)
+    
+    @classmethod
+    def _populate_create_aggregate_form_with_session_value(cls, dc_session, form):
+        aggregate_uuid = dc_session['materials']['aggregate']
+        aggregate = MaterialsFacade.get_material_from_session('Aggregates', aggregate_uuid)
+        if aggregate.name:
+            cls._populate_create_aggregate_name_field_with_session_value(form, aggregate.name)
+        if aggregate.costs:
+            cls._populate_create_aggregate_costs_field_with_session_value(form, aggregate.costs)
+    
+    @classmethod
+    def _populate_create_admixture_form_with_session_value(cls, dc_session, form):
+        admixture_uuid = dc_session['materials']['admixture']
+        admixture = MaterialsFacade.get_material_from_session('Admixture', admixture_uuid)
+        if admixture.name:
+            cls._populate_create_admixture_name_field_with_session_value(form, admixture.name)
+        if admixture.costs:
+            cls._populate_create_admixture_costs_field_with_session_value(form, admixture.costs)
 
     @classmethod
-    def _populate_create_liquid_name_field_with_session_value(cls, form, liquid_name):
-        form.new_project_form.create_liquid_form.name_field.data = liquid_name
-
-    @classmethod
-    def _populate_create_liquid_cost_fields_with_session_value(cls, form, liquid_costs):
-        form.new_project_form.create_liquid_form.cost_CO_2.data = liquid_costs.co2_footprint
-        form.new_project_form.create_liquid_form.cost_EUR.data = liquid_costs.costs
-        form.new_project_form.create_liquid_form.cost_delivery_time.data = liquid_costs.delivery_time
-
-    @classmethod
-    def _populate_create_liquid_composition_fields_with_session_value(cls, form, liquid_composition):
-        form.new_project_form.create_liquid_form.h2_O.data = liquid_composition.h2_o
-        form.new_project_form.create_liquid_form.h2_O_mol.data = liquid_composition.h2_o_mol
-        form.new_project_form.create_liquid_form.na2_si_o3.data = liquid_composition.na2_si_o3
-        form.new_project_form.create_liquid_form.na2_si_o3_mol.data = liquid_composition.na2_si_o3_mol
-        form.new_project_form.create_liquid_form.na_o_h.data = liquid_composition.na_o_h
-        form.new_project_form.create_liquid_form.na_o_h_mol.data = liquid_composition.na_o_h_mol
+    def _populate_create_process_form_with_session_value(cls, dc_session, form):
+        process_uuid = dc_session['materials']['process']
+        process = MaterialsFacade.get_material_from_session('Process', process_uuid)
+        if process.name:
+            cls._populate_create_process_name_field_with_session_value(form, process.name)
+        if process.costs:
+            cls._populate_create_process_cost_field_with_session_value(form, process.costs)
+        if process.duration:
+            cls._populate_create_process_duration_field_with_session_value(form, process.duration)
+        if process.temperature:
+            cls._populate_create_process_temperature_field_with_session_value(form, process.temperature)
+        if process.relative_humidity:
+            cls._populate_create_process_relative_humidity_field_with_session_value(form, process.relative_humidity)
 
     @classmethod
     def _populate_create_powder_name_field_with_session_value(cls, form, powder_name):
@@ -127,6 +147,67 @@ class DesignAssistantService:
     def _populate_create_powder_structure_fields_with_session_value(cls, form, powder_structure):
         form.new_project_form.create_powder_form.fines_modulus.data = powder_structure.fine
         form.new_project_form.create_powder_form.specific_gravity.data = powder_structure.gravity
+
+    @classmethod
+    def _populate_create_liquid_name_field_with_session_value(cls, form, liquid_name):
+        form.new_project_form.create_liquid_form.name_field.data = liquid_name
+
+    @classmethod
+    def _populate_create_liquid_cost_fields_with_session_value(cls, form, liquid_costs):
+        form.new_project_form.create_liquid_form.cost_CO_2.data = liquid_costs.co2_footprint
+        form.new_project_form.create_liquid_form.cost_EUR.data = liquid_costs.costs
+        form.new_project_form.create_liquid_form.cost_delivery_time.data = liquid_costs.delivery_time
+
+    @classmethod
+    def _populate_create_liquid_composition_fields_with_session_value(cls, form, liquid_composition):
+        form.new_project_form.create_liquid_form.h2_O.data = liquid_composition.h2_o
+        form.new_project_form.create_liquid_form.h2_O_mol.data = liquid_composition.h2_o_mol
+        form.new_project_form.create_liquid_form.na2_si_o3.data = liquid_composition.na2_si_o3
+        form.new_project_form.create_liquid_form.na2_si_o3_mol.data = liquid_composition.na2_si_o3_mol
+        form.new_project_form.create_liquid_form.na_o_h.data = liquid_composition.na_o_h
+        form.new_project_form.create_liquid_form.na_o_h_mol.data = liquid_composition.na_o_h_mol
+
+    @classmethod
+    def _populate_create_aggregate_name_field_with_session_value(cls, form, aggregate_name):
+        form.new_project_form.create_aggregate_form.name_field.data = aggregate_name
+
+    @classmethod
+    def _populate_create_aggregate_costs_field_with_session_value(cls, form, aggregate_costs):
+        form.new_project_form.create_aggregate_form.cost_CO_2.data = aggregate_costs.co2_footprint
+        form.new_project_form.create_aggregate_form.cost_EUR.data = aggregate_costs.costs
+        form.new_project_form.create_aggregate_form.cost_delivery_time.data = aggregate_costs.delivery_time
+
+    @classmethod
+    def _populate_create_admixture_name_field_with_session_value(cls, form, admixture_name):
+        form.new_project_form.create_admixture_form.name_field.data = admixture_name
+
+    @classmethod
+    def _populate_create_admixture_costs_field_with_session_value(cls, form, admixture_costs):
+        form.new_project_form.create_admixture_form.cost_CO_2.data = admixture_costs.co2_footprint
+        form.new_project_form.create_admixture_form.cost_EUR.data = admixture_costs.costs
+        form.new_project_form.create_admixture_form.cost_delivery_time.data = admixture_costs.delivery_time
+
+    @classmethod
+    def _populate_create_process_name_field_with_session_value(cls, form, process_name):
+        form.new_project_form.create_process_form.name_field.data = process_name
+
+    @classmethod
+    def _populate_create_process_cost_field_with_session_value(cls, form, process_costs):
+        form.new_project_form.create_process_form.cost_CO_2.data = process_costs.co2_footprint
+        form.new_project_form.create_process_form.cost_EUR.data = process_costs.costs
+        form.new_project_form.create_process_form.cost_delivery_time.data = process_costs.delivery_time
+    
+    @classmethod
+    def _populate_create_process_duration_field_with_session_value(cls, form, process_duration):
+        form.new_project_form.create_process_form.duration.data = process_duration
+
+    @classmethod
+    def _populate_create_process_temperature_field_with_session_value(cls, form, process_temperature):
+        form.new_project_form.create_process_form.temperature.data = process_temperature
+
+    @classmethod
+    def _populate_create_process_relative_humidity_field_with_session_value(cls, form, process_relative_humidity):
+        form.new_project_form.create_process_form.relative_humidity.data = process_relative_humidity
 
     @classmethod
     def _populate_campaign_form_with_session_value(cls, form, design_assistant_session):
@@ -249,8 +330,7 @@ class DesignAssistantService:
             materials = design_assistant_session['data_creation'].get('materials', None)
             if materials:
                 uuid = design_assistant_session['data_creation']['materials']['powder']
-                MaterialsFacade.edit_material(uuid, value)
-                DesignAssistantPersistence.update_progress()
+                cls._edit_material(uuid, value)
             else:
                 uuid = MaterialsFacade.save_material(value)
                 materials = {'powder': str(uuid)}
@@ -259,15 +339,59 @@ class DesignAssistantService:
         if key == 'liquid':
             design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
             materials = design_assistant_session['data_creation'].get('materials', None)
-            uuid = design_assistant_session['data_creation']['materials'].get('liquid', None)
+            uuid = cls._get_uuid_of_material('liquid')
             if uuid:
-                MaterialsFacade.edit_material(uuid, value)
-                DesignAssistantPersistence.update_progress()
+                cls._edit_material(uuid, value)
             else:
                 uuid = MaterialsFacade.save_material(value)
                 materials['liquid'] = str(uuid)
                 DesignAssistantPersistence.update_session_for_materials_key(materials)
+            
+        if key == 'aggregate':
+            design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+            materials = design_assistant_session['data_creation'].get('materials', None)
+            uuid = cls._get_uuid_of_material('aggregate')
+            if uuid:
+                cls._edit_material(uuid, value)
+            else:
+                uuid = MaterialsFacade.save_material(value)
+                materials['aggregate'] = str(uuid)
+                DesignAssistantPersistence.update_session_for_materials_key(materials)
+        
+        if key == 'admixture':
+            design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+            materials = design_assistant_session['data_creation'].get('materials', None)
+            uuid = cls._get_uuid_of_material('admixture')
+            if uuid:
+                cls._edit_material(uuid, value)
+            else:
+                uuid = MaterialsFacade.save_material(value)
+                materials['admixture'] = str(uuid)
+                DesignAssistantPersistence.update_session_for_materials_key(materials)
+        
+        if key == 'process':
+            design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+            materials = design_assistant_session['data_creation'].get('materials', None)
+            uuid = cls._get_uuid_of_material('process')
+            if uuid:
+                cls._edit_material(uuid, value)
+            else:
+                uuid = MaterialsFacade.save_material(value)
+                materials['process'] = str(uuid)
+                DesignAssistantPersistence.update_session_for_materials_key(materials)
 
+    
+    @classmethod
+    def _get_uuid_of_material(cls, material):
+        design_assistant_session = DesignAssistantPersistence.get_session_for_property("design_assistant")
+        uuid = design_assistant_session['data_creation']['materials'].get(material, None)
+        return uuid
+        
+    @classmethod
+    def _edit_material(cls, uuid, value):
+        MaterialsFacade.edit_material(uuid, value)
+        DesignAssistantPersistence.update_progress()
+    
     @classmethod
     def _valid_powder_selection(cls, value):
         blend = value['blend_powders']
@@ -346,4 +470,20 @@ class DesignAssistantService:
             template = 'data_creation/liquid_oxide_composition.html'
         if progress == 9:
             template = 'data_creation/aggregate_name.html'
+        if progress == 10:
+            template = 'data_creation/aggregate_costs.html'        
+        if progress == 11:
+            template = 'data_creation/aggregate_composition.html'
+        if progress == 12:
+            template = 'data_creation/admixture_name.html'
+        if progress == 13:
+            template = 'data_creation/admixture_costs.html'  
+        if progress == 14:
+            template = 'data_creation/process_name.html'
+        if progress == 15:
+            template = 'data_creation/process_costs.html'
+        if progress == 16:
+            template = 'data_creation/process_information.html'
+        if progress == 17:
+            template = 'data_creation/formulation.html' 
         return template

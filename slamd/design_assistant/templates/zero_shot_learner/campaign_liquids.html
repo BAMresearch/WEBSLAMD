@@ -11,7 +11,11 @@
                 {% for option in form.campaign_form.liquids_field %}
                 <div class="d-flex gap-4 justify-content-between">
                     <div>{{ option.label.text }}</div>
+                    {% if form.campaign_form.additional_liquid.data %}
+                    <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ option.data }}" disabled/>
+                    {% else %}
                     <input type="checkbox" name="liquid_option" class="liquid_option" value="{{ option.data }}"{% if form.campaign_form.liquids_field.data %} disabled {% if option.data in form.campaign_form.liquids_field.data %} checked {% endif %} {% endif %}/>
+                    {% endif %}
                 </div>
                 {% endfor %}
                 {% if form.campaign_form.additional_liquid.data %}

@@ -1,0 +1,31 @@
+{% block content %}
+{% from 'icons.html' import chatbot_icon, user_icon %}
+<div class="chat_container">
+    <div class="bot_message_container d-flex gap-3 mx-auto">
+        {{ chatbot_icon(30, 30, "currentColor") }}
+        <div class="bot_message border rounded p-3 d-inline-block mb-4">      
+                <div>Please specify costs and socio-economic impact of the process</div>
+        </div>
+    </div>
+    <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
+        <div class="chat_message border rounded p-3 d-inline-block">
+            <div class="d-flex flex-column gap-2 align-items-center">
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.cost_CO_2.label.text}}</div>
+                    <input id="process_cost_value_CO_2" class="process_cost_input w-auto form-control text-end" name="process_cost_value_CO_2"  {% if form.new_project_form.create_process_form.cost_CO_2.data %} value="{{ form.new_project_form.create_process_form.cost_CO_2.data }}" disabled {% endif %} {% if progress >= 16 %} disabled {% endif %} type="number"/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.cost_EUR.label.text}}</div>
+                    <input id="process_cost_value_EUR" class="process_cost_input w-auto form-control text-end" name="process_cost_value_EUR" {% if form.new_project_form.create_process_form.cost_EUR.data %} value="{{ form.new_project_form.create_process_form.cost_EUR.data }}" disabled {% endif %} {% if progress >= 16 %} disabled {% endif %} type="number"/>
+                </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_process_form.cost_delivery_time.label.text}}</div>
+                    <input id="process_cost_value_delivery_time" class="process_cost_input w-auto form-control text-end" name="process_cost_value_delivery_time" {% if form.new_project_form.create_process_form.cost_delivery_time.data %} value="{{ form.new_project_form.create_process_form.cost_delivery_time.data }}" disabled {% endif %} {% if progress >= 16 %} disabled {% endif %} type="number"/>
+                </div>
+            </div>
+            <div class="text-end mt-2"><button class="process_costs_button btn btn-primary" id="process_costs_button" {% if progress >= 16 %} disabled {% endif %}>Save</button></div>
+        </div>
+        {{ user_icon(30, 30, "currentColor") }}
+    </div>
+</div>
+{% endblock %}

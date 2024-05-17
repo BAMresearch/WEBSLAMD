@@ -13,8 +13,8 @@ async function handleSavingFormulation() {
     });
     updateProgress()
     scrollDown()
-    document.getElementById("generate_design_knowledge_button").disabled = false
-    document.getElementById("generate_formulation_button").disabled = false
+    document.getElementById("generate_design_knowledge_button").disabled = true
+    document.getElementById("generate_formulation_button").disabled = true
     document.getElementById("design_knowledge").disabled = true
     document.getElementById("formulation_saved_message").classList.remove('d-none')
     document.getElementById("formulation_saved_message").classList.add('d-flex')

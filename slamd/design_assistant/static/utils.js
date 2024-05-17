@@ -22,7 +22,5 @@ export function scrollDown() {
 
 export function updateProgress() {
     let progressBar = document.getElementById('chat_progress');
-    if (progressBar.value < 10) {
-        progressBar.value = progressBar.value + 1;
-    }
+    progressBar.value = progressBar.value + 1;
 }

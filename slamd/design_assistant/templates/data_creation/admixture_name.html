@@ -4,17 +4,17 @@
     <div class="bot_message_container d-flex gap-3 mx-auto">
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="bot_message border rounded p-3 d-inline-block mb-4">      
-            <div>{{ form.new_project_form.create_aggregate_form.name_field.label.text }}</div>
+            <div>{{ form.new_project_form.create_admixture_form.name_field.label.text }}</div>
         </div>
     </div>
     <div class="chat_message_container d-flex justify-content-end gap-3 mx-auto">
         <div class="chat_message border rounded p-3 d-inline-block">
             <div class="d-flex flex-column gap-2">
                 <div class="d-flex justify-content-end align-items-center gap-2">
-                    <div>Name of the aggregate: </div>
-                    <input id='aggregate_name_input' {% if form.new_project_form.create_aggregate_form.name_field.data %} value="{{ form.new_project_form.create_aggregate_form.name_field.data }}" disabled {% endif %} class="aggregate_name_input w-auto form-control text-end" />
+                    <div>Name of the admixture: </div>
+                    <input id='admixture_name_input' {% if form.new_project_form.create_admixture_form.name_field.data %} value="{{ form.new_project_form.create_admixture_form.name_field.data }}" disabled {% endif %} class="admixture_name_input w-auto form-control text-end" />
                 </div>
-                <div class="text-end"><button class="aggregate_name_button btn btn-primary" id="aggregate_name_button" disabled>Save</button></div>
+                <div class="text-end"><button class="admixture_name_button btn btn-primary" id="admixture_name_button" disabled>Save</button></div>
             </div>
         </div>
         {{ user_icon(30, 30, "currentColor") }}
