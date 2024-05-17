@@ -4,13 +4,21 @@
     <div class="bot_message_container d-flex gap-3 mx-auto">
         {{ chatbot_icon(30, 30, "currentColor") }}
         <div class="bot_message border rounded p-3 d-inline-block mb-4">
-                <p>{{ form.material_type_form.init_intro_text }}</p>
+            {% if form.task_form.task_field.data == 'zero_shot_learner' %}
+                <p>{{ form.material_type_form.za_init_intro_text }}</p>
                 <p>{{ form.material_type_form.init_process_overview }}</p>
                 <ul>
-                    <li>{{ form.material_type_form.init_step_one }}</li>
-                    <li>{{ form.material_type_form.init_step_two }}</li>
-                    <li>{{ form.material_type_form.init_step_three }}</li>
+                    <li>{{ form.material_type_form.za_init_step_one }}</li>
+                    <li>{{ form.material_type_form.za_init_step_two }}</li>
+                    <li>{{ form.material_type_form.za_init_step_three }}</li>
                 </ul>
+            {% else %}
+                <p>{{ form.material_type_form.new_project_intro_text }}</p>
+                <ul>
+                    <li>{{ form.material_type_form.new_project_step_one }}</li>
+                    <li>{{ form.material_type_form.new_project_step_two }}</li>
+                </ul>
+            {% endif %}
             <div class="mb-3">{{ form.material_type_form.material_type_field.label.text }}</div>
         </div>
     </div>
