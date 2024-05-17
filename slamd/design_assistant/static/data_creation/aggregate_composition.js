@@ -1,5 +1,5 @@
 import { updateProgress, scrollDown } from '../utils.js'
-import { assignEventsToNameAggregateStep } from './aggregate_name.js'
+import { assignEventsToNameAdmixtureStep } from './admixture_name.js'
 
 export function assignEventsToCompositionAggregateStep(){
     const aggregate_composition_button = document.getElementById("aggregate_composition_button")
@@ -39,7 +39,7 @@ function handleSubmittingAggregateComposition(event){
             aggregate
         );
         document.getElementById("aggregate_composition_button").disabled = true
-        assignEventsToNameAggregateStep()
+        assignEventsToNameAdmixtureStep()
         updateProgress()
         scrollDown()
     }, 1000);
