@@ -43,7 +43,7 @@ export async function handleLiquidSubmission() {
             selected_liquids.push(liquid_option.value);
             liquid_option.previousElementSibling.disabled = true
         }
-        liquid_option.disabled = "true";
+        liquid_option.disabled = true
     });
     document.getElementById("additional_liquid_button").disabled = true;
     document.getElementById("submit_liquid_button").disabled = true;
