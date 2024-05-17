@@ -6,7 +6,13 @@ export function assignEventsToFormulationStep(){
 }
 function handleGeneratingFormulation(event){
     let new_url
-    let material_type = document.querySelector(".material_type_field_choice").value.toLowerCase()
-    new_url = window.location.href.replace('/design_assistant/', `/materials/formulations/${material_type}`)
+    let material_type_selection
+    const material_types = document.querySelectorAll(".material_type_field_choice")
+    material_types.forEach((material_type) => {
+        if (material_type.checked){
+            material_type_selection = material_type.value.toLowerCase()
+        }
+    });
+    new_url = window.location.href.replace('/design_assistant/', `/materials/formulations/${material_type_selection}`)
     window.location.href = new_url
 }
