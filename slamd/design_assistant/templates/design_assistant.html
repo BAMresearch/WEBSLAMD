@@ -32,7 +32,7 @@
     </div>
 
     <div class="d-flex justify-content-center mb-4">
-        <progress id="chat_progress" style="width: 100%; height: 20px" value={{ progress }} max="10"></progress>
+        <progress id="chat_progress" style="width: 100%; height: 20px" value={{ progress }} {% if form.new_project_form %} max="17" {% else %} max="10" {% endif %}></progress>
     </div>
     <div id="chat_window" class="p-4 h-100" style="overflow-y: auto">
         {{ form.csrf_token }}
