@@ -14,7 +14,7 @@
                     <div>Name of the process: </div>
                     <input id='process_name_input' {% if form.new_project_form.create_process_form.name_field.data %} value="{{ form.new_project_form.create_process_form.name_field.data }}" disabled {% endif %} class="process_name_input w-auto form-control text-end" />
                 </div>
-                <div class="text-end"><button class="process_name_button btn btn-primary" id="process_name_button" {% if form.material_type_form.material_type_field.data == 'Concrete' %} disabled {% endif %} {% if progress >= 15 %} disabled {% endif %} >Save</button></div>
+                <div class="text-end"><button class="process_name_button btn btn-primary" id="process_name_button" disabled>Save</button></div>
             </div>
         </div>
         {{ user_icon(30, 30, "currentColor") }}

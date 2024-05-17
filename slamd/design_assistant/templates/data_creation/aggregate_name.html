@@ -14,7 +14,7 @@
                     <div>Name of the aggregate: </div>
                     <input id='aggregate_name_input' {% if form.new_project_form.create_aggregate_form.name_field.data %} value="{{ form.new_project_form.create_aggregate_form.name_field.data }}" disabled {% endif %} class="aggregate_name_input w-auto form-control text-end" />
                 </div>
-                <div class="text-end"><button class="aggregate_name_button btn btn-primary" id="aggregate_name_button" {% if progress >= 10 %} disabled {% endif %} >Save</button></div>
+                <div class="text-end"><button class="aggregate_name_button btn btn-primary" id="aggregate_name_button" disabled>Save</button></div>
             </div>
         </div>
         {{ user_icon(30, 30, "currentColor") }}
