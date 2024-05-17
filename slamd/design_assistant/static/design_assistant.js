@@ -24,6 +24,7 @@ import { assignEventsToCostsAdmixtureStep } from "./data_creation/admixture_cost
 import { assignEventsToNameProcessStep } from "./data_creation/process_name.js";
 import { assignEventsToCostsProcessStep } from "./data_creation/process_costs.js";
 import { assignEventsToInformationProcessStep } from "./data_creation/process_information.js";
+import { assignEventsToFormulationStep } from './data_creation/formulation.js'
 
 window.addEventListener("load", function () {
     document.getElementById("nav-bar-design-assistant").setAttribute("class", "nav-link active");
@@ -60,4 +61,5 @@ window.addEventListener("load", function () {
     assignEventsToNameProcessStep()
     assignEventsToCostsProcessStep()
     assignEventsToInformationProcessStep()
+    assignEventsToFormulationStep()
 });

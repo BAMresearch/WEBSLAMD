@@ -1,5 +1,5 @@
 import { updateProgress, scrollDown } from '../utils.js'
-import { assignEventsToNameProcessStep } from './process_name.js'
+import { assignEventsToFormulationStep } from './formulation.js'
 
 export function assignEventsToInformationProcessStep(){
     const process_information_button = document.getElementById("process_information_button")
@@ -36,6 +36,7 @@ function handleSubmittingProcessInformation(event){
             process
         );
         document.getElementById("process_information_button").disabled = true
+        assignEventsToFormulationStep()
         updateProgress()
         scrollDown()
     }, 1000);
