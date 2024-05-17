@@ -22,7 +22,7 @@ export function handleLiquidSelection(event) {
         submit_liquid_button.disabled = true;
     } else {
         if (event.target.classList.contains("custom_liquid_option")) {
-            const custom_liquid_option_name = event.target.nextElementSibling;
+            const custom_liquid_option_name = event.target.previousElementSibling;
             if (custom_liquid_option_name.value) {
                 submit_liquid_button.disabled = false;
             } else {
@@ -41,6 +41,7 @@ export async function handleLiquidSubmission() {
     liquid_options.forEach(function (liquid_option) {
         if (liquid_option.checked) {
             selected_liquids.push(liquid_option.value);
+            liquid_option.previousElementSibling.disabled = true
         }
         liquid_option.disabled = "true";
     });
@@ -64,7 +65,7 @@ export async function handleLiquidSubmission() {
 function handleCustomLiquidNaming(event) {
     const submit_liquid_button = document.getElementById("submit_liquid_button");
     const liquid_options = document.querySelectorAll('.liquid_option')
-    const custom_liquid_option = event.target.previousElementSibling;
+    const custom_liquid_option = event.target.nextElementSibling;
     const count = countSelectedOptions(liquid_options)
     custom_liquid_option.value = event.target.value;
     if (custom_liquid_option.checked) {
@@ -89,8 +90,8 @@ export function handleAddingLiquid() {
     custom_liquid_name_input.placeholder = "Name of liquid";
     custom_liquid_name_input.classList.add("liquid_option_name");
     custom_liquid_name_input.name = 'custom_liquid_name'
-    custom_liquid_container.appendChild(custom_liquid_option_input);
     custom_liquid_container.appendChild(custom_liquid_name_input);
+    custom_liquid_container.appendChild(custom_liquid_option_input);
     liquids_container.appendChild(custom_liquid_container);
     assignClickEventToLiquidForm();
     assignInputEventToLiquidForm();
