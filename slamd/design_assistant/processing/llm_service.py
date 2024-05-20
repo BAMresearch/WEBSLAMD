@@ -6,7 +6,7 @@ from slamd.common.error_handling import FreeTrialLimitExhaustedException, ValueN
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
 MAX_FREE_LLM_CALLS = 10
-MODEL = 'gpt-3.5-turbo'
+MODEL = 'gpt-4o'
 
 
 class LLMService:
@@ -209,8 +209,15 @@ class LLMService:
         instruction_prompt_excerpt = (f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best "
                                       f"{material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design "
                                       f"knowledge to improve your predictions.'\n "
-                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists the ratios or percentages of the "
-                                      f"various components involved.\n")
+                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists:\n"
+                                      f"## Weight of Powders: [your esitmate'] kg\n"
+                                      f"## W/C-Ratio: [your estimate] %\n"
+                                      f"## If relevant Weight of Additives [your esitmate] kg\n"
+                                      f"## If relevant Weight of Admixtures [your esitmate] kg \n"
+                                      f"## If relevant Composition of Powder Blend [Your Estimate of Weight Fractions of Powders A/B/...] \n"
+                                      f"## If relevant Composition of Liquid [Your Estimate Weight Fraction of H2O/NaOH/Na2SiO3,...] \n"
+                                      f"## If relevant Processing: [Your esitmate Processing Steps]\n"
+                                      f"## amd all the other various components involved.\n")
 
         material_type_excerpt = cls._generate_material_type_user_input_excerpt(zero_shot_learner_session)
         powders_excerpt = cls._generate_powders_user_input_excerpt(zero_shot_learner_session)
@@ -247,7 +254,7 @@ class LLMService:
     @classmethod
     def _create_output_format_excerpt(cls):
         return """
-In your recipe, make sure that the ratios and percentages of the components of all considered materials are consistent.
+In your recipe, make sure that the weights and percentages of the components of all considered materials are consistent.
 For examples, if you put out all components in units of percent they must add up to 100%.
 
 All the components of the recipe should be listed in a comma-seperated way. Each component should follow the following pattern.
@@ -257,26 +264,17 @@ All the components of the recipe should be listed in a comma-seperated way. Each
 
 For you orientation, here are some examples (note that these are just examples and must not be included in the general knowledge provided; further make sure to use units that are conventional for the components you are proposing):
 
-Example 1:
-Water to Cement Ratio: 0.5
+Make sure to stick to exactly this format! Here are examples:
 
-Example 2:
-Fly Ash: 20%
+Example 1 Geopolymere Concrete:
 
-The full output format thus must look as follows:
+Weight of Powders: 300 kg, Water to Cement Ratio: 35 %,Weight of Additives 150 kg, Weight of Admixtures (superplasticizer) 15 kg, Composition of Powder Blend FA/GGBFS: 50/50, Composition of Liquid H2O/NaOH/Na2SiO3: 95/3/2 m%, Processing: ambient curing, Aggregates 1800 kg 
+                        
 
-NAME_OF_THE_COMPONENT 1: VALUE 1, NAME_OF_THE_COMPONENT 2: VALUE 2, NAME_OF_THE_COMPONENT 3: VALUE 3
+Example 2 OPC based Concrete:
 
-and so on until all components are included. Make sure to stick to exactly this format! Here are examples:
+OPC: 400 kg, Water to Cement Ratio: 42 %, Weight of Admixtures (superplasticizer) 18 kg, Recycled Aggregates: 10%, Aggregates 1780 kg
 
-Example 1:
-
-Fly Ash: 30%, GGBFS: 70%, Water to Cement Ratio: 0.4
-
-Example 2:
-
-Geopolymer: 30%, Water: 60%, Recycled Aggregates: 10%
-
-Example 3:
-Fly Ash: 40%, Water: 25%, Biochar: 10%, Rice Husk Ash: 10%, Recycled Glass Fines: 10%, Super Plasticizer: 5%
+Example 3 Alkali Activated Binder Composition :
+Fly Ash/GGBFS: 40/60, Water to Cement Ratio: 38 %, Biochar: 10%, Rice Husk Ash: 10%, Recycled Glass Fines: 10%, Super Plasticizer: 5%
 """
