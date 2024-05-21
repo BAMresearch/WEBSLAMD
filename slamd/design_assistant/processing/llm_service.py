@@ -56,8 +56,8 @@ class LLMService:
         # generate instruction excerpt
         instruction_excerpt = cls._generate_design_knowledge_instruction_excerpt(zero_shot_learner_session)
         # combine user excerpt with system excerpt and instruction excerpt to build final design knowledge prompt
-        design_knowledge_prompt = instruction_excerpt + user_input_excerpt + '// Only generate knowledge! No formulations yet!'
-        #print(design_knowledge_prompt)
+        design_knowledge_prompt = instruction_excerpt + user_input_excerpt
+        print(design_knowledge_prompt)
         return design_knowledge_prompt
 
     @classmethod
@@ -187,7 +187,7 @@ class LLMService:
     @classmethod
     def generate_formulation(cls, design_knowledge, token):
         prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
-        #print(prompt)
+        print(prompt)
         user_message = {"role": "user", "content": prompt}
         formulation = cls._generate_openai_llm_response([user_message], MODEL, token)
         return formulation
@@ -209,20 +209,8 @@ class LLMService:
         instruction_prompt_excerpt = (f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best "
                                       f"{material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design "
                                       f"knowledge to improve your predictions.'\n "
-<<<<<<< Updated upstream
                                       f"Based on the general knowledge, your task is to explicitly give a recipe which lists the ratios or percentages of the "
                                       f"various components involved.\n")
-=======
-                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists:\n"
-                                      f"## Weight of Powders: [your estimate'] kg\n"
-                                      f"## W/C-Ratio: [your estimate] %\n"
-                                      f"## If relevant Weight of Additives [your estimate] kg\n"
-                                      f"## If relevant Weight of Admixtures [your estimate] kg \n"
-                                      f"## If relevant Composition of Powder Blend [Your estimate of Weight Fractions of Powders A/B/...] \n"
-                                      f"## If relevant Composition of Liquid [Your estimate Weight Fraction of H2O/NaOH/Na2SiO3,...] \n"
-                                      f"## If relevant Processing: [Your estimate Processing Steps]\n"
-                                      f"## and all the other various components involved. Make sure all components are well specified. If relevant makes sure to include exact powder blends and activator compositions.\n")
->>>>>>> Stashed changes
 
         material_type_excerpt = cls._generate_material_type_user_input_excerpt(zero_shot_learner_session)
         powders_excerpt = cls._generate_powders_user_input_excerpt(zero_shot_learner_session)
