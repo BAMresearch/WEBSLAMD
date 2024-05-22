@@ -5,8 +5,8 @@ from slamd.common.error_handling import FreeTrialLimitExhaustedException, ValueN
     LLMNotRespondingException
 from slamd.design_assistant.processing.design_assistant_persistence import DesignAssistantPersistence
 
-MAX_FREE_LLM_CALLS = 10
-MODEL = 'gpt-3.5-turbo'
+MAX_FREE_LLM_CALLS = 20
+MODEL = 'gpt-4o'
 
 
 class LLMService:
@@ -57,7 +57,7 @@ class LLMService:
         instruction_excerpt = cls._generate_design_knowledge_instruction_excerpt(zero_shot_learner_session)
         # combine user excerpt with system excerpt and instruction excerpt to build final design knowledge prompt
         design_knowledge_prompt = instruction_excerpt + user_input_excerpt
-        print(design_knowledge_prompt)
+        #print(design_knowledge_prompt)
         return design_knowledge_prompt
 
     @classmethod
@@ -87,12 +87,14 @@ class LLMService:
         material_type = zero_shot_learner_session['type']
         design_knowledge_design_targets_instruction_excerpt = cls._generate_design_knowledge_design_targets_instruction_excerpt(zero_shot_learner_session)
         instruction_excerpt = (f'You have performed thousands of experiments in the laboratory. You have extensive design proficiency '
-                               f'for cementitious materials. You always answer with no more than six crucial sentences captuaring pivotal and '
-                               f'quantitative formulation design rules. You always answer in a direct manner, e.g., the change in '
-                               f'(parameter) has (effect) due to (influence).'
+                               f'for cementitious materials. You always answer with around seven crucial sentences captuaring pivotal and '
+                               f'quantitative formulation design rules. You always answer in a direct manner, e.g., the change of '
+                               f'(parameter) in (range of) has (effect) due to (influence).'
+                               f'You must give specific advice on types, weights and composition of each constituent (including activator composition if relevant)'
                                f'Your answer is well-structered in bullet-points. '
                                f'What is the best formulation design knowledge you have for finding {material_type} '
-                               f'formulations{design_knowledge_design_targets_instruction_excerpt}?')
+                               f'formulations{design_knowledge_design_targets_instruction_excerpt}? '
+                               f'Only output design actionable design rules! No formulations, yet!')
         return instruction_excerpt
          
     @classmethod
@@ -187,7 +189,7 @@ class LLMService:
     @classmethod
     def generate_formulation(cls, design_knowledge, token):
         prompt = cls._generate_zero_shot_learner_prompt(design_knowledge)
-        print(prompt)
+        #print(prompt)
         user_message = {"role": "user", "content": prompt}
         formulation = cls._generate_openai_llm_response([user_message], MODEL, token)
         return formulation
@@ -209,8 +211,15 @@ class LLMService:
         instruction_prompt_excerpt = (f"////You are a powerful {material_type_excerpt} formulation prediction model tasked with finding the best "
                                       f"{material_type_excerpt} formulation that {design_targets_excerpt}. You are able to incorporate general design "
                                       f"knowledge to improve your predictions.'\n "
-                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists the ratios or percentages of the "
-                                      f"various components involved.\n")
+                                      f"Based on the general knowledge, your task is to explicitly give a recipe which lists:\n"
+                                      f"## Weight of Powders: [your estimate'] kg\n"
+                                      f"## If relevant Composition of Powder Blend [Your Estimate of Weight Fractions of Powders A/B/...]\n"
+                                      f"## W/C-Ratio: [your estimate] %\n"
+                                      f"## If relevant Composition of Liquid [your estimate Weight Fraction of H2O/Activator A /Activator B,...] \n"
+                                      f"## If relevant Weight of [Additives Type]: [your estimate] kg\n"
+                                      f"## If relevant Weight of [Admixtures Type]: [your estimate] kg \n"
+                                      f"## If relevant Processing: [Your esitmate Processing Steps]\n"
+                                      f"## and all the other various components involved.\n")
 
         material_type_excerpt = cls._generate_material_type_user_input_excerpt(zero_shot_learner_session)
         powders_excerpt = cls._generate_powders_user_input_excerpt(zero_shot_learner_session)
@@ -257,11 +266,49 @@ All the components of the recipe should be listed in a comma-seperated way. Each
 
 For you orientation, here are some examples (note that these are just examples and must not be included in the general knowledge provided; further make sure to use units that are conventional for the components you are proposing):
 
-Example 1:
-Water to Cement Ratio: 0.5
+## Example 1 Geopolymer Concrete:
+Powder: 
+- Weight of Powders: [your estimate] kg, 
+- Composition of Powder Blend Powder A/Powder B: [your estimate]/[your estimate], 
 
-Example 2:
-Fly Ash: 20%
+Liquid: 
+- Water to Cement Ratio: [your estimate], 
+- Composition of Alkali-Activator Liquid H2O/[your input]/[your input]: [your estimate]/[your estimate]/[your estimate] m%,
+
+Additives and admixtures: 
+- Weight of Additives [your estimate] kg, Weight of Admixtures (Superplasticizer) [your estimate] kg,  
+
+Processing: 
+- [your input], 
+
+Aggregates
+- Fines: [your estimate] kg 
+- Coarse: [your estimate] kg 
+                  
+## Example 2 OPC based Concrete:
+Powders: 
+[Cement Type]: [your estimate] kg, 
+Liquid: 
+Water to Cement Ratio: [your estimate], 
+
+Admixtures: 
+Superplasticizer: 18 kg, 
+
+Aggregates
+- Fines: [your estimate] kg 
+- Coarse: [your estimate] kg (10% recycled Aggregates)
+
+## Example 3 Alkali Activated Binder Composition :
+Solids: 
+- Fly Ash/GGBFS: [your estimate]/[your estimate], 
+- m%, Biochar: [your estimate] %, 
+- Rice Husk Ash: [your estimate] %, 
+- Recycled Glass Fines: [your estimate] %,
+
+Liquids:
+- Water to Cement Ratio: [your estimate], 
+- Composition of Liquid H2O/[your input]/[your input]: [your estimate]/[your estimate]/[your estimate] 
+- Super Plasticizer: [your estimate] %
 
 The full output format thus must look as follows:
 
@@ -269,14 +316,46 @@ NAME_OF_THE_COMPONENT 1: VALUE 1, NAME_OF_THE_COMPONENT 2: VALUE 2, NAME_OF_THE_
 
 and so on until all components are included. Make sure to stick to exactly this format! Here are examples:
 
-Example 1:
+## Example 1:
+Powder:
+- Weight of Powders: 300 kg,
+- Composition of Powder Blend FA/GGBFS: 50/50, 
+Liquid:
+- Water to Cement Ratio: 0.35, 
+- Composition of Liquid H2O/NaOH/Na2SiO3: 62/23/15 m%, 
+Additives and Admixtures
+- Lime Stone Powder: 150 kg, 
+- Superplasticizer: 15 kg, 
+Aggregates: 
+- Aggregates: 1820 kg 
+Processing: 
+- ambient curing
 
-Fly Ash: 30%, GGBFS: 70%, Water to Cement Ratio: 0.4
 
-Example 2:
+## Example 2:
+Powder:
+- CEM II/A-LL 42,5 N: 400 kg,
+Liquid: 
+- Water to Cement Ratio: 0.42, 
+Additives and admixtures:
+- Superplasticizer 18 kg,
+Aggregates: 
+Coarse: 950 kg
+Fines 700 kg, 
+Recycled Aggregates: 10%
 
-Geopolymer: 30%, Water: 60%, Recycled Aggregates: 10%
+## Example 3:
+Solids composition: 
+- Fly Ash/GGBFS: 30/40 m%,
+- Biochar: 10 m%,
+- Rice Husk Ash: 10 m%, 
+- Recycled Glass Fines: 10 m%,
+ 
+Water to Cement Ratio: 0.38, 
 
-Example 3:
-Fly Ash: 40%, Water: 25%, Biochar: 10%, Rice Husk Ash: 10%, Recycled Glass Fines: 10%, Super Plasticizer: 5%
+Composition of Liquid 
+- H2O/NaOH/Na2SiO3: 55/20/25 m%, 
+
+Admixture: 
+Super Plasticizer: 5 m% of powders
 """
