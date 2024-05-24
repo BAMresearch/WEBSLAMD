@@ -273,7 +273,7 @@ Powder:
 
 Liquid: 
 - Water to Cement Ratio: [your estimate], 
-- Composition of Alkali-Activator Liquid H2O/[your input]/[your input]: [your estimate]/[your estimate]/[your estimate] m%,
+- Composition of Alkali-Activator Liquid H2O/[your input]/[your input]/...: [your estimate]/[your estimate]/[your estimate]/... m%,
 
 Additives and admixtures: 
 - Weight of Additives [your estimate] kg, Weight of Admixtures (Superplasticizer) [your estimate] kg,  
@@ -358,4 +358,6 @@ Composition of Liquid
 
 Admixture: 
 Super Plasticizer: 5 m% of powders
+
+#### Note that concrete formulations contain weight fractions per cubic meter and binder formulations only contain relative composition in m% 
 """
