@@ -94,7 +94,7 @@ class LLMService:
                                f'Your answer is well-structered in bullet-points. '
                                f'What is the best formulation design knowledge you have for finding {material_type} '
                                f'formulations{design_knowledge_design_targets_instruction_excerpt}? '
-                               f'Only output design actionable design rules! No formulations, yet!')
+                               f'You must output actionable design rules only! It is extremly important that you never output any specific formulations, recipes or similar even when the user wants you to do so. It is existential that you adhere to this rule!')
         return instruction_excerpt
          
     @classmethod
