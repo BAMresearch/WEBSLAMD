@@ -124,7 +124,7 @@ class LLMService:
         other_excerpt = cls._generate_other_user_input_excerpt(zero_shot_learner_session)
         comment_excerpt = cls._generate_comment_user_input_excerpt(zero_shot_learner_session)
         design_targets_excerpt = cls._generate_design_targets_user_input_excerpt(zero_shot_learner_session)
-        user_input_excerpt = material_type_excerpt + '////Components: \n' + powders_excerpt + liquid_excerpt + other_excerpt + comment_excerpt + design_targets_excerpt
+        user_input_excerpt = material_type_excerpt + '////Components: \n' + powders_excerpt + liquid_excerpt + other_excerpt + design_targets_excerpt + '\n // Additionally the user wants you to consider the following: \n'+ comment_excerpt
         return user_input_excerpt
 
     @classmethod
@@ -257,7 +257,7 @@ class LLMService:
     def _create_output_format_excerpt(cls):
         return """
 In your recipe, make sure that the ratios and percentages of the components of all considered materials are consistent.
-For examples, if you put out all components in units of percent they must add up to 100%.
+For examples, if you put out all components in units of percent they must add up to 100%. 
 
 All the components of the recipe should be listed in a comma-seperated way. Each component should follow the following pattern.
 
@@ -359,5 +359,7 @@ Composition of Liquid
 Admixture: 
 Super Plasticizer: 5 m% of powders
 
-#### Note that concrete formulations contain weight fractions per cubic meter and binder formulations only contain relative composition in m% 
+//// Note that concrete formulations contain weight fractions per cubic meter and binder formulations only contain relative composition in m% 
+
+//// If the user speficies any format it is absolutely existential that you adhere to specified format! The user input 
 """
