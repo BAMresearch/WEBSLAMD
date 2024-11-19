@@ -113,7 +113,7 @@ def download_dataset(dataset):
 def download_prediction():
     filename, dataset_content = DiscoveryService.download_prediction()
     return send_file(dataset_content,
-                     attachment_filename=filename,
+                     download_name=filename,
                      as_attachment=True)
 
 
