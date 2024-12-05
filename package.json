@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/BAMresearch/WEBSLAMD#readme",
   "devDependencies": {
-    "@testing-library/cypress": "^8.0.3",
-    "cypress": "^10.11.0"
+    "@testing-library/cypress": "^10.0.2",
+    "cypress": "^12.17.4"
   }
 }
