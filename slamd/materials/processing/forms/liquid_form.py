@@ -73,3 +73,11 @@ class LiquidForm(MaterialsForm):
             validators.Optional()
         ]
     )
+
+    density = DecimalField(
+        label='Density (kg/m³)',
+        default=1.0,
+        validators=[
+            validators.Optional()
+        ]
+    )

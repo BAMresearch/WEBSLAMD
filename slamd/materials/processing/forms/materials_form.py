@@ -20,13 +20,6 @@ class MaterialsForm(Form):
                  'Admixture', 'Process', 'Custom']
     )
 
-    density = DecimalField(
-        label='Density (t/m³)',
-        validators=[
-            validators.optional()
-        ]
-    )
-
     recyclingrate = DecimalField(
         label='Recyclingrate (%)',
         validators=[
