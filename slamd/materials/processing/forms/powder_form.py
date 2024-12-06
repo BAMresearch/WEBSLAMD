@@ -111,7 +111,7 @@ class PowderForm(MaterialsForm):
     )
 
     density = DecimalField(
-        label='Density (kg/m³)',
+        label='Powder density (kg/m³)',
         default=1.4,
         validators=[
             validators.Optional()
