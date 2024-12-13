@@ -57,7 +57,7 @@
             </div>
         </div>
     </div>
-    {% if form.material_type.data != 'Custom' %}
+    {% if form.material_type.data not in ['Custom', 'Admixture'] %}
     <div class="accordion-item">
         <h2 class="accordion-header" id="flush-headingFive">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -79,8 +79,6 @@
                 {% include 'aggregates_form.html' %}
                 {% elif form.material_type.data == 'Process' %}
                 {% include 'process_form.html' %}
-                {% elif form.material_type.data == 'Admixture' %}
-                {% include 'admixture_form.html' %}
                 {% endif %}
             </div>
         </div>
@@ -90,7 +88,7 @@
         <h2 class="accordion-header" id="flush-headingSix">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                 data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
-                {% if form.material_type.data not in ['Custom', 'Process'] %}
+                {% if form.material_type.data not in ['Custom', 'Process', 'Admixture']%}
                 6 - Additional Properties - Leave empty if not needed.
                 {% else %}
                 5 - Additional Properties - Leave empty if not needed.

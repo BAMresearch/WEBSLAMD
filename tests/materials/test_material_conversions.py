@@ -18,8 +18,9 @@ def _create_generic_material():
     material_as_dict = {
         'name': 'MatName', 'type': 'generic',
         'uuid': str(uuid1()),
+        'density' : 1.5,
         'costs': {
-            'co2_footprint': 1.2, 'costs': 2.3, 'delivery_time': 3.4
+            'co2_footprint': 1.2, 'costs': 2.3, 'delivery_time': 3.4, 'recyclingrate' : 20
         },
         'additional_properties': [
             {'name': 'AddProp1', 'value': 5},

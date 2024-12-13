@@ -51,8 +51,8 @@ def test_slamd_selects_powder(client):
     assert 'SrO' in template
     assert 'Mn₂O₃' in template
 
-    assert '4 - Composition' in template
-    assert '5 - Additional Properties - Leave empty if not needed.' in template
+    assert '5 - Composition' in template
+    assert '6 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_liquid(client):
@@ -71,8 +71,8 @@ def test_slamd_selects_liquid(client):
     assert 'H₂O (m%)' in template
     assert 'H₂O (mol%)' in template
 
-    assert '4 - Composition' in template
-    assert '5 - Additional Properties - Leave empty if not needed.' in template
+    assert '5 - Composition' in template
+    assert '6 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_aggregates(client):
@@ -83,12 +83,11 @@ def test_slamd_selects_aggregates(client):
     assert 'Fine Aggregates' in template
     assert 'Coarse Aggregates' in template
     assert 'Specific gravity' in template
-    assert 'Bulk density' in template
     assert 'Fineness modulus' in template
     assert 'Water absorption' in template
 
-    assert '4 - Composition' in template
-    assert '5 - Additional Properties - Leave empty if not needed.' in template
+    assert '5 - Composition' in template
+    assert '6 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_admixture(client):
@@ -98,7 +97,7 @@ def test_slamd_selects_admixture(client):
     assert response.status_code == 200
 
     assert '4 - Composition' not in template
-    assert '4 - Additional Properties - Leave empty if not needed.' in template
+    assert '5 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_custom(client):
@@ -108,7 +107,7 @@ def test_slamd_selects_custom(client):
     assert response.status_code == 200
 
     assert '4 - Composition' not in template
-    assert '4 - Additional Properties - Leave empty if not needed.' in template
+    assert '5 - Additional Properties - Leave empty if not needed.' in template
 
 
 def test_slamd_selects_process(client):
