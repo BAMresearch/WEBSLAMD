@@ -48,7 +48,7 @@ class ExperimentPostprocessor:
         - Number the rows from 1 to n (length of the dataframe) to identify them easier on the plots.
         - Move Utility, Novelty, all the target columns and their uncertainties to the left of the dataframe.
         """
-        df = df.sort_values(by='Utility', ascending=False)
+        df = df.sort_values(by=['Utility', 'Idx_Sample'], ascending=[False, True])
         df.insert(loc=0, column='Row number', value=list(range(1, len(df) + 1)))
 
         if exp.novelty is not None:
