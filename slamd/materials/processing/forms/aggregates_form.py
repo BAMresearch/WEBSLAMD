@@ -43,7 +43,7 @@ class AggregatesForm(MaterialsForm):
         ])
 
     density = DecimalField(
-        label='Aggregate density (kg/m³)',
+        label='Aggregate density (t/m³)',
         default=2.4,
         validators=[
             validators.Optional()
