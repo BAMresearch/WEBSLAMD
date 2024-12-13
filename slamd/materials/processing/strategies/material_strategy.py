@@ -89,6 +89,7 @@ class MaterialStrategy(ABC):
             all_properties=join_all(cls.gather_composition_information(material))
         )
 
+        cls._append_density(dto, material.density)
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
         # Remove trailing comma and whitespace
@@ -151,6 +152,12 @@ class MaterialStrategy(ABC):
     @classmethod
     def save_model(cls, model):
         MaterialsPersistence.save(model.type.lower(), model)
+
+    @classmethod
+    def _append_density(cls, dto, density):
+        if density is None:
+            return
+        dto.all_properties += cls.include('Density (t/m³)', density)
 
     @classmethod
     def _append_cost_properties(cls, dto, costs):
