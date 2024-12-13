@@ -210,6 +210,10 @@ class MaterialStrategy(ABC):
         pass
 
     @classmethod
+    def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_blended_density(normalized_ratios, base_materials_as_dict)
+
+    @classmethod
     def compute_blended_costs(cls, normalized_ratios, base_materials_as_dict):
         return BlendingPropertiesCalculator.compute_blended_costs(normalized_ratios, base_materials_as_dict)
 

@@ -23,11 +23,13 @@ class CustomStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_customs_as_dict):
+        density = cls.compute_blended_density(normalized_ratios, base_customs_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_customs_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_customs_as_dict)
 
         return Custom(type=base_customs_as_dict[0]['type'],
                       name=name,
+                      density=density,
                       costs=costs,
                       additional_properties=additional_properties,
                       is_blended=True,

@@ -11,8 +11,9 @@ class BlendingPropertiesCalculator:
         blended_co2_footprint = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'co2_footprint')
         blended_costs = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'costs')
         blended_delivery_time = cls._compute_max(base_materials_as_dict, 'costs', 'delivery_time')
+        blended_recyclingrate = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'costs', 'recyclingrate')
 
-        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time)
+        return Costs(co2_footprint=blended_co2_footprint, costs=blended_costs, delivery_time=blended_delivery_time, recyclingrate=blended_recyclingrate)
 
     @classmethod
     def compute_mean(cls, normalized_ratios, materials_as_dict, *keys):
@@ -32,6 +33,12 @@ class BlendingPropertiesCalculator:
             return None
         maximum = max(non_empty_values)
         return round(maximum, 2)
+
+    @classmethod
+    def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
+        blended_density = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'density')
+        print('Blended density', blended_density)
+        return blended_density
 
     #
     # normalized_ratios: normalized ratios determined from the user input, e.g. [0.4, 0.4, 0.2]

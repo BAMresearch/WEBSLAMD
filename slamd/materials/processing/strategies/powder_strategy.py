@@ -104,6 +104,7 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_powders_as_dict):
+        density = cls.compute_blended_density(normalized_ratios, base_powders_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = cls._compute_blended_structure(normalized_ratios, base_powders_as_dict)
@@ -111,6 +112,7 @@ class PowderStrategy(MaterialStrategy):
 
         return Powder(type=base_powders_as_dict[0]['type'],
                       name=name,
+                      density=density,
                       costs=costs,
                       composition=composition,
                       structure=structure,
