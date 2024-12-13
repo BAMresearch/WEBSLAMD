@@ -159,6 +159,7 @@ class MaterialStrategy(ABC):
         dto.all_properties += cls.include('Costs (€/ton for materials, € for processes)', costs.costs)
         dto.all_properties += cls.include('CO₂ footprint (kg/ton for materials, kg for processes)', costs.co2_footprint)
         dto.all_properties += cls.include('Delivery time (days)', costs.delivery_time)
+        dto.all_properties += cls.include('Recyclingrate (%)', costs.recyclingrate)
 
     @classmethod
     def _append_additional_properties(cls, dto, additional_properties):
