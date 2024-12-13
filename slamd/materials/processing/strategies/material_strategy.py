@@ -138,7 +138,8 @@ class MaterialStrategy(ABC):
         return Costs(
             co2_footprint=float_if_not_empty(submitted_material.get('co2_footprint', None)),
             costs=float_if_not_empty(submitted_material.get('costs', None)),
-            delivery_time=float_if_not_empty(submitted_material.get('delivery_time', None))
+            delivery_time=float_if_not_empty(submitted_material.get('delivery_time', None)),
+            recyclingrate=float_if_not_empty(submitted_material.get('recyclingrate', None))
         )
 
     @classmethod

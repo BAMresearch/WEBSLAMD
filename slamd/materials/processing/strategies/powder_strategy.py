@@ -42,6 +42,7 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):
+
         composition = Composition(
             fe3_o2=float_if_not_empty(submitted_material.get('fe3_o2', None)),
             si_o2=float_if_not_empty(submitted_material.get('si_o2', None)),
@@ -65,6 +66,7 @@ class PowderStrategy(MaterialStrategy):
         return Powder(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
+            density=submitted_material.get('density', None),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,

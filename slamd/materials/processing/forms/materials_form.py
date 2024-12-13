@@ -24,7 +24,8 @@ class MaterialsForm(Form):
         label='Recyclingrate (%)',
         validators=[
             validators.optional()
-        ]
+        ],
+        render_kw={"min": "0", "max": "1", "step": "0.01"}
     )
 
     co2_footprint = DecimalField(

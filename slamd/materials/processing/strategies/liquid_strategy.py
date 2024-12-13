@@ -34,6 +34,7 @@ class LiquidStrategy(MaterialStrategy):
 
     @classmethod
     def create_model(cls, submitted_material):
+
         composition = Composition(
             na2_si_o3=float_if_not_empty(submitted_material.get('na2_si_o3', None)),
             na_o_h=float_if_not_empty(submitted_material.get('na_o_h', None)),
@@ -50,6 +51,7 @@ class LiquidStrategy(MaterialStrategy):
         return Liquid(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
+            density=submitted_material.get('density', None),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)

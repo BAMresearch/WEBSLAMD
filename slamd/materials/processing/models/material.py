@@ -9,6 +9,7 @@ class Costs:
     co2_footprint: float = None
     costs: float = None
     delivery_time: float = None
+    recyclingrate: float = None
 
 
 @dataclass
@@ -18,7 +19,6 @@ class Material:
     name: str = ''
     type: str = ''
     density: float = None
-    recyclingrate: float = None
     costs: Costs = None
     additional_properties: list[AdditionalProperty] = None
     is_blended: bool = False
