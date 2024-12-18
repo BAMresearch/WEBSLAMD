@@ -16,7 +16,7 @@ class CustomStrategy(MaterialStrategy):
         return Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            density=submitted_material.get('density', None),
+            density=submitted_material['density'],
             costs=cls.extract_cost_properties(submitted_material),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )

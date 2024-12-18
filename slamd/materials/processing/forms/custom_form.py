@@ -9,6 +9,6 @@ class CustomForm(MaterialsForm):
         label='Density (t/m³)',
         default=1.0,
         validators=[
-            validators.Optional()
+            validators.DataRequired(message='Material density cannot be empty')
         ]
     )

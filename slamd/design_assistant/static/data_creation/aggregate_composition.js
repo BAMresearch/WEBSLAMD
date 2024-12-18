@@ -20,7 +20,6 @@ function handleSubmittingAggregateComposition(event){
         "fine_aggregates" : aggregate_composition_inputs[0].value, 
         "coarse_aggregates" : aggregate_composition_inputs[1].value, 
         "gravity" : aggregate_composition_inputs[2].value, 
-        "bulk_density" : aggregate_composition_inputs[3].value,
         "fineness_modulus" : aggregate_composition_inputs[4].value,
         "water_absorption" : aggregate_composition_inputs[5].value 
     }

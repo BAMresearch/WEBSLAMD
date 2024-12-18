@@ -102,6 +102,7 @@ class MaterialStrategy(ABC):
             ('uuid', material.uuid),
             ('material_name', material.name),
             ('material_type', material.type),
+            ('density', material.density),
             ('delivery_time', str_if_not_none(material.costs.delivery_time)),
             ('costs', str_if_not_none(material.costs.costs)),
             ('co2_footprint', str_if_not_none(material.costs.co2_footprint)),

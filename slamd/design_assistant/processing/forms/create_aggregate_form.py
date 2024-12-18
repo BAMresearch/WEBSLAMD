@@ -48,13 +48,6 @@ class CreateAggregateForm(Form):
         ]
     )
 
-    bulk_density = DecimalField(
-        label='Bulk density (kg/m³)',
-        validators=[
-            validators.Optional()
-        ]
-    )
-
     fineness_modulus = DecimalField(
         label='Fineness modulus (m³/kg)',
         validators=[

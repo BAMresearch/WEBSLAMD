@@ -114,6 +114,6 @@ class PowderForm(MaterialsForm):
         label='Powder density (t/m³)',
         default=1.4,
         validators=[
-            validators.Optional()
+            validators.DataRequired(message='Material density cannot be empty')
         ]
     )

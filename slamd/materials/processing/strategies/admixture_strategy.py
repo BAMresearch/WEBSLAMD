@@ -16,7 +16,7 @@ class AdmixtureStrategy(MaterialStrategy):
         return Admixture(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
-            density=submitted_material.get('density', None),
+            density=submitted_material['density'],
             costs=cls.extract_cost_properties(submitted_material),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )

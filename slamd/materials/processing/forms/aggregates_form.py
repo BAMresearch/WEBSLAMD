@@ -24,12 +24,6 @@ class AggregatesForm(MaterialsForm):
             validators.Optional()
         ])
 
-    bulk_density = DecimalField(
-        label='Bulk density (kg/m³)',
-        validators=[
-            validators.Optional()
-        ])
-
     fineness_modulus = DecimalField(
         label='Fineness modulus (m³/kg)',
         validators=[
@@ -46,6 +40,6 @@ class AggregatesForm(MaterialsForm):
         label='Aggregate density (t/m³)',
         default=2.4,
         validators=[
-            validators.Optional()
+            validators.DataRequired(message='Material density cannot be empty')
         ]
     )

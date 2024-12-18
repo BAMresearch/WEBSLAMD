@@ -37,7 +37,6 @@ class BlendingPropertiesCalculator:
     @classmethod
     def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
         blended_density = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'density')
-        print('Blended density', blended_density)
         return blended_density
 
     #

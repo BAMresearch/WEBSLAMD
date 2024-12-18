@@ -10,7 +10,6 @@ class Composition:
     fine_aggregates: float = None
     coarse_aggregates: float = None
     gravity: float = None
-    bulk_density: float = None
     fineness_modulus: float = None
     water_absorption: float = None
 
