@@ -44,7 +44,6 @@ def _create_aggregates_material():
             'fine_aggregates': 1.2,
             'coarse_aggregates': 2.3,
             'gravity': 3.4,
-            'bulk_density': 4.5,
             'fineness_modulus': 5.6,
             'water_absorption': 6.7
         }
