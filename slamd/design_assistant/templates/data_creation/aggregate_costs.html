@@ -22,6 +22,10 @@
                     <div>{{ form.new_project_form.create_aggregate_form.cost_delivery_time.label.text}}</div>
                     <input id="aggregate_cost_value_delivery_time" class="aggregate_cost_input w-auto form-control text-end" name="aggregate_cost_value_delivery_time" {% if form.new_project_form.create_aggregate_form.cost_delivery_time.data %} value="{{ form.new_project_form.create_aggregate_form.cost_delivery_time.data }}" disabled {% endif %} {% if progress >= 11 %} disabled {% endif %} type="number"/>
                 </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_aggregate_form.cost_recyclingrate.label.text}}</div>
+                    <input id="aggregate_cost_value_recyclingrate" class="aggregate_cost_input w-auto form-control text-end" name="aggregate_cost_value_recyclingrate" {% if form.new_project_form.create_aggregate_form.cost_recyclingrate.data %} value="{{ form.new_project_form.create_aggregate_form.cost_recyclingrate.data }}" disabled {% endif %} {% if progress >= 11 %} disabled {% endif %} type="number"/>
+                </div>
             </div>
             <div class="text-end mt-2"><button class="aggregate_costs_button btn btn-primary" id="aggregate_costs_button" {% if progress >= 11 %} disabled {% endif %}>Save</button></div>
         </div>

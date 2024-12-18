@@ -26,3 +26,10 @@ class CreateAdmixtureForm(Form):
             validators.Optional()
         ]
     )
+
+    cost_recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ]
+    )

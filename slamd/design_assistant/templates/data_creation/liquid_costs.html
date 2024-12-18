@@ -22,6 +22,10 @@
                     <div>{{ form.new_project_form.create_liquid_form.cost_delivery_time.label.text}}</div>
                     <input id="liquid_cost_value_delivery_time" class="liquid_cost_input w-auto form-control text-end" name="liquid_cost_value_delivery_time" {% if form.new_project_form.create_liquid_form.cost_delivery_time.data %} value="{{ form.new_project_form.create_liquid_form.cost_delivery_time.data }}" disabled {% endif %} {% if progress >= 8 %} disabled {% endif %} type="number"/>
                 </div>
+                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
+                    <div>{{ form.new_project_form.create_liquid_form.cost_recyclingrate.label.text}}</div>
+                    <input id="liquid_cost_value_recyclingrate" class="liquid_cost_input w-auto form-control text-end" name="liquid_cost_value_recyclingrate" {% if form.new_project_form.create_liquid_form.cost_recyclingrate.data %} value="{{ form.new_project_form.create_liquid_form.cost_recyclingrate.data }}" disabled {% endif %} {% if progress >= 8 %} disabled {% endif %} type="number"/>
+                </div>
             </div>
             <div class="text-end mt-2"><button class="liquid_costs_button btn btn-primary" id="liquid_costs_button" {% if progress >= 8 %} disabled {% endif %}>Save</button></div>
         </div>

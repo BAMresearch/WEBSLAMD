@@ -45,7 +45,7 @@ class AggregatesStrategy(MaterialStrategy):
         return Aggregates(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            density=submitted_material['density'],
+            density=submitted_material.get('density', 2.40),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)

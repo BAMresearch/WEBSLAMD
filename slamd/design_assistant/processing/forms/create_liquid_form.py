@@ -27,6 +27,13 @@ class CreateLiquidForm(Form):
         ]
     )
 
+    cost_recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ]
+    )
+
     h2_O = DecimalField(
         label='H₂O (m%)',
         validators=[

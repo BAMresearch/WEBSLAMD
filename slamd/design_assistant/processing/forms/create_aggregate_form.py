@@ -27,6 +27,13 @@ class CreateAggregateForm(Form):
         ]
     )
 
+    cost_recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ]
+    )
+
     fine_aggregates = DecimalField(
         label='Fine Aggregates (m%)',
         validators=[

@@ -65,7 +65,7 @@ class PowderStrategy(MaterialStrategy):
         return Powder(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
-            density=submitted_material['density'],
+            density=submitted_material.get('density', 1.40),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,

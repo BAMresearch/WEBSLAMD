@@ -50,7 +50,7 @@ class LiquidStrategy(MaterialStrategy):
         return Liquid(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
-            density=submitted_material['density'],
+            density=submitted_material.get('density', 1.00),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)

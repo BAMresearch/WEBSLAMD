@@ -14,7 +14,8 @@ function handleSubmittingPowderCosts(event){
     const powder_cost_CO_2 = powder_cost_inputs[0].value
     const powder_cost_EUR = powder_cost_inputs[1].value
     const powder_cost_delivery_time = powder_cost_inputs[2].value
-    const powder = { 'material_type':'Powder', 'material_name' : powder_name,  "co2_footprint" : powder_cost_CO_2, "costs" : powder_cost_EUR, "delivery_time" : powder_cost_delivery_time }
+    const powder_cost_recyclingrate = powder_cost_inputs[3].value
+    const powder = { 'material_type':'Powder', 'material_name' : powder_name,  "co2_footprint" : powder_cost_CO_2, "costs" : powder_cost_EUR, "delivery_time" : powder_cost_delivery_time, "recyclingrate" : powder_cost_recyclingrate }
     powder_cost_inputs.forEach((powder_cost_input) => {
         powder_cost_input.disabled = true
     })
