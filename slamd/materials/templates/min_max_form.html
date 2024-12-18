@@ -1,3 +1,25 @@
+<!DOCTYPE html>
+<main>
+<div class="d-flex rounded bg-white flex-column pb-3" role="tooltip">
+    <h3 class="explanation-header">Based on what would you like to blend the selected base materials?</h3>
+    <div class="explanation-body flex-grow-1">
+        You may blend the selected base materials based on either their density or their weight.
+    </div>
+</div>
+<nav class="navbar navbar-expand navbar-light bg-transparent position-static">
+    <div class="container-fluid">
+        <ul class="navbar-nav mb-lg-0 d-flex flex-row">
+            <li class="nav-item">
+                <a href="#" id="nav-bar-blended-materials-density" class="nav-link active" aria-current="page"
+                    onClick="confirmSelection()">Density-based</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" id="nav-bar-blended-materials-weight" class="nav-link" aria-current="page"
+                    onClick="confirmSelection('weight')">Weight-based</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 {% if not complete %}
 <div class="alert alert-warning" role="alert">
     <h5 class="alert-heading">Incomplete data</h5>
@@ -9,30 +31,14 @@
     </div>
 </div>
 {% endif %}
-{% for entry in min_max_form.all_min_max_entries %}
-<div class="d-none">
-    {{ entry.uuid_field(class_="form-control", hidden=True) }}
-</div>
-<div class="row g-3 mb-3 align-items-end">
-    <div class="col-3">
-        {{ entry.blended_material_name.label(class_="control-label") }}
-        {{ entry.blended_material_name(class_="form-control", disabled=True) }}
-    </div>
-    <div class="col-3">
-        {{ entry.increment.label(class_="control-label") }}
-        {{ entry.increment(class_="form-control") }}
-    </div>
-    <div class="col-3">
-        {{ entry.min.label(class_="control-label") }}
-        {{ entry.min(class_="form-control") }}
-    </div>
-    <div class="col-3">
-        {{ entry.max.label(class_="control-label") }}
-        {{ entry.max(class_="form-control") }}
-    </div>
-</div>
-{% endfor %}
+{% if blending_criteria == 'density' %}
+{% include 'density_min_max_form.html' %}
+{% else %}
+{% include 'weight_min_max_form.html' %}
+{% endif %}
 <button class="btn btn-success col-12 mb-3" type="button" id="confirm-blending-configuration-button"
     data-bs-toggle="tooltip" data-bs-placement="bottom" title="Fill in all editable fields" disabled>
     5 - Preview blending ratios
 </button>
+</main>
+<script src="{{url_for('blended_materials.static', filename='blended_materials.js')}}"></script>
