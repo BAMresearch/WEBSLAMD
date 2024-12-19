@@ -6,6 +6,7 @@ from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+from slamd.materials.processing.constants.material_constants import AGGREGATE_DEFAULT_DENSITY
 
 KEY_COMPOSITION = 'composition'
 
@@ -45,7 +46,7 @@ class AggregatesStrategy(MaterialStrategy):
         return Aggregates(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            density=submitted_material.get('density', 2.40),
+            density=submitted_material.get('density', AGGREGATE_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)
