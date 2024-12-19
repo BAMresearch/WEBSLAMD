@@ -77,11 +77,11 @@ async function deleteMaterial(id, material_type) {
 function updateActiveBlendingCriteria(blending_criteria){
   if (document.getElementById("nav-bar-blended-materials-weight")) {
     if (blending_criteria === 'weight') {
-      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link active");
-      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link");
+      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link active fs-5");
+      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link fs-5");
     } else {
-      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link");
-      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link active");
+      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link fs-5");
+      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link active fs-5");
     }
   }
 }
