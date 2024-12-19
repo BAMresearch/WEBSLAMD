@@ -27,6 +27,13 @@ class CreateAggregateForm(Form):
         ]
     )
 
+    cost_recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ]
+    )
+
     fine_aggregates = DecimalField(
         label='Fine Aggregates (m%)',
         validators=[
@@ -43,13 +50,6 @@ class CreateAggregateForm(Form):
 
     gravity = DecimalField(
         label='Specific gravity',
-        validators=[
-            validators.Optional()
-        ]
-    )
-
-    bulk_density = DecimalField(
-        label='Bulk density (kg/m³)',
         validators=[
             validators.Optional()
         ]

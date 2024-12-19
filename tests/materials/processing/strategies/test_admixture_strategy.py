@@ -7,6 +7,7 @@ from slamd.materials.processing.strategies.admixture_strategy import AdmixtureSt
 def test_create_model_reads_all_properties_from_submitted_material():
     submitted_material = ImmutableMultiDict([('material_name', 'test admixture'),
                                              ('material_type', 'Admixture'),
+                                             ('density', '1.10'),
                                              ('co2_footprint', '999.99'),
                                              ('costs', '888.88'),
                                              ('delivery_time', '77'),

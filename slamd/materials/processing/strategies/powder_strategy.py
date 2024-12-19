@@ -5,6 +5,7 @@ from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+from slamd.materials.processing.constants.material_constants import POWDER_DEFAULT_DENSITY
 
 KEY_COMPOSITION = 'composition'
 KEY_STRUCTURE = 'structure'
@@ -65,6 +66,7 @@ class PowderStrategy(MaterialStrategy):
         return Powder(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
+            density=submitted_material.get('density', POWDER_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,
@@ -102,6 +104,7 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_powders_as_dict):
+        density = cls.compute_blended_density(normalized_ratios, base_powders_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_powders_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_powders_as_dict)
         structure = cls._compute_blended_structure(normalized_ratios, base_powders_as_dict)
@@ -109,6 +112,7 @@ class PowderStrategy(MaterialStrategy):
 
         return Powder(type=base_powders_as_dict[0]['type'],
                       name=name,
+                      density=density,
                       costs=costs,
                       composition=composition,
                       structure=structure,

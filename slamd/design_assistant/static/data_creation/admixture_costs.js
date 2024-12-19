@@ -14,7 +14,8 @@ function handleSubmittingAdmixtureCosts(event){
     const admixture_cost_CO_2 = admixture_cost_inputs[0].value
     const admixture_cost_EUR = admixture_cost_inputs[1].value
     const admixture_cost_delivery_time = admixture_cost_inputs[2].value
-    const admixture = { 'material_type':'Admixture', 'material_name' : admixture_name,  "co2_footprint" : admixture_cost_CO_2, "costs" : admixture_cost_EUR, "delivery_time" : admixture_cost_delivery_time }
+    const admixture_cost_recyclingrate = admixture_cost_inputs[3].value
+    const admixture = { 'material_type':'Admixture', 'material_name' : admixture_name,  "co2_footprint" : admixture_cost_CO_2, "costs" : admixture_cost_EUR, "delivery_time" : admixture_cost_delivery_time, "recyclingrate" : admixture_cost_recyclingrate }
     admixture_cost_inputs.forEach((admixture_cost_input) => {
         admixture_cost_input.disabled = true
     })

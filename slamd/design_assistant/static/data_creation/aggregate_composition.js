@@ -11,18 +11,19 @@ export function assignEventsToCompositionAggregateStep(){
 function handleSubmittingAggregateComposition(event){
     const aggregate_composition_inputs = document.querySelectorAll(".aggregate_composition_input") 
     const aggregate_cost_inputs = document.querySelectorAll(".aggregate_cost_input")
+    console.log(aggregate_composition_inputs)
     const aggregate = { 
         'material_type':'Aggregates', 
         'material_name' : document.getElementById("aggregate_name_input").value,
         "co2_footprint" : aggregate_cost_inputs[0].value,
         "costs" : aggregate_cost_inputs[1].value,
-        "delivery_time" : aggregate_cost_inputs[2].value, 
+        "delivery_time" : aggregate_cost_inputs[2].value,
+        "recyclingrate" : aggregate_cost_inputs[3].value,
         "fine_aggregates" : aggregate_composition_inputs[0].value, 
         "coarse_aggregates" : aggregate_composition_inputs[1].value, 
         "gravity" : aggregate_composition_inputs[2].value, 
-        "bulk_density" : aggregate_composition_inputs[3].value,
-        "fineness_modulus" : aggregate_composition_inputs[4].value,
-        "water_absorption" : aggregate_composition_inputs[5].value 
+        "fineness_modulus" : aggregate_composition_inputs[3].value,
+        "water_absorption" : aggregate_composition_inputs[4].value
     }
     aggregate_composition_inputs.forEach((aggregate_composition_input) => {
         aggregate_composition_input.disabled = true

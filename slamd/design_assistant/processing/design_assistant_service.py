@@ -135,6 +135,7 @@ class DesignAssistantService:
         form.new_project_form.create_powder_form.cost_CO_2.data = powder_costs.co2_footprint
         form.new_project_form.create_powder_form.cost_EUR.data = powder_costs.costs
         form.new_project_form.create_powder_form.cost_delivery_time.data = powder_costs.delivery_time
+        form.new_project_form.create_powder_form.cost_recyclingrate.data = powder_costs.recyclingrate
 
     @classmethod
     def _populate_create_powder_composition_fields_with_session_value(cls, form, powder_composition):
@@ -157,6 +158,7 @@ class DesignAssistantService:
         form.new_project_form.create_liquid_form.cost_CO_2.data = liquid_costs.co2_footprint
         form.new_project_form.create_liquid_form.cost_EUR.data = liquid_costs.costs
         form.new_project_form.create_liquid_form.cost_delivery_time.data = liquid_costs.delivery_time
+        form.new_project_form.create_liquid_form.cost_recyclingrate.data = liquid_costs.recyclingrate
 
     @classmethod
     def _populate_create_liquid_composition_fields_with_session_value(cls, form, liquid_composition):
@@ -176,6 +178,7 @@ class DesignAssistantService:
         form.new_project_form.create_aggregate_form.cost_CO_2.data = aggregate_costs.co2_footprint
         form.new_project_form.create_aggregate_form.cost_EUR.data = aggregate_costs.costs
         form.new_project_form.create_aggregate_form.cost_delivery_time.data = aggregate_costs.delivery_time
+        form.new_project_form.create_aggregate_form.cost_recyclingrate.data = aggregate_costs.recyclingrate
 
     @classmethod
     def _populate_create_admixture_name_field_with_session_value(cls, form, admixture_name):
@@ -186,6 +189,7 @@ class DesignAssistantService:
         form.new_project_form.create_admixture_form.cost_CO_2.data = admixture_costs.co2_footprint
         form.new_project_form.create_admixture_form.cost_EUR.data = admixture_costs.costs
         form.new_project_form.create_admixture_form.cost_delivery_time.data = admixture_costs.delivery_time
+        form.new_project_form.create_admixture_form.cost_recyclingrate.data = admixture_costs.recyclingrate
 
     @classmethod
     def _populate_create_process_name_field_with_session_value(cls, form, process_name):
@@ -280,6 +284,7 @@ class DesignAssistantService:
 
     @classmethod
     def update_design_assistant_session(cls, value, key=None):
+
         if key == 'task':
             if value not in ['zero_shot_learner', 'data_creation']:
                 raise ValueNotSupportedException('Provided task is not supported.')

@@ -6,6 +6,7 @@ from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+from slamd.materials.processing.constants.material_constants import LIQUID_DEFAULT_DENSITY
 
 KEY_COMPOSITION = 'composition'
 
@@ -50,6 +51,7 @@ class LiquidStrategy(MaterialStrategy):
         return Liquid(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
+            density=submitted_material.get('density', LIQUID_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)
@@ -57,12 +59,14 @@ class LiquidStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_liquid_as_dict):
+        density = cls.compute_blended_density(normalized_ratios, base_liquid_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_liquid_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_liquid_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_liquid_as_dict)
 
         return Liquid(type=base_liquid_as_dict[0]['type'],
                       name=name,
+                      density=density,
                       costs=costs,
                       composition=composition,
                       additional_properties=additional_properties,

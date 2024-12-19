@@ -38,7 +38,6 @@ def test_aggregates_composition_constructor_sets_default_values():
     assert composition.fine_aggregates is None
     assert composition.coarse_aggregates is None
     assert composition.gravity is None
-    assert composition.bulk_density is None
 
 
 def test_aggregates_composition_constructor_sets_properties():
@@ -46,10 +45,8 @@ def test_aggregates_composition_constructor_sets_properties():
         fine_aggregates=123.45,
         coarse_aggregates=67.890,
         gravity=987.6,
-        bulk_density=543.2
     )
 
     assert composition.fine_aggregates == 123.45
     assert composition.coarse_aggregates == 67.890
     assert composition.gravity == 987.6
-    assert composition.bulk_density == 543.2

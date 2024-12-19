@@ -1,15 +1,38 @@
 {% from 'icons.html' import add_icon, delete_icon -%}
 
-
 <div class="accordion accordion" id="accordion-materials-form">
+    {% if form.material_type.data not in ['Process'] %}
     <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
+        <h2 class="accordion-header" id="flush-headingFour">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                3 - Cost
+                    data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                3 - Density
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+        <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour">
+            <div class="accordion-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        {{ form.density.label(class_="control-label") }}
+                        {{ form.density(class_="form-control") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                {% if form.material_type.data != 'Process' %}
+                4 - Cost
+                {% else %}
+                3 - Cost
+                {% endif %}
+            </button>
+        </h2>
+        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree">
             <div class="accordion-body">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
@@ -24,23 +47,29 @@
                         {{ form.delivery_time.label(class_="control-label") }}
                         {{ form.delivery_time(class_="form-control") }}
                     </div>
+                    {% if form.material_type.data != 'Process' %}
+                    <div class="col-md-4">
+                        {{ form.recyclingrate.label(class_="control-label") }}
+                        {{ form.recyclingrate(class_="form-control") }}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    {% if form.material_type.data != 'Custom' and form.material_type.data != 'Admixture' %}
+    {% if form.material_type.data not in ['Custom', 'Admixture'] %}
     <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingTwo">
+        <h2 class="accordion-header" id="flush-headingFive">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
                 {% if form.material_type.data != 'Process' %}
-                4 - Composition
+                5 - Composition
                 {% else %}
                 4 - Process Information
                 {% endif %}
             </button>
         </h2>
-        <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo">
+        <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive">
             <div class="accordion-body">
                 {% if form.material_type.data == 'Powder' %}
                 {% include 'powder_form.html' %}
@@ -50,25 +79,23 @@
                 {% include 'aggregates_form.html' %}
                 {% elif form.material_type.data == 'Process' %}
                 {% include 'process_form.html' %}
-                {% else %}
-                {% include 'powder_form.html' %}
                 {% endif %}
             </div>
         </div>
     </div>
     {% endif %}
     <div class="accordion-item">
-        <h2 class="accordion-header" id="flush-headingThree">
+        <h2 class="accordion-header" id="flush-headingSix">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                {% if form.material_type.data != 'Custom' and form.material_type.data != 'Admixture' %}
-                5 - Additional Properties - Leave empty if not needed.
+                data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                {% if form.material_type.data not in ['Custom', 'Process', 'Admixture']%}
+                6 - Additional Properties - Leave empty if not needed.
                 {% else %}
-                4 - Additional Properties - Leave empty if not needed.
+                5 - Additional Properties - Leave empty if not needed.
                 {% endif %}
             </button>
         </h2>
-        <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree">
+        <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix">
             <div class="accordion-body">
                 <div class="col-md-12 rounded bg-white" role="tooltip">
                     <h3 class="explanation-header">Here you can add custom properties</h3>

@@ -1,5 +1,14 @@
+from wtforms import DecimalField, validators
+
+
 from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 
 class CustomForm(MaterialsForm):
-    pass
+    density = DecimalField(
+        label='Density (t/m³)',
+        default=1.0,
+        validators=[
+            validators.DataRequired(message='Material density cannot be empty')
+        ]
+    )
