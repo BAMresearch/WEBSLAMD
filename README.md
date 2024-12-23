@@ -80,7 +80,7 @@ On Linux:
 On Windows:
 - Install [anaconda](https://www.anaconda.com/). Anaconda provides its own Python version; you do not need to manually install Python. (Advanced users may also use miniconda on Windows, instead.)
 - Open "Anaconda Prompt" from your start menu and navigate to your project folder.
-- Run `conda env create -f environment.yaml`
+- Run `conda env create -f environment.yml`
 - You have now installed a new conda environment named WEBSLAMD. You need to activate the environment before you can use it using `conda activate WEBSLAMD`, or by opening the anaconda navigator and going to "Environments", then selecting the WEBSLAMD environment and click "Open Terminal". You will need to run the project from here.
 
 ### 2.2 Starting the App (Required) <a name="start_app"></a>
@@ -119,7 +119,7 @@ options. This step can be skipped as it is not required for our purposes.
 After installing node, go to the root directory and run `npm install` to install necessary node dependencies.
 
 ##### Execution
-Once all dependencies are installed, start the flask server (see _2. Starting the App (Required)_).
+Start the flask server once all dependencies are installed (see _2. Starting the App (Required)_).
 You may now navigate to the root directory and run `npm run test` to run all the tests in the command line.
 
 If you prefer to watch the test running in a GUI, go to the root directory and run `npm run cypress:open`.
@@ -140,7 +140,7 @@ The authors present a large-scale case study that demonstrates the potential of 
    - Our results show training data required for data-driven design may be much less than commonly suggested.
    - Further, it is more important to establish a practical design framework than to develop more accurate models.
 The clear guidance provided in this paper allows immediate adoption into practical applications and suggests that this can be translated into significant advances in sustainable building materials development. [Available in Journal of Cleaner Production](https://doi.org/10.1016/j.jclepro.2023.138221).
-4. **Accelerating the search for alkali-activated cements with sequential learning.** Christoph Völker, Sabine Kruschwitz, Benjami Moreno Torres, Rafia Firdous, Ghezal Ahmad Jan Zia, and Dietmar Stephan. Proceedings of FIB Conference 2022, Oslo, Norway, 2022. This paper investigates the use of sequential learning methods for accelerating the discovery of alkali-activated cements. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal cements. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.33502.92480/1).
+4. **Accelerating the search for alkali-activated cements with sequential learning.** Christoph Völker, Sabine Kruschwitz, Benjami Moreno Torres, Rafia Firdous, Ghezal Ahmad Jan Zia, and Dietmar Stephan. Proceedings of FIB Conference 2022, Oslo, Norway, 2022. This paper investigates the use of sequential learning methods to accelerate the discovery of alkali-activated cements. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal cements. [Available on ResearchGate.net](https://doi.org/10.13140/RG.2.2.33502.92480/1).
 5. **Sequential learning to accelerate discovery of alkali-activated binders.** Christoph Völker, Rafia Firdous, Dietmar Stephan, et al. Journal of Materials Science, vol. 56, no. 21, 2021, pp. 15859-15881. This paper presents a study on the use of sequential learning to accelerate the discovery of alkali-activated binders. The study demonstrates the potential of sequential learning in reducing the number of experiments required to identify optimal binders, leading to faster discovery and development of sustainable building materials. [Available in Journal of Materials Science](https://doi.org/10.1007/s10853-021-06324-z).
    
 
