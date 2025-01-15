@@ -16,7 +16,7 @@ async function selectBaseMaterialType(event) {
   document.getElementById("base_material_selection").addEventListener("change", toggleConfirmationButton);
 }
 
-async function confirmSelection(blending_criteria='density') {
+async function confirmSelection() {
   removeInnerHtmlFromPlaceholder("min-max-placeholder");
   removeInnerHtmlFromPlaceholder("blending-ratio-placeholder");
 
@@ -27,8 +27,8 @@ async function confirmSelection(blending_criteria='density') {
 
   const type = document.getElementById("base_type").value;
 
-  const url = `${BLENDED_MATERIALS_URL}/${blending_criteria}/add_min_max_entries/${type.toLowerCase()}/${selectedMaterials.length}`;
-
+  const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${type.toLowerCase()}/${selectedMaterials.length}`;
+  console.log('im getting called')
   insertSpinnerInPlaceholder("min-max-placeholder");
   await postDataAndEmbedTemplateInPlaceholder(url, "min-max-placeholder", uuids);
   removeSpinnerInPlaceholder("min-max-placeholder");
@@ -36,7 +36,6 @@ async function confirmSelection(blending_criteria='density') {
   prepareMinMaxInputFieldsFromSelection(selectedMaterials);
   assignKeyboardEventsToMinMaxForm();
   assignConfirmBlendingConfigurationEvent();
-  updateActiveBlendingCriteria(blending_criteria);
 
 }
 
@@ -77,11 +76,11 @@ async function deleteMaterial(id, material_type) {
 function updateActiveBlendingCriteria(blending_criteria){
   if (document.getElementById("nav-bar-blended-materials-weight")) {
     if (blending_criteria === 'weight') {
-      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link active fs-5");
-      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link fs-5");
+      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link active");
+      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link");
     } else {
-      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link fs-5");
-      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link active fs-5");
+      document.getElementById("nav-bar-blended-materials-weight").setAttribute("class", "nav-link");
+      document.getElementById("nav-bar-blended-materials-density").setAttribute("class", "nav-link active");
     }
   }
 }

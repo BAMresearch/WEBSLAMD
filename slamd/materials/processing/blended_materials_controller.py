@@ -42,11 +42,11 @@ def submit_blending():
     return redirect('/materials/blended')
 
 
-@blended_materials.route('/<blending_criteria>/add_min_max_entries/<material_type>/<count>', methods=['POST'])
-def add_min_max_entry(blending_criteria, material_type, count):
+@blended_materials.route('/add_min_max_entries/<material_type>/<count>', methods=['POST'])
+def add_min_max_entry(material_type, count):
     data = json.loads(request.data)
     min_max_form, complete = BlendedMaterialsService.create_min_max_form(material_type, count, data)
-    body = {'template': render_template('min_max_form.html', blending_criteria=blending_criteria, material_type=material_type, count=count, min_max_form=min_max_form, complete=complete)}
+    body = {'template': render_template('min_max_form.html', material_type=material_type, count=count, min_max_form=min_max_form, complete=complete)}
     return make_response(jsonify(body), 200)
 
 

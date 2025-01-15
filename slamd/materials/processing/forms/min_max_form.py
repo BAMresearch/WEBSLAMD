@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm as Form
-from wtforms import FieldList, FormField, DecimalField, validators
+from wtforms import FieldList, FormField, DecimalField, SelectField, validators
 from wtforms import StringField
 
 
@@ -21,10 +21,6 @@ class MinMaxEntriesForm(Form):
 
 class MinMaxForm(Form):
 
-    total_volume = DecimalField(
-        label='Total Volume (m³)',
-        default=1,
-        validators=[validators.DataRequired(message='Total volume cannot be empty')]
-    )
+    blending_strategy = SelectField(label='Blending Strategy', choices=['Volume-based', 'Weight-based'])
 
     all_min_max_entries = FieldList(FormField(MinMaxEntriesForm), min_entries=0)
