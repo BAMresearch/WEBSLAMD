@@ -99,6 +99,7 @@ class BlendedMaterialsService(MaterialsService):
 
         base_materials_as_dict = []
         base_type = submitted_blending_configuration['base_type']
+        blending_strategy = submitted_blending_configuration['blending_strategy']
 
         for base_material_uuid in base_material_uuids:
             base_material = MaterialsPersistence.query_by_type_and_uuid(base_type, base_material_uuid)
@@ -108,7 +109,9 @@ class BlendedMaterialsService(MaterialsService):
 
         list_of_normalized_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
                                                                                             RATIO_DELIMITER)
-
+        if blending_strategy == 'Volume-based':
+            list_of_normalized_ratios_lists = RatioParser.density_to_weight_ratios(list_of_normalized_ratios_lists,
+                                                                                   base_materials_as_dict)
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
         for ratio_list in list_of_normalized_ratios_lists:
