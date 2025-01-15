@@ -44,6 +44,7 @@ async function assignConfirmBlendingConfigurationEvent() {
 
   elem.addEventListener("click", async () => {
     const minMaxValuesWithIncrements = collectMinMaxValuesWithIncrements();
+    console.log(minMaxValuesWithIncrements)
     const url = `${BLENDED_MATERIALS_URL}/add_ratios`;
 
     insertSpinnerInPlaceholder("blending-ratio-placeholder");

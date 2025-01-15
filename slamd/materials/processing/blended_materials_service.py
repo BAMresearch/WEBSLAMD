@@ -62,8 +62,8 @@ class BlendedMaterialsService(MaterialsService):
             min_max_form.all_min_max_entries.append_entry()
 
         # Min/Max of the last entry are calculated from the previous entries, and the labels need to be switched
-        min_max_form.all_min_max_entries[-1].min.label.text = 'Max (%)'
-        min_max_form.all_min_max_entries[-1].max.label.text = 'Min (%)'
+        # min_max_form.all_min_max_entries[-1].min.label.text = 'Max (%)'
+        # min_max_form.all_min_max_entries[-1].max.label.text = 'Min (%)'
 
         return min_max_form, complete
 
@@ -76,7 +76,7 @@ class BlendedMaterialsService(MaterialsService):
     def create_ratio_form(cls, min_max_values_with_increments):
         if not min_max_increment_config_valid(min_max_values_with_increments, 100):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
-
+        print(min_max_values_with_increments)
         all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
 
         cartesian_product = product(*all_values)
