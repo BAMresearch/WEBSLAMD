@@ -1,9 +1,9 @@
+
 {% for entry in min_max_form.all_min_max_entries %}
 <div class="d-none">
     {{ entry.uuid_field(class_="form-control", hidden=True) }}
 </div>
 <div class="row g-3 mb-3 align-items-end">
-    <div>Weight-based blending</div>
     <div class="col-3">
         {{ entry.blended_material_name.label(class_="control-label") }}
         {{ entry.blended_material_name(class_="form-control", disabled=True) }}

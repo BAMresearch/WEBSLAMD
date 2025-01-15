@@ -20,4 +20,11 @@ class MinMaxEntriesForm(Form):
 
 
 class MinMaxForm(Form):
+
+    total_volume = DecimalField(
+        label='Total Volume (m³)',
+        default=1,
+        validators=[validators.DataRequired(message='Total volume cannot be empty')]
+    )
+
     all_min_max_entries = FieldList(FormField(MinMaxEntriesForm), min_entries=0)
