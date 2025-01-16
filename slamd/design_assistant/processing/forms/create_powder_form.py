@@ -25,7 +25,14 @@ class CreatePowderForm(Form):
         validators=[
             validators.Optional()
         ]
-    ) 
+    )
+
+    cost_recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ]
+    )
     
     ca_o = DecimalField(
         label='CaO (m%)',

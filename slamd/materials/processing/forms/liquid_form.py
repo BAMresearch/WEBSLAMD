@@ -73,3 +73,11 @@ class LiquidForm(MaterialsForm):
             validators.Optional()
         ]
     )
+
+    density = DecimalField(
+        label='Liquid density (t/m³)',
+        default=1.0,
+        validators=[
+            validators.DataRequired(message='Material density cannot be empty')
+        ]
+    )

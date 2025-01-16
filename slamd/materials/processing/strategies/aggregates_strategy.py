@@ -6,6 +6,7 @@ from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+from slamd.materials.processing.constants.material_constants import AGGREGATE_DEFAULT_DENSITY
 
 KEY_COMPOSITION = 'composition'
 
@@ -38,7 +39,6 @@ class AggregatesStrategy(MaterialStrategy):
             fine_aggregates=float_if_not_empty(submitted_material.get('fine_aggregates', None)),
             coarse_aggregates=float_if_not_empty(submitted_material.get('coarse_aggregates', None)),
             gravity=float_if_not_empty(submitted_material.get('gravity', None)),
-            bulk_density=float_if_not_empty(submitted_material.get('bulk_density', None)),
             fineness_modulus=float_if_not_empty(submitted_material.get('fineness_modulus', None)),
             water_absorption=float_if_not_empty(submitted_material.get('water_absorption', None))
         )
@@ -46,6 +46,7 @@ class AggregatesStrategy(MaterialStrategy):
         return Aggregates(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
+            density=submitted_material.get('density', AGGREGATE_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)
@@ -56,7 +57,6 @@ class AggregatesStrategy(MaterialStrategy):
         return [cls.include('Fine Aggregates (m%)', aggregates.composition.fine_aggregates),
                 cls.include('Coarse Aggregates (m%)', aggregates.composition.coarse_aggregates),
                 cls.include('Specific Gravity', aggregates.composition.gravity),
-                cls.include('Bulk Density (kg/m³)', aggregates.composition.bulk_density),
                 cls.include('Fineness modulus (m³/kg)', aggregates.composition.fineness_modulus),
                 cls.include('Water absorption (m%)', aggregates.composition.water_absorption)]
 
@@ -75,12 +75,11 @@ class AggregatesStrategy(MaterialStrategy):
         fine_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fine_aggregates')
         coarse_aggregates_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'coarse_aggregates')
         gravity_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'gravity')
-        bulk_density_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'bulk_density')
         fineness_modulus_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'fineness_modulus')
         water_absorption_complete = pcc.is_complete(base_materials_as_dict, 'composition', 'water_absorption')
 
-        return fine_aggregates_complete and coarse_aggregates_complete and gravity_complete and \
-            bulk_density_complete and fineness_modulus_complete and water_absorption_complete
+        return (fine_aggregates_complete and coarse_aggregates_complete and gravity_complete and
+                fineness_modulus_complete and water_absorption_complete)
 
     @classmethod
     def convert_to_multidict(cls, aggregates):
@@ -93,12 +92,14 @@ class AggregatesStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_aggregates_as_dict):
+        density = cls.compute_blended_density(normalized_ratios, base_aggregates_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_aggregates_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_aggregates_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_aggregates_as_dict)
 
         return Aggregates(type=base_aggregates_as_dict[0]['type'],
                           name=name,
+                          density=density,
                           costs=costs,
                           composition=composition,
                           additional_properties=additional_properties,
@@ -115,16 +116,15 @@ class AggregatesStrategy(MaterialStrategy):
         blended_coarse_aggregates = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
                                                      'coarse_aggregates')
         blended_gravity = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition', 'gravity')
-        blended_bulk_density = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
-                                                'bulk_density')
+
         blended_fineness_modulus = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
                                                     'fineness_modulus')
         blended_water_absorption = bpc.compute_mean(normalized_ratios, base_aggregates_as_dict, 'composition',
                                                     'water_absorption')
 
         composition = Composition(fine_aggregates=blended_fine_aggregates, coarse_aggregates=blended_coarse_aggregates,
-                                  gravity=blended_gravity, bulk_density=blended_bulk_density,
-                                  fineness_modulus=blended_fineness_modulus, water_absorption=blended_water_absorption)
+                                  gravity=blended_gravity, fineness_modulus=blended_fineness_modulus,
+                                  water_absorption=blended_water_absorption)
 
         return composition
 

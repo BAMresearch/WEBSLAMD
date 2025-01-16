@@ -89,6 +89,7 @@ class MaterialStrategy(ABC):
             all_properties=join_all(cls.gather_composition_information(material))
         )
 
+        cls._append_density(dto, material.density)
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
         # Remove trailing comma and whitespace
@@ -101,6 +102,7 @@ class MaterialStrategy(ABC):
             ('uuid', material.uuid),
             ('material_name', material.name),
             ('material_type', material.type),
+            ('density', material.density),
             ('delivery_time', str_if_not_none(material.costs.delivery_time)),
             ('costs', str_if_not_none(material.costs.costs)),
             ('co2_footprint', str_if_not_none(material.costs.co2_footprint)),
@@ -138,7 +140,8 @@ class MaterialStrategy(ABC):
         return Costs(
             co2_footprint=float_if_not_empty(submitted_material.get('co2_footprint', None)),
             costs=float_if_not_empty(submitted_material.get('costs', None)),
-            delivery_time=float_if_not_empty(submitted_material.get('delivery_time', None))
+            delivery_time=float_if_not_empty(submitted_material.get('delivery_time', None)),
+            recyclingrate=float_if_not_empty(submitted_material.get('recyclingrate', None))
         )
 
     @classmethod
@@ -152,12 +155,19 @@ class MaterialStrategy(ABC):
         MaterialsPersistence.save(model.type.lower(), model)
 
     @classmethod
+    def _append_density(cls, dto, density):
+        if density is None:
+            return
+        dto.all_properties += cls.include('Density (t/m³)', density)
+
+    @classmethod
     def _append_cost_properties(cls, dto, costs):
         if costs is None:
             return
         dto.all_properties += cls.include('Costs (€/ton for materials, € for processes)', costs.costs)
         dto.all_properties += cls.include('CO₂ footprint (kg/ton for materials, kg for processes)', costs.co2_footprint)
         dto.all_properties += cls.include('Delivery time (days)', costs.delivery_time)
+        dto.all_properties += cls.include('Recyclingrate (%)', costs.recyclingrate)
 
     @classmethod
     def _append_additional_properties(cls, dto, additional_properties):
@@ -199,6 +209,10 @@ class MaterialStrategy(ABC):
     @classmethod
     def check_completeness_of_base_material_properties(cls, base_materials_as_dict):
         pass
+
+    @classmethod
+    def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_blended_density(normalized_ratios, base_materials_as_dict)
 
     @classmethod
     def compute_blended_costs(cls, normalized_ratios, base_materials_as_dict):

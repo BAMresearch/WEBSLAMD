@@ -20,6 +20,14 @@ class MaterialsForm(Form):
                  'Admixture', 'Process', 'Custom']
     )
 
+    recyclingrate = DecimalField(
+        label='Recyclingrate (%)',
+        validators=[
+            validators.optional()
+        ],
+        render_kw={"min": "0", "max": "1", "step": "0.01"}
+    )
+
     co2_footprint = DecimalField(
         label='CO₂ footprint (kg/ton for materials, kg for processes)',
         validators=[

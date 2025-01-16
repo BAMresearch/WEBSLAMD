@@ -92,7 +92,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
                                  costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
                                      fine_aggregates=10.0, coarse_aggregates=4.4, gravity=7,
-                                     bulk_density=11, fineness_modulus=5, water_absorption=10),
+                                     fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='2'),
                                                         AdditionalProperty(name='Prop2', value='Category'),
                                                         AdditionalProperty(name='Prop3', value='Not a number 1')])
@@ -103,7 +103,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
                                  costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
                                      fine_aggregates=20.0, coarse_aggregates=4.1, gravity=4,
-                                     bulk_density=11, fineness_modulus=5, water_absorption=10),
+                                     fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                         AdditionalProperty(name='Prop2', value='Category'),
                                                         AdditionalProperty(name='Prop3', value='12')])
@@ -114,7 +114,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
                                  costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
                                  composition=slamd.materials.processing.models.aggregates.Composition(
                                      fine_aggregates=27.0, coarse_aggregates=9.0, gravity=6,
-                                     bulk_density=16, fineness_modulus=5, water_absorption=10),
+                                     fineness_modulus=5, water_absorption=10),
                                  additional_properties=[AdditionalProperty(name='Prop1', value='5'),
                                                         AdditionalProperty(name='Prop2', value='Other Category'),
                                                         AdditionalProperty(name='Prop3', value='Not a number 2')])

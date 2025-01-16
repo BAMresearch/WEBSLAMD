@@ -14,7 +14,8 @@ function handleSubmittingAggregateCosts(event){
     const aggregate_cost_CO_2 = aggregate_cost_inputs[0].value
     const aggregate_cost_EUR = aggregate_cost_inputs[1].value
     const aggregate_cost_delivery_time = aggregate_cost_inputs[2].value
-    const aggregate = { 'material_type':'Aggregates', 'material_name' : aggregate_name,  "co2_footprint" : aggregate_cost_CO_2, "costs" : aggregate_cost_EUR, "delivery_time" : aggregate_cost_delivery_time }
+    const aggregate_cost_recyclingrate = aggregate_cost_inputs[3].value
+    const aggregate = { 'material_type':'Aggregates', 'material_name' : aggregate_name,  "co2_footprint" : aggregate_cost_CO_2, "costs" : aggregate_cost_EUR, "delivery_time" : aggregate_cost_delivery_time, "recyclingrate" : aggregate_cost_recyclingrate }
     aggregate_cost_inputs.forEach((aggregate_cost_input) => {
         aggregate_cost_input.disabled = true
     })
