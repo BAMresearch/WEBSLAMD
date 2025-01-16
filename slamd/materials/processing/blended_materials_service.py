@@ -61,10 +61,6 @@ class BlendedMaterialsService(MaterialsService):
         for _ in range(count):
             min_max_form.all_min_max_entries.append_entry()
 
-        # Min/Max of the last entry are calculated from the previous entries, and the labels need to be switched
-        # min_max_form.all_min_max_entries[-1].min.label.text = 'Max (%)'
-        # min_max_form.all_min_max_entries[-1].max.label.text = 'Min (%)'
-
         return min_max_form, complete
 
     @classmethod
@@ -76,21 +72,23 @@ class BlendedMaterialsService(MaterialsService):
     def create_ratio_form(cls, min_max_values_with_increments):
         if not min_max_increment_config_valid(min_max_values_with_increments, 100):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
-        print(min_max_values_with_increments)
+
         all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
 
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
+        valid_cartesian_product_list = [cartesian_product for cartesian_product in cartesian_product_list if
+                                        sum(cartesian_product) == 100]
 
         if len(cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException(
                 f'Too many blends were requested. At most {MAX_NUMBER_OF_RATIOS} ratios can be created!')
 
         ratio_form = RatioForm()
-        for ratio_as_list in cartesian_product_list:
-            all_ratios_for_entry = RatioParser.create_ratio_string(ratio_as_list)
+        for ratio in valid_cartesian_product_list:
+            ratio_as_string = RatioParser.ratio_list_to_ratio_string(ratio)
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
-            ratio_form_entry.ratio.data = all_ratios_for_entry
+            ratio_form_entry.ratio.data = ratio_as_string
         return ratio_form
 
     @classmethod
@@ -142,7 +140,7 @@ class BlendedMaterialsService(MaterialsService):
     @classmethod
     def _prepare_values_for_cartesian_product(cls, min_max_values_with_increments):
         all_values = []
-        for i in range(len(min_max_values_with_increments) - 1):
+        for i in range(len(min_max_values_with_increments)):
             values_for_given_base_material = []
             current_value = min_max_values_with_increments[i]['min']
             max_value = min_max_values_with_increments[i]['max']
