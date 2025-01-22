@@ -103,16 +103,9 @@ class PowderForm(MaterialsForm):
         ]
     )
 
-    gravity = DecimalField(
-        label='Specific gravity',
-        validators=[
-            validators.Optional()
-        ]
-    )
-
     density = DecimalField(
-        label='Powder density (t/m³)',
-        default=1.4,
+        label='Powder Specific Gravity',
+        default=3.15,
         validators=[
             validators.DataRequired(message='Material density cannot be empty')
         ]

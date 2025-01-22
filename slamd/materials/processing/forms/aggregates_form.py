@@ -37,8 +37,8 @@ class AggregatesForm(MaterialsForm):
         ])
 
     density = DecimalField(
-        label='Aggregate density (t/m³)',
-        default=2.4,
+        label='Aggregates Specific Gravity',
+        default=2.65,
         validators=[
             validators.DataRequired(message='Material density cannot be empty')
         ]

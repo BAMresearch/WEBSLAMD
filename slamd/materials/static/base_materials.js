@@ -71,6 +71,7 @@ function autocorrectDeliveryTime(event) {
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-base").setAttribute("class", "nav-link active");
   document.getElementById("material_name").addEventListener("keyup", toggleSubmitButtonIfInputFieldEmpty);
+  document.getElementById('density').addEventListener("keyup", toggleSubmitButtonIfInputFieldEmpty);
   document.getElementById("material_type").addEventListener("change", selectMaterialType);
   document.getElementById("add-property-button").addEventListener("click", addAdditionalProperty);
   document.getElementById("delete-property-button").addEventListener("click", deleteAdditionalProperty);

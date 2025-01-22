@@ -6,8 +6,8 @@ from slamd.materials.processing.forms.materials_form import MaterialsForm
 
 class AdmixtureForm(MaterialsForm):
     density = DecimalField(
-        label='Admixture density (t/m³)',
-        default=1.1,
+        label='Admixture Specific Gravity',
+        default=1.50,
         validators=[
                 validators.DataRequired(message='Material density cannot be empty')
         ]
