@@ -59,7 +59,6 @@ class PowderStrategy(MaterialStrategy):
         )
 
         structure = Structure(
-            gravity=float_if_not_empty(submitted_material.get('gravity', None)),
             fine=float_if_not_empty(submitted_material.get('fine', None))
         )
         return Powder(
@@ -87,8 +86,7 @@ class PowderStrategy(MaterialStrategy):
                 cls.include('SrO (m%)', powder.composition.sr_o),
                 cls.include('Mn₂O₃ (m%)', powder.composition.mn2_o3),
                 cls.include('LOI (m%)', powder.composition.loi),
-                cls.include('Fine modules (m²/kg)', powder.structure.fine),
-                cls.include('Specific gravity', powder.structure.gravity)]
+                cls.include('Fine modules (m²/kg)', powder.structure.fine)]
 
     @classmethod
     def convert_to_multidict(cls, powder):
@@ -98,7 +96,6 @@ class PowderStrategy(MaterialStrategy):
             field_value = str_if_not_none(getattr(powder.composition, field.name))
             multidict.add(field.name, field_value)
         multidict.add('fine', str_if_not_none(powder.structure.fine))
-        multidict.add('gravity', str_if_not_none(powder.structure.gravity))
         return multidict
 
     @classmethod
@@ -154,9 +151,8 @@ class PowderStrategy(MaterialStrategy):
     @classmethod
     def _check_completeness_of_structure(cls, base_materials_as_dict):
         fine_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'fine')
-        gravity_complete = PropertyCompletenessChecker.is_complete(base_materials_as_dict, 'structure', 'gravity')
 
-        return fine_complete and gravity_complete
+        return fine_complete
 
     @classmethod
     def _compute_blended_composition(cls, normalized_ratios, base_powders_as_dict):
@@ -189,10 +185,8 @@ class PowderStrategy(MaterialStrategy):
     def _compute_blended_structure(cls, normalized_ratios, base_powders_as_dict):
         blended_fine = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict, 'structure',
                                                                  'fine')
-        blended_gravity = BlendingPropertiesCalculator.compute_mean(normalized_ratios, base_powders_as_dict,
-                                                                    'structure', 'gravity')
 
-        return Structure(fine=blended_fine, gravity=blended_gravity)
+        return Structure(fine=blended_fine)
 
     @classmethod
     def for_formulation(cls, powder):
@@ -201,5 +195,4 @@ class PowderStrategy(MaterialStrategy):
             field_value = float_if_not_empty(getattr(powder.composition, field.name))
             multidict.add(field.name, field_value)
         multidict.add('fine', float_if_not_empty(powder.structure.fine))
-        multidict.add('gravity', float_if_not_empty(powder.structure.gravity))
         return multidict

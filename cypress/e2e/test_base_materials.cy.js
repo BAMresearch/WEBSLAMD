@@ -49,7 +49,6 @@ describe("Test creating base materials", () => {
     cy.findByText("Structural composition").should("exist");
     cy.fillForm({
       "Fine modules (m²/kg)": "123.45",
-      "Specific gravity": "67.890",
     });
 
     // Fill out additional properties

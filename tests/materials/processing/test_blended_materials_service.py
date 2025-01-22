@@ -186,7 +186,6 @@ def test_save_blended_materials_creates_two_powders_from_three_base_materials(mo
 
     with app.test_request_context('/materials/blended'):
         form = _prepare_request_for_successful_blending('Powder')
-
         BlendedMaterialsService.save_blended_materials(form)
 
     _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
@@ -253,8 +252,10 @@ def _prepare_request_for_successful_blending(material_type):
     form = MultiDict()
     form.add('blended_material_name', 'test blend 1')
     form.add('base_type', material_type)
+    form['blending_strategy'] = 'Weight-based'
     form['all_ratio_entries-0-ratio'] = '40/40/20'
     form['all_ratio_entries-1-ratio'] = '40/30/30'
+    form['all_ratio_entries-2-ratio'] = '40/20/40'
     form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
     return form
 
@@ -280,7 +281,6 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_first_blended_material.costs.delivery_time == 40.0
 
     assert mock_save_called_with_first_blended_material.structure.fine == 70.0
-    assert mock_save_called_with_first_blended_material.structure.gravity is None
 
     assert len(mock_save_called_with_first_blended_material.additional_properties) == 3
     assert mock_save_called_with_first_blended_material.additional_properties[0].name == 'Prop1'
@@ -304,7 +304,6 @@ def _assert_saved_blended_powders(mock_save_called_with_first_blended_material,
     assert mock_save_called_with_second_blended_material.costs.delivery_time == 40.0
 
     assert mock_save_called_with_second_blended_material.structure.fine == 65.0
-    assert mock_save_called_with_second_blended_material.structure.gravity is None
 
     assert len(mock_save_called_with_second_blended_material.additional_properties) == 3
     assert mock_save_called_with_second_blended_material.additional_properties[0].name == 'Prop1'
@@ -322,7 +321,6 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
                                      mock_save_called_with_second_blended_material):
     assert mock_save_called_with_first_blended_material.composition.fine_aggregates == 17.4
     assert mock_save_called_with_first_blended_material.composition.coarse_aggregates == 5.2
-    assert mock_save_called_with_first_blended_material.composition.gravity == 5.6
 
     assert mock_save_called_with_first_blended_material.costs.co2_footprint == 26.0
     assert mock_save_called_with_first_blended_material.costs.costs == 36.0
@@ -341,7 +339,6 @@ def _assert_saved_blended_aggregates(mock_save_called_with_first_blended_materia
 
     assert mock_save_called_with_second_blended_material.composition.fine_aggregates == 18.1
     assert mock_save_called_with_second_blended_material.composition.coarse_aggregates == 5.69
-    assert mock_save_called_with_second_blended_material.composition.gravity == 5.8
 
     assert mock_save_called_with_second_blended_material.costs.co2_footprint == 32.0
     assert mock_save_called_with_second_blended_material.costs.costs == 35.0
@@ -429,7 +426,7 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     dto = all_blended_materials[0]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, test prop: test value'
 
     assert result.ctx == 'blended materials'
     assert mock_delete_by_type_and_uuid_called_with == (

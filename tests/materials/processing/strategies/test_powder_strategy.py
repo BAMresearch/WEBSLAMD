@@ -26,7 +26,6 @@ def test_create_model_reads_all_properties_from_submitted_material():
                                              ('mn2_o3', '7.65'),
                                              ('loi', '7.65'),
                                              ('fine', '123.45'),
-                                             ('gravity', '678.90'),
                                              ('submit', 'Save material')])
     model = PowderStrategy.create_model(submitted_material)
     assert model.name == 'test powder'
@@ -49,7 +48,6 @@ def test_create_model_reads_all_properties_from_submitted_material():
     assert model.composition.mn2_o3 == 7.65
     assert model.composition.loi == 7.65
     assert model.structure.fine == 123.45
-    assert model.structure.gravity == 678.90
 
 
 def test_gather_composition_properties_adds_all_properties():
@@ -69,8 +67,7 @@ def test_gather_composition_properties_adds_all_properties():
         loi=2
     )
     structure = Structure(
-        fine=123.45,
-        gravity=678.90
+        fine=123.45
     )
     powder = Powder(
         name='test powder',
@@ -95,8 +92,7 @@ def test_gather_composition_properties_adds_all_properties():
                       'SrO (m%): 8.76, ',
                       'Mn₂O₃ (m%): 7.65, ',
                       'LOI (m%): 2, ',
-                      'Fine modules (m²/kg): 123.45, ',
-                      'Specific gravity: 678.9, ']
+                      'Fine modules (m²/kg): 123.45, ']
 
 
 def test_convert_to_multidict_adds_all_properties():
@@ -116,8 +112,7 @@ def test_convert_to_multidict_adds_all_properties():
         loi=7.65
     )
     structure = Structure(
-        fine=123.45,
-        gravity=678.90
+        fine=123.45
     )
     powder = Powder(
         name='test powder',
@@ -145,7 +140,6 @@ def test_convert_to_multidict_adds_all_properties():
     assert multidict['mn2_o3'] == '7.65'
     assert multidict['loi'] == '7.65'
     assert multidict['fine'] == '123.45'
-    assert multidict['gravity'] == '678.9'
 
 
 def test_check_completeness_of_base_material_properties_returns_true_when_all_properties_are_incomplete(monkeypatch):

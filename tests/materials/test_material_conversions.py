@@ -43,7 +43,6 @@ def _create_aggregates_material():
         'composition': {
             'fine_aggregates': 1.2,
             'coarse_aggregates': 2.3,
-            'gravity': 3.4,
             'fineness_modulus': 5.6,
             'water_absorption': 6.7
         }
@@ -75,7 +74,6 @@ def _create_powder_material():
         },
         'structure': {
             'fine': 1.2,
-            'gravity': 2.3
         }
     }
 
@@ -179,7 +177,6 @@ def test_powder_from_dict():
 
     struct_as_dict = powder_as_dict.pop('structure')
     assert powder_from_dict.structure.fine == struct_as_dict['fine']
-    assert powder_from_dict.structure.gravity == struct_as_dict['gravity']
 
     for k, v in powder_as_dict.items():
         assert getattr(powder_from_dict, k) == v

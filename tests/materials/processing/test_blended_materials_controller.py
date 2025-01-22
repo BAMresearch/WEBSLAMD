@@ -21,6 +21,7 @@ def test_blended_materials_controller_shows_initial_blended_materials_form_and_t
 
     html = response.data.decode('utf-8')
     assert 'Blended base materials' in html
+    assert 'Blended base materials' in html
     assert 'Name' in html
     assert 'Material type' in html
     assert 'test powder' in html

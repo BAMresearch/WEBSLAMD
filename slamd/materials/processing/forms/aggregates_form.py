@@ -18,12 +18,6 @@ class AggregatesForm(MaterialsForm):
         ]
     )
 
-    gravity = DecimalField(
-        label='Specific gravity',
-        validators=[
-            validators.Optional()
-        ])
-
     fineness_modulus = DecimalField(
         label='Fineness modulus (m³/kg)',
         validators=[

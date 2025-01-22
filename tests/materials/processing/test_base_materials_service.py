@@ -105,7 +105,6 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('mn2_o3', ''),
                                    ('loi', ''),
                                    ('fine', ''),
-                                   ('gravity', ''),
                                    ('submit', 'Save material')])
         BaseMaterialService.save_material(form)
 
@@ -286,7 +285,6 @@ def test_edit_material_edits_powder(monkeypatch):
                                    ('mn2_o3', ''),
                                    ('loi', ''),
                                    ('fine', ''),
-                                   ('gravity', ''),
                                    ('submit', 'Save material')])
         BaseMaterialService.edit_material('powder', 'to_be_edited', form)
 
@@ -506,4 +504,4 @@ def _assert_test_powders(all_materials):
     dto = all_materials[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Specific gravity: 12, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, test prop: test value'

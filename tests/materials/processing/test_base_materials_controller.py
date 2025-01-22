@@ -82,7 +82,6 @@ def test_slamd_selects_aggregates(client):
     assert response.status_code == 200
     assert 'Fine Aggregates' in template
     assert 'Coarse Aggregates' in template
-    assert 'Specific gravity' in template
     assert 'Fineness modulus' in template
     assert 'Water absorption' in template
 
