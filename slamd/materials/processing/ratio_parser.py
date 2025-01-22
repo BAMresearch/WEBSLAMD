@@ -31,10 +31,15 @@ class RatioParser:
     @classmethod
     def density_to_weight_ratios(cls, normalized_ratios, base_materials):
         densities = [base_material['density'] for base_material in base_materials]
-        normalized_density_ratios = [[
-            (float(densities[0]) * normalized_ratio[0]) / (float(densities[0]) * normalized_ratio[0] + float(densities[1]) * normalized_ratio[1]),
-            (float(densities[1]) * normalized_ratio[1]) / (float(densities[0]) * normalized_ratio[0] + float(densities[1]) * normalized_ratio[1])
-        ] for normalized_ratio in normalized_ratios]
+        normalized_density_ratios = []
+
+        for normalized_ratio in normalized_ratios:
+            weighted_ratios = [density * ratio for density, ratio in zip(densities, normalized_ratio)]
+            sum_density_ratios = sum(weighted_ratios)
+
+            normalized_density_ratio = [round(weighted / sum_density_ratios, 2) for weighted in weighted_ratios]
+            normalized_density_ratios.append(normalized_density_ratio)
+
         return normalized_density_ratios
 
 
