@@ -5,6 +5,7 @@ from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
 from slamd.materials.processing.strategies.blending_properties_calculator import BlendingPropertiesCalculator
 from slamd.materials.processing.strategies.property_completeness_checker import PropertyCompletenessChecker
+from slamd.materials.processing.constants.material_constants import POWDER_DEFAULT_DENSITY
 
 KEY_COMPOSITION = 'composition'
 KEY_STRUCTURE = 'structure'
@@ -64,7 +65,7 @@ class PowderStrategy(MaterialStrategy):
         return Powder(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
-            density=submitted_material.get('density', 1.40),
+            density=submitted_material.get('density', POWDER_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             structure=structure,

@@ -1,7 +1,7 @@
 from slamd.materials.processing.models.admixture import Admixture
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
-
+from slamd.materials.processing.constants.material_constants import ADMIXTURE_DEFAULT_DENSITY
 
 class AdmixtureStrategy(MaterialStrategy):
 
@@ -16,7 +16,7 @@ class AdmixtureStrategy(MaterialStrategy):
         return Admixture(
             name=submitted_material.get('material_name', None),
             type=submitted_material.get('material_type', None),
-            density=submitted_material.get('density', 1.10),
+            density=submitted_material.get('density', ADMIXTURE_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )

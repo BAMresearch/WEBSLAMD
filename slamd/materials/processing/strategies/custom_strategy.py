@@ -1,7 +1,7 @@
 from slamd.materials.processing.models.custom import Custom
 from slamd.materials.processing.ratio_parser import RatioParser
 from slamd.materials.processing.strategies.material_strategy import MaterialStrategy
-
+from slamd.materials.processing.constants.material_constants import CUSTOM_DEFAULT_DENSITY
 
 class CustomStrategy(MaterialStrategy):
 
@@ -16,7 +16,7 @@ class CustomStrategy(MaterialStrategy):
         return Custom(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            density=submitted_material['density'],
+            density=submitted_material.get('density', CUSTOM_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             additional_properties=cls.extract_additional_properties(submitted_material)
         )
