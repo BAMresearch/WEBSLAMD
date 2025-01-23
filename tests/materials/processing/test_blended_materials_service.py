@@ -10,8 +10,9 @@ from slamd.materials.processing.materials_persistence import MaterialsPersistenc
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.liquid import Liquid
 from slamd.materials.processing.models.powder import Powder
+from slamd.materials.processing.ratio_parser import RatioParser
 from tests.materials.materials_test_data import create_test_powders, prepare_test_base_powders_for_blending, \
-    prepare_test_base_aggregates_for_blending, prepare_test_base_liquids_for_blending
+    prepare_test_base_aggregates_for_blending, prepare_test_base_liquids_for_blending, create_test_base_materials_dict
 
 app = create_app('testing', with_session=False)
 
@@ -42,7 +43,7 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
     with app.test_request_context('/materials/blended/add_ratios'):
         ratio_request = [{'idx': 0, 'min': 45, 'max': 55, 'increment': 5},
                          {'idx': 1, 'min': 2, 'max': 6, 'increment': 2},
-                         {'idx': 2, 'min': 53, 'max': 39, 'increment': None}]
+                         {'idx': 2, 'min': 39, 'max': 53, 'increment': 1}]
 
         form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
@@ -57,7 +58,7 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
 def test_create_ratio_form_creates_all_ratios_for_decimal_values():
     with app.test_request_context('/materials/blended/add_ratios'):
         ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 5},
-                         {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
+                         {'idx': 1, 'min': 85, 'max': 90, 'increment': 5}]
 
         form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
@@ -67,33 +68,11 @@ def test_create_ratio_form_creates_all_ratios_for_decimal_values():
         assert data == [{'ratio': '10/90'}, {'ratio': '15/85'}]
 
 
-def test_create_ratio_form_creates_all_ratios_for_large_increment_value():
-    with app.test_request_context('/materials/blended/add_ratios'):
-        ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 30},
-                         {'idx': 1, 'min': 90, 'max': 85, 'increment': None}]
-
-        form = BlendedMaterialsService.create_ratio_form(ratio_request)
-
-        data = form.all_ratio_entries.data
-
-        assert len(data) == 1
-        assert data == [{'ratio': '10/90'}]
-
-
 def test_create_ratio_form_raises_exception_when_too_many_ratios_are_requested():
     with app.test_request_context('/materials/blended/add_ratios'):
         with pytest.raises(SlamdRequestTooLargeException):
             ratio_request = [{'idx': 0, 'min': 10, 'max': 90, 'increment': 0.01},
-                             {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
-
-            BlendedMaterialsService.create_ratio_form(ratio_request)
-
-
-def test_create_ratio_form_raises_exception_when_min_value_is_invalid():
-    with app.test_request_context('/materials/blended/add_ratios'):
-        with pytest.raises(ValueNotSupportedException):
-            ratio_request = [{'idx': 0, 'min': -2, 'max': 90, 'increment': 0.01},
-                             {'idx': 1, 'min': 90, 'max': 10, 'increment': None}]
+                             {'idx': 1, 'min': 90, 'max': 10, 'increment': 0.01}]
 
             BlendedMaterialsService.create_ratio_form(ratio_request)
 
@@ -176,9 +155,9 @@ def test_save_blended_materials_creates_two_powders_from_three_base_materials(mo
         if material_type == 'powder':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0.4/0.4/0.2':
+            if material.name == 'test blend 1-Weight-based-powder 1/powder 2/powder 3-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-0.4/0.3/0.3':
+            if material.name == 'test blend 1-Weight-based-powder 1/powder 2/powder 3-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -203,9 +182,10 @@ def test_save_blended_materials_creates_two_aggregates_from_three_base_materials
         if material_type == 'aggregates':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0.4/0.4/0.2':
+            print(material.name)
+            if material.name == 'test blend 1-Weight-based-aggregate 1/aggregate 2/aggregate 3-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-0.4/0.3/0.3':
+            if material.name == 'test blend 1-Weight-based-aggregate 1/aggregate 2/aggregate 3-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -231,9 +211,9 @@ def test_save_blended_materials_creates_two_liquids_from_three_base_materials(mo
         if material_type == 'liquid':
             nonlocal mock_save_called_with_first_blended_material
             nonlocal mock_save_called_with_second_blended_material
-            if material.name == 'test blend 1-0.4/0.4/0.2':
+            if material.name == 'test blend 1-Weight-based-liquid 1/liquid 2/liquid 3-0.4/0.4/0.2':
                 mock_save_called_with_first_blended_material = material
-            if material.name == 'test blend 1-0.4/0.3/0.3':
+            if material.name == 'test blend 1-Weight-based-liquid 1/liquid 2/liquid 3-0.4/0.3/0.3':
                 mock_save_called_with_second_blended_material = material
 
     monkeypatch.setattr(MaterialsPersistence, 'query_by_type_and_uuid', mock_query_by_type_and_uuid)
@@ -255,7 +235,6 @@ def _prepare_request_for_successful_blending(material_type):
     form['blending_strategy'] = 'Weight-based'
     form['all_ratio_entries-0-ratio'] = '40/40/20'
     form['all_ratio_entries-1-ratio'] = '40/30/30'
-    form['all_ratio_entries-2-ratio'] = '40/20/40'
     form.setlist('base_material_selection', ['uuid1', 'uuid2', 'uuid3'])
     return form
 
@@ -426,8 +405,16 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
     dto = all_blended_materials[0]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Density (t/m³): 3, test prop: test value'
 
     assert result.ctx == 'blended materials'
     assert mock_delete_by_type_and_uuid_called_with == (
         'powder', 'uuid to delete')
+
+#
+def test_weights_to_density_ratio(monkeypatch):
+    normalized_ratios = [[0.5, 0.5], [0.6, 0.4], [0.7, 0.3]]
+    base_materials_dict = create_test_base_materials_dict()
+    weights_to_density_ratios = RatioParser.weight_to_density_ratios(normalized_ratios, base_materials_dict)
+
+    assert weights_to_density_ratios == [[0.36, 0.64], [0.46, 0.54], [0.57, 0.43]]

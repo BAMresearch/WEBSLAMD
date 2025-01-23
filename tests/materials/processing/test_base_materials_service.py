@@ -88,6 +88,7 @@ def test_save_material_creates_powder(monkeypatch):
     with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
                                    ('material_type', 'Powder'),
+                                   ('density', '1'),
                                    ('co2_footprint', ''),
                                    ('costs', ''),
                                    ('delivery_time', ''),
@@ -107,6 +108,7 @@ def test_save_material_creates_powder(monkeypatch):
                                    ('fine', ''),
                                    ('submit', 'Save material')])
         BaseMaterialService.save_material(form)
+
 
     assert mock_create_model_called_with == form
 
@@ -161,6 +163,7 @@ def test_save_material_creates_aggregates(monkeypatch):
     with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
                                    ('material_type', 'Aggregates'),
+                                   ('density', '1'),
                                    ('fine_aggregates', ''),
                                    ('coarse_aggregates', ''),
                                    ('fa_density', ''),
@@ -214,6 +217,7 @@ def test_save_material_creates_admixture(monkeypatch):
     with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test admixture'),
                                    ('material_type', 'Admixture'),
+                                   ('density', '1'),
                                    ('composition', ''),
                                    ('type', ''),
                                    ('submit', 'Save material')])
@@ -239,6 +243,7 @@ def test_save_material_creates_custom(monkeypatch):
     with app.test_request_context('/materials/base'):
         form = ImmutableMultiDict([('material_name', 'test custom'),
                                    ('material_type', 'Custom'),
+                                   ('density', '1'),
                                    ('custom_name', ''),
                                    ('custom_value', ''),
                                    ('submit', 'Save material')])
@@ -268,6 +273,7 @@ def test_edit_material_edits_powder(monkeypatch):
     with app.test_request_context('/materials/base/powder/to_be_edited'):
         form = ImmutableMultiDict([('material_name', 'test powder'),
                                    ('material_type', 'Powder'),
+                                   ('density', '1'),
                                    ('co2_footprint', ''),
                                    ('costs', ''),
                                    ('delivery_time', ''),
@@ -312,6 +318,7 @@ def test_edit_material_edits_liquid(monkeypatch):
     with app.test_request_context('/materials/base/liquid/to_be_edited'):
         form = ImmutableMultiDict([('material_name', 'test liquid'),
                                    ('material_type', 'Liquid'),
+                                   ('density', '1'),
                                    ('na2_si_o3', ''),
                                    ('na_o_h', ''),
                                    ('na2_si_o3_mol', ''),
@@ -349,6 +356,7 @@ def test_edit_material_edits_aggregates(monkeypatch):
     with app.test_request_context('/materials/base/aggregates/to_be_edited'):
         form = ImmutableMultiDict([('material_name', 'test aggregates'),
                                    ('material_type', 'Aggregates'),
+                                   ('density', '1'),
                                    ('fine_aggregates', ''),
                                    ('coarse_aggregates', ''),
                                    ('fa_density', ''),
@@ -410,6 +418,7 @@ def test_edit_material_edits_admixture(monkeypatch):
     with app.test_request_context('/materials/base/admixture/to_be_edited'):
         form = ImmutableMultiDict([('material_name', 'test admixture'),
                                    ('material_type', 'Admixture'),
+                                   ('density', '1'),
                                    ('composition', ''),
                                    ('type', ''),
                                    ('submit', 'Save material')])
@@ -439,6 +448,7 @@ def test_edit_material_edits_custom(monkeypatch):
     with app.test_request_context('/materials/base/custom/to_be_edited'):
         form = ImmutableMultiDict([('material_name', 'test custom'),
                                    ('material_type', 'Custom'),
+                                   ('density', '1'),
                                    ('custom_name', ''),
                                    ('custom_value', ''),
                                    ('submit', 'Save material')])
@@ -500,8 +510,8 @@ def _assert_test_powders(all_materials):
     dto = all_materials[0]
     assert dto.name == 'my powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == ''
+    assert dto.all_properties == 'Density (t/m³): 2'
     dto = all_materials[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Density (t/m³): 3, test prop: test value'

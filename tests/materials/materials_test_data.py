@@ -14,6 +14,7 @@ def create_test_powders():
     powder1 = Powder(
         name='test powder',
         type='Powder',
+        density=3,
         composition=composition,
         structure=structure,
         additional_properties=[AdditionalProperty(
@@ -26,6 +27,7 @@ def create_test_powders():
     powder2 = Powder(
         name='my powder',
         type='Powder',
+        density=2,
         composition=composition,
         structure=structure,
         additional_properties=[]
@@ -125,7 +127,7 @@ def prepare_test_base_aggregates_for_blending(material_type, uuid):
 
 def prepare_test_base_liquids_for_blending(material_type, uuid):
     if uuid == 'uuid1':
-        liquid1 = Liquid(name='liquid 1', type='Liquid',
+        liquid1 = Liquid(name='liquid 1', type='Liquid', density=1.02,
                          costs=Costs(co2_footprint=20, costs=50, delivery_time=30),
                          composition=slamd.materials.processing.models.liquid.Composition(
                              na2_si_o3=10.0, na_o_h=4.4, na2_si_o3_mol=7,
@@ -136,7 +138,7 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid1.uuid = 'uuid1'
         return liquid1
     if uuid == 'uuid2':
-        liquid2 = Liquid(name='liquid 2', type='Liquid',
+        liquid2 = Liquid(name='liquid 2', type='Liquid', density=1.42,
                          costs=Costs(co2_footprint=10, costs=30, delivery_time=40),
                          composition=slamd.materials.processing.models.liquid.Composition(
                              na2_si_o3=20.0, na_o_h=4.1, na2_si_o3_mol=4,
@@ -147,7 +149,7 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
         liquid2.uuid = 'uuid2'
         return liquid2
     if uuid == 'uuid3':
-        liquid3 = Liquid(name='liquid 3', type='Liquid',
+        liquid3 = Liquid(name='liquid 3', type='Liquid', density=1.22,
                          costs=Costs(co2_footprint=70, costs=20, delivery_time=40),
                          composition=slamd.materials.processing.models.liquid.Composition(
                              na2_si_o3=27.0, na_o_h=9.0, na2_si_o3_mol=6,
@@ -161,8 +163,25 @@ def prepare_test_base_liquids_for_blending(material_type, uuid):
 
 
 def prepare_test_admixture():
-    aggregates1 = Admixture(name='admixture 1', type='Admixture',
+    aggregates1 = Admixture(name='admixture 1', type='Admixture', density=2.7,
                             costs=Costs(co2_footprint=11, costs=55, delivery_time=31),
                             additional_properties=[])
     aggregates1.uuid = 'uuid admixture'
     return aggregates1
+
+def create_test_base_materials_dict():
+    base_material_as_dict = [{'uuid': 'testUuid1', 'name': 'Powder1', 'type': 'Powder',
+                              'density': '1.40', 'costs': Costs(co2_footprint=10.0, costs=5.0, delivery_time=1,
+                                                                recyclingrate=100.0), 'additional_properties': [],
+                              'composition': Composition(fe3_o2=1, si_o2=2, al2_o3=3, ca_o=4, mg_o=5,
+                                                         na2_o=6, k2_o=7, s_o3=8, ti_o2=9, p2_o5=10,
+                                                         sr_o=11, mn2_o3=12, loi=13)},
+                             {'uuid': 'testUuid2', 'name': 'Powder2', 'type': 'Powder',
+                              'density': '2.5', 'costs': Costs(co2_footprint=8.0, costs=100.0, delivery_time=2,
+                                                             recyclingrate=60.0), 'additional_properties': [],
+                              'composition': Composition(fe3_o2=13, si_o2=12, al2_o3=11, ca_o=10, mg_o=9,
+                                                         na2_o=8, k2_o=7, s_o3=6, ti_o2=5, p2_o5=4,
+                                                         sr_o=3, mn2_o3=2, loi=1)}]
+
+    return base_material_as_dict
+

@@ -24,6 +24,7 @@ def test_slamd_shows_form_and_table(client, monkeypatch):
 
     assert 'Name' in html
     assert 'Material type' in html
+    assert 'Density' in html
     assert 'CO₂ footprint' in html
     assert 'Costs' in html
     assert 'Delivery time' in html
