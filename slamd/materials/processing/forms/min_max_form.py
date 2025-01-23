@@ -12,11 +12,11 @@ class MinMaxEntriesForm(Form):
         validators=[validators.DataRequired(message='Name cannot be empty')]
     )
 
-    increment = DecimalField('Increment (%)')
+    increment = DecimalField('Increment (Vol.-%)')
 
-    min = DecimalField('Min (%)')
+    min = DecimalField('Min (Vol.-%)')
 
-    max = DecimalField('Max (%)')
+    max = DecimalField('Max (Vol.-%)')
 
 
 class MinMaxForm(Form):
