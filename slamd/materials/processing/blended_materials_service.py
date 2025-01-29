@@ -107,10 +107,8 @@ class BlendedMaterialsService(MaterialsService):
 
         list_of_normalized_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
                                                                                             RATIO_DELIMITER)
-        print(list_of_normalized_ratios_lists)
-        print(base_materials_as_dict)
         if blending_strategy == 'Volume-based':
-            list_of_normalized_ratios_lists = RatioParser.weight_to_density_ratios(list_of_normalized_ratios_lists,
+            list_of_normalized_ratios_lists = RatioParser.volume_to_weight_ratios(list_of_normalized_ratios_lists,
                                                                                    base_materials_as_dict)
         strategy = MaterialFactory.create_strategy(base_type.lower())
 

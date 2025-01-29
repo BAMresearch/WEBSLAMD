@@ -510,8 +510,8 @@ def _assert_test_powders(all_materials):
     dto = all_materials[0]
     assert dto.name == 'my powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Density (t/m³): 2'
+    assert dto.all_properties == 'Specific Gravity: 2'
     dto = all_materials[1]
     assert dto.name == 'test powder'
     assert dto.type == 'Powder'
-    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Density (t/m³): 3, test prop: test value'
+    assert dto.all_properties == 'Fe₂O₃ (m%): 23.3, Specific Gravity: 3, test prop: test value'

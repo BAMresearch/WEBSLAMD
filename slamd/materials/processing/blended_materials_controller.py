@@ -46,7 +46,7 @@ def submit_blending():
 def add_min_max_entry(material_type, count):
     data = json.loads(request.data)
     min_max_form, complete = BlendedMaterialsService.create_min_max_form(material_type, count, data)
-    body = {'template': render_template('min_max_form.html', material_type=material_type, count=count, min_max_form=min_max_form, complete=complete)}
+    body = {'template': render_template('min_max_form.html', min_max_form=min_max_form, complete=complete)}
     return make_response(jsonify(body), 200)
 
 

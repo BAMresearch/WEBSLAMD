@@ -158,7 +158,7 @@ class MaterialStrategy(ABC):
     def _append_density(cls, dto, density):
         if density is None:
             return
-        dto.all_properties += cls.include('Density (t/m³)', density)
+        dto.all_properties += cls.include('Specific Gravity', density)
 
     @classmethod
     def _append_cost_properties(cls, dto, costs):

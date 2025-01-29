@@ -169,6 +169,7 @@ def prepare_test_admixture():
     aggregates1.uuid = 'uuid admixture'
     return aggregates1
 
+
 def create_test_base_materials_dict():
     base_material_as_dict = [{'uuid': 'testUuid1', 'name': 'Powder1', 'type': 'Powder',
                               'density': '1.40', 'costs': Costs(co2_footprint=10.0, costs=5.0, delivery_time=1,
@@ -185,3 +186,6 @@ def create_test_base_materials_dict():
 
     return base_material_as_dict
 
+
+def create_test_normalized_blending_ratios_for_two_materials():
+    return [[0.5, 0.5], [0.6, 0.4], [0.7, 0.3]]
