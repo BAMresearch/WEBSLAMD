@@ -90,14 +90,11 @@ def test_powder_structure_constructor_sets_default_values():
     structure = Structure()
 
     assert structure.fine is None
-    assert structure.gravity is None
 
 
 def test_powder_structure_constructor_sets_properties():
     structure = Structure(
-        fine=123.45,
-        gravity=678.90
+        fine=123.45
     )
 
     assert structure.fine == 123.45
-    assert structure.gravity == 678.90

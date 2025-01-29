@@ -18,7 +18,7 @@ class Material:
     uuid: UUID = field(default_factory=uuid1)
     name: str = ''
     type: str = ''
-    density: float = None
+    specific_gravity: float = None
     costs: Costs = None
     additional_properties: list[AdditionalProperty] = None
     is_blended: bool = False

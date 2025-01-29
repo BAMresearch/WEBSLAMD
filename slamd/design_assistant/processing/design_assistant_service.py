@@ -147,7 +147,6 @@ class DesignAssistantService:
     @classmethod
     def _populate_create_powder_structure_fields_with_session_value(cls, form, powder_structure):
         form.new_project_form.create_powder_form.fines_modulus.data = powder_structure.fine
-        form.new_project_form.create_powder_form.specific_gravity.data = powder_structure.gravity
 
     @classmethod
     def _populate_create_liquid_name_field_with_session_value(cls, form, liquid_name):

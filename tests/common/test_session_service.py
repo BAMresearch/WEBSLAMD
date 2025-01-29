@@ -23,7 +23,7 @@ def _mock_find_all_materials():
             [Liquid(uuid=UUID('69162ae6-4f11-11ed-b9a6-a05950ec4f04'), type=str(MaterialType.LIQUID.value),
                     composition=LiquidComposition(na2_o=3))],
             [Aggregates(uuid=UUID('86e70486-4f11-11ed-910e-a05950ec4f04'), type=str(MaterialType.AGGREGATES.value),
-                        composition=AggregatesComposition(gravity=2))],
+                        composition=AggregatesComposition())],
             [Admixture(uuid=UUID('8fee9a00-4f11-11ed-be28-a05950ec4f04'), type=str(MaterialType.ADMIXTURE.value))],
             [Custom(uuid=UUID('96dcb8ec-4f11-11ed-971c-a05950ec4f04'), type=str(MaterialType.CUSTOM.value))]]
 
@@ -96,5 +96,4 @@ def test_load_session_from_json_string(monkeypatch):
     assert str(saved_materials['liquid'][0].uuid) == '69162ae6-4f11-11ed-b9a6-a05950ec4f04'
     assert saved_materials['powder'][0].structure.fine == 5
     assert saved_materials['liquid'][0].composition.na2_o == 3
-    assert saved_materials['aggregates'][0].composition.gravity == 2
     assert da_session['design_assistant'] == {'dataset': 'None', 'zero_shot_learner': {'type': 'Concrete'}}

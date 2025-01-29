@@ -61,10 +61,6 @@ class BlendedMaterialsService(MaterialsService):
         for _ in range(count):
             min_max_form.all_min_max_entries.append_entry()
 
-        # Min/Max of the last entry are calculated from the previous entries, and the labels need to be switched
-        min_max_form.all_min_max_entries[-1].min.label.text = 'Max (%)'
-        min_max_form.all_min_max_entries[-1].max.label.text = 'Min (%)'
-
         return min_max_form, complete
 
     @classmethod
@@ -99,16 +95,21 @@ class BlendedMaterialsService(MaterialsService):
 
         base_materials_as_dict = []
         base_type = submitted_blending_configuration['base_type']
+        blending_strategy = submitted_blending_configuration['blending_strategy']
+        base_materials_as_string = ''
 
         for base_material_uuid in base_material_uuids:
             base_material = MaterialsPersistence.query_by_type_and_uuid(base_type, base_material_uuid)
             if base_material is None:
                 raise MaterialNotFoundException('The requested base materials do no longer exist!')
             base_materials_as_dict.append(base_material.__dict__)
+            base_materials_as_string += base_material.name + '/'
 
         list_of_normalized_ratios_lists = RatioParser.create_list_of_normalized_ratio_lists(all_ratios_as_string,
                                                                                             RATIO_DELIMITER)
-
+        if blending_strategy == 'Volume-based':
+            list_of_normalized_ratios_lists = RatioParser.volume_to_weight_ratios(list_of_normalized_ratios_lists,
+                                                                                   base_materials_as_dict)
         strategy = MaterialFactory.create_strategy(base_type.lower())
 
         for ratio_list in list_of_normalized_ratios_lists:
@@ -116,7 +117,7 @@ class BlendedMaterialsService(MaterialsService):
                 raise ValueNotSupportedException('Ratios cannot be matched with base materials!')
 
             blend_name = submitted_blending_configuration['blended_material_name']
-            blended_material_name = f'{blend_name}-{RatioParser.ratio_list_to_ratio_string(ratio_list)}'
+            blended_material_name = f'{blend_name}-{blending_strategy}-{base_materials_as_string[:-1]}-{RatioParser.ratio_list_to_ratio_string(ratio_list)}'
             blended_material = strategy.create_blended_material(blended_material_name, ratio_list,
                                                                 base_materials_as_dict)
             strategy.save_model(blended_material)

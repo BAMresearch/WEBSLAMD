@@ -85,7 +85,6 @@ TEST_GAUSS_WITH_THRESH_INPUT = {
     'al2_o3': {0: 21, 1: 21, 2: 21, 3: 21, 4: 21, 5: 21, 6: 21, 7: 21, 8: 21, 9: 21},
     'ca_o': {0: 14, 1: 14, 2: 14, 3: 14, 4: 14, 5: 14, 6: 14, 7: 14, 8: 14, 9: 14},
     'fine': {0: 4, 1: 4, 2: 4, 3: 4, 4: 4, 5: 4, 6: 4, 7: 4, 8: 4, 9: 4},
-    'gravity': {0: 23, 1: 23, 2: 23, 3: 23, 4: 23, 5: 23, 6: 23, 7: 23, 8: 23, 9: 23},
     'na2_si_o3': {0: 234, 1: 234, 2: 234, 3: 234, 4: 234, 5: 234, 6: 234, 7: 234, 8: 234, 9: 234},
     'na2_si_o3_mol': {0: 25, 1: 25, 2: 25, 3: 25, 4: 25, 5: 25, 6: 25, 7: 25, 8: 25, 9: 25},
     'na_o_h': {0: 234, 1: 234, 2: 234, 3: 234, 4: 234, 5: 234, 6: 234, 7: 234, 8: 234, 9: 234},
@@ -268,7 +267,6 @@ TEST_GAUSS_WITH_THRESH_PRED = {
     'fe3_o2': {1: 34, 3: 34, 4: 34},
     'fine': {1: 4, 3: 4, 4: 4},
     'fine_aggregates': {1: 25, 3: 25, 4: 25},
-    'gravity': {1: 23, 3: 23, 4: 23},
     'h2_o': {1: 1, 3: 1, 4: 1},
     'na2_si_o3': {1: 234, 3: 234, 4: 234},
     'na2_si_o3_mol': {1: 25, 3: 25, 4: 25},
@@ -303,7 +301,7 @@ TEST_RF_WITHOUT_THRESH_CONFIG = {
 
 TEST_GAUSS_WITH_THRESH_CONFIG = {
     'materials_data_input': ['Powder (kg)', 'Liquid (kg)', 'Aggregates (kg)', 'Materials',
-                             'fe3_o2', 'al2_o3', 'ca_o', 'fine', 'gravity', 'na2_si_o3', 'na2_si_o3_mol',
+                             'fe3_o2', 'al2_o3', 'ca_o', 'fine', 'na2_si_o3', 'na2_si_o3_mol',
                              'na_o_h', 'si_o2_mol', 'h2_o',
                              'fine_aggregates', 'coarse_aggregates', 'water_absorption', 'total costs / ton',
                              'total co2_footprint / ton', 'total delivery_time '],

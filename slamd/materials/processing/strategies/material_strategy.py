@@ -89,7 +89,7 @@ class MaterialStrategy(ABC):
             all_properties=join_all(cls.gather_composition_information(material))
         )
 
-        cls._append_density(dto, material.density)
+        cls._append_specific_gravity(dto, material.specific_gravity)
         cls._append_cost_properties(dto, material.costs)
         cls._append_additional_properties(dto, material.additional_properties)
         # Remove trailing comma and whitespace
@@ -102,7 +102,7 @@ class MaterialStrategy(ABC):
             ('uuid', material.uuid),
             ('material_name', material.name),
             ('material_type', material.type),
-            ('density', material.density),
+            ('specific_gravity', material.specific_gravity),
             ('delivery_time', str_if_not_none(material.costs.delivery_time)),
             ('costs', str_if_not_none(material.costs.costs)),
             ('co2_footprint', str_if_not_none(material.costs.co2_footprint)),
@@ -155,10 +155,10 @@ class MaterialStrategy(ABC):
         MaterialsPersistence.save(model.type.lower(), model)
 
     @classmethod
-    def _append_density(cls, dto, density):
-        if density is None:
+    def _append_specific_gravity(cls, dto, specific_gravity):
+        if specific_gravity is None:
             return
-        dto.all_properties += cls.include('Density (t/m³)', density)
+        dto.all_properties += cls.include('Specific Gravity', specific_gravity)
 
     @classmethod
     def _append_cost_properties(cls, dto, costs):
@@ -211,8 +211,8 @@ class MaterialStrategy(ABC):
         pass
 
     @classmethod
-    def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
-        return BlendingPropertiesCalculator.compute_blended_density(normalized_ratios, base_materials_as_dict)
+    def compute_blended_specific_gravity(cls, normalized_ratios, base_materials_as_dict):
+        return BlendingPropertiesCalculator.compute_blended_specific_gravity(normalized_ratios, base_materials_as_dict)
 
     @classmethod
     def compute_blended_costs(cls, normalized_ratios, base_materials_as_dict):

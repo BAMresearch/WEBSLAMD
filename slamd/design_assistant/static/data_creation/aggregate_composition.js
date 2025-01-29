@@ -20,8 +20,7 @@ function handleSubmittingAggregateComposition(event){
         "delivery_time" : aggregate_cost_inputs[2].value,
         "recyclingrate" : aggregate_cost_inputs[3].value,
         "fine_aggregates" : aggregate_composition_inputs[0].value, 
-        "coarse_aggregates" : aggregate_composition_inputs[1].value, 
-        "gravity" : aggregate_composition_inputs[2].value, 
+        "coarse_aggregates" : aggregate_composition_inputs[1].value,
         "fineness_modulus" : aggregate_composition_inputs[3].value,
         "water_absorption" : aggregate_composition_inputs[4].value
     }
