@@ -257,8 +257,10 @@ class BuildingMaterialStrategy(ABC):
             entry.min.label.text = 'Max (kg)'
             entry.max.label.text = 'Min (kg)'
         if type == 'Powder':
-            cls._populate_minx_max_entry_with_default_values()
+            cls._populate_minx_max_entry_with_default_values(entry)
 
     @classmethod
-    def _populate_minx_max_entry_with_default_values(cls):
-        pass
+    def _populate_minx_max_entry_with_default_values(cls, entry):
+        entry.increment.data = 10
+        entry.min.data = 350
+        entry.max.data = 450
