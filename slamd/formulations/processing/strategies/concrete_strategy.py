@@ -45,9 +45,9 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'W/C Ratio', 'Liquid')
 
-        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
-        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
-        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio) %'
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio) %'
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio) %'
 
         if len(admixture_names):
             joined_admixture_names = ', '.join(admixture_names)

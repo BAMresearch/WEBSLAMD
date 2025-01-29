@@ -3,6 +3,15 @@ function autocorrectWeightValue() {
     correctInputFieldValue(weightConstraintInput, 0);
 }
 
+function updateConstraintLabel(){
+    const constraintLabel = document.getElementById("constraint_input_label")
+    if (this.value === 'Weight') {
+        constraintLabel.textContent = constraintLabel.textContent.replace('Volume (m³)', 'Weight (t)')
+    } else {
+        constraintLabel.textContent = constraintLabel.textContent.replace('Weight (t)', 'Volume (m³)')
+    }
+}
+
 window.addEventListener("load", function () {
     document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
 
@@ -15,4 +24,5 @@ window.addEventListener("load", function () {
     }
 
     document.getElementById("nav-bar-formulations").setAttribute("class", "nav-link active");
+    document.getElementById("constraint_selection").addEventListener("change", updateConstraintLabel)
 });
