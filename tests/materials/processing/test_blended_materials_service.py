@@ -52,9 +52,9 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
         data = form.all_ratio_entries.data
         print(data)
         assert len(data) == 9
-        assert data == [{'ratio': '45/2/53'}, {'ratio': '45/4/51'}, {'ratio': '45/6/49'}, {'ratio': '50/2/48'},
-                        {'ratio': '50/4/46'}, {'ratio': '50/6/44'}, {'ratio': '55/2/43'}, {'ratio': '55/4/41'},
-                        {'ratio': '55/6/39'}]
+        assert data == [{'ratio': '45/2/53'}, {'ratio': '45/4/51'}, {'ratio': '45/6/49'},
+                        {'ratio': '50/2/48'}, {'ratio': '50/4/46'}, {'ratio': '50/6/44'},
+                        {'ratio': '55/2/43'}, {'ratio': '55/4/41'}, {'ratio': '55/6/39'}]
 
 def test_create_ratio_form_creates_all_ratios_for_decimal_values():
     with app.test_request_context('/materials/blended/add_ratios'):
