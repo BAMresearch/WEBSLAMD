@@ -1,7 +1,7 @@
 from wtforms import DecimalField, validators
 
 from slamd.materials.processing.forms.materials_form import MaterialsForm
-
+from slamd.materials.processing.constants.material_constants import POWDER_DEFAULT_DENSITY
 
 class PowderForm(MaterialsForm):
 
@@ -103,17 +103,10 @@ class PowderForm(MaterialsForm):
         ]
     )
 
-    gravity = DecimalField(
-        label='Specific gravity',
+    specific_gravity = DecimalField(
+        label='Specific Gravity',
+        default=POWDER_DEFAULT_DENSITY,
         validators=[
-            validators.Optional()
-        ]
-    )
-
-    density = DecimalField(
-        label='Powder density (t/m³)',
-        default=1.4,
-        validators=[
-            validators.DataRequired(message='Material density cannot be empty')
+            validators.DataRequired(message='Material specific gravity cannot be empty')
         ]
     )

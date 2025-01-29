@@ -37,16 +37,13 @@ def test_aggregates_composition_constructor_sets_default_values():
 
     assert composition.fine_aggregates is None
     assert composition.coarse_aggregates is None
-    assert composition.gravity is None
 
 
 def test_aggregates_composition_constructor_sets_properties():
     composition = Composition(
         fine_aggregates=123.45,
-        coarse_aggregates=67.890,
-        gravity=987.6,
+        coarse_aggregates=67.890
     )
 
     assert composition.fine_aggregates == 123.45
     assert composition.coarse_aggregates == 67.890
-    assert composition.gravity == 987.6

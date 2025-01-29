@@ -28,7 +28,6 @@ async function confirmSelection() {
   const type = document.getElementById("base_type").value;
 
   const url = `${BLENDED_MATERIALS_URL}/add_min_max_entries/${type.toLowerCase()}/${selectedMaterials.length}`;
-
   insertSpinnerInPlaceholder("min-max-placeholder");
   await postDataAndEmbedTemplateInPlaceholder(url, "min-max-placeholder", uuids);
   removeSpinnerInPlaceholder("min-max-placeholder");
@@ -36,6 +35,7 @@ async function confirmSelection() {
   prepareMinMaxInputFieldsFromSelection(selectedMaterials);
   assignKeyboardEventsToMinMaxForm();
   assignConfirmBlendingConfigurationEvent();
+  assignChangeBlendingStrategyEvent();
 }
 
 async function assignConfirmBlendingConfigurationEvent() {
@@ -56,6 +56,24 @@ async function assignConfirmBlendingConfigurationEvent() {
   });
 }
 
+function assignChangeBlendingStrategyEvent(){
+  document.getElementById("blending_strategy").addEventListener("change", function() {
+    const blending_strategy = this.value
+    const labels = document.getElementsByClassName('percentage-label');
+
+    if (blending_strategy === 'Weight-based'){
+      for (let label of labels) {
+        label.textContent = label.textContent.replace('Vol.-%', 'W.-%');
+      }
+    }
+    else {
+      for (let label of labels) {
+        label.textContent = label.textContent.replace('W.-%', 'Vol.-%');
+      }
+    }
+  });
+}
+
 function toggleConfirmationButton() {
   const count = countSelectedOptionsMultipleSelectField(document.getElementById("base_material_selection"));
   document.getElementById("change-base-material-selection-button").disabled = count < 2;
@@ -70,6 +88,7 @@ function checkNameIsNotEmpty(event) {
 async function deleteMaterial(id, material_type) {
   deleteMaterialByType(id, material_type, true);
 }
+
 
 window.addEventListener("load", function () {
   document.getElementById("nav-bar-blended").setAttribute("class", "nav-link active");

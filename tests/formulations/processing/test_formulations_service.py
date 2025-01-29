@@ -285,7 +285,7 @@ def _create_additional_powder():
     powder = Powder(name='powder 1', type='Powder',
                     costs=Costs(co2_footprint=2, costs=2.2, delivery_time=12),
                     composition=Composition(fe3_o2=2.3),
-                    structure=Structure(fine=1, gravity=2),
+                    structure=Structure(fine=1),
                     additional_properties=[])
     powder.uuid = 'additional'
     return powder
@@ -385,7 +385,6 @@ def _create_expected_df_as_dict():
                                  5: 5.0,
                                  6: 5.0,
                                  7: 5.0},
-            'gravity': {0: 6.0, 1: 6.0, 2: 6.0, 3: 6.0, 4: 6.0, 5: 6.0, 6: 6.0, 7: 6.0},
             'h2_o_mol': {0: 11.0,
                          1: 11.0,
                          2: 11.0,

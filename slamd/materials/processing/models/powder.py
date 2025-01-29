@@ -26,7 +26,6 @@ class Composition:
 @dataclass
 class Structure:
     fine: float = None
-    gravity: float = None
 
 
 @dataclass

@@ -24,7 +24,6 @@ function handleSubmittingPowderStructuralComposition(event){
         "si_o2" : powder_oxide_composition_inputs[2].value, 
         "fe3_o2" : powder_oxide_composition_inputs[3].value,
         "fine" : powder_structural_composition_inputs[0].value,
-        "gravity" : powder_structural_composition_inputs[1].value 
     }
     powder_structural_composition_inputs.forEach((powder_structural_composition_input) => {
         powder_structural_composition_input.disabled = true

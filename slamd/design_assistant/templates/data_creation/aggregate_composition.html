@@ -19,10 +19,6 @@
                     <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_coarse_aggregates" {% if form.new_project_form.create_aggregate_form.coarse_aggregates.data %} value="{{ form.new_project_form.create_aggregate_form.coarse_aggregates.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
                 </div>
                 <div class="d-flex w-100 justify-content-end align-items-center gap-3">
-                    <div>{{ form.new_project_form.create_aggregate_form.gravity.label.text}}</div>
-                    <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_gravity" {% if form.new_project_form.create_aggregate_form.gravity.data %} value="{{ form.new_project_form.create_aggregate_form.gravity.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
-                </div>
-                <div class="d-flex w-100 justify-content-end align-items-center gap-3">
                     <div>{{ form.new_project_form.create_aggregate_form.fineness_modulus.label.text}}</div>
                     <input class="aggregate_composition_input w-auto form-control text-end" name="aggregate_composition_fineness_modulus" {% if form.new_project_form.create_aggregate_form.fineness_modulus.data %} value="{{ form.new_project_form.create_aggregate_form.fineness_modulus.data }}"  {% endif %} type="number" {% if progress >= 12 %} disabled {% endif %}/>
                 </div>

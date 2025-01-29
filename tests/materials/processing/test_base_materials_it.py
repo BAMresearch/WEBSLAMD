@@ -26,7 +26,6 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
     assert 'SiO₂ (m%)' in html
     assert 'Mn₂O₃ (m%)' in html
     assert 'LOI (m%)' in html
-    assert 'Specific gravity' in html
     assert 'Add property' in html
     assert 'Delete last property' in html
 
@@ -38,6 +37,6 @@ def test_all_saved_base_materials_are_sorted_correctly_and_returned(client, monk
 
     assert 'my powder' in html
     assert 'test powder' in html
-    assert 'Fe₂O₃ (m%): 23.3, Specific gravity: 12, test prop: test value' in html
+    assert 'Fe₂O₃ (m%): 23.3, Specific Gravity: 3, test prop: test value' in html
     assert 'test aggregate' in html
     assert 'Fine Aggregates (m%): 12, aggregate property: aggregate property value' in html

@@ -24,6 +24,7 @@ def test_slamd_shows_form_and_table(client, monkeypatch):
 
     assert 'Name' in html
     assert 'Material type' in html
+    assert 'Density' in html
     assert 'CO₂ footprint' in html
     assert 'Costs' in html
     assert 'Delivery time' in html
@@ -82,7 +83,6 @@ def test_slamd_selects_aggregates(client):
     assert response.status_code == 200
     assert 'Fine Aggregates' in template
     assert 'Coarse Aggregates' in template
-    assert 'Specific gravity' in template
     assert 'Fineness modulus' in template
     assert 'Water absorption' in template
 

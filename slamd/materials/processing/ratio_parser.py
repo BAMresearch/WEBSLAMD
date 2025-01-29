@@ -27,3 +27,20 @@ class RatioParser:
         ratio_list = [string_to_number(piece) for piece in pieces]
         sum_ratio_list = sum(ratio_list)
         return [ratio / sum_ratio_list for ratio in ratio_list]
+
+    @classmethod
+    def volume_to_weight_ratios(cls, normalized_ratios, base_materials):
+        densities = [base_material['specific_gravity'] for base_material in base_materials]
+        normalized_weight_ratios = []
+
+        for normalized_ratio in normalized_ratios:
+            weight_ratios = [float(specific_gravity) * float(ratio) for specific_gravity, ratio in zip(densities, normalized_ratio)]
+            sum_weight_ratios = sum(weight_ratios)
+
+            normalized_weight_ratio = [round(weight_ratio / sum_weight_ratios, 2) for weight_ratio in weight_ratios]
+            normalized_weight_ratios.append(normalized_weight_ratio)
+
+        return normalized_weight_ratios
+
+
+

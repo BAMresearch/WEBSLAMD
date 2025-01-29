@@ -6,7 +6,6 @@
   "delivery_time": "5",
   "fine_aggregates": "",
   "coarse_aggregates": "5",
-  "gravity": "10",
   "fineness_modulus": "",
   "water_absorption": "",
   "additional_properties-0-property_name": "Example shared property",

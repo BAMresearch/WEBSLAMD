@@ -57,7 +57,7 @@ class LLMService:
         instruction_excerpt = cls._generate_design_knowledge_instruction_excerpt(zero_shot_learner_session)
         # combine user excerpt with system excerpt and instruction excerpt to build final design knowledge prompt
         design_knowledge_prompt = instruction_excerpt + user_input_excerpt
-        #print(design_knowledge_prompt)
+
         return design_knowledge_prompt
 
     @classmethod

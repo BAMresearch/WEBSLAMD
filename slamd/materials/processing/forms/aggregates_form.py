@@ -1,7 +1,7 @@
 from wtforms import DecimalField, validators
 
 from slamd.materials.processing.forms.materials_form import MaterialsForm
-
+from slamd.materials.processing.constants.material_constants import AGGREGATE_DEFAULT_DENSITY
 
 class AggregatesForm(MaterialsForm):
     fine_aggregates = DecimalField(
@@ -18,12 +18,6 @@ class AggregatesForm(MaterialsForm):
         ]
     )
 
-    gravity = DecimalField(
-        label='Specific gravity',
-        validators=[
-            validators.Optional()
-        ])
-
     fineness_modulus = DecimalField(
         label='Fineness modulus (m³/kg)',
         validators=[
@@ -36,10 +30,10 @@ class AggregatesForm(MaterialsForm):
             validators.Optional()
         ])
 
-    density = DecimalField(
-        label='Aggregate density (t/m³)',
-        default=2.4,
+    specific_gravity = DecimalField(
+        label='Specific Gravity',
+        default=AGGREGATE_DEFAULT_DENSITY,
         validators=[
-            validators.DataRequired(message='Material density cannot be empty')
+            validators.DataRequired(message='Material specific gravity cannot be empty')
         ]
     )

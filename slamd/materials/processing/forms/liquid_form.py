@@ -1,7 +1,7 @@
 from wtforms import DecimalField, validators
 
 from slamd.materials.processing.forms.materials_form import MaterialsForm
-
+from slamd.materials.processing.constants.material_constants import LIQUID_DEFAULT_DENSITY
 
 class LiquidForm(MaterialsForm):
     na2_si_o3 = DecimalField(
@@ -74,10 +74,10 @@ class LiquidForm(MaterialsForm):
         ]
     )
 
-    density = DecimalField(
-        label='Liquid density (t/m³)',
-        default=1.0,
+    specific_gravity = DecimalField(
+        label='Liquid Specific Gravity',
+        default=LIQUID_DEFAULT_DENSITY,
         validators=[
-            validators.DataRequired(message='Material density cannot be empty')
+            validators.DataRequired(message='Material specific gravity cannot be empty')
         ]
     )
