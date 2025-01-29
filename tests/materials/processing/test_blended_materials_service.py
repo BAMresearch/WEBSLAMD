@@ -43,17 +43,18 @@ def test_list_material_selection_by_type_raises_not_found_exception():
 
 def test_create_ratio_form_creates_all_ratios_for_integer_values():
     with app.test_request_context('/materials/blended/add_ratios'):
-        ratio_request = [{'idx': 0, 'min': 50, 'max': 100, 'increment': 10},
-                         {'idx': 1, 'min': 20, 'max': 40, 'increment': 20},
-                         {'idx': 2, 'min': 10, 'max': 30, 'increment': 30}]
+        ratio_request = [{'idx': 0, 'min': 45, 'max': 55, 'increment': 5},
+                         {'idx': 1, 'min': 2, 'max': 6, 'increment': 2},
+                         {'idx': 2, 'min': 39, 'max': 53, 'increment': 1}]
 
         form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
         data = form.all_ratio_entries.data
-
-        assert len(data) == 2
-        assert data == [{'ratio': '50/40/10'}, {'ratio': '70/20/10'}]
-
+        print(data)
+        assert len(data) == 9
+        assert data == [{'ratio': '45/2/53'}, {'ratio': '45/4/51'}, {'ratio': '45/6/49'}, {'ratio': '50/2/48'},
+                        {'ratio': '50/4/46'}, {'ratio': '50/6/44'}, {'ratio': '55/2/43'}, {'ratio': '55/4/41'},
+                        {'ratio': '55/6/39'}]
 
 def test_create_ratio_form_creates_all_ratios_for_decimal_values():
     with app.test_request_context('/materials/blended/add_ratios'):
@@ -71,8 +72,10 @@ def test_create_ratio_form_creates_all_ratios_for_decimal_values():
 def test_create_ratio_form_raises_exception_when_too_many_ratios_are_requested():
     with app.test_request_context('/materials/blended/add_ratios'):
         with pytest.raises(SlamdRequestTooLargeException):
-            ratio_request = [{'idx': 0, 'min': 10, 'max': 90, 'increment': 0.01},
-                             {'idx': 1, 'min': 10, 'max': 90, 'increment': 0.01}]
+            ratio_request = [{'idx': 0, 'min': 1, 'max': 99, 'increment': 1},
+                             {'idx': 1, 'min': 1, 'max': 99, 'increment': 1},
+                             {'idx': 2, 'min': 1, 'max': 99, 'increment': 1}
+                             ]
 
             BlendedMaterialsService.create_ratio_form(ratio_request)
 

@@ -74,13 +74,11 @@ class BlendedMaterialsService(MaterialsService):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
 
         all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
-
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
         valid_cartesian_product_list = [cartesian_product for cartesian_product in cartesian_product_list if
                                         sum(cartesian_product) == 100]
-
-        if len(cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
+        if len(valid_cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException(
                 f'Too many blends were requested. At most {MAX_NUMBER_OF_RATIOS} ratios can be created!')
 
