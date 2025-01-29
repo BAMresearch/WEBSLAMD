@@ -7,7 +7,7 @@ from slamd.materials.processing.strategies.aggregates_strategy import Aggregates
 def test_create_model_reads_all_properties_from_submitted_material():
     submitted_material = ImmutableMultiDict([('material_name', 'test aggregates'),
                                              ('material_type', 'Aggregates'),
-                                             ('density', '2.40'),
+                                             ('specific_gravity', '2.40'),
                                              ('co2_footprint', '999.99'),
                                              ('costs', '888.88'),
                                              ('delivery_time', '77'),

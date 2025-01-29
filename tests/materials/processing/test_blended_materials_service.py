@@ -414,12 +414,12 @@ def test_delete_material_calls_persistence_and_returns_remaining_materials(monke
         'powder', 'uuid to delete')
 
 
-def test_weights_to_density_ratio(monkeypatch):
+def test_weights_to_specific_gravity_ratio(monkeypatch):
     normalized_ratios = create_test_normalized_blending_ratios_for_two_materials()
     base_materials_dict = create_test_base_materials_dict()
-    weights_to_density_ratios = RatioParser.volume_to_weight_ratios(normalized_ratios, base_materials_dict)
+    weights_to_specific_gravity_ratios = RatioParser.volume_to_weight_ratios(normalized_ratios, base_materials_dict)
 
-    assert weights_to_density_ratios == [[0.36, 0.64], [0.46, 0.54], [0.57, 0.43]]
+    assert weights_to_specific_gravity_ratios == [[0.36, 0.64], [0.46, 0.54], [0.57, 0.43]]
 
 
 def test_save_blended_materials_calls_ratio_parser(monkeypatch):

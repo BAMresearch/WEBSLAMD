@@ -6,10 +6,10 @@ from slamd.materials.processing.constants.material_constants import CUSTOM_DEFAU
 
 
 class CustomForm(MaterialsForm):
-    density = DecimalField(
+    specific_gravity = DecimalField(
         label='Specific Gravity',
         default=CUSTOM_DEFAULT_DENSITY,
         validators=[
-            validators.DataRequired(message='Material density cannot be empty')
+            validators.DataRequired(message='Material specific gravity cannot be empty')
         ]
     )

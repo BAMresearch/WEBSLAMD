@@ -7,8 +7,8 @@ const BLENDED_MATERIALS_URL = `${window.location.protocol}//${window.location.ho
 
 function toggleSubmitButtonIfInputFieldEmpty(event) {
   const material_name = document.getElementById("material_name").value
-  const density = document.getElementById("density").value
-  document.getElementById("submit").disabled = (material_name === undefined || material_name === "") || (density  === undefined || density === "");
+  const specific_gravity = document.getElementById("specific_gravity").value
+  document.getElementById("submit").disabled = (material_name === undefined || material_name === "") || (specific_gravity  === undefined || specific_gravity === "");
 }
 
 /**

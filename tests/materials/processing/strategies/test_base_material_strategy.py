@@ -59,7 +59,7 @@ def test_base_material_strategy_convert_to_multidict_adds_all_properties():
     material = Material(
         name='test material',
         type='Material',
-        density=1.40,
+        specific_gravity=1.40,
         costs=costs,
         additional_properties=[],
     )
@@ -67,7 +67,7 @@ def test_base_material_strategy_convert_to_multidict_adds_all_properties():
     multidict = MockStrategy.convert_to_multidict(material)
     assert multidict['material_name'] == 'test material'
     assert multidict['material_type'] == 'Material'
-    assert multidict['density'] == 1.40
+    assert multidict['specific_gravity'] == 1.40
     assert multidict['co2_footprint'] == '12.3'
     assert multidict['costs'] == '45.6'
     assert multidict['delivery_time'] == '789'

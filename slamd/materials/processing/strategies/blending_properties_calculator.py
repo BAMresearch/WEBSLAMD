@@ -35,9 +35,9 @@ class BlendingPropertiesCalculator:
         return round(maximum, 2)
 
     @classmethod
-    def compute_blended_density(cls, normalized_ratios, base_materials_as_dict):
-        blended_density = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'density')
-        return blended_density
+    def compute_blended_specific_gravity(cls, normalized_ratios, base_materials_as_dict):
+        blended_specific_gravity = cls.compute_mean(normalized_ratios, base_materials_as_dict, 'specific_gravity')
+        return blended_specific_gravity
 
     #
     # normalized_ratios: normalized ratios determined from the user input, e.g. [0.4, 0.4, 0.2]

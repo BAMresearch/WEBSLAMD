@@ -45,7 +45,7 @@ class AggregatesStrategy(MaterialStrategy):
         return Aggregates(
             name=submitted_material['material_name'],
             type=submitted_material['material_type'],
-            density=submitted_material.get('density', AGGREGATE_DEFAULT_DENSITY),
+            specific_gravity=submitted_material.get('specific_gravity', AGGREGATE_DEFAULT_DENSITY),
             costs=cls.extract_cost_properties(submitted_material),
             composition=composition,
             additional_properties=cls.extract_additional_properties(submitted_material)
@@ -89,14 +89,14 @@ class AggregatesStrategy(MaterialStrategy):
 
     @classmethod
     def create_blended_material(cls, name, normalized_ratios, base_aggregates_as_dict):
-        density = cls.compute_blended_density(normalized_ratios, base_aggregates_as_dict)
+        specific_gravity = cls.compute_blended_specific_gravity(normalized_ratios, base_aggregates_as_dict)
         costs = cls.compute_blended_costs(normalized_ratios, base_aggregates_as_dict)
         composition = cls._compute_blended_composition(normalized_ratios, base_aggregates_as_dict)
         additional_properties = cls.compute_additional_properties(normalized_ratios, base_aggregates_as_dict)
 
         return Aggregates(type=base_aggregates_as_dict[0]['type'],
                           name=name,
-                          density=density,
+                          specific_gravity=specific_gravity,
                           costs=costs,
                           composition=composition,
                           additional_properties=additional_properties,

@@ -8,7 +8,7 @@ from slamd.materials.processing.strategies.property_completeness_checker import 
 def test_create_model_reads_all_properties_from_submitted_material():
     submitted_material = ImmutableMultiDict([('material_name', 'test powder'),
                                              ('material_type', 'Powder'),
-                                             ('density', 1.40),
+                                             ('specific_gravity', 1.40),
                                              ('co2_footprint', '999.99'),
                                              ('costs', '888.88'),
                                              ('delivery_time', '77'),
@@ -30,7 +30,7 @@ def test_create_model_reads_all_properties_from_submitted_material():
     model = PowderStrategy.create_model(submitted_material)
     assert model.name == 'test powder'
     assert model.type == 'Powder'
-    assert model.density == 1.40
+    assert model.specific_gravity == 1.40
     assert model.costs.co2_footprint == 999.99
     assert model.costs.costs == 888.88
     assert model.costs.delivery_time == 77

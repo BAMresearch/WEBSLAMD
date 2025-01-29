@@ -74,10 +74,10 @@ class LiquidForm(MaterialsForm):
         ]
     )
 
-    density = DecimalField(
+    specific_gravity = DecimalField(
         label='Liquid Specific Gravity',
         default=LIQUID_DEFAULT_DENSITY,
         validators=[
-            validators.DataRequired(message='Material density cannot be empty')
+            validators.DataRequired(message='Material specific gravity cannot be empty')
         ]
     )
