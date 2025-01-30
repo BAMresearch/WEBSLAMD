@@ -1,5 +1,6 @@
 const CONCRETE_FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations/concrete`;
 let concreteWeightConstraint = "";
+let materialsSpecificGravity = {}
 
 /**
  * Despite the fact that some functions in binder.js and concrete.js look rather similar, we choose not to
@@ -48,6 +49,7 @@ async function confirmSelection() {
 
     addListenersToIndependentFields(CONCRETE);
     assignConfirmFormulationsConfigurationEvent();
+    getSpecificGravityOfMaterials();
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
@@ -65,6 +67,61 @@ async function assignConfirmFormulationsConfigurationEvent() {
         assignDeleteWeightEvent();
         assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
     });
+}
+
+
+async function getSpecificGravityOfMaterials(){
+    const materialsUuidDict = buildMaterialsUuidDict();
+    const token = document.getElementById("csrf_token").value;
+    const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/get_specific_gravity`
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": token,
+        },
+        body: JSON.stringify(materialsUuidDict),
+    });
+
+    materialsSpecificGravity = await response.json()
+}
+
+function buildMaterialsUuidDict(){
+    let materialsDict = {};
+    document.querySelectorAll('.row.g-3.mb-3.align-items-end').forEach(row => {
+        let uuidField = row.previousElementSibling?.querySelector('.uuid-field');
+        let materialField = row.querySelector('[name$="materials_entry_name"]');
+
+        if (uuidField && materialField) {
+            let uuid = uuidField.value.trim();
+            let materialName = materialField.value.trim();
+
+            if (uuid && materialName) {
+
+                let categoryMatch = materialName.match(/^([\w\s]+)\s*\(/);
+                let category = categoryMatch ? categoryMatch[1].trim() : materialName;
+
+                if (category === 'W/C Ratio'){
+                    category = 'Liquid'
+                }
+                if (category === 'Powders'){
+                    category = 'Powder'
+                }
+                if (category === 'Admixtures'){
+                    category = 'Admixture'
+                }
+                if (category === 'Air Pore Content'){
+                    return
+                }
+                if (!materialsDict[category]) {
+                    materialsDict[category] = [];
+                }
+                uuid.split(',').forEach(singleUuid => {
+                    materialsDict[category].push(singleUuid.trim());
+                });
+            }
+        }
+    });
+    return materialsDict
 }
 
 async function deleteFormulations() {

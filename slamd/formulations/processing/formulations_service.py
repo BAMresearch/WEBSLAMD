@@ -7,7 +7,7 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORA
     TEMPORARY_BINDER_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-
+from slamd.materials.processing.materials_facade import MaterialsFacade
 
 class FormulationsService:
 
@@ -86,3 +86,18 @@ class FormulationsService:
         if filename.startswith('temporary'):
             raise ValueNotSupportedException('The name of the file cannot start with "temporary"!')
         return filename
+
+    @classmethod
+    def get_specific_gravity_dict(cls, materials_dict):
+        densities_dict = {}
+        for material, uuids in materials_dict.items():
+            material = material.lower()
+            densities_dict[material] = []
+            for uuid in uuids:
+                session_value = MaterialsFacade.get_material_from_session(material, uuid)
+                if session_value and hasattr(session_value, 'specific_gravity'):
+                    densities_dict[material].append(session_value.specific_gravity)
+
+        return densities_dict
+
+

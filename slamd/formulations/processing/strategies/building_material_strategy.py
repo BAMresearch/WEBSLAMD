@@ -272,11 +272,11 @@ class BuildingMaterialStrategy(ABC):
             entry.min.data = 2
             entry.max.label.text = 'Max (Powder/Admixture-ratio) %'
             entry.max.data = 4
-        if type == 'Air Void Content':
+        if type == 'Air Pore Content':
             entry.increment.data = 0
-            entry.increment.label.text = 'Increment &'
+            entry.increment.label.text = 'Increment %'
             entry.max.data = 2
-            entry.max.label.text = 'Max &'
+            entry.max.label.text = 'Max %'
             entry.min.data = 2
             entry.min.label.text = 'Min %'
 

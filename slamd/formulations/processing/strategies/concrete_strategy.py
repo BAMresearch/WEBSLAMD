@@ -70,7 +70,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                        f'Aggregates ({joined_aggregates_names})', 'Aggregates')
 
         if selected_constraint_type == 'Volume':
-            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Void-Content-1', 'Air Void Contents', 'Air Void Content')
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1', 'Air Pore Content', 'Air Pore Content')
 
         cls._create_process_fields(formulation_selection, min_max_form)
 

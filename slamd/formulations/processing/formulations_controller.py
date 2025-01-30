@@ -72,3 +72,9 @@ def submit_dataset(building_material):
     FormulationsService.save_dataset(request.form, building_material)
 
     return redirect(f'/materials/formulations/{building_material}')
+
+@formulations.route('/<building_material>/get_specific_gravity', methods=['POST'])
+def get_densities(building_material):
+    materials = json.loads(request.data)
+    specific_gravity_dict = FormulationsService.get_specific_gravity_dict(materials)
+    return make_response(jsonify(specific_gravity_dict), 200)
