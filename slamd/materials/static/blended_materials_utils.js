@@ -9,24 +9,17 @@ function prepareMinMaxInputFieldsFromSelection(selectedMaterials) {
   for (let i = 0; i < selectedMaterials.length; i++) {
     document.getElementById(`all_min_max_entries-${i}-uuid_field`).value = selectedMaterials[i].uuid;
     document.getElementById(`all_min_max_entries-${i}-blended_material_name`).value = selectedMaterials[i].name;
-    if (i === selectedMaterials.length - 1) {
-      document.getElementById(`all_min_max_entries-${i}-increment`).disabled = true;
-      document.getElementById(`all_min_max_entries-${i}-max`).disabled = true;
-      document.getElementById(`all_min_max_entries-${i}-min`).disabled = true;
-    }
   }
 }
 
 function assignKeyboardEventsToMinMaxForm() {
-  const independentInputFields = collectIndependentInputFields();
+  const independentInputFields = collectInputFields();
 
   for (const item of independentInputFields) {
     item.min.addEventListener("keyup", () => {
-      computeDependentValue("min", item.min, independentInputFields);
       toggleConfirmBlendingButton(independentInputFields);
     });
     item.max.addEventListener("keyup", () => {
-      computeDependentValue("max", item.max, independentInputFields);
       toggleConfirmBlendingButton(independentInputFields);
     });
     item.increment.addEventListener("keyup", () => {
@@ -72,28 +65,28 @@ function collectRatioFields() {
  * of all the other min/max values. The number of min items always equals the number of min items. Therefore we can get the
  * total number of rows simply by extracting the tags with id ending on -min.
  */
-function collectIndependentInputFields() {
-  const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+function collectInputFields() {
+  const numberOfRows = document.querySelectorAll('[id$="-min"]').length;
 
-  const independentInputFields = [];
-  for (let i = 0; i < numberOfIndependentRows; i++) {
+  const inputFields = [];
+  for (let i = 0; i < numberOfRows; i++) {
     const min = document.getElementById(`all_min_max_entries-${i}-min`);
     const max = document.getElementById(`all_min_max_entries-${i}-max`);
     const increment = document.getElementById(`all_min_max_entries-${i}-increment`);
-    independentInputFields.push({
+    inputFields.push({
       min: min,
       max: max,
       increment: increment,
     });
   }
-  return independentInputFields;
+  return inputFields;
 }
 
 function collectMinMaxValuesWithIncrements() {
-  const numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+  const numberOfRows = document.querySelectorAll('[id$="-min"]').length;
 
   const minMaxValuesWithIncrements = [];
-  for (let i = 0; i <= numberOfIndependentRows; i++) {
+  for (let i = 0; i < numberOfRows; i++) {
     const min = document.getElementById(`all_min_max_entries-${i}-min`);
     const max = document.getElementById(`all_min_max_entries-${i}-max`);
     const increment = document.getElementById(`all_min_max_entries-${i}-increment`);
