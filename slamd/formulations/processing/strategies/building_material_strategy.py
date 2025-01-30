@@ -21,7 +21,7 @@ class BuildingMaterialStrategy(ABC):
 
     @classmethod
     @abstractmethod
-    def create_min_max_form(cls, formulation_selection):
+    def create_min_max_form(cls, formulation_selection, selected_constraint_type):
         pass
 
     @classmethod
@@ -272,4 +272,11 @@ class BuildingMaterialStrategy(ABC):
             entry.min.data = 2
             entry.max.label.text = 'Max (Powder/Admixture-ratio) %'
             entry.max.data = 4
+        if type == 'Air Void Content':
+            entry.increment.data = 0
+            entry.increment.label.text = 'Increment &'
+            entry.max.data = 2
+            entry.max.label.text = 'Max &'
+            entry.min.data = 2
+            entry.min.label.text = 'Min %'
 

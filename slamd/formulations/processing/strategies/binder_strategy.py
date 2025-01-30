@@ -24,7 +24,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         return dataframe
 
     @classmethod
-    def create_min_max_form(cls, formulation_selection):
+    def create_min_max_form(cls, formulation_selection, selected_constraint_type):
         result = cls.classify_formulation_selection(formulation_selection)
         powder_names, powder_uuids = result['Powder']
         liquid_names, liquid_uuids = result['Liquid']
@@ -48,6 +48,10 @@ class BinderStrategy(BuildingMaterialStrategy):
             joined_aggregates_names = ', '.join(aggregates_names)
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                            f'Aggregates ({joined_aggregates_names})', 'Aggregates')
+
+        if selected_constraint_type == 'Volume':
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Void-Content-1',
+                                           'Air Void Contents', 'Air Void Content')
 
         if len(admixture_names):
             joined_admixture_names = ', '.join(admixture_names)

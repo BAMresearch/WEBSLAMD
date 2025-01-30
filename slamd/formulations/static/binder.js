@@ -33,10 +33,16 @@ async function confirmSelection() {
     binderWeightConstraint = document.getElementById("weight_constraint").value;
 
     const selectedMaterials = collectBuildingMaterialFormulationSelection();
+    const selectedConstraintType = document.getElementById("constraint_selection").value;
     const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
+    body = {
+        "selectedMaterials" : selectedMaterials,
+        "selectedConstraintType" : selectedConstraintType
+    }
+
     insertSpinnerInPlaceholder("formulations_min_max_placeholder");
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
+    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", body);
     removeSpinnerInPlaceholder("formulations_min_max_placeholder");
 
     addListenersToIndependentFields(BINDER);
