@@ -50,7 +50,7 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
         form = BlendedMaterialsService.create_ratio_form(ratio_request)
 
         data = form.all_ratio_entries.data
-        print(data)
+
         assert len(data) == 9
         assert data == [{'ratio': '45/2/53'}, {'ratio': '45/4/51'}, {'ratio': '45/6/49'},
                         {'ratio': '50/2/48'}, {'ratio': '50/4/46'}, {'ratio': '50/6/44'},
