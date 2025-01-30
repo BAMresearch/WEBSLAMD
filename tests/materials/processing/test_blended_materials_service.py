@@ -56,7 +56,6 @@ def test_create_ratio_form_creates_all_ratios_for_integer_values():
                         {'ratio': '50/2/48'}, {'ratio': '50/4/46'}, {'ratio': '50/6/44'},
                         {'ratio': '55/2/43'}, {'ratio': '55/4/41'}, {'ratio': '55/6/39'}]
 
-
 def test_create_ratio_form_creates_all_ratios_for_decimal_values():
     with app.test_request_context('/materials/blended/add_ratios'):
         ratio_request = [{'idx': 0, 'min': 10, 'max': 15, 'increment': 5},
@@ -73,8 +72,10 @@ def test_create_ratio_form_creates_all_ratios_for_decimal_values():
 def test_create_ratio_form_raises_exception_when_too_many_ratios_are_requested():
     with app.test_request_context('/materials/blended/add_ratios'):
         with pytest.raises(SlamdRequestTooLargeException):
-            ratio_request = [{'idx': 0, 'min': 10, 'max': 90, 'increment': 0.01},
-                             {'idx': 1, 'min': 90, 'max': 10, 'increment': 0.01}]
+            ratio_request = [{'idx': 0, 'min': 1, 'max': 99, 'increment': 1},
+                             {'idx': 1, 'min': 1, 'max': 99, 'increment': 1},
+                             {'idx': 2, 'min': 1, 'max': 99, 'increment': 1}
+                             ]
 
             BlendedMaterialsService.create_ratio_form(ratio_request)
 

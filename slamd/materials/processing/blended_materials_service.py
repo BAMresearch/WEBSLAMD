@@ -74,19 +74,19 @@ class BlendedMaterialsService(MaterialsService):
             raise ValueNotSupportedException('Configuration of ratios is not valid!')
 
         all_values = cls._prepare_values_for_cartesian_product(min_max_values_with_increments)
-
         cartesian_product = product(*all_values)
         cartesian_product_list = list(cartesian_product)
-
-        if len(cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
+        valid_cartesian_product_list = [cartesian_product for cartesian_product in cartesian_product_list if
+                                        sum(cartesian_product) == 100]
+        if len(valid_cartesian_product_list) > MAX_NUMBER_OF_RATIOS:
             raise SlamdRequestTooLargeException(
                 f'Too many blends were requested. At most {MAX_NUMBER_OF_RATIOS} ratios can be created!')
 
         ratio_form = RatioForm()
-        for ratio_as_list in cartesian_product_list:
-            all_ratios_for_entry = RatioParser.create_ratio_string(ratio_as_list)
+        for ratio in valid_cartesian_product_list:
+            ratio_as_string = RatioParser.ratio_list_to_ratio_string(ratio)
             ratio_form_entry = ratio_form.all_ratio_entries.append_entry()
-            ratio_form_entry.ratio.data = all_ratios_for_entry
+            ratio_form_entry.ratio.data = ratio_as_string
         return ratio_form
 
     @classmethod
@@ -143,7 +143,7 @@ class BlendedMaterialsService(MaterialsService):
     @classmethod
     def _prepare_values_for_cartesian_product(cls, min_max_values_with_increments):
         all_values = []
-        for i in range(len(min_max_values_with_increments) - 1):
+        for i in range(len(min_max_values_with_increments)):
             values_for_given_base_material = []
             current_value = min_max_values_with_increments[i]['min']
             max_value = min_max_values_with_increments[i]['max']
