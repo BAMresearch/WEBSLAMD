@@ -47,29 +47,29 @@ function addListenersToIndependentFields(context) {
     const independentInputFields = collectInputFields();
     for (const item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields, context);
+            // computeDependentValue("min", item.min, independentInputFields, context);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.min.id).setAttribute("title", "");
 
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields, context);
+            // computeDependentValue("max", item.max, independentInputFields, context);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.max.id).setAttribute("title", "");
 
         item.increment.addEventListener("keyup", () => {
             const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint
-            correctInputFieldValue(item.increment, 0, parseFloat(constraint));
+            // correctInputFieldValue(item.increment, 0, parseFloat(constraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
     }
 }
 
 function toggleConfirmationFormulationsButtons(inputFields) {
-    const allIncrementsFilled = inputFields.filter((item) => item["increment"].value === "").length === 0;
-    const allMinFilled = inputFields.filter((item) => item["min"].value === "").length === 0;
-    const allMaxFilled = inputFields.filter((item) => item["max"].value === "").length === 0;
+    const allIncrementsFilled = inputFields.filter(item => item.increment.value === "").length === 0;
+    const allMinFilled = inputFields.filter(item => item.min.value === "").length === 0;
+    const allMaxFilled = inputFields.filter(item => item.max.value === "").length === 0;
     document.getElementById("confirm_formulations_configuration_button").disabled = !(
         allIncrementsFilled &&
         allMinFilled &&
@@ -82,7 +82,7 @@ function toggleConfirmationFormulationsButtons(inputFields) {
  * to define formulations without weight constraints we internally take this possibility into account.
  */
 function collectInputFields(only_independent = true) {
-    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 2;
 
     if (!only_independent) {
         numberOfIndependentRows += 1;
@@ -90,9 +90,16 @@ function collectInputFields(only_independent = true) {
 
     const inputFields = [];
     for (let i = 0; i < numberOfIndependentRows; i++) {
-        const min = document.getElementById(`materials_min_max_entries-${i}-min`);
-        const max = document.getElementById(`materials_min_max_entries-${i}-max`);
-        const increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+        const type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
+        let min = document.getElementById(`materials_min_max_entries-${i}-min`);
+        let max = document.getElementById(`materials_min_max_entries-${i}-max`);
+        let increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+        // if (type.value === 'Liquid'){
+        //     const convertedLiquidValues = convertLiquidValues(min, max,increment)
+        //     min = convertedLiquidValues.min
+        //     max = convertedLiquidValues.max
+        //     increment = convertedLiquidValues.increment
+        // }
         inputFields.push({
             min: min,
             max: max,
@@ -196,10 +203,8 @@ function computeDependentValue(inputFieldName, currentInputField, independentMin
 
 function autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
     correctInputFieldValue(currentInputField, 0);
-
     // Empty values => NaN; all others are parsed to float
     let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
-
     // Multiply the liquid value (second in array/index 1) with the powder value (first in array/index 0)
     // Since liquid is given as a ratio of powder
     // The + casts to a number, because toFixed returns strings...
@@ -213,7 +218,7 @@ function autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, 
         if (currentInputField.id.includes(CONCRETE_LIQUID_HTML_ID_INCLUDES)) {
             // liquids need to be updated with a ratio instead of a total
             currentInputField.value = (
-                (concreteWeightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
+                ((concreteWeightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]) * 100
             ).toFixed(2);
         } else {
             currentInputField.value = (concreteWeightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
@@ -337,4 +342,11 @@ function toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields) {
 function updateSamplingRatioValue(ratio) {
     const value = parseFloat(ratio);
     document.getElementById("selected-ratio").value = value.toFixed(2);
+}
+
+function convertLiquidValues(min, max, increment) {
+    min.value = parseInt(min.value) / 100;
+    max.value = parseInt(max.value) / 100;
+    increment.value = parseInt(increment.value) / 100;
+    return {min, max, increment}
 }

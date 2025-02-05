@@ -11,6 +11,8 @@ function toggleBasedOnSelectionAndConstraints() {
     const powderPlaceholder = document.getElementById("powder_selection");
     const liquidPlaceholder = document.getElementById("liquid_selection");
     const aggregatesPlaceholder = document.getElementById("aggregates_selection");
+    concreteWeightConstraint = document.getElementById("weight_constraint").value;
+
 
     const powderSelected = atLeastOneItemIsSelected(powderPlaceholder);
     const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder);
@@ -59,13 +61,28 @@ async function assignConfirmFormulationsConfigurationEvent() {
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(CONCRETE);
         const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_weights`;
+        console.log(requestData)
+        const token = document.getElementById("csrf_token").value;
+        //
+        const constraintType = document.getElementById('constraint_selection')
+        console.log(constraintType.value)
+        requestData['selectedConstraintType'] = constraintType.value
+        let response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": token,
+            },
+            body: JSON.stringify(requestData),
+        });
 
-        insertSpinnerInPlaceholder("formulations_weights_placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
-        removeSpinnerInPlaceholder("formulations_weights_placeholder");
-        assignKeyboardEventsToWeightForm(true);
-        assignDeleteWeightEvent();
-        assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+        response = await response.json()
+        console.log(response)
+        // insertSpinnerInPlaceholder("formulations_weights_placeholder");
+        // await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
+        // removeSpinnerInPlaceholder("formulations_weights_placeholder");
+        // assignKeyboardEventsToWeightForm(true);
+        // assignDeleteWeightEvent();
+        // assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
     });
 }
 
