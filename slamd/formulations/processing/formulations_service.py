@@ -31,7 +31,16 @@ class FormulationsService:
     @classmethod
     def create_materials_formulations(cls, formulations_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.create_formulation_batch(formulations_data)
+
+        if formulations_data['selectedConstraintType'] == 'Volume':
+            formulations_data = cls.compute_formulations_data_for_volume_constraint(strategy, formulations_data)
+            print(formulations_data)
+        else:
+            # Implement formulations data for weight based
+            pass
+        # return strategy.create_formulation_batch(formulations_data)
+
+        return formulations_data
 
     @classmethod
     def _create_properties(cls, inner_dict):
@@ -100,4 +109,38 @@ class FormulationsService:
 
         return densities_dict
 
+    @classmethod
+    def compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
+        formulation_materials_specific_gravities = (cls._get_specific_gravity_of_formulation_configuration(request_data
+                                                                   ['materials_formulation_configuration']))
+        formulations_with_weights = strategy.generate_formulations_with_weights_for_volume_constraint(request_data, formulation_materials_specific_gravities)
 
+        formulations_data = cls._build_formulations_data(formulations_with_weights, request_data)
+        return formulations_data
+
+    @classmethod
+    def _get_specific_gravity_of_formulation_configuration(cls, configuration):
+        specific_gravities = []
+        for material in configuration:
+            material_type = material.get('type')
+            material_uuids = material.get('uuid')
+            if material_type in ['Powder', 'Liquid', 'Admixture', 'Aggregates']:
+                material_uuids = material_uuids.split(',')
+                for material_uuid in material_uuids:
+                    material = MaterialsFacade.get_material_from_session(material_type, material_uuid)
+                    specific_gravities.append({'uuid': material_uuid, 'type': material_type,'specific_gravity': material.specific_gravity})
+
+        return specific_gravities
+
+    @classmethod
+    def _build_formulations_data(cls, formulations_with_weights, request_data):
+        formulations_data = []
+        for formulation in formulations_with_weights:
+            formulation_data = {}
+            formulation_data['materials_request_data'] = {'materials_formulation_configuration': formulation['materials']}
+            formulation_data['weight_request_data'] = formulation['all_weights']
+            formulation_data['processes_request_data'] = request_data['processesRequestData']
+            formulation_data['samplingSize'] = request_data['samplingSize']
+            formulations_data.append(formulation_data)
+
+        return formulations_data

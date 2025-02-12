@@ -266,11 +266,11 @@ class BuildingMaterialStrategy(ABC):
             entry.min.data = 350
             entry.max.data = 450
         if type == 'Admixture':
-            entry.increment.label.text = 'Increment (Powder/Admixture-ratio) %'
+            entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
             entry.increment.data = 1
-            entry.min.label.text = 'Min (Powder/Admixture-ratio) %'
+            entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
             entry.min.data = 2
-            entry.max.label.text = 'Max (Powder/Admixture-ratio) %'
+            entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
             entry.max.data = 4
         if type == 'Air Pore Content':
             entry.increment.data = 0
@@ -279,4 +279,12 @@ class BuildingMaterialStrategy(ABC):
             entry.max.label.text = 'Max %'
             entry.min.data = 2
             entry.min.label.text = 'Min %'
+
+
+    @classmethod
+    @abstractmethod
+    def generate_formulation_weights(cls, min_max_data, specific_gravities):
+        pass
+
+
 

@@ -60,13 +60,14 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(CONCRETE);
-        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_weights`;
-        console.log(requestData)
+        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         const token = document.getElementById("csrf_token").value;
-        //
         const constraintType = document.getElementById('constraint_selection')
-        console.log(constraintType.value)
+        const processesRequestData = collectProcessesRequestData();
         requestData['selectedConstraintType'] = constraintType.value
+        requestData['processesRequestData'] = processesRequestData
+        requestData['samplingSize'] = 1
+        console.log(requestData)
         let response = await fetch(url, {
             method: "POST",
             headers: {

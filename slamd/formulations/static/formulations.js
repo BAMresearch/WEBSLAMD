@@ -5,10 +5,13 @@ function autocorrectWeightValue() {
 
 function updateConstraintLabel(){
     const constraintLabel = document.getElementById("constraint_input_label")
+    const constraintValue = document.getElementById("weight_constraint")
     if (this.value === 'Weight') {
-        constraintLabel.textContent = constraintLabel.textContent.replace('Volume (m³)', 'Weight (t)')
+        constraintLabel.textContent = constraintLabel.textContent.replace('Volume (m³)', 'Weight (kg)')
+        constraintValue.value = 2400.0
     } else {
-        constraintLabel.textContent = constraintLabel.textContent.replace('Weight (t)', 'Volume (m³)')
+        constraintLabel.textContent = constraintLabel.textContent.replace('Weight (kg)', 'Volume (m³)')
+        constraintValue.value = 1.0
     }
 }
 

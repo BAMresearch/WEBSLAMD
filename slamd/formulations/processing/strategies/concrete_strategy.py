@@ -3,8 +3,11 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORA
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
+from slamd.formulations.processing.volumes_calculator import VolumesCalculator
+from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
+from itertools import product
 
 MAX_DATASET_SIZE = 10000
 
@@ -65,12 +68,12 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(custom_uuids),
                                            f'Customs ({joined_custom_names})', 'Custom')
 
+        if selected_constraint_type == 'Volume':
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1', 'Air Pore Content', 'Air Pore Content')
+
         joined_aggregates_names = ', '.join(aggregates_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
                                        f'Aggregates ({joined_aggregates_names})', 'Aggregates')
-
-        if selected_constraint_type == 'Volume':
-            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1', 'Air Pore Content', 'Air Pore Content')
 
         cls._create_process_fields(formulation_selection, min_max_form)
 
@@ -94,3 +97,71 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     @classmethod
     def _sort_materials(cls, materials_for_formulation):
         return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
+
+    @classmethod
+    def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, specific_gravities):
+        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data['materials_formulation_configuration'])
+
+        materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
+
+        admixture_custom_materials_indices = cls._calculate_aggregates_admixture_indices(materials_in_formulation)
+
+        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_custom_materials_indices)
+
+        material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities, admixture_custom_materials_indices)
+
+        material_combinations = cls._generate_material_combinations(material_volumes)
+
+        material_volumes_for_all_combinations = VolumesCalculator.generate_volumes_for_combinations(material_combinations)
+
+        valid_volumes_for_all_combinations = VolumesCalculator.validate_volume_combinations(material_volumes_for_all_combinations, min_max_data['weight_constraint'])
+
+        valid_formulations_with_aggregates = VolumesCalculator.add_aggregates_volume_to_combination(valid_volumes_for_all_combinations, specific_gravities, min_max_data['weight_constraint'])
+
+        formulations_with_weights = VolumesCalculator.transform_volumes_to_weights(valid_formulations_with_aggregates, specific_gravities, admixture_custom_materials_indices)
+
+        return formulations_with_weights
+
+    @classmethod
+    def _generate_material_combinations(cls, all_material_volumes):
+        powders = [material for material in all_material_volumes if material['type'] == 'Powder']
+        liquids = [material for material in all_material_volumes if material['type'] == 'Liquid']
+        admixtures = [material for material in all_material_volumes if material['type'] == 'Admixture']
+        customs = [material for material in all_material_volumes if material['type'] == 'Custom']
+
+        if admixtures and customs:
+            formulation_list = [
+                [powder, liquid, admixture, custom]
+                for powder, liquid, admixture, custom in product(powders, liquids, admixtures, customs)
+            ]
+        elif admixtures and not customs:
+            formulation_list = [
+                [powder, liquid, admixture]
+                for powder, liquid, admixture in product(powders, liquids, admixtures)
+            ]
+        elif customs and not admixtures:
+            formulation_list = [
+                [powder, liquid, customs]
+                for powder, liquid, customs in product(powders, liquids, customs)
+            ]
+        else:
+            formulation_list = [
+                [powder, liquid]
+                for powder, liquid in product(powders, liquids)
+            ]
+
+        return formulation_list
+
+    @classmethod
+    def _calculate_aggregates_admixture_indices(cls, materials_in_formulation):
+        admixture_index = None
+        custom_index = None
+        if 'Admixture' in materials_in_formulation and 'Custom' not in materials_in_formulation:
+            admixture_index = 2
+        if 'Custom' in materials_in_formulation and 'Admixture' not in materials_in_formulation:
+            custom_index = 2
+        if 'Admixture' in materials_in_formulation and 'Custom' in materials_in_formulation:
+            admixture_index = 2
+            custom_index = 3
+        indices = {'admixture_index': admixture_index, 'custom_index': custom_index}
+        return indices
