@@ -34,7 +34,6 @@ class FormulationsService:
 
         if formulations_data['selectedConstraintType'] == 'Volume':
             formulations_data = cls.compute_formulations_data_for_volume_constraint(strategy, formulations_data)
-            print(formulations_data)
         else:
             # Implement formulations data for weight based
             pass
@@ -124,7 +123,7 @@ class FormulationsService:
         for material in configuration:
             material_type = material.get('type')
             material_uuids = material.get('uuid')
-            if material_type in ['Powder', 'Liquid', 'Admixture', 'Aggregates']:
+            if material_type in ['Powder', 'Liquid', 'Admixture', 'Aggregates', 'Custom']:
                 material_uuids = material_uuids.split(',')
                 for material_uuid in material_uuids:
                     material = MaterialsFacade.get_material_from_session(material_type, material_uuid)

@@ -104,11 +104,11 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
 
-        admixture_custom_materials_indices = cls._calculate_aggregates_admixture_indices(materials_in_formulation)
+        admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
 
-        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_custom_materials_indices)
+        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
 
-        material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities, admixture_custom_materials_indices)
+        material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities, admixture_and_custom_materials_indices)
 
         material_combinations = cls._generate_material_combinations(material_volumes)
 
@@ -118,7 +118,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         valid_formulations_with_aggregates = VolumesCalculator.add_aggregates_volume_to_combination(valid_volumes_for_all_combinations, specific_gravities, min_max_data['weight_constraint'])
 
-        formulations_with_weights = VolumesCalculator.transform_volumes_to_weights(valid_formulations_with_aggregates, specific_gravities, admixture_custom_materials_indices)
+        formulations_with_weights = VolumesCalculator.transform_volumes_to_weights(valid_formulations_with_aggregates, specific_gravities, admixture_and_custom_materials_indices)
 
         return formulations_with_weights
 
@@ -153,7 +153,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return formulation_list
 
     @classmethod
-    def _calculate_aggregates_admixture_indices(cls, materials_in_formulation):
+    def _calculate_admixture_and_custom_indices(cls, materials_in_formulation):
         admixture_index = None
         custom_index = None
         if 'Admixture' in materials_in_formulation and 'Custom' not in materials_in_formulation:

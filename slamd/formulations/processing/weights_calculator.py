@@ -82,24 +82,23 @@ class WeightsCalculator:
         return round(powder_mass, 2)
 
     @classmethod
-    def compute_weights_from_ratios(cls, all_materials_weights_and_ratios,admixture_custom_indices):
+    def compute_weights_from_ratios(cls, all_materials_weights_and_ratios, admixture_custom_indices):
         powder_weights = all_materials_weights_and_ratios[0]
         liquid_ratios = all_materials_weights_and_ratios[1]
-        admixture_ratios = []
         liquid_weights = []
         admixture_weights = []
-
-        if admixture_custom_indices.get('admixture_index'):
-            admixture_ratios = all_materials_weights_and_ratios[admixture_custom_indices['admixture_index']]
 
         for powder_weight in powder_weights:
             for liquid_ratio in liquid_ratios:
                 liquid_weights.append(float(powder_weight) * float(liquid_ratio) / 100)
-            for admixture_ratio in admixture_ratios:
-                admixture_weights.append(float(powder_weight) * float(admixture_ratio) / 100)
+            if admixture_custom_indices.get('admixture_index'):
+                admixture_ratios = all_materials_weights_and_ratios[admixture_custom_indices['admixture_index']]
+                for admixture_ratio in admixture_ratios:
+                    admixture_weights.append(float(powder_weight) * float(admixture_ratio) / 100)
 
         all_materials_weights_and_ratios[1] = [str(val) for val in liquid_weights]
-        all_materials_weights_and_ratios[2] = [str(val) for val in admixture_weights]
+        if admixture_custom_indices.get('admixture_index'):
+            all_materials_weights_and_ratios[2] = [str(val) for val in admixture_weights]
 
         return all_materials_weights_and_ratios
 
