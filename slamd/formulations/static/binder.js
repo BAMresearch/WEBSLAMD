@@ -50,19 +50,39 @@ async function confirmSelection() {
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
-    const button = document.getElementById("confirm_formulations_configuration_button");
+    // const button = document.getElementById("confirm_formulations_configuration_button");
+    // enableTooltip(button);
+    //
+    // button.addEventListener("click", async () => {
+    //     const requestData = collectFormulationsMinMaxRequestData(BINDER);
+    //     const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/add_weights`;
+    //
+    //     insertSpinnerInPlaceholder("formulations_weights_placeholder");
+    //     await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
+    //     removeSpinnerInPlaceholder("formulations_weights_placeholder");
+    //     assignKeyboardEventsToWeightForm(true);
+    //     assignDeleteWeightEvent();
+    //     assignCreateFormulationsBatchEvent(`${BINDER_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+    // });
+    const button = document.getElementById("create_formulations_batch_button");
     enableTooltip(button);
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(BINDER);
-        const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/add_weights`;
+        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+        const token = document.getElementById("csrf_token").value;
+        const constraintType = document.getElementById('constraint_selection')
+        const processesRequestData = collectProcessesRequestData();
+        requestData['selectedConstraintType'] = constraintType.value
+        requestData['processesRequestData'] = processesRequestData
+        requestData['samplingSize'] = 1
 
-        insertSpinnerInPlaceholder("formulations_weights_placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
-        removeSpinnerInPlaceholder("formulations_weights_placeholder");
-        assignKeyboardEventsToWeightForm(true);
-        assignDeleteWeightEvent();
-        assignCreateFormulationsBatchEvent(`${BINDER_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+        insertSpinnerInPlaceholder("formulations-table-placeholder");
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", requestData);
+        removeSpinnerInPlaceholder("formulations-table-placeholder");
+
+        document.getElementById("submit").disabled = false;
+        document.getElementById("delete_formulations_batches_button").disabled = false;
     });
 }
 

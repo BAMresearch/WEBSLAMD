@@ -38,7 +38,7 @@ def add_formulations_min_max_entry(building_material):
     body = {'template': render_template('formulations_min_max_form.html', formulations_min_max_form=min_max_form)}
     return make_response(jsonify(body), 200)
 
-#Ggf für Binder notwendig wenn doch die Gewichte angezeigt werden sollen
+# Ggf. für Binder notwendig wenn doch die Gewichte angezeigt werden sollen
 # @formulations.route('/<building_material>/add_weights', methods=['POST'])
 # def add_weights(building_material):
 #     weights_request_data = json.loads(request.data)
@@ -50,14 +50,12 @@ def add_formulations_min_max_entry(building_material):
 @formulations.route('/<building_material>/create_formulations_batch', methods=['POST'])
 def submit_formulation_batch(building_material):
     request_data = json.loads(request.data)
-    # print(request_data)
     dataframe = FormulationsService.create_materials_formulations(request_data, building_material)
     html_dataframe = dataframe.to_html(index=False,
                                        table_id='formulations_dataframe',
                                        classes='table table-bordered table-striped table-hover topscroll-table')
     body = {'template': render_template('formulations_table.html', df=html_dataframe)}
     return make_response(jsonify(body), 200)
-    # return {'msg': 'success'}
 
 
 @formulations.route('/<building_material>', methods=['DELETE'])
