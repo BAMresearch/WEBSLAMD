@@ -37,8 +37,10 @@ class FormulationsService:
         else:
             # Implement formulations data for weight based
             pass
-        # return strategy.create_formulation_batch(formulations_data)
-
+        # print(formulations_data[0])
+        for formulation in formulations_data:
+            formulations_data = strategy.create_formulation_batch(formulation)
+        # print(formulations_data)
         return formulations_data
 
     @classmethod
@@ -133,13 +135,16 @@ class FormulationsService:
 
     @classmethod
     def _build_formulations_data(cls, formulations_with_weights, request_data):
+        # print(formulations_with_weights)
         formulations_data = []
         for formulation in formulations_with_weights:
+            for material in formulation['materials']:
+                material['uuids'] = material.pop('uuid')
             formulation_data = {}
             formulation_data['materials_request_data'] = {'materials_formulation_configuration': formulation['materials']}
-            formulation_data['weight_request_data'] = formulation['all_weights']
+            formulation_data['weights_request_data'] = {'all_weights': formulation['all_weights']}
             formulation_data['processes_request_data'] = request_data['processesRequestData']
-            formulation_data['samplingSize'] = request_data['samplingSize']
+            formulation_data['sampling_size'] = request_data['samplingSize']
             formulations_data.append(formulation_data)
 
         return formulations_data

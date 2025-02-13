@@ -285,31 +285,31 @@ function assignDeleteWeightEvent() {
     }
 }
 
-function assignCreateFormulationsBatchEvent(url) {
-    const button = document.getElementById("create_formulations_batch_button");
-    enableTooltip(button);
-
-    button.addEventListener("click", async () => {
-        const materialsRequestData = collectMaterialRequestData();
-        const weightsRequestData = collectWeights();
-        const processesRequestData = collectProcessesRequestData();
-        const samplingSize = document.getElementById("sampling_size_slider").value
-
-        const formulationsRequest = {
-            materials_request_data: materialsRequestData,
-            weights_request_data: weightsRequestData,
-            processes_request_data: processesRequestData,
-            sampling_size: samplingSize
-        };
-
-        insertSpinnerInPlaceholder("formulations-table-placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
-        removeSpinnerInPlaceholder("formulations-table-placeholder");
-
-        document.getElementById("submit").disabled = false;
-        document.getElementById("delete_formulations_batches_button").disabled = false;
-    });
-}
+// function assignCreateFormulationsBatchEvent(url) {
+//     const button = document.getElementById("create_formulations_batch_button");
+//     enableTooltip(button);
+//
+//     button.addEventListener("click", async () => {
+//         const materialsRequestData = collectMaterialRequestData();
+//         const weightsRequestData = collectWeights();
+//         const processesRequestData = collectProcessesRequestData();
+//         const samplingSize = document.getElementById("sampling_size_slider").value
+//
+//         const formulationsRequest = {
+//             materials_request_data: materialsRequestData,
+//             weights_request_data: weightsRequestData,
+//             processes_request_data: processesRequestData,
+//             sampling_size: samplingSize
+//         };
+//
+//         insertSpinnerInPlaceholder("formulations-weights-placeholder");
+//         await postDataAndEmbedTemplateInPlaceholder(url, "formulations-weights-placeholder", formulationsRequest);
+//         removeSpinnerInPlaceholder("formulations-weights-placeholder");
+//
+//         document.getElementById("submit").disabled = false;
+//         document.getElementById("delete_formulations_batches_button").disabled = false;
+//     });
+// }
 
 function toggleSubmitButtonBasedOnWeights() {
     const weightFields = collectWeightFields();

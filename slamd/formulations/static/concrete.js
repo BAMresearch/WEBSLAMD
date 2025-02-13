@@ -51,11 +51,10 @@ async function confirmSelection() {
 
     addListenersToIndependentFields(CONCRETE);
     assignConfirmFormulationsConfigurationEvent();
-    getSpecificGravityOfMaterials();
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
-    const button = document.getElementById("confirm_formulations_configuration_button");
+    const button = document.getElementById("create_formulations_batch_button");
     enableTooltip(button);
 
     button.addEventListener("click", async () => {
@@ -67,80 +66,33 @@ async function assignConfirmFormulationsConfigurationEvent() {
         requestData['selectedConstraintType'] = constraintType.value
         requestData['processesRequestData'] = processesRequestData
         requestData['samplingSize'] = 1
-        console.log(requestData)
-        let response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": token,
-            },
-            body: JSON.stringify(requestData),
-        });
-
-        response = await response.json()
-        console.log(response)
+        // console.log(requestData)
+        // let response = await fetch(url, {
+        //     method: "POST",
+        //     headers: {
+        //         "X-CSRF-TOKEN": token,
+        //     },
+        //     body: JSON.stringify(requestData),
+        // });
+        //
+        // response = await response.json()
+        // console.log(response)
         // insertSpinnerInPlaceholder("formulations_weights_placeholder");
         // await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
         // removeSpinnerInPlaceholder("formulations_weights_placeholder");
         // assignKeyboardEventsToWeightForm(true);
         // assignDeleteWeightEvent();
         // assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+        insertSpinnerInPlaceholder("formulations-table-placeholder");
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", requestData);
+        removeSpinnerInPlaceholder("formulations-table-placeholder");
+
+        document.getElementById("submit").disabled = false;
+        document.getElementById("delete_formulations_batches_button").disabled = false;
     });
 }
 
 
-async function getSpecificGravityOfMaterials(){
-    const materialsUuidDict = buildMaterialsUuidDict();
-    const token = document.getElementById("csrf_token").value;
-    const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/get_specific_gravity`
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": token,
-        },
-        body: JSON.stringify(materialsUuidDict),
-    });
-
-    materialsSpecificGravity = await response.json()
-}
-
-function buildMaterialsUuidDict(){
-    let materialsDict = {};
-    document.querySelectorAll('.row.g-3.mb-3.align-items-end').forEach(row => {
-        let uuidField = row.previousElementSibling?.querySelector('.uuid-field');
-        let materialField = row.querySelector('[name$="materials_entry_name"]');
-
-        if (uuidField && materialField) {
-            let uuid = uuidField.value.trim();
-            let materialName = materialField.value.trim();
-
-            if (uuid && materialName) {
-
-                let categoryMatch = materialName.match(/^([\w\s]+)\s*\(/);
-                let category = categoryMatch ? categoryMatch[1].trim() : materialName;
-
-                if (category === 'W/C Ratio'){
-                    category = 'Liquid'
-                }
-                if (category === 'Powders'){
-                    category = 'Powder'
-                }
-                if (category === 'Admixtures'){
-                    category = 'Admixture'
-                }
-                if (category === 'Air Pore Content'){
-                    return
-                }
-                if (!materialsDict[category]) {
-                    materialsDict[category] = [];
-                }
-                uuid.split(',').forEach(singleUuid => {
-                    materialsDict[category].push(singleUuid.trim());
-                });
-            }
-        }
-    });
-    return materialsDict
-}
 
 async function deleteFormulations() {
     await deleteDataAndEmbedTemplateInPlaceholder(CONCRETE_FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");

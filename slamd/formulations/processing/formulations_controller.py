@@ -51,13 +51,13 @@ def add_weights(building_material):
 def submit_formulation_batch(building_material):
     request_data = json.loads(request.data)
     # print(request_data)
-    FormulationsService.create_materials_formulations(request_data, building_material)
-    # html_dataframe = dataframe.to_html(index=False,
-    #                                    table_id='formulations_dataframe',
-    #                                    classes='table table-bordered table-striped table-hover topscroll-table')
-    # body = {'template': render_template('formulations_table.html', df=html_dataframe)}
-    # return make_response(jsonify(body), 200)
-    return {'msg': 'success'}
+    dataframe = FormulationsService.create_materials_formulations(request_data, building_material)
+    html_dataframe = dataframe.to_html(index=False,
+                                       table_id='formulations_dataframe',
+                                       classes='table table-bordered table-striped table-hover topscroll-table')
+    body = {'template': render_template('formulations_table.html', df=html_dataframe)}
+    return make_response(jsonify(body), 200)
+    # return {'msg': 'success'}
 
 
 @formulations.route('/<building_material>', methods=['DELETE'])
@@ -73,9 +73,3 @@ def submit_dataset(building_material):
     FormulationsService.save_dataset(request.form, building_material)
 
     return redirect(f'/materials/formulations/{building_material}')
-
-@formulations.route('/<building_material>/get_specific_gravity', methods=['POST'])
-def get_densities(building_material):
-    materials = json.loads(request.data)
-    specific_gravity_dict = FormulationsService.get_specific_gravity_dict(materials)
-    return make_response(jsonify(specific_gravity_dict), 200)

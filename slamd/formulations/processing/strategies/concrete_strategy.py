@@ -88,7 +88,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
         cls._create_min_max_form_entry_internal(entries, uuids, name, material_type, ['Powder', 'Liquid', 'Aggregates'],
-                                                'Aggregates')
+                                                ['Aggregates', 'Air Pore Content'])
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, weight_constraint):

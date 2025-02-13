@@ -250,7 +250,7 @@ class BuildingMaterialStrategy(ABC):
             entry.increment.name = type
             entry.min.name = type
             entry.max.name = type
-        if type == disabled_type:
+        if type in disabled_type:
             entry.increment.render_kw = {'disabled': 'disabled'}
             entry.min.render_kw = {'disabled': 'disabled'}
             entry.max.render_kw = {'disabled': 'disabled'}
