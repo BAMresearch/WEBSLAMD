@@ -165,3 +165,15 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             custom_index = 3
         indices = {'admixture_index': admixture_index, 'custom_index': custom_index}
         return indices
+
+    @classmethod
+    def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data):
+        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data['materials_formulation_configuration'])
+        materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
+        admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
+        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
+        weights_combinations = list(product(*material_weights))
+        formulations_with_aggregates = WeightsCalculator.add_aggregates_weight_to_weight_combinations(weights_combinations, float(min_max_data['weight_constraint']))
+        return formulations_with_aggregates
+
+

@@ -102,3 +102,15 @@ class WeightsCalculator:
 
         return all_materials_weights_and_ratios
 
+    @classmethod
+    def add_aggregates_weight_to_weight_combinations(cls, weight_combinations, weight_constraint):
+        new_weight_combinations = []
+        for weight_combination in weight_combinations:
+            weights = [float(weight) for weight in weight_combination]
+            aggregates_weight = weight_constraint - sum(weights)
+            weight_combination = "/".join(f"{v:.2f}" for v in weights + [aggregates_weight])
+            new_weight_combinations.append(weight_combination)
+        return new_weight_combinations
+
+
+

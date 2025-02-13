@@ -61,6 +61,7 @@ class VolumesCalculator:
             all_volumes = formulation.get('all_volumes')
 
             for combination in all_volumes:
+                # check if this validation makes sense or if sum of volumes are always smaller than volume_constraint
                 # if sum(combination) + AIR_PORE_CONTENT_VOLUME < float(volume_constraint):
                 if sum(combination) + AIR_PORE_CONTENT_VOLUME < 0.26:
                     valid_combinations.append(combination)

@@ -33,15 +33,16 @@ class FormulationsService:
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
 
         if formulations_data['selectedConstraintType'] == 'Volume':
-            formulations_data = cls.compute_formulations_data_for_volume_constraint(strategy, formulations_data)
+            formulations = cls._compute_formulations_data_for_volume_constraint(strategy, formulations_data)
         else:
             # Implement formulations data for weight based
-            pass
+            formulations = cls._compute_formulations_data_for_weight_constraint(strategy, formulations_data)
+            print(formulations)
         # print(formulations_data[0])
-        for formulation in formulations_data:
-            formulations_data = strategy.create_formulation_batch(formulation)
+        for formulation in formulations:
+            formulations = strategy.create_formulation_batch(formulation)
         # print(formulations_data)
-        return formulations_data
+        return formulations
 
     @classmethod
     def _create_properties(cls, inner_dict):
@@ -111,7 +112,7 @@ class FormulationsService:
         return densities_dict
 
     @classmethod
-    def compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
+    def _compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
         formulation_materials_specific_gravities = (cls._get_specific_gravity_of_formulation_configuration(request_data
                                                                    ['materials_formulation_configuration']))
         formulations_with_weights = strategy.generate_formulations_with_weights_for_volume_constraint(request_data, formulation_materials_specific_gravities)
@@ -135,7 +136,7 @@ class FormulationsService:
 
     @classmethod
     def _build_formulations_data(cls, formulations_with_weights, request_data):
-        # print(formulations_with_weights)
+        print(formulations_with_weights)
         formulations_data = []
         for formulation in formulations_with_weights:
             for material in formulation['materials']:
@@ -147,4 +148,20 @@ class FormulationsService:
             formulation_data['sampling_size'] = request_data['samplingSize']
             formulations_data.append(formulation_data)
 
+        return formulations_data
+
+    @classmethod
+    def _compute_formulations_data_for_weight_constraint(cls, strategy, request_data):
+        formulations_data = []
+        formulation = {}
+        # print(request_data)
+        formulations_with_weights = strategy.generate_formulations_with_weights_for_weight_constraint(request_data)
+        # print(formulations_with_weights)
+        for material in request_data['materials_formulation_configuration']:
+            material.pop('min')
+            material.pop('max')
+            material.pop('increment')
+        formulation['materials'] = request_data['materials_formulation_configuration']
+        formulation['all_weights'] = formulations_with_weights
+        formulations_data.append(formulation)
         return formulations_data
