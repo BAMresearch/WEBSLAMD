@@ -109,8 +109,9 @@ class FormulationsService:
 
     @classmethod
     def _compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
-        formulation_materials_specific_gravities = (cls._get_specific_gravity_of_formulation_configuration(request_data
-                                                                   ['materials_formulation_configuration']))
+        formulation_materials_specific_gravities = cls._get_specific_gravity_of_formulation_configuration(
+            request_data['materials_formulation_configuration']
+        )
         formulations_with_weights = strategy.generate_formulations_with_weights_for_volume_constraint(request_data, formulation_materials_specific_gravities)
 
         formulations_data = cls._build_formulations_data(formulations_with_weights, request_data)

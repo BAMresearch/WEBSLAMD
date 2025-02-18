@@ -256,11 +256,11 @@ class BuildingMaterialStrategy(ABC):
             entry.max.render_kw = {'disabled': 'disabled'}
             entry.min.label.text = 'Max (kg)'
             entry.max.label.text = 'Min (kg)'
-        cls._populate_minx_max_entry_with_default_values(entry, type)
+        cls._populate_min_max_entry_with_default_values(entry, type)
 
 
     @classmethod
-    def _populate_minx_max_entry_with_default_values(cls, entry, type):
+    def _populate_min_max_entry_with_default_values(cls, entry, type):
         if type == 'Powder':
             entry.increment.data = 10
             entry.min.data = 350

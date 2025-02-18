@@ -8,34 +8,41 @@ G_CM3_TO_KG_M3_CONVERSION_FACTOR = 1000
 class VolumesCalculator:
 
     @classmethod
-    def compute_volumes_from_weights(cls, weights, specific_gravities, admixture_custom_indices):
+    def compute_volumes_from_weights(cls, weights, specific_gravities):
         volumes = []
-        admixture_index = admixture_custom_indices.get('admixture_index')
-        custom_index = admixture_custom_indices.get('custom_index')
-        admixture_weights = weights[admixture_index] if admixture_index else None
-        custom_weights = weights[custom_index] if custom_index else None
 
-        for specific_gravity in specific_gravities:
-            if specific_gravity.get('type') == 'Powder':
-                powder_volumes = [float(powder_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-                                         for powder_weight in weights[0]]
-                powder_uuid = specific_gravity.get('uuid')
-                volumes.append({'type': 'Powder', 'uuid': powder_uuid, 'volumes': powder_volumes})
-            if specific_gravity.get('type') == 'Liquid':
-                liquid_volumes = [float(liquid_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-                                        for liquid_weight in weights[1]]
-                liquid_uuid = specific_gravity.get('uuid')
-                volumes.append({'type': 'Liquid', 'uuid': liquid_uuid, 'volumes': liquid_volumes})
-            if specific_gravity.get('type') == 'Admixture':
-                admixture_volumes = [float(admixture_weight) / (float(specific_gravity.get('specific_gravity')) *
-                                                                G_CM3_TO_KG_M3_CONVERSION_FACTOR) for admixture_weight in admixture_weights]
-                admixture_uuid = specific_gravity.get('uuid')
-                volumes.append({'type': 'Admixture', 'uuid': admixture_uuid, 'volumes': admixture_volumes})
-            if specific_gravity.get('type') == 'Custom':
-                custom_volumes = [float(custom_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-                                         for custom_weight in custom_weights]
-                custom_uuid = specific_gravity.get('uuid')
-                volumes.append({'type': 'Custom', 'uuid': custom_uuid, 'volumes': custom_volumes})
+        types = set([sg["type"] for sg in specific_gravities])
+        materials = []
+        for t in types:
+            materials.append()
+
+        for w in weights:
+
+
+            for specific_gravity in specific_gravities:
+                if specific_gravity.get('type') == 'Powder':
+                    powder_volumes = [float(powder_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                                             for powder_weight in weights[0]]
+                    powder_uuid = specific_gravity.get('uuid')
+                    volumes.append({'type': 'Powder', 'uuid': powder_uuid, 'volumes': powder_volumes})
+
+                if specific_gravity.get('type') == 'Liquid':
+                    liquid_volumes = [float(liquid_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                                            for liquid_weight in weights[1]]
+                    liquid_uuid = specific_gravity.get('uuid')
+                    volumes.append({'type': 'Liquid', 'uuid': liquid_uuid, 'volumes': liquid_volumes})
+
+                if specific_gravity.get('type') == 'Admixture':
+                    admixture_volumes = [float(admixture_weight) / (float(specific_gravity.get('specific_gravity')) *
+                                                                    G_CM3_TO_KG_M3_CONVERSION_FACTOR) for admixture_weight in admixture_weights]
+                    admixture_uuid = specific_gravity.get('uuid')
+                    volumes.append({'type': 'Admixture', 'uuid': admixture_uuid, 'volumes': admixture_volumes})
+
+                if specific_gravity.get('type') == 'Custom':
+                    custom_volumes = [float(custom_weight) / (float(specific_gravity.get('specific_gravity')) * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                                             for custom_weight in custom_weights]
+                    custom_uuid = specific_gravity.get('uuid')
+                    volumes.append({'type': 'Custom', 'uuid': custom_uuid, 'volumes': custom_volumes})
 
         return volumes
 
@@ -62,10 +69,11 @@ class VolumesCalculator:
 
             for combination in all_volumes:
                 # check if this validation makes sense or if sum of volumes are always smaller than volume_constraint
-                # if sum(combination) + AIR_PORE_CONTENT_VOLUME < float(volume_constraint):
-                if sum(combination) + AIR_PORE_CONTENT_VOLUME < 0.26:
+                if sum(combination) + AIR_PORE_CONTENT_VOLUME < float(volume_constraint):
                     valid_combinations.append(combination)
+
             formulation['all_volumes'] = set(valid_combinations)
+
         return formulations
 
 
@@ -98,6 +106,7 @@ class VolumesCalculator:
             aggregates_specific_gravity = ''
             admixture_specific_gravity = ''
             custom_specific_gravity = ''
+
             for materials in formulation['materials']:
                 if materials.get('type') == 'Powder':
                     powder_uuid = materials.get('uuid')
@@ -109,6 +118,7 @@ class VolumesCalculator:
                     custom_uuid = materials.get('uuid')
                 if materials.get('type') == 'Aggregates':
                     aggregates_uuid = materials.get('uuid')
+
             for specific_gravity in specific_gravities:
                 specific_gravity_uuid = specific_gravity.get('uuid')
                 if specific_gravity_uuid == powder_uuid:
@@ -145,6 +155,7 @@ class VolumesCalculator:
 
             formulation.pop('all_volumes')
             formulation['all_weights'] = all_weights
+
         return formulations
 
 

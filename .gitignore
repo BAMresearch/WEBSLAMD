@@ -27,3 +27,4 @@ flask_session
 node_modules/
 cypress/videos
 cypress/screenshots/
+.aider*
