@@ -63,26 +63,10 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const token = document.getElementById("csrf_token").value;
         const constraintType = document.getElementById('constraint_selection')
         const processesRequestData = collectProcessesRequestData();
-        requestData['selectedConstraintType'] = constraintType.value
-        requestData['processesRequestData'] = processesRequestData
-        requestData['samplingSize'] = 1
-        // console.log(requestData)
-        // let response = await fetch(url, {
-        //     method: "POST",
-        //     headers: {
-        //         "X-CSRF-TOKEN": token,
-        //     },
-        //     body: JSON.stringify(requestData),
-        // });
-        //
-        // response = await response.json()
-        // console.log(response)
-        // insertSpinnerInPlaceholder("formulations_weights_placeholder");
-        // await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
-        // removeSpinnerInPlaceholder("formulations_weights_placeholder");
-        // assignKeyboardEventsToWeightForm(true);
-        // assignDeleteWeightEvent();
-        // assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+        requestData['selected_constraint_type'] = constraintType.value
+        requestData['processes_request_data'] = processesRequestData
+        requestData['sampling_size'] = 1
+
         insertSpinnerInPlaceholder("formulations-table-placeholder");
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", requestData);
         removeSpinnerInPlaceholder("formulations-table-placeholder");

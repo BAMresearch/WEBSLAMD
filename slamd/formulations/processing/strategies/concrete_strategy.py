@@ -1,10 +1,12 @@
+import itertools
+
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.formulations.processing.models import ConcreteComposition, Material
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.volumes_calculator import VolumesCalculator
+from slamd.formulations.processing.volumes_calculator import VolumesCalculator, G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
@@ -56,9 +58,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio) %'
         min_max_form.materials_min_max_entries.entries[-1].max.data = 60
 
-
-
-
         if len(admixture_names):
             joined_admixture_names = ', '.join(admixture_names)
             cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(admixture_uuids),
@@ -70,7 +69,8 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                            f'Customs ({joined_custom_names})', 'Custom')
 
         if selected_constraint_type == 'Volume':
-            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1', 'Air Pore Content', 'Air Pore Content')
+            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1',
+                                           'Air Pore Content', 'Air Pore Content')
 
         joined_aggregates_names = ', '.join(aggregates_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
@@ -100,52 +100,117 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
 
     @classmethod
-    def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, specific_gravities):
-        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data['materials_formulation_configuration'])
-        materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
+    def _extract_material_uuids(cls, min_max_data):
+        result = {}
+        for item in min_max_data:
+            material_type = item['type']
+            uuids = item['uuid'].split(',')  # Split in case there are multiple UUIDs
 
-        admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
-        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
-        material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities)
+            if material_type not in result:
+                result[material_type] = []
 
-        formulations = []
-        powders = []
-        liquids = []
-        admixtures = []
-        customs = []
-        air_pore_contents = []
-        for powder in powders:
-            for liquid in liquids:
-                for admixture in admixtures:
-                    for custom in customs:
-                        for apc in air_pore_contents:
-                            formulations.append(cls._create_formulation_variations())
+            result[material_type].extend(uuids)
 
-        for powder_weight in materials_weights_and_ratios[0]:
-            for liquid_ratio in materials_weights_and_ratios[1]:
-                formulations.append(
-                    ConcreteComposition(
-                        powder=Material(uuid=)
-                    )
+        return result
+
+    @classmethod
+    def _find_material_combinations(cls, type_to_uuids):
+        material_types = list(type_to_uuids.keys())
+        uuid_lists = [type_to_uuids[material_type] for material_type in material_types]
+
+        raw_combinations = itertools.product(*uuid_lists)
+
+        combinations = []
+        for combination in raw_combinations:
+            combination_dict = {material_type: uuid for material_type, uuid in zip(material_types, combination)}
+            combinations.append(combination_dict)
+
+        return combinations
+
+    @classmethod
+    def _create_preliminary_compositions(cls, material_combination, material_space):
+        material_types = list(material_space.keys())
+
+        compositions = []
+        for combination in itertools.product(*[material_space[mt] for mt in material_types]):
+            combination_dict = dict(zip(material_types, combination))
+            compositions.append(
+                ConcreteComposition(
+                    powder=Material(uuid=material_combination["Powder"],
+                                    mass=combination_dict["Powder"],
+                                    volume=None) if "Powder" in material_types else None,
+                    liquid=Material(uuid=material_combination["Liquid"],
+                                    mass=combination_dict["Liquid"] * material_combination["Powder"] / 100,
+                                    volume=None) if "Liquid" in material_types else None,
+                    admixture=Material(uuid=material_combination["Admixture"],
+                                       mass=combination_dict["Admixture"] * material_combination["Powder"] / 100,
+                                       volume=None) if "Admixture" in material_types else None,
+                    custom=Material(uuid=material_combination["Custom"],
+                                    mass=combination_dict["Custom"],
+                                    volume=None) if "Custom" in material_types else None,
+                    air_pore_content=combination_dict["Air Pore Content"],
+                    aggregate=Material(uuid=material_combination["Aggregate"], mass=None, volume=None),
                 )
-                # if admixture_ratios:
-                #     for admixture_ratio in admixture_ratios:
-                #         compositions.append(ConcreteComposition(
-                #             powder=Material()
-                #         ))
-                #         compositions.append({
-                #             "powder": powder_weight,
-                #             "liquid": float(powder_weight) * float(liquid_ratio) / 100,
-                #             "admixture": float(powder_weight) * float(admixture_ratio) / 100,
-                #         })
-                # else:
-                #     weights.append({
-                #         "powder": powder_weight,
-                #         "liquid": float(powder_weight) * float(liquid_ratio) / 100,
-                #     })
+            )
+
+        return compositions
+
+    @classmethod
+    def _complete_composition(cls, composition, specific_gravities, volume_constraint):
+        c = composition
+        total_volume = volume_constraint * c.air_pore_content / 100
+
+        if c.powder:
+            c.powder.volume = c.powder.mass / (specific_gravities[c.powder.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += c.powder.volume
+
+        if c.liquid:
+            c.liquid.volume = c.liquid.mass / (specific_gravities[c.liquid.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += c.liquid.volume
+
+        if c.admixture:
+            c.admixture.volume = c.admixture.mass / (specific_gravities[c.admixture.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += c.admixture.volume
+
+        if c.custom:
+            c.custom.volume = c.custom.mass / (specific_gravities[c.custom.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += c.custom.volume
+
+        if total_volume > volume_constraint:
+            return None
+
+        c.aggregate.volume = volume_constraint - total_volume
+        c.aggregate.mass = round(
+            c.aggregate.volume * specific_gravities[c.aggregate.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
+        )
+
+        return c
+
+    @classmethod
+    def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, specific_gravities):
+
+        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(
+            min_max_data['materials_formulation_configuration']
+        )
+        # materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
+        #
+        # admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
+        # material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
+        # material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities)
+
+        materials = cls._extract_material_uuids(min_max_data["materials_formulation_configuration"])
+        material_combinations = cls._find_material_combinations(materials)
+
+        compositions = []
+        for material_combination in material_combinations:
+            compositions.extend(cls._create_preliminary_compositions(material_combination, materials_weights_and_ratios))
+
+        completed_compositions = []
+        for composition in compositions:
+            if completed_composition := cls._complete_composition(composition, specific_gravities, min_max_data["volumeConstraint"]):
+                completed_compositions.append(completed_composition)
 
         return
-
 
         #
         # material_combinations = cls._generate_material_combinations(material_volumes)
@@ -206,12 +271,14 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
     @classmethod
     def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data):
-        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data['materials_formulation_configuration'])
-        materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
+        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(
+            min_max_data['materials_formulation_configuration'])
+        materials_in_formulation = [material.get('type') for material in
+                                    min_max_data['materials_formulation_configuration']]
         admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
-        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
+        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios,
+                                                                         admixture_and_custom_materials_indices)
         weights_combinations = list(product(*material_weights))
-        formulations_with_aggregates = WeightsCalculator.add_aggregates_weight_to_weight_combinations(weights_combinations, float(min_max_data['weight_constraint']))
+        formulations_with_aggregates = WeightsCalculator.add_aggregates_weight_to_weight_combinations(
+            weights_combinations, float(min_max_data['weight_constraint']))
         return formulations_with_aggregates
-
-

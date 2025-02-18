@@ -36,9 +36,9 @@ class FormulationsService:
             formulations = cls._compute_formulations_data_for_volume_constraint(strategy, formulations_data)
         else:
             formulations = cls._compute_formulations_data_for_weight_constraint(strategy, formulations_data)
-        for formulation in formulations:
-            formulations = strategy.create_formulation_batch(formulation)
-        return formulations
+            return strategy.create_formulation_batch(formulations_data)
+
+        # return formulations
 
     @classmethod
     def _create_properties(cls, inner_dict):
@@ -98,18 +98,16 @@ class FormulationsService:
     def get_specific_gravity_dict(cls, materials_dict):
         densities_dict = {}
         for material, uuids in materials_dict.items():
-            material = material.lower()
-            densities_dict[material] = []
+            densities_dict[material] = {}
             for uuid in uuids:
                 session_value = MaterialsFacade.get_material_from_session(material, uuid)
-                if session_value and hasattr(session_value, 'specific_gravity'):
-                    densities_dict[material].append(session_value.specific_gravity)
+                densities_dict[material][uuid] = session_value.specific_gravity
 
         return densities_dict
 
     @classmethod
     def _compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
-        formulation_materials_specific_gravities = cls._get_specific_gravity_of_formulation_configuration(
+        formulation_materials_specific_gravities = cls.get_specific_gravity_dict(
             request_data['materials_formulation_configuration']
         )
         formulations_with_weights = strategy.generate_formulations_with_weights_for_volume_constraint(request_data, formulation_materials_specific_gravities)
@@ -148,14 +146,14 @@ class FormulationsService:
 
     @classmethod
     def _compute_formulations_data_for_weight_constraint(cls, strategy, request_data):
-        formulations_data = []
-        formulation = {}
-        formulations_with_weights = strategy.generate_formulations_with_weights_for_weight_constraint(request_data)
+        formulations_data = {}
+        formulations_data['all_weights'] = strategy.generate_formulations_with_weights_for_weight_constraint(request_data)
+
         for material in request_data['materials_formulation_configuration']:
             material.pop('min')
             material.pop('max')
             material.pop('increment')
-        formulation['materials'] = request_data['materials_formulation_configuration']
-        formulation['all_weights'] = formulations_with_weights
-        formulations_data.append(formulation)
+
+        formulations_data['materials'] = request_data['materials_formulation_configuration']
+
         return formulations_data

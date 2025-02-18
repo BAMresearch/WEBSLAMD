@@ -3,15 +3,15 @@ from dataclasses import dataclass
 @dataclass
 class Material:
     uuid: str
-    mass: float
-    volume: float
+    mass: float | None
+    volume: float | None
 
 
 @dataclass
 class ConcreteComposition:
-    powder: Material
-    liquid: Material
-    admixture: Material
-    aggregate: Material
-    air_pore_content: Material
-    custom: Material
+    powder: Material | None
+    liquid: Material | None
+    admixture: Material | None
+    aggregate: Material | None
+    air_pore_content: float  # In percent
+    custom: Material | None

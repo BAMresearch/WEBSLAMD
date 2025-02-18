@@ -205,9 +205,9 @@ class BuildingMaterialStrategy(ABC):
     def _create_formulation_batch_internal(cls, formulations_data, filename):
         previous_batch_df = DiscoveryFacade.query_dataset_by_name(filename)
 
-        materials_data = formulations_data['materials_request_data']['materials_formulation_configuration']
+        materials_data = formulations_data['materials_formulation_configuration']
         processes_data = formulations_data['processes_request_data']['processes']
-        weights_data = formulations_data['weights_request_data']['all_weights']
+        weights_data = formulations_data['all_weights']
         sampling_size = float_if_not_empty(formulations_data['sampling_size'])
 
         materials = cls._prepare_materials_for_taking_direct_product(materials_data)

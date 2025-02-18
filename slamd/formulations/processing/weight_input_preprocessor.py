@@ -11,6 +11,15 @@ class WeightInputPreprocessor:
         return [cls._create_weights(entry) for entry in formulation_config[:-1]]
 
     @classmethod
+    def collect_weights_as_dict(cls, formulation_config):
+        # Skip last entry - dependent aggregate or powder
+        weights = {}
+        for config in formulation_config[:-1]:
+            weights[config["type"]] = [float(w) for w in WeightInputPreprocessor._create_weights(config)]
+
+        return weights
+
+    @classmethod
     def _create_weights(cls, material_configuration):
         values_for_given_material = []
         current_value = float(material_configuration['min'])
@@ -23,6 +32,6 @@ class WeightInputPreprocessor:
             if increment > 0:
                 current_value = round(current_value + increment, 2)
             else:
-                return
+                return values_for_given_material
 
         return values_for_given_material
