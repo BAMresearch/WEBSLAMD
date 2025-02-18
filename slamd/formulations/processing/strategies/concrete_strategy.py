@@ -92,8 +92,8 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                                 ['Aggregates', 'Air Pore Content'])
 
     @classmethod
-    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
-        return WeightsCalculator.compute_full_concrete_weights_product(all_materials_weights, weight_constraint)
+    def _compute_weights_product(cls, all_materials_weights, constraint):
+        return WeightsCalculator.compute_full_concrete_weights_product(all_materials_weights, constraint)
 
     @classmethod
     def _sort_materials(cls, materials_for_formulation):
@@ -140,16 +140,16 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                     mass=combination_dict["Powder"],
                                     volume=None) if "Powder" in material_types else None,
                     liquid=Material(uuid=material_combination["Liquid"],
-                                    mass=combination_dict["Liquid"] * material_combination["Powder"] / 100,
+                                    mass=combination_dict["Liquid"] * combination_dict["Powder"] / 100,
                                     volume=None) if "Liquid" in material_types else None,
                     admixture=Material(uuid=material_combination["Admixture"],
-                                       mass=combination_dict["Admixture"] * material_combination["Powder"] / 100,
+                                       mass=combination_dict["Admixture"] * combination_dict["Powder"] / 100,
                                        volume=None) if "Admixture" in material_types else None,
                     custom=Material(uuid=material_combination["Custom"],
                                     mass=combination_dict["Custom"],
                                     volume=None) if "Custom" in material_types else None,
                     air_pore_content=combination_dict["Air Pore Content"],
-                    aggregate=Material(uuid=material_combination["Aggregate"], mass=None, volume=None),
+                    aggregate=Material(uuid=material_combination["Aggregates"], mass=None, volume=None),
                 )
             )
 
@@ -169,7 +169,8 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             total_volume += c.liquid.volume
 
         if c.admixture:
-            c.admixture.volume = c.admixture.mass / (specific_gravities[c.admixture.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.admixture.volume = c.admixture.mass / (
+                    specific_gravities[c.admixture.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.admixture.volume
 
         if c.custom:
@@ -187,29 +188,38 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return c
 
     @classmethod
-    def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, specific_gravities):
+    def _get_specific_gravities(cls, materials_dict):
+        densities_dict = {}
+        for material, uuids in materials_dict.items():
+            if material == "Air Pore Content":
+                continue
 
-        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(
-            min_max_data['materials_formulation_configuration']
-        )
-        # materials_in_formulation = [material.get('type') for material in min_max_data['materials_formulation_configuration']]
-        #
-        # admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
-        # material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios, admixture_and_custom_materials_indices)
-        # material_volumes = VolumesCalculator.compute_volumes_from_weights(material_weights, specific_gravities)
+            for uuid in uuids:
+                session_value = MaterialsFacade.get_material_from_session(material, uuid)
+                densities_dict[uuid] = float(session_value.specific_gravity)
 
-        materials = cls._extract_material_uuids(min_max_data["materials_formulation_configuration"])
+        return densities_dict
+
+    @classmethod
+    def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, volume_constraint):
+        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
+        materials = cls._extract_material_uuids(min_max_data)
+        specific_gravities = cls._get_specific_gravities(materials)
         material_combinations = cls._find_material_combinations(materials)
 
         compositions = []
         for material_combination in material_combinations:
-            compositions.extend(cls._create_preliminary_compositions(material_combination, materials_weights_and_ratios))
+            compositions.extend(
+                cls._create_preliminary_compositions(material_combination, weights_and_ratios))
 
         completed_compositions = []
         for composition in compositions:
-            if completed_composition := cls._complete_composition(composition, specific_gravities, min_max_data["volumeConstraint"]):
+            if completed_composition := cls._complete_composition(composition, specific_gravities, volume_constraint):
                 completed_compositions.append(completed_composition)
 
+        # TODO: Create dataframe
+        # TODO: Apply logic to weight based constraints
+        # TODO: Fix binders
         return
 
         #
@@ -217,68 +227,27 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         #
         # material_volumes_for_all_combinations = VolumesCalculator.generate_volumes_for_combinations(material_combinations)
         #
-        # valid_volumes_for_all_combinations = VolumesCalculator.validate_volume_combinations(material_volumes_for_all_combinations, min_max_data['weight_constraint'])
+        # valid_volumes_for_all_combinations = VolumesCalculator.validate_volume_combinations(material_volumes_for_all_combinations, min_max_data["constraint"])
         #
-        # valid_formulations_with_aggregates = VolumesCalculator.add_aggregates_volume_to_combination(valid_volumes_for_all_combinations, specific_gravities, min_max_data['weight_constraint'])
+        # valid_formulations_with_aggregates = VolumesCalculator.add_aggregates_volume_to_combination(valid_volumes_for_all_combinations, specific_gravities, min_max_data["constraint"])
         #
         # formulations_with_weights = VolumesCalculator.transform_volumes_to_weights(valid_formulations_with_aggregates, specific_gravities, admixture_and_custom_materials_indices)
         #
         # return formulations_with_weights
 
     @classmethod
-    def _generate_material_combinations(cls, all_material_volumes):
-        powders = [material for material in all_material_volumes if material['type'] == 'Powder']
-        liquids = [material for material in all_material_volumes if material['type'] == 'Liquid']
-        admixtures = [material for material in all_material_volumes if material['type'] == 'Admixture']
-        customs = [material for material in all_material_volumes if material['type'] == 'Custom']
+    def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data, weight_constraint):
+        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data)
+        materials_in_formulation = [material.get('type') for material in min_max_data]
 
-        if admixtures and customs:
-            formulation_list = [
-                [powder, liquid, admixture, custom]
-                for powder, liquid, admixture, custom in product(powders, liquids, admixtures, customs)
-            ]
-        elif admixtures and not customs:
-            formulation_list = [
-                [powder, liquid, admixture]
-                for powder, liquid, admixture in product(powders, liquids, admixtures)
-            ]
-        elif customs and not admixtures:
-            formulation_list = [
-                [powder, liquid, customs]
-                for powder, liquid, customs in product(powders, liquids, customs)
-            ]
-        else:
-            formulation_list = [
-                [powder, liquid]
-                for powder, liquid in product(powders, liquids)
-            ]
-
-        return formulation_list
-
-    @classmethod
-    def _calculate_admixture_and_custom_indices(cls, materials_in_formulation):
-        admixture_index = None
-        custom_index = None
-        if 'Admixture' in materials_in_formulation and 'Custom' not in materials_in_formulation:
-            admixture_index = 2
-        if 'Custom' in materials_in_formulation and 'Admixture' not in materials_in_formulation:
-            custom_index = 2
-        if 'Admixture' in materials_in_formulation and 'Custom' in materials_in_formulation:
-            admixture_index = 2
-            custom_index = 3
-        indices = {'admixture_index': admixture_index, 'custom_index': custom_index}
-        return indices
-
-    @classmethod
-    def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data):
-        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(
-            min_max_data['materials_formulation_configuration'])
-        materials_in_formulation = [material.get('type') for material in
-                                    min_max_data['materials_formulation_configuration']]
         admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
-        material_weights = WeightsCalculator.compute_weights_from_ratios(materials_weights_and_ratios,
-                                                                         admixture_and_custom_materials_indices)
+        material_weights = WeightsCalculator.compute_weights_from_ratios(
+            materials_weights_and_ratios,
+            admixture_and_custom_materials_indices
+        )
         weights_combinations = list(product(*material_weights))
         formulations_with_aggregates = WeightsCalculator.add_aggregates_weight_to_weight_combinations(
-            weights_combinations, float(min_max_data['weight_constraint']))
+            weights_combinations, float(weight_constraint)
+        )
+
         return formulations_with_aggregates

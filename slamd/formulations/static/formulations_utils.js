@@ -130,8 +130,10 @@ function collectFormulationsMinMaxRequestData(context) {
 
     const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint;
     return {
-        materials_formulation_configuration: rowData,
-        weight_constraint: constraint,
+        materials_request_data: {
+            min_max_data: rowData
+        },
+        constraint: constraint,
     };
 }
 

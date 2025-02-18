@@ -75,15 +75,15 @@ class BuildingMaterialStrategy(ABC):
     @classmethod
     def populate_weights_form(cls, weights_request_data):
         materials_formulation_config = weights_request_data['materials_formulation_configuration']
-        weight_constraint = weights_request_data['weight_constraint']
+        constraint = weights_request_data["constraint"]
 
         # the result of the computation contains a list of lists with each containing the weights in terms of the
         # various materials used for blending; for example weight_combinations =
         # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
-        if empty(weight_constraint):
+        if empty(constraint):
             raise ValueNotSupportedException('You must set a non-empty weight constraint!')
         else:
-            weight_combinations = cls._get_constrained_weights(materials_formulation_config, weight_constraint)
+            weight_combinations = cls._get_constrained_weights(materials_formulation_config, constraint)
 
         if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
             raise SlamdRequestTooLargeException(
@@ -131,19 +131,19 @@ class BuildingMaterialStrategy(ABC):
             cls._create_min_max_form_entry(min_max_form.process_entries, item['uuid'], item['name'], 'Process')
 
     @classmethod
-    def _get_constrained_weights(cls, formulation_config, weight_constraint):
-        if not_numeric(weight_constraint):
+    def _get_constrained_weights(cls, formulation_config, constraint):
+        if not_numeric(constraint):
             raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not cls._weight_ranges_valid(formulation_config, weight_constraint):
+        if not cls._weight_ranges_valid(formulation_config, constraint):
             raise ValueNotSupportedException('Configuration of weights is not valid!')
 
         all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
 
-        return cls._compute_weights_product(all_materials_weights, weight_constraint)
+        return cls._compute_weights_product(all_materials_weights, constraint)
 
     @classmethod
     @abstractmethod
-    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
+    def _compute_weights_product(cls, all_materials_weights, constraint):
         pass
 
     @classmethod
@@ -175,7 +175,7 @@ class BuildingMaterialStrategy(ABC):
         admixtures = []
         customs = []
         for materials_for_type_data in materials_data:
-            uuids = materials_for_type_data['uuids'].split(',')
+            uuids = materials_for_type_data['uuid'].split(',')
             for uuid in uuids:
                 material_type = materials_for_type_data['type']
                 if material_type.lower() == MaterialsFacade.POWDER:
@@ -205,7 +205,7 @@ class BuildingMaterialStrategy(ABC):
     def _create_formulation_batch_internal(cls, formulations_data, filename):
         previous_batch_df = DiscoveryFacade.query_dataset_by_name(filename)
 
-        materials_data = formulations_data['materials_formulation_configuration']
+        materials_data = formulations_data['materials']
         processes_data = formulations_data['processes_request_data']['processes']
         weights_data = formulations_data['all_weights']
         sampling_size = float_if_not_empty(formulations_data['sampling_size'])

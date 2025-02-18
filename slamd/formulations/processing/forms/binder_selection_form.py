@@ -49,7 +49,7 @@ class BinderSelectionForm(Form):
     constraint_selection = SelectField(label='1.7 - Constraint type selection',
                                        choices=['Weight'])
 
-    weight_constraint = DecimalField(
+    constraint = DecimalField(
         label='1.8 - Max. Weight (kg) (Sum of materials used for formulation) *',
         default=500,
         validators=[validators.DataRequired(message='Weight constraint cannot be empty')]

@@ -1,11 +1,11 @@
 function autocorrectWeightValue() {
-    const weightConstraintInput = document.getElementById("weight_constraint");
+    const weightConstraintInput = document.getElementById("constraint");
     correctInputFieldValue(weightConstraintInput, 0);
 }
 
 function updateConstraintLabel(){
     const constraintLabel = document.getElementById("constraint_input_label")
-    const constraintValue = document.getElementById("weight_constraint")
+    const constraintValue = document.getElementById("constraint")
     if (this.value === 'Weight') {
         constraintLabel.textContent = constraintLabel.textContent.replace('Volume (m³)', 'Weight (kg)')
         constraintValue.value = 2400.0
@@ -16,7 +16,7 @@ function updateConstraintLabel(){
 }
 
 window.addEventListener("load", function () {
-    document.getElementById("weight_constraint").addEventListener("keyup", autocorrectWeightValue);
+    document.getElementById("constraint").addEventListener("keyup", autocorrectWeightValue);
 
     if (window.location.pathname.includes('concrete')) {
         document.getElementById("nav-bar-formulations-concrete").setAttribute("class", "nav-link active");

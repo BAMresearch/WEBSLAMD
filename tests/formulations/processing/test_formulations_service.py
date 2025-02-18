@@ -79,7 +79,7 @@ def test_create_weights_form_computes_all_weights_for_concrete(monkeypatch):
                     {'uuid': '1', 'type': 'Powder', 'min': 18.2, 'max': 40, 'increment': 10.5},
                     {'uuid': '2', 'type': 'Liquid', 'min': 0.5, 'max': 0.6, 'increment': 0.1},
                     {'uuid': '3', 'type': 'Aggregates', 'min': 67.6, 'max': 35, 'increment': None}],
-                'weight_constraint': '100'
+                "constraint": '100'
             }
 
         form = FormulationsService.create_weights_form(weight_request_data, 'concrete')
@@ -102,7 +102,7 @@ def test_create_weights_form_computes_all_weights_for_binder(monkeypatch):
                     {'uuid': '1', 'type': 'Liquid', 'min': 0.2, 'max': 0.3, 'increment': 0.1},
                     {'uuid': '2', 'type': 'Aggregates', 'min': 20, 'max': 30, 'increment': 10},
                     {'uuid': '3', 'type': 'Powder', 'min': 66.67, 'max': 53.85, 'increment': None}],
-                'weight_constraint': '100'
+                "constraint": '100'
             }
 
         form = FormulationsService.create_weights_form(weight_request_data, 'binder')
@@ -121,7 +121,7 @@ def test_create_weights_form_raises_exceptions_when_too_many_weights_are_request
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
-                'weight_constraint': '100'
+                "constraint": '100'
             }
 
         with pytest.raises(SlamdRequestTooLargeException):
@@ -134,7 +134,7 @@ def test_create_weights_form_raises_exceptions_when_weight_constraint_is_not_set
         weight_request_data = \
             {
                 'materials_formulation_configuration': MATERIALS_CONFIG,
-                'weight_constraint': ''
+                "constraint": ''
             }
 
         with pytest.raises(ValueNotSupportedException):

@@ -53,7 +53,7 @@ class ConcreteSelectionForm(Form):
 
     constraint_selection = SelectField(label='1.7 - Constraint type selection', choices=['Volume', 'Weight'])
 
-    weight_constraint = DecimalField(
+    constraint = DecimalField(
         label='1.8 - Max. Volume (m³) (Sum of materials used for formulation) *',
         default=1,
         validators=[validators.DataRequired(message='Weight constraint cannot be empty')]

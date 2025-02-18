@@ -32,11 +32,15 @@ class FormulationsService:
     def create_materials_formulations(cls, formulations_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
 
-        if formulations_data['selectedConstraintType'] == 'Volume':
-            formulations = cls._compute_formulations_data_for_volume_constraint(strategy, formulations_data)
+        if formulations_data['selected_constraint_type'] == 'Volume':
+            formulations = strategy.generate_formulations_with_weights_for_volume_constraint(
+                formulations_data["materials_request_data"]["min_max_data"],
+                float(formulations_data["constraint"])
+            )
+            # formulations = cls._build_formulations_data(formulations_with_weights, formulations_data)
         else:
             formulations = cls._compute_formulations_data_for_weight_constraint(strategy, formulations_data)
-            return strategy.create_formulation_batch(formulations_data)
+            return strategy.create_formulation_batch(formulations)
 
         # return formulations
 
@@ -95,27 +99,6 @@ class FormulationsService:
         return filename
 
     @classmethod
-    def get_specific_gravity_dict(cls, materials_dict):
-        densities_dict = {}
-        for material, uuids in materials_dict.items():
-            densities_dict[material] = {}
-            for uuid in uuids:
-                session_value = MaterialsFacade.get_material_from_session(material, uuid)
-                densities_dict[material][uuid] = session_value.specific_gravity
-
-        return densities_dict
-
-    @classmethod
-    def _compute_formulations_data_for_volume_constraint(cls, strategy, request_data):
-        formulation_materials_specific_gravities = cls.get_specific_gravity_dict(
-            request_data['materials_formulation_configuration']
-        )
-        formulations_with_weights = strategy.generate_formulations_with_weights_for_volume_constraint(request_data, formulation_materials_specific_gravities)
-
-        formulations_data = cls._build_formulations_data(formulations_with_weights, request_data)
-        return formulations_data
-
-    @classmethod
     def _get_specific_gravity_of_formulation_configuration(cls, configuration):
         specific_gravities = []
         for material in configuration:
@@ -147,13 +130,17 @@ class FormulationsService:
     @classmethod
     def _compute_formulations_data_for_weight_constraint(cls, strategy, request_data):
         formulations_data = {}
-        formulations_data['all_weights'] = strategy.generate_formulations_with_weights_for_weight_constraint(request_data)
+        formulations_data['all_weights'] = strategy.generate_formulations_with_weights_for_weight_constraint(
+            request_data['materials_request_data']["min_max_data"], request_data["constraint"]
+        )
 
-        for material in request_data['materials_formulation_configuration']:
+        formulations_data['materials'] = request_data['materials_request_data']["min_max_data"]
+        for material in formulations_data['materials']:
             material.pop('min')
             material.pop('max')
             material.pop('increment')
 
-        formulations_data['materials'] = request_data['materials_formulation_configuration']
+        formulations_data["processes_request_data"] = request_data["processes_request_data"]
+        formulations_data["sampling_size"] = request_data["sampling_size"]
 
         return formulations_data

@@ -22,7 +22,7 @@ function toggleBasedOnSelectionAndConstraints() {
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
-    binderWeightConstraint = document.getElementById("weight_constraint").value;
+    binderWeightConstraint = document.getElementById("constraint").value;
     toggleBasedOnSelectionAndConstraints();
 }
 
@@ -30,7 +30,7 @@ async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
     removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
     document.getElementById("submit").disabled = true;
-    binderWeightConstraint = document.getElementById("weight_constraint").value;
+    binderWeightConstraint = document.getElementById("constraint").value;
 
     const selectedMaterials = collectBuildingMaterialFormulationSelection();
     const selectedConstraintType = document.getElementById("constraint_selection").value;
@@ -98,7 +98,7 @@ window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
 
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("weight_constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("powder_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("delete_formulations_batches_button").addEventListener("click", deleteFormulations);
