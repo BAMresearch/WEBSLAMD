@@ -268,78 +268,87 @@ class BuildingMaterialStrategy(ABC):
 
     @classmethod
     @abstractmethod
-    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
+    def _complete_composition(cls, f: Formulation, specific_gravities, constraint,
                               constraint_type: Literal["Volume", "Weight"]):
         pass
 
     @classmethod
-    def _calculate_composition_cost(cls, c: Formulation):
-        c.costs = 0
-        c.co2_footprint = 0
-        c.delivery_time = 0
+    def _calculate_composition_cost(cls, f: Formulation):
+        f.costs = 0
+        f.co2_footprint = 0
+        f.delivery_time = 0
+        f.recycling_rate = 0
 
-        if c.powder:
-            powder_factor = c.powder.mass / c.total_mass
-            c.costs += (c.powder.material.costs.costs or 0) * powder_factor
-            c.co2_footprint += (c.powder.material.costs.co2_footprint or 0) * powder_factor
-            c.delivery_time = max(c.delivery_time, c.powder.material.costs.delivery_time or 0)
+        if f.powder:
+            powder_factor = f.powder.mass / f.total_mass
+            f.costs += (f.powder.material.costs.costs or 0) * powder_factor
+            f.co2_footprint += (f.powder.material.costs.co2_footprint or 0) * powder_factor
+            f.recycling_rate += (f.powder.material.costs.recyclingrate or 0) * powder_factor
+            f.delivery_time = max(f.delivery_time, f.powder.material.costs.delivery_time or 0)
 
-        if c.liquid:
-            liquid_factor = c.liquid.mass / c.total_mass
-            c.costs += (c.liquid.material.costs.costs or 0) * liquid_factor
-            c.co2_footprint += (c.liquid.material.costs.co2_footprint or 0) * liquid_factor
-            c.delivery_time = max(c.delivery_time, c.liquid.material.costs.delivery_time or 0)
+        if f.liquid:
+            liquid_factor = f.liquid.mass / f.total_mass
+            f.costs += (f.liquid.material.costs.costs or 0) * liquid_factor
+            f.co2_footprint += (f.liquid.material.costs.co2_footprint or 0) * liquid_factor
+            f.recycling_rate += (f.liquid.material.costs.recyclingrate or 0) * liquid_factor
+            f.delivery_time = max(f.delivery_time, f.liquid.material.costs.delivery_time or 0)
 
-        if c.admixture:
-            admixture_factor = c.admixture.mass / c.total_mass
-            c.costs += (c.admixture.material.costs.costs or 0) * admixture_factor
-            c.co2_footprint += (c.admixture.material.costs.co2_footprint or 0) * admixture_factor
-            c.delivery_time = max(c.delivery_time, c.admixture.material.costs.delivery_time or 0)
+        if f.admixture:
+            admixture_factor = f.admixture.mass / f.total_mass
+            f.costs += (f.admixture.material.costs.costs or 0) * admixture_factor
+            f.co2_footprint += (f.admixture.material.costs.co2_footprint or 0) * admixture_factor
+            f.recycling_rate += (f.admixture.material.costs.recyclingrate or 0) * admixture_factor
+            f.delivery_time = max(f.delivery_time, f.admixture.material.costs.delivery_time or 0)
 
-        if c.custom:
-            custom_factor = c.custom.mass / c.total_mass
-            c.costs += (c.custom.material.costs.costs or 0) * custom_factor
-            c.co2_footprint += (c.custom.material.costs.co2_footprint or 0) * custom_factor
-            c.delivery_time = max(c.delivery_time, c.custom.material.costs.delivery_time or 0)
+        if f.custom:
+            custom_factor = f.custom.mass / f.total_mass
+            f.costs += (f.custom.material.costs.costs or 0) * custom_factor
+            f.co2_footprint += (f.custom.material.costs.co2_footprint or 0) * custom_factor
+            f.recycling_rate += (f.custom.material.costs.recyclingrate or 0) * custom_factor
+            f.delivery_time = max(f.delivery_time, f.custom.material.costs.delivery_time or 0)
 
-        if c.aggregate:
-            aggregate_factor = c.aggregate.mass / c.total_mass
-            c.costs += (c.aggregate.material.costs.costs or 0) * aggregate_factor
-            c.co2_footprint += (c.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
-            c.delivery_time = max(c.delivery_time, c.aggregate.material.costs.delivery_time or 0)
+        if f.aggregate:
+            aggregate_factor = f.aggregate.mass / f.total_mass
+            f.costs += (f.aggregate.material.costs.costs or 0) * aggregate_factor
+            f.co2_footprint += (f.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
+            f.recycling_rate += (f.aggregate.material.costs.recyclingrate or 0) * aggregate_factor
+            f.delivery_time = max(f.delivery_time, f.aggregate.material.costs.delivery_time or 0)
 
-        if c.process:
-            c.costs += c.process.costs.costs or 0
-            c.co2_footprint += c.process.costs.co2_footprint or 0
-            c.delivery_time = max(c.delivery_time, c.process.costs.delivery_time or 0)
+        if f.process:
+            f.costs += f.process.costs.costs or 0
+            f.co2_footprint += f.process.costs.co2_footprint or 0
+            f.delivery_time = max(f.delivery_time, f.process.costs.delivery_time or 0)
 
-        c.costs = round(c.costs, 2)
-        c.co2_footprint = round(c.co2_footprint, 2)
-        c.delivery_time = round(c.delivery_time, 2)
+        f.costs = round(f.costs, 2)
+        f.co2_footprint = round(f.co2_footprint, 2)
+        f.delivery_time = round(f.delivery_time, 2)
+        f.recycling_rate = round(f.recycling_rate, 2)
 
     @classmethod
-    def _create_dataframe(cls, compositions):
+    def _create_dataframe(cls, formulations):
         rows = []
-        for idx, comp in enumerate(compositions):
+        for idx, formulation in enumerate(formulations):
             row = {
                 'Idx_Sample': idx,
-                'Powder (kg)': comp.powder.mass,
-                'Liquid (kg)': comp.liquid.mass,
+                'Powder (kg)': formulation.powder.mass,
+                'Liquid (kg)': formulation.liquid.mass,
+                'Aggregates (kg)': formulation.aggregate.mass if formulation.aggregate else None,
+                'Admixture (kg)': formulation.admixture.mass if formulation.aggregate else None,
+                f'{formulation.custom.material.name} (kg)': formulation.custom.mass if formulation.custom else None,
                 'Materials': ", ".join(filter(None, [
-                    comp.powder.material.name if comp.powder else None,
-                    comp.liquid.material.name if comp.liquid else None,
-                    comp.admixture.material.name if comp.admixture else None,
-                    comp.custom.material.name if comp.custom else None,
-                    comp.aggregate.material.name if comp.aggregate else None,
-                    comp.process.name if comp.process else None,
+                    formulation.powder.material.name if formulation.powder else None,
+                    formulation.liquid.material.name if formulation.liquid else None,
+                    formulation.admixture.material.name if formulation.admixture else None,
+                    formulation.custom.material.name if formulation.custom else None,
+                    formulation.aggregate.material.name if formulation.aggregate else None,
+                    formulation.process.name if formulation.process else None,
                 ])),
-                'total costs': comp.costs,
-                'total co2_footprint': comp.co2_footprint,
-                'total delivery_time': comp.delivery_time,
+                'total costs': formulation.costs,
+                'total co2_footprint': formulation.co2_footprint,
+                'total delivery_time': formulation.delivery_time,
+                'total recycling_rate': formulation.recycling_rate,
             }
-            if comp.aggregate:
-                row['Aggregates (kg)'] = comp.aggregate.mass
             rows.append(row)
 
-        df = pd.DataFrame(rows)
+        df = pd.DataFrame(rows).dropna(axis="columns", how="all")
         return df

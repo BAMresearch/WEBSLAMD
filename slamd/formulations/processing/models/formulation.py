@@ -26,5 +26,6 @@ class Formulation:
     costs: Optional[float] = None
     co2_footprint: Optional[float] = None
     delivery_time: Optional[float] = None
+    recycling_rate: Optional[float] = None
 
     total_mass: Optional[float] = None

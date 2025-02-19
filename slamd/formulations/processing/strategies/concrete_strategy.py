@@ -160,49 +160,51 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return compositions
 
     @classmethod
-    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
+    def _complete_composition(cls, f: Formulation, specific_gravities, constraint,
                               constraint_type: Literal["Volume", "Weight"]):
-        total_volume = constraint * c.air_pore_content / 100 if c.air_pore_content is not None else 0
-        c.total_mass = 0
+        total_volume = constraint * f.air_pore_content / 100 if f.air_pore_content is not None else 0
+        f.total_mass = 0
 
-        if c.powder:
-            c.powder.volume = c.powder.mass / (
-                    specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-            total_volume += c.powder.volume
-            c.total_mass += c.powder.mass
+        if f.powder:
+            f.powder.volume = f.powder.mass / (
+                    specific_gravities[str(f.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += f.powder.volume
+            f.total_mass += f.powder.mass
 
-        if c.liquid:
-            c.liquid.volume = c.liquid.mass / (
-                    specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-            total_volume += c.liquid.volume
-            c.total_mass += c.liquid.mass
+        if f.liquid:
+            f.liquid.volume = f.liquid.mass / (
+                    specific_gravities[str(f.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += f.liquid.volume
+            f.total_mass += f.liquid.mass
 
-        if c.admixture:
-            c.admixture.volume = c.admixture.mass / (
-                    specific_gravities[str(c.admixture.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-            total_volume += c.admixture.volume
-            c.total_mass += c.admixture.mass
+        if f.admixture:
+            f.admixture.volume = f.admixture.mass / (
+                    specific_gravities[str(f.admixture.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += f.admixture.volume
+            f.total_mass += f.admixture.mass
 
-        if c.custom:
-            c.custom.volume = c.custom.mass / (
-                    specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
-            total_volume += c.custom.volume
-            c.total_mass += c.custom.mass
+        if f.custom:
+            f.custom.volume = f.custom.mass / (
+                    specific_gravities[str(f.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            total_volume += f.custom.volume
+            f.total_mass += f.custom.mass
 
         if constraint_type == "Volume" and total_volume > constraint:
             return None
-        elif constraint_type == "Weight" and c.total_mass > constraint:
+        elif constraint_type == "Weight" and f.total_mass > constraint:
             return None
 
         if constraint_type == "Volume":
-            c.aggregate.volume = constraint - total_volume
-            c.aggregate.mass = round(
-                c.aggregate.volume * specific_gravities[
-                    str(c.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
+            f.aggregate.volume = constraint - total_volume
+            f.aggregate.mass = round(
+                f.aggregate.volume * specific_gravities[
+                    str(f.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
             )
+            f.total_mass += f.aggregate.mass
         elif constraint_type == "Weight":
-            c.aggregate.mass = round(constraint - c.total_mass, 2)
+            f.aggregate.mass = round(constraint - f.total_mass, 2)
+            f.total_mass += f.aggregate.mass
         else:
             raise ValueError("Invalid constraint type: " + str(constraint_type))
 
-        return c
+        return f
