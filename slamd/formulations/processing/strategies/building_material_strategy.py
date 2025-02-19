@@ -74,30 +74,6 @@ class BuildingMaterialStrategy(ABC):
         }
 
     @classmethod
-    def populate_weights_form(cls, weights_request_data):
-        materials_formulation_config = weights_request_data['materials_formulation_configuration']
-        constraint = weights_request_data["constraint"]
-
-        # the result of the computation contains a list of lists with each containing the weights in terms of the
-        # various materials used for blending; for example weight_combinations =
-        # "[['18.2', '15.2', '66.6'], ['18.2', '20.3', '61.5'], ['28.7', '15.2', '56.1']]"
-        if empty(constraint):
-            raise ValueNotSupportedException('You must set a non-empty weight constraint!')
-        else:
-            weight_combinations = cls._get_constrained_weights(materials_formulation_config, constraint)
-
-        if len(weight_combinations) > MAX_NUMBER_OF_WEIGHTS:
-            raise SlamdRequestTooLargeException(
-                f'Too many weights were requested. At most {MAX_NUMBER_OF_WEIGHTS} weights can be created!')
-
-        weights_form = WeightsForm()
-        for i, entry in enumerate(weight_combinations):
-            ratio_form_entry = weights_form.all_weights_entries.append_entry()
-            ratio_form_entry.weights.data = WEIGHT_FORM_DELIMITER.join(entry)
-            ratio_form_entry.idx.data = str(i)
-        return weights_form
-
-    @classmethod
     @abstractmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, type):
         pass
@@ -130,48 +106,6 @@ class BuildingMaterialStrategy(ABC):
         selection_for_type = [item for item in formulation_selection if item['type'] == 'Process']
         for item in selection_for_type:
             cls._create_min_max_form_entry(min_max_form.process_entries, item['uuid'], item['name'], 'Process')
-
-    @classmethod
-    def _get_constrained_weights(cls, formulation_config, constraint):
-        if not_numeric(constraint):
-            raise ValueNotSupportedException('Weight Constraint must be a number!')
-        if not cls._weight_ranges_valid(formulation_config, constraint):
-            raise ValueNotSupportedException('Configuration of weights is not valid!')
-
-        all_materials_weights = WeightInputPreprocessor.collect_weights(formulation_config)
-
-        return cls._compute_weights_product(all_materials_weights, constraint)
-
-    @classmethod
-    @abstractmethod
-    def _compute_weights_product(cls, all_materials_weights, constraint):
-        pass
-
-    @classmethod
-    def _weight_ranges_valid(cls, formulation_config, constraint):
-        # Skip aggregate (last value)
-        for i, conf in enumerate(formulation_config[:-1]):
-            if i == 1:
-                # liquid - ratios, calculate differently
-                min_value = float(conf['min']) * float(formulation_config[0]['min'])
-                max_value = float(conf['max']) * float(formulation_config[0]['max'])
-                # validation checks if increment is negative, 0 or non_numeric - does not need to be multiplied
-                increment = float(conf['increment'])
-            else:
-                # everything else - regular validation
-                min_value = float(conf['min'])
-                max_value = float(conf['max'])
-                increment = float(conf['increment'])
-
-            if validate_ranges(increment, max_value, min_value, float(constraint)):
-                return False
-
-        return True
-
-    @classmethod
-    @abstractmethod
-    def _sort_materials(cls, materials_for_formulation):
-        pass
 
     @classmethod
     def _create_min_max_form_entry_internal(cls, entries, uuids, name, type, req_types, disabled_type):
@@ -217,6 +151,7 @@ class BuildingMaterialStrategy(ABC):
                 cls._calculate_composition_cost(completed_composition)
                 completed_compositions.append(completed_composition)
 
+        # TODO: Air Pore Content
         return cls._create_dataframe(completed_compositions)
 
     @classmethod

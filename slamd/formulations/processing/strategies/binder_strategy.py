@@ -94,8 +94,8 @@ class BinderStrategy(BuildingMaterialStrategy):
             entry.max.data = 4
         if type == 'Aggregates':
             entry.increment.data = 10
-            entry.max.data = 50
-            entry.min.data = 100
+            entry.min.data = 50
+            entry.max.data = 100
         if type == 'Custom':
             entry.increment.data = 5
             entry.min.data = 0

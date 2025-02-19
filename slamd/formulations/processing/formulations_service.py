@@ -23,11 +23,6 @@ class FormulationsService:
         return strategy.create_min_max_form(formulation_selection, selected_constraint_type)
 
     @classmethod
-    def create_weights_form(cls, weights_request_data, building_material):
-        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.populate_weights_form(weights_request_data)
-
-    @classmethod
     def create_materials_formulations(cls, formulations_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
 
