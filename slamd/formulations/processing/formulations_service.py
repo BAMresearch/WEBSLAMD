@@ -7,7 +7,6 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORA
     TEMPORARY_BINDER_FORMULATION
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-from slamd.materials.processing.materials_facade import MaterialsFacade
 
 class FormulationsService:
 
@@ -38,18 +37,7 @@ class FormulationsService:
                 float(formulations_data["constraint"])
             )
         else:
-            formulations = cls._compute_formulations_data_for_weight_constraint(strategy, formulations_data)
-            return strategy.create_formulation_batch(formulations)
-
-        # return formulations
-
-    @classmethod
-    def _create_properties(cls, inner_dict):
-        properties = ''
-        for key, value in inner_dict.items():
-            properties += f'{key}: {value}; '
-        properties = properties.strip()[:-1]
-        return properties
+            pass
 
     @classmethod
     def delete_formulation(cls, building_material):
@@ -96,50 +84,3 @@ class FormulationsService:
         if filename.startswith('temporary'):
             raise ValueNotSupportedException('The name of the file cannot start with "temporary"!')
         return filename
-
-    @classmethod
-    def _get_specific_gravity_of_formulation_configuration(cls, configuration):
-        specific_gravities = []
-        for material in configuration:
-            material_type = material.get('type')
-            material_uuids = material.get('uuid')
-            if material_type in ['Powder', 'Liquid', 'Admixture', 'Aggregates', 'Custom']:
-                material_uuids = material_uuids.split(',')
-                for material_uuid in material_uuids:
-                    material = MaterialsFacade.get_material_from_session(material_type, material_uuid)
-                    specific_gravities.append({'uuid': material_uuid, 'type': material_type,'specific_gravity': material.specific_gravity})
-
-        return specific_gravities
-
-    @classmethod
-    def _build_formulations_data(cls, formulations_with_weights, request_data):
-        formulations_data = []
-        for formulation in formulations_with_weights:
-            for material in formulation['materials']:
-                material['uuids'] = material.pop('uuid')
-            formulation_data = {}
-            formulation_data['materials_request_data'] = {'materials_formulation_configuration': formulation['materials']}
-            formulation_data['weights_request_data'] = {'all_weights': formulation['all_weights']}
-            formulation_data['processes_request_data'] = request_data['processesRequestData']
-            formulation_data['sampling_size'] = request_data['samplingSize']
-            formulations_data.append(formulation_data)
-
-        return formulations_data
-
-    @classmethod
-    def _compute_formulations_data_for_weight_constraint(cls, strategy, request_data):
-        formulations_data = {}
-        formulations_data['all_weights'] = strategy.generate_formulations_with_weights_for_weight_constraint(
-            request_data['materials_request_data']["min_max_data"], request_data["constraint"]
-        )
-
-        formulations_data['materials'] = request_data['materials_request_data']["min_max_data"]
-        for material in formulations_data['materials']:
-            material.pop('min')
-            material.pop('max')
-            material.pop('increment')
-
-        formulations_data["processes_request_data"] = request_data["processes_request_data"]
-        formulations_data["sampling_size"] = request_data["sampling_size"]
-
-        return formulations_data

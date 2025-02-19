@@ -3,16 +3,15 @@ import itertools
 import pandas as pd
 
 from slamd.common.error_handling import ValueNotSupportedException
+from slamd.design_assistant.processing.constants import G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
 from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.volumes_calculator import VolumesCalculator, G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
-from itertools import product
 
 MAX_DATASET_SIZE = 10000
 
@@ -269,25 +268,8 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             if completed_composition := cls._complete_composition(composition, specific_gravities, volume_constraint):
                 completed_compositions.append(completed_composition)
 
-        # TODO: Create dataframe
         # TODO: Apply logic to weight based constraints
         # TODO: Fix binders
+        # TODO: Warning popup in frontend
+        # TODO: Processes
         return cls._create_dataframe(completed_compositions)
-
-
-    @classmethod
-    def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data, weight_constraint):
-        materials_weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data)
-        materials_in_formulation = [material.get('type') for material in min_max_data]
-
-        admixture_and_custom_materials_indices = cls._calculate_admixture_and_custom_indices(materials_in_formulation)
-        material_weights = WeightsCalculator.compute_weights_from_ratios(
-            materials_weights_and_ratios,
-            admixture_and_custom_materials_indices
-        )
-        weights_combinations = list(product(*material_weights))
-        formulations_with_aggregates = WeightsCalculator.add_aggregates_weight_to_weight_combinations(
-            weights_combinations, float(weight_constraint)
-        )
-
-        return formulations_with_aggregates

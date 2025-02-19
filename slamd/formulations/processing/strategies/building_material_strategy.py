@@ -279,12 +279,3 @@ class BuildingMaterialStrategy(ABC):
             entry.max.label.text = 'Max %'
             entry.min.data = 2
             entry.min.label.text = 'Min %'
-
-
-    @classmethod
-    @abstractmethod
-    def generate_formulation_weights(cls, min_max_data, specific_gravities):
-        pass
-
-
-

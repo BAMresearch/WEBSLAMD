@@ -1,8 +1,4 @@
-from functools import reduce
 from itertools import product
-
-from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
-from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
 class WeightsCalculator:
