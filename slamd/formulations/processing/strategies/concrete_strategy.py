@@ -208,3 +208,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             raise ValueError("Invalid constraint type: " + str(constraint_type))
 
         return f
+
+    @classmethod
+    def _create_dataframe(cls, formulations):
+        return cls._create_dataframe_internal(formulations, TEMPORARY_CONCRETE_FORMULATION)

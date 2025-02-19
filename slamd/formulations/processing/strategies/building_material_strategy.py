@@ -7,6 +7,8 @@ import pandas as pd
 from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.common.slamd_utils import empty, not_numeric
+from slamd.discovery.processing.discovery_facade import DiscoveryFacade
+from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.models.formulation import Formulation
 from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS, WeightInputPreprocessor
@@ -216,8 +218,6 @@ class BuildingMaterialStrategy(ABC):
                 completed_compositions.append(completed_composition)
 
         # TODO: Warning popup in frontend
-        # TODO: Recyclingrate
-        # TODO: Attach new dataframe to old dataframe
         return cls._create_dataframe(completed_compositions)
 
     @classmethod
@@ -325,7 +325,12 @@ class BuildingMaterialStrategy(ABC):
         f.recycling_rate = round(f.recycling_rate, 2)
 
     @classmethod
+    @abstractmethod
     def _create_dataframe(cls, formulations):
+        pass
+
+    @classmethod
+    def _create_dataframe_internal(cls, formulations, filename):
         rows = []
         for idx, formulation in enumerate(formulations):
             row = {
@@ -333,8 +338,8 @@ class BuildingMaterialStrategy(ABC):
                 'Powder (kg)': formulation.powder.mass,
                 'Liquid (kg)': formulation.liquid.mass,
                 'Aggregates (kg)': formulation.aggregate.mass if formulation.aggregate else None,
-                'Admixture (kg)': formulation.admixture.mass if formulation.aggregate else None,
-                f'{formulation.custom.material.name} (kg)': formulation.custom.mass if formulation.custom else None,
+                'Admixture (kg)': formulation.admixture.mass if formulation.admixture else None,
+                f'{formulation.custom.material.name} (kg)' if formulation.custom else "__placeholder": formulation.custom.mass if formulation.custom else None,
                 'Materials': ", ".join(filter(None, [
                     formulation.powder.material.name if formulation.powder else None,
                     formulation.liquid.material.name if formulation.liquid else None,
@@ -351,4 +356,13 @@ class BuildingMaterialStrategy(ABC):
             rows.append(row)
 
         df = pd.DataFrame(rows).dropna(axis="columns", how="all")
+        if previous_batch_df := DiscoveryFacade.query_dataset_by_name(filename):
+            df = pd.concat((previous_batch_df.dataframe, df))
+
+        df["Idx_Sample"] = range(0, len(df))
+        df.insert(0, "Idx_Sample", df.pop("Idx_Sample"))
+
+        temp_dataset = Dataset(name=filename, dataframe=df)
+        DiscoveryFacade.save_and_overwrite_dataset(temp_dataset, filename)
+
         return df

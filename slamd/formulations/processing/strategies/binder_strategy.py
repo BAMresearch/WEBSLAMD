@@ -187,3 +187,7 @@ class BinderStrategy(BuildingMaterialStrategy):
             c.total_mass += c.admixture.mass
 
         return c
+
+    @classmethod
+    def _create_dataframe(cls, formulations):
+        return cls._create_dataframe_internal(formulations, TEMPORARY_BINDER_FORMULATION)
