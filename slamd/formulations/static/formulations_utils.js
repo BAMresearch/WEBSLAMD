@@ -70,7 +70,7 @@ function toggleConfirmationFormulationsButtons(inputFields) {
     const allIncrementsFilled = inputFields.filter(item => item.increment.value === "").length === 0;
     const allMinFilled = inputFields.filter(item => item.min.value === "").length === 0;
     const allMaxFilled = inputFields.filter(item => item.max.value === "").length === 0;
-    document.getElementById("confirm_formulations_configuration_button").disabled = !(
+    document.getElementById("create_formulations_batch_button").disabled = !(
         allIncrementsFilled &&
         allMinFilled &&
         allMaxFilled
