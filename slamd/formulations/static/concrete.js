@@ -1,6 +1,5 @@
 const CONCRETE_FORMULATIONS_MATERIALS_URL = `${window.location.protocol}//${window.location.host}/materials/formulations/concrete`;
 let concreteWeightConstraint = "";
-let materialsSpecificGravity = {}
 
 /**
  * Despite the fact that some functions in binder.js and concrete.js look rather similar, we choose not to
