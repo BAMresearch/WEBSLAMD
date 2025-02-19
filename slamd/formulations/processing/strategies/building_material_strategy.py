@@ -1,5 +1,9 @@
+import itertools
 from abc import ABC, abstractmethod
 from itertools import product
+from typing import Literal
+
+import pandas as pd
 
 from slamd.common.common_validators import validate_ranges
 from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
@@ -10,6 +14,7 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.formulations_converter import FormulationsConverter
+from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
 from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS, WeightInputPreprocessor
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 
@@ -168,77 +173,9 @@ class BuildingMaterialStrategy(ABC):
         return True
 
     @classmethod
-    def _prepare_materials_for_taking_direct_product(cls, materials_data):
-        powders = []
-        liquids = []
-        aggregates = []
-        admixtures = []
-        customs = []
-        for materials_for_type_data in materials_data:
-            uuids = materials_for_type_data['uuid'].split(',')
-            for uuid in uuids:
-                material_type = materials_for_type_data['type']
-                if material_type.lower() == MaterialsFacade.POWDER:
-                    powders.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.LIQUID:
-                    liquids.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.AGGREGATES:
-                    aggregates.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.ADMIXTURE:
-                    admixtures.append(MaterialsFacade.get_material(material_type, uuid))
-                elif material_type.lower() == MaterialsFacade.CUSTOM:
-                    customs.append(MaterialsFacade.get_material(material_type, uuid))
-                else:
-                    raise MaterialNotFoundException('Cannot process the requested material!')
-
-        # We sort the materials according to a) the fact that for concrete, aggregates is always the dependent material
-        # in terms of the weight constraint thus appearing last and b) the order of appearance in the formulation UI
-        materials_for_formulation = MaterialsForFormulations(powders, aggregates, liquids, admixtures, customs)
-        return cls._sort_materials(materials_for_formulation)
-
-    @classmethod
     @abstractmethod
     def _sort_materials(cls, materials_for_formulation):
         pass
-
-    @classmethod
-    def _create_formulation_batch_internal(cls, formulations_data, filename):
-        previous_batch_df = DiscoveryFacade.query_dataset_by_name(filename)
-
-        materials_data = formulations_data['materials']
-        processes_data = formulations_data['processes_request_data']['processes']
-        weights_data = formulations_data['all_weights']
-        sampling_size = float_if_not_empty(formulations_data['sampling_size'])
-
-        materials = cls._prepare_materials_for_taking_direct_product(materials_data)
-
-        processes = []
-        for process in processes_data:
-            processes.append(MaterialsFacade.get_process(process['uuid']))
-
-        if len(processes) > 0:
-            materials.append(processes)
-
-        combinations_for_formulations = list(product(*materials))
-
-        dataframe = FormulationsConverter.formulation_to_df(combinations_for_formulations, weights_data)
-        if sampling_size < 1:
-            dataframe = dataframe.sample(frac=sampling_size)
-
-        if previous_batch_df:
-            dataframe = concat(previous_batch_df.dataframe, dataframe)
-
-        if len(dataframe.index) > MAX_DATASET_SIZE:
-            raise SlamdRequestTooLargeException(
-                f'Formulation is too large. At most {MAX_DATASET_SIZE} rows can be created!')
-
-        dataframe['Idx_Sample'] = range(0, len(dataframe))
-        dataframe.insert(0, 'Idx_Sample', dataframe.pop('Idx_Sample'))
-
-        temporary_dataset = Dataset(name=filename, dataframe=dataframe)
-        DiscoveryFacade.save_and_overwrite_dataset(temporary_dataset, filename)
-
-        return dataframe
 
     @classmethod
     def _create_min_max_form_entry_internal(cls, entries, uuids, name, type, req_types, disabled_type):
@@ -258,3 +195,158 @@ class BuildingMaterialStrategy(ABC):
             entry.max.label.text = 'Min (kg)'
 
         return entry
+
+    @classmethod
+    def generate_formulations(cls, min_max_data, constraint, constraint_type: Literal["Volume", "Weight"], processes):
+        materials = cls._extract_material_uuids(min_max_data)
+        material_and_process_combinations = cls._find_material_and_process_combinations(
+            {**materials, "Process": processes} if processes else materials
+        )
+
+        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
+        parameter_space = {**weights_and_ratios, "Process": processes} if processes else weights_and_ratios
+
+        compositions = []
+        for combination in material_and_process_combinations:
+            compositions.extend(
+                cls._create_preliminary_compositions(combination, parameter_space)
+            )
+
+        specific_gravities = cls._get_specific_gravities(materials)
+
+        completed_compositions = []
+        for composition in compositions:
+            if completed_composition := cls._complete_composition(composition, specific_gravities, constraint,
+                                                                  constraint_type):
+                cls._calculate_composition_cost(completed_composition)
+                completed_compositions.append(completed_composition)
+
+        # TODO: Fix binders
+        # TODO: Warning popup in frontend
+        # TODO: Binder defaults?
+        # TODO: Recyclingrate
+        # TODO: Attach new dataframe to old dataframe
+        return cls._create_dataframe(completed_compositions)
+
+    @classmethod
+    def _extract_material_uuids(cls, min_max_data):
+        result = {}
+        for item in min_max_data:
+            material_type = item['type']
+            uuids = item['uuid'].split(',')
+
+            if material_type not in result:
+                result[material_type] = []
+
+            result[material_type].extend(uuids)
+
+        return result
+
+    @classmethod
+    def _find_material_and_process_combinations(cls, type_to_uuids):
+        types = list(type_to_uuids.keys())
+        uuid_lists = [type_to_uuids[material_type] for material_type in types]
+
+        raw_combinations = itertools.product(*uuid_lists)
+
+        combinations = []
+        for combination in raw_combinations:
+            combination_dict = {t: uuid for t, uuid in zip(types, combination)}
+            combinations.append(combination_dict)
+
+        return combinations
+
+    @classmethod
+    @abstractmethod
+    def _create_preliminary_compositions(cls, combination, param_space):
+        pass
+
+    @classmethod
+    def _get_specific_gravities(cls, materials_dict):
+        densities_dict = {}
+        for material, uuids in materials_dict.items():
+            if material == "Air Pore Content":
+                continue
+
+            for uuid in uuids:
+                session_value = MaterialsFacade.get_material_from_session(material, uuid)
+                densities_dict[uuid] = float(session_value.specific_gravity)
+
+        return densities_dict
+
+    @classmethod
+    @abstractmethod
+    def _complete_composition(cls, c: ConcreteComposition, specific_gravities, constraint,
+                              constraint_type: Literal["Volume", "Weight"]):
+        pass
+
+    @classmethod
+    def _calculate_composition_cost(cls, c: ConcreteComposition):
+        c.costs = 0
+        c.co2_footprint = 0
+        c.delivery_time = 0
+
+        if c.powder:
+            powder_factor = c.powder.mass / c.total_mass
+            c.costs += (c.powder.material.costs.costs or 0) * powder_factor
+            c.co2_footprint += (c.powder.material.costs.co2_footprint or 0) * powder_factor
+            c.delivery_time = max(c.delivery_time, c.powder.material.costs.delivery_time or 0)
+
+        if c.liquid:
+            liquid_factor = c.liquid.mass / c.total_mass
+            c.costs += (c.liquid.material.costs.costs or 0) * liquid_factor
+            c.co2_footprint += (c.liquid.material.costs.co2_footprint or 0) * liquid_factor
+            c.delivery_time = max(c.delivery_time, c.liquid.material.costs.delivery_time or 0)
+
+        if c.admixture:
+            admixture_factor = c.admixture.mass / c.total_mass
+            c.costs += (c.admixture.material.costs.costs or 0) * admixture_factor
+            c.co2_footprint += (c.admixture.material.costs.co2_footprint or 0) * admixture_factor
+            c.delivery_time = max(c.delivery_time, c.admixture.material.costs.delivery_time or 0)
+
+        if c.custom:
+            custom_factor = c.custom.mass / c.total_mass
+            c.costs += (c.custom.material.costs.costs or 0) * custom_factor
+            c.co2_footprint += (c.custom.material.costs.co2_footprint or 0) * custom_factor
+            c.delivery_time = max(c.delivery_time, c.custom.material.costs.delivery_time or 0)
+
+        if c.aggregate:
+            aggregate_factor = c.aggregate.mass / c.total_mass
+            c.costs += (c.aggregate.material.costs.costs or 0) * aggregate_factor
+            c.co2_footprint += (c.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
+            c.delivery_time = max(c.delivery_time, c.aggregate.material.costs.delivery_time or 0)
+
+        if c.process:
+            c.costs += c.process.costs.costs or 0
+            c.co2_footprint += c.process.costs.co2_footprint or 0
+            c.delivery_time = max(c.delivery_time, c.process.costs.delivery_time or 0)
+
+        c.costs = round(c.costs, 2)
+        c.co2_footprint = round(c.co2_footprint, 2)
+        c.delivery_time = round(c.delivery_time, 2)
+
+    @classmethod
+    def _create_dataframe(cls, compositions):
+        rows = []
+        for idx, comp in enumerate(compositions):
+            row = {
+                'Idx_Sample': idx,
+                'Powder (kg)': comp.powder.mass,
+                'Liquid (kg)': comp.liquid.mass,
+                'Aggregates (kg)': comp.aggregate.mass,
+                'Materials': ", ".join(filter(None, [
+                    comp.powder.material.name if comp.powder else None,
+                    comp.liquid.material.name if comp.liquid else None,
+                    comp.admixture.material.name if comp.admixture else None,
+                    comp.custom.material.name if comp.custom else None,
+                    comp.aggregate.material.name if comp.aggregate else None,
+                    comp.process.name if comp.process else None,
+                ])),
+                'total costs': comp.costs,
+                'total co2_footprint': comp.co2_footprint,
+                'total delivery_time': comp.delivery_time,
+            }
+            rows.append(row)
+
+        df = pd.DataFrame(rows)
+        return df

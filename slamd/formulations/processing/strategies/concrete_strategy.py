@@ -123,34 +123,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return MaterialsFacade.sort_for_concrete_formulation(materials_for_formulation)
 
     @classmethod
-    def _extract_material_uuids(cls, min_max_data):
-        result = {}
-        for item in min_max_data:
-            material_type = item['type']
-            uuids = item['uuid'].split(',')  # Split in case there are multiple UUIDs
-
-            if material_type not in result:
-                result[material_type] = []
-
-            result[material_type].extend(uuids)
-
-        return result
-
-    @classmethod
-    def _find_material_and_process_combinations(cls, type_to_uuids):
-        types = list(type_to_uuids.keys())
-        uuid_lists = [type_to_uuids[material_type] for material_type in types]
-
-        raw_combinations = itertools.product(*uuid_lists)
-
-        combinations = []
-        for combination in raw_combinations:
-            combination_dict = {t: uuid for t, uuid in zip(types, combination)}
-            combinations.append(combination_dict)
-
-        return combinations
-
-    @classmethod
     def _create_preliminary_compositions(cls, combination, param_space):
         types = list(param_space.keys())
 
@@ -177,7 +149,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                         mass=combination_dict["Custom"],
                     ) if "Custom" in types else None,
                     air_pore_content=combination_dict["Air Pore Content"] if "Air Pore Content" in types else None,
-                    process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" else None,
+                    process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" in types else None,
                     aggregate=MaterialContent(
                         material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
                     ),
@@ -233,119 +205,3 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             raise ValueError("Invalid constraint type: " + str(constraint_type))
 
         return c
-
-    @classmethod
-    def _calculate_composition_cost(cls, c: ConcreteComposition):
-        c.costs = 0
-        c.co2_footprint = 0
-        c.delivery_time = 0
-
-        if c.powder:
-            powder_factor = c.powder.mass / c.total_mass
-            c.costs += (c.powder.material.costs.costs or 0) * powder_factor
-            c.co2_footprint += (c.powder.material.costs.co2_footprint or 0) * powder_factor
-            c.delivery_time = max(c.delivery_time, c.powder.material.costs.delivery_time or 0)
-
-        if c.liquid:
-            liquid_factor = c.liquid.mass / c.total_mass
-            c.costs += (c.liquid.material.costs.costs or 0) * liquid_factor
-            c.co2_footprint += (c.liquid.material.costs.co2_footprint or 0) * liquid_factor
-            c.delivery_time = max(c.delivery_time, c.liquid.material.costs.delivery_time or 0)
-
-        if c.admixture:
-            admixture_factor = c.admixture.mass / c.total_mass
-            c.costs += (c.admixture.material.costs.costs or 0) * admixture_factor
-            c.co2_footprint += (c.admixture.material.costs.co2_footprint or 0) * admixture_factor
-            c.delivery_time = max(c.delivery_time, c.admixture.material.costs.delivery_time or 0)
-
-        if c.custom:
-            custom_factor = c.custom.mass / c.total_mass
-            c.costs += (c.custom.material.costs.costs or 0) * custom_factor
-            c.co2_footprint += (c.custom.material.costs.co2_footprint or 0) * custom_factor
-            c.delivery_time = max(c.delivery_time, c.custom.material.costs.delivery_time or 0)
-
-        if c.aggregate:
-            aggregate_factor = c.aggregate.mass / c.total_mass
-            c.costs += (c.aggregate.material.costs.costs or 0) * aggregate_factor
-            c.co2_footprint += (c.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
-            c.delivery_time = max(c.delivery_time, c.aggregate.material.costs.delivery_time or 0)
-
-        if c.process:
-            c.costs += c.process.costs.costs or 0
-            c.co2_footprint += c.process.costs.co2_footprint or 0
-            c.delivery_time = max(c.delivery_time, c.process.costs.delivery_time or 0)
-
-        c.costs = round(c.costs, 2)
-        c.co2_footprint = round(c.co2_footprint, 2)
-        c.delivery_time = round(c.delivery_time, 2)
-
-    @classmethod
-    def _get_specific_gravities(cls, materials_dict):
-        densities_dict = {}
-        for material, uuids in materials_dict.items():
-            if material == "Air Pore Content":
-                continue
-
-            for uuid in uuids:
-                session_value = MaterialsFacade.get_material_from_session(material, uuid)
-                densities_dict[uuid] = float(session_value.specific_gravity)
-
-        return densities_dict
-
-    @classmethod
-    def _create_dataframe(cls, compositions):
-        rows = []
-        for idx, comp in enumerate(compositions):
-            row = {
-                'Idx_Sample': idx,
-                'Powder (kg)': comp.powder.mass,
-                'Liquid (kg)': comp.liquid.mass,
-                'Aggregates (kg)': comp.aggregate.mass,
-                'Materials': ", ".join(filter(None, [
-                    comp.powder.material.name if comp.powder else None,
-                    comp.liquid.material.name if comp.liquid else None,
-                    comp.admixture.material.name if comp.admixture else None,
-                    comp.custom.material.name if comp.custom else None,
-                    comp.aggregate.material.name if comp.aggregate else None,
-                    comp.process.name if comp.process else None,
-                ])),
-                'total costs': comp.costs,
-                'total co2_footprint': comp.co2_footprint,
-                'total delivery_time': comp.delivery_time,
-            }
-            rows.append(row)
-
-        df = pd.DataFrame(rows)
-        return df
-
-    @classmethod
-    def generate_formulations(cls, min_max_data, constraint, constraint_type: Literal["Volume", "Weight"], processes):
-        materials = cls._extract_material_uuids(min_max_data)
-        material_and_process_combinations = cls._find_material_and_process_combinations(
-            {**materials, "Process": processes} if processes else materials
-        )
-
-        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
-        parameter_space = {**weights_and_ratios, "Process": processes} if processes else weights_and_ratios
-
-        compositions = []
-        for combination in material_and_process_combinations:
-            compositions.extend(
-                cls._create_preliminary_compositions(combination, parameter_space)
-            )
-
-        specific_gravities = cls._get_specific_gravities(materials)
-
-        completed_compositions = []
-        for composition in compositions:
-            if completed_composition := cls._complete_composition(composition, specific_gravities, constraint,
-                                                                  constraint_type):
-                cls._calculate_composition_cost(completed_composition)
-                completed_compositions.append(completed_composition)
-
-        # TODO: Fix binders
-        # TODO: Warning popup in frontend
-        # TODO: Only allow button if all fields filled in
-        # TODO: Binder defaults?
-        # TODO: Recyclingrate
-        return cls._create_dataframe(completed_compositions)

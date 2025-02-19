@@ -20,7 +20,7 @@ class ConcreteComposition:
     aggregate: MaterialContent | None
     custom: MaterialContent | None
 
-    air_pore_content: float  # In percent
+    air_pore_content: Optional[float]  # In percent
     process: Optional[Process]
 
     costs: Optional[float] = None

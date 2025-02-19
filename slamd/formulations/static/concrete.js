@@ -41,8 +41,8 @@ async function confirmSelection() {
     const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
     body = {
-        "selectedMaterials" : selectedMaterials,
-        "selectedConstraintType" : selectedConstraintType
+        "selected_materials" : selectedMaterials,
+        "selected_constraint_type" : selectedConstraintType
     }
 
     insertSpinnerInPlaceholder("formulations_min_max_placeholder");
