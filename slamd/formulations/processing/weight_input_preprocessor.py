@@ -6,11 +6,6 @@ class WeightInputPreprocessor:
     @classmethod
     def collect_weights(cls, formulation_config):
         # Skip last entry - dependent aggregate or powder
-        return [cls._create_weights(entry) for entry in formulation_config[:-1]]
-
-    @classmethod
-    def collect_weights_as_dict(cls, formulation_config):
-        # Skip last entry - dependent aggregate or powder
         weights = {}
         for config in formulation_config[:-1]:
             weights[config["type"]] = [float(w) for w in WeightInputPreprocessor._create_weights(config)]

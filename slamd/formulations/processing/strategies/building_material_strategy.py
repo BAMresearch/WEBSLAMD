@@ -133,7 +133,7 @@ class BuildingMaterialStrategy(ABC):
             {**materials, "Process": processes} if processes else materials
         )
 
-        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
+        weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data)
         parameter_space = {**weights_and_ratios, "Process": processes} if processes else weights_and_ratios
 
         compositions = []

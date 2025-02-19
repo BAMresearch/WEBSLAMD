@@ -7,7 +7,6 @@ from slamd.formulations.processing.models.formulation import Formulation, Materi
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
@@ -100,14 +99,6 @@ class BinderStrategy(BuildingMaterialStrategy):
             entry.increment.data = 5
             entry.min.data = 0
             entry.max.data = 20
-
-    @classmethod
-    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
-        return WeightsCalculator.compute_full_binder_weights_product(all_materials_weights, weight_constraint)
-
-    @classmethod
-    def _sort_materials(cls, materials_for_formulation):
-        return MaterialsFacade.sort_for_binder_formulation(materials_for_formulation)
 
     @classmethod
     def _create_preliminary_compositions(cls, combination, param_space):
