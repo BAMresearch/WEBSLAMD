@@ -26,3 +26,5 @@ class ConcreteComposition:
     costs: Optional[float] = None
     co2_footprint: Optional[float] = None
     delivery_time: Optional[float] = None
+
+    total_mass: Optional[float] = None

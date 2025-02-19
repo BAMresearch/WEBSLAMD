@@ -166,73 +166,98 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return compositions
 
     @classmethod
-    def _complete_composition(cls, composition, specific_gravities, constraint, constraint_type: Literal["Volume", "Weight"]):
-        c = composition
+    def _complete_composition(cls, c: ConcreteComposition, specific_gravities, constraint,
+                              constraint_type: Literal["Volume", "Weight"]):
         total_volume = constraint * c.air_pore_content / 100 if c.air_pore_content is not None else 0
-        total_mass = 0
-        c.costs = 0
-        c.co2_footprint = 0
-        c.delivery_time = 0
+        c.total_mass = 0
 
         if c.powder:
-            c.powder.volume = c.powder.mass / (specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.powder.volume = c.powder.mass / (
+                        specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.powder.volume
-            total_mass += c.powder.mass
-            c.costs += c.powder.material.costs.costs or 0
-            c.co2_footprint += c.powder.material.costs.co2_footprint or 0
-            c.delivery_time += c.powder.material.costs.delivery_time or 0
+            c.total_mass += c.powder.mass
 
         if c.liquid:
-            c.liquid.volume = c.liquid.mass / (specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.liquid.volume = c.liquid.mass / (
+                        specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.liquid.volume
-            total_mass += c.liquid.mass
-            c.costs += c.liquid.material.costs.costs or 0
-            c.co2_footprint += c.liquid.material.costs.co2_footprint or 0
-            c.delivery_time += c.liquid.material.costs.delivery_time or 0
+            c.total_mass += c.liquid.mass
 
         if c.admixture:
             c.admixture.volume = c.admixture.mass / (
                     specific_gravities[str(c.admixture.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.admixture.volume
-            total_mass += c.admixture.mass
-            c.costs += c.admixture.material.costs.costs or 0
-            c.co2_footprint += c.admixture.material.costs.co2_footprint or 0
-            c.delivery_time += c.admixture.material.costs.delivery_time or 0
+            c.total_mass += c.admixture.mass
 
         if c.custom:
-            c.custom.volume = c.custom.mass / (specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.custom.volume = c.custom.mass / (
+                        specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.custom.volume
-            total_mass += c.custom.mass
-            c.costs += c.custom.material.costs.costs or 0
-            c.co2_footprint += c.custom.material.costs.co2_footprint or 0
-            c.delivery_time += c.custom.material.costs.delivery_time or 0
-
-        if c.process:
-            c.costs += c.process.costs.costs or 0
-            c.co2_footprint += c.process.costs.co2_footprint or 0
-            c.delivery_time += c.process.costs.delivery_time or 0
+            c.total_mass += c.custom.mass
 
         if constraint_type == "Volume" and total_volume > constraint:
             return None
-        elif constraint_type == "Weight" and total_mass > constraint:
+        elif constraint_type == "Weight" and c.total_mass > constraint:
             return None
 
         if constraint_type == "Volume":
             c.aggregate.volume = constraint - total_volume
             c.aggregate.mass = round(
-                c.aggregate.volume * specific_gravities[str(c.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
+                c.aggregate.volume * specific_gravities[
+                    str(c.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
             )
         elif constraint_type == "Weight":
-            c.aggregate.mass = round(constraint - total_mass, 2)
+            c.aggregate.mass = round(constraint - c.total_mass, 2)
         else:
             raise ValueError("Invalid constraint type: " + str(constraint_type))
 
-        # TODO Weighted costs
-        c.costs += c.aggregate.material.costs.costs or 0
-        c.co2_footprint += c.aggregate.material.costs.co2_footprint or 0
-        c.delivery_time += c.aggregate.material.costs.delivery_time or 0
-
         return c
+
+    @classmethod
+    def _calculate_composition_cost(cls, c: ConcreteComposition):
+        c.costs = 0
+        c.co2_footprint = 0
+        c.delivery_time = 0
+
+        if c.powder:
+            powder_factor = c.powder.mass / c.total_mass
+            c.costs += (c.powder.material.costs.costs or 0) * powder_factor
+            c.co2_footprint += (c.powder.material.costs.co2_footprint or 0) * powder_factor
+            c.delivery_time = max(c.delivery_time, c.powder.material.costs.delivery_time or 0)
+
+        if c.liquid:
+            liquid_factor = c.liquid.mass / c.total_mass
+            c.costs += (c.liquid.material.costs.costs or 0) * liquid_factor
+            c.co2_footprint += (c.liquid.material.costs.co2_footprint or 0) * liquid_factor
+            c.delivery_time = max(c.delivery_time, c.liquid.material.costs.delivery_time or 0)
+
+        if c.admixture:
+            admixture_factor = c.admixture.mass / c.total_mass
+            c.costs += (c.admixture.material.costs.costs or 0) * admixture_factor
+            c.co2_footprint += (c.admixture.material.costs.co2_footprint or 0) * admixture_factor
+            c.delivery_time = max(c.delivery_time, c.admixture.material.costs.delivery_time or 0)
+
+        if c.custom:
+            custom_factor = c.custom.mass / c.total_mass
+            c.costs += (c.custom.material.costs.costs or 0) * custom_factor
+            c.co2_footprint += (c.custom.material.costs.co2_footprint or 0) * custom_factor
+            c.delivery_time = max(c.delivery_time, c.custom.material.costs.delivery_time or 0)
+
+        if c.aggregate:
+            aggregate_factor = c.aggregate.mass / c.total_mass
+            c.costs += (c.aggregate.material.costs.costs or 0) * aggregate_factor
+            c.co2_footprint += (c.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
+            c.delivery_time = max(c.delivery_time, c.aggregate.material.costs.delivery_time or 0)
+
+        if c.process:
+            c.costs += c.process.costs.costs or 0
+            c.co2_footprint += c.process.costs.co2_footprint or 0
+            c.delivery_time = max(c.delivery_time, c.process.costs.delivery_time or 0)
+
+        c.costs = round(c.costs, 2)
+        c.co2_footprint = round(c.co2_footprint, 2)
+        c.delivery_time = round(c.delivery_time, 2)
+
 
     @classmethod
     def _get_specific_gravities(cls, materials_dict):
@@ -293,10 +318,12 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         completed_compositions = []
         for composition in compositions:
-            if completed_composition := cls._complete_composition(composition, specific_gravities, constraint, constraint_type):
+            if completed_composition := cls._complete_composition(composition, specific_gravities, constraint,
+                                                                  constraint_type):
+                cls._calculate_composition_cost(completed_composition)
                 completed_compositions.append(completed_composition)
 
         # TODO: Fix binders
         # TODO: Warning popup in frontend
-        # TODO: Processes
+        # TODO: Only allow button if all fields filled in
         return cls._create_dataframe(completed_compositions)
