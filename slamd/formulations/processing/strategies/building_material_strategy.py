@@ -216,7 +216,6 @@ class BuildingMaterialStrategy(ABC):
                 completed_compositions.append(completed_composition)
 
         # TODO: Warning popup in frontend
-        # TODO: Binder defaults?
         # TODO: Recyclingrate
         # TODO: Attach new dataframe to old dataframe
         return cls._create_dataframe(completed_compositions)

@@ -92,13 +92,14 @@ class BinderStrategy(BuildingMaterialStrategy):
             entry.min.data = 2
             entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
             entry.max.data = 4
-        if type == 'Air Pore Content':
-            entry.increment.data = 0
-            entry.increment.label.text = 'Increment %'
-            entry.max.data = 2
-            entry.max.label.text = 'Max %'
-            entry.min.data = 2
-            entry.min.label.text = 'Min %'
+        if type == 'Aggregates':
+            entry.increment.data = 10
+            entry.max.data = 50
+            entry.min.data = 100
+        if type == 'Custom':
+            entry.increment.data = 5
+            entry.min.data = 0
+            entry.max.data = 20
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, weight_constraint):

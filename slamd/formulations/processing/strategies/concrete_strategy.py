@@ -110,6 +110,10 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             entry.max.label.text = 'Max %'
             entry.min.data = 2
             entry.min.label.text = 'Min %'
+        if type == 'Custom':
+            entry.increment.data = 5
+            entry.min.data = 0
+            entry.max.data = 20
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, constraint):
