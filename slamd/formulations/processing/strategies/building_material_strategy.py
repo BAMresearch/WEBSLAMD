@@ -1,22 +1,16 @@
 import itertools
 from abc import ABC, abstractmethod
-from itertools import product
 from typing import Literal
 
 import pandas as pd
 
 from slamd.common.common_validators import validate_ranges
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException, \
-    MaterialNotFoundException
-from slamd.common.ml_utils import concat
-from slamd.common.slamd_utils import empty, not_numeric, float_if_not_empty
-from slamd.discovery.processing.discovery_facade import DiscoveryFacade
-from slamd.discovery.processing.models.dataset import Dataset
+from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
+from slamd.common.slamd_utils import empty, not_numeric
 from slamd.formulations.processing.forms.weights_form import WeightsForm
-from slamd.formulations.processing.formulations_converter import FormulationsConverter
-from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
+from slamd.formulations.processing.models.formulation import Formulation
 from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS, WeightInputPreprocessor
-from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
+from slamd.materials.processing.materials_facade import MaterialsFacade
 
 WEIGHT_FORM_DELIMITER = '/'
 MAX_DATASET_SIZE = 10000
@@ -221,7 +215,6 @@ class BuildingMaterialStrategy(ABC):
                 cls._calculate_composition_cost(completed_composition)
                 completed_compositions.append(completed_composition)
 
-        # TODO: Fix binders
         # TODO: Warning popup in frontend
         # TODO: Binder defaults?
         # TODO: Recyclingrate
@@ -276,12 +269,12 @@ class BuildingMaterialStrategy(ABC):
 
     @classmethod
     @abstractmethod
-    def _complete_composition(cls, c: ConcreteComposition, specific_gravities, constraint,
+    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
                               constraint_type: Literal["Volume", "Weight"]):
         pass
 
     @classmethod
-    def _calculate_composition_cost(cls, c: ConcreteComposition):
+    def _calculate_composition_cost(cls, c: Formulation):
         c.costs = 0
         c.co2_footprint = 0
         c.delivery_time = 0
@@ -333,7 +326,6 @@ class BuildingMaterialStrategy(ABC):
                 'Idx_Sample': idx,
                 'Powder (kg)': comp.powder.mass,
                 'Liquid (kg)': comp.liquid.mass,
-                'Aggregates (kg)': comp.aggregate.mass,
                 'Materials': ", ".join(filter(None, [
                     comp.powder.material.name if comp.powder else None,
                     comp.liquid.material.name if comp.liquid else None,
@@ -346,6 +338,8 @@ class BuildingMaterialStrategy(ABC):
                 'total co2_footprint': comp.co2_footprint,
                 'total delivery_time': comp.delivery_time,
             }
+            if comp.aggregate:
+                row['Aggregates (kg)'] = comp.aggregate.mass
             rows.append(row)
 
         df = pd.DataFrame(rows)

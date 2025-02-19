@@ -1,16 +1,13 @@
 import itertools
 from typing import Literal
 
-import pandas as pd
-
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.design_assistant.processing.constants import G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
-from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
+from slamd.formulations.processing.models.formulation import Formulation, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
@@ -131,7 +128,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             combination_dict = dict(zip(types, composition))
 
             compositions.append(
-                ConcreteComposition(
+                Formulation(
                     powder=MaterialContent(
                         material=MaterialsFacade.get_material("powder", combination["Powder"]),
                         mass=combination_dict["Powder"],
@@ -159,7 +156,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return compositions
 
     @classmethod
-    def _complete_composition(cls, c: ConcreteComposition, specific_gravities, constraint,
+    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
                               constraint_type: Literal["Volume", "Weight"]):
         total_volume = constraint * c.air_pore_content / 100 if c.air_pore_content is not None else 0
         c.total_mass = 0

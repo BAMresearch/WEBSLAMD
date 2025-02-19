@@ -2,9 +2,8 @@ import itertools
 from typing import Literal
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.design_assistant.processing.constants import G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_BINDER_FORMULATION
-from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
+from slamd.formulations.processing.models.formulation import Formulation, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
@@ -118,7 +117,7 @@ class BinderStrategy(BuildingMaterialStrategy):
             combination_dict = dict(zip(types, composition))
 
             compositions.append(
-                ConcreteComposition(
+                Formulation(
                     powder=MaterialContent(
                         material=MaterialsFacade.get_material("powder", combination["Powder"]),
                     ),
@@ -145,7 +144,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         return compositions
 
     @classmethod
-    def _complete_composition(cls, c: ConcreteComposition, specific_gravities, constraint,
+    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
                               constraint_type: Literal["Volume", "Weight"]):
         # Equation for calculating dependent (powder) from absolute custom, relative liquid/admixture:
         # liquid * powder + aggregates + admixture * powder + custom + powder = constraint
@@ -166,10 +165,11 @@ class BinderStrategy(BuildingMaterialStrategy):
         if c.powder:
             # Total mass contains (custom mass + aggregates mass) at this point
             c.powder.mass = (constraint - c.total_mass) / (
-                c.liquid.mass / 100 if c.liquid else 0
-                + c.admixture.mass / 100 if c.admixture else 0
+                (c.liquid.mass / 100 if c.liquid else 0)
+                + (c.admixture.mass / 100 if c.admixture else 0)
                 + 1
             )
+            c.powder.mass = round(c.powder.mass, 2)
             c.total_mass += c.powder.mass
 
         # If we can't fit into the constraint, powder mass is negative -> invalid
@@ -178,11 +178,11 @@ class BinderStrategy(BuildingMaterialStrategy):
 
         # Now we convert liquid and admixture masses from % of powder to actual kg
         if c.liquid:
-            c.liquid.mass = c.liquid.mass * c.powder.mass
+            c.liquid.mass = round(c.liquid.mass * c.powder.mass / 100, 2)
             c.total_mass += c.liquid.mass
 
         if c.admixture:
-            c.admixture.mass = c.admixture.mass * c.powder.mass
+            c.admixture.mass = round(c.admixture.mass * c.powder.mass / 100, 2)
             c.total_mass += c.admixture.mass
 
         return c

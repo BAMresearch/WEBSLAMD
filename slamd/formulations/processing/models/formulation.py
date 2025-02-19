@@ -13,7 +13,7 @@ class MaterialContent:
 
 
 @dataclass
-class ConcreteComposition:
+class Formulation:
     powder: MaterialContent | None
     liquid: MaterialContent | None
     admixture: MaterialContent | None
