@@ -1,8 +1,10 @@
 import itertools
 
+import pandas as pd
+
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
-from slamd.formulations.processing.models import ConcreteComposition, Material
+from slamd.formulations.processing.models import ConcreteComposition, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
@@ -134,22 +136,29 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         compositions = []
         for combination in itertools.product(*[material_space[mt] for mt in material_types]):
             combination_dict = dict(zip(material_types, combination))
+            # MaterialsFacade.get_material(material_type, uuid)
             compositions.append(
                 ConcreteComposition(
-                    powder=Material(uuid=material_combination["Powder"],
-                                    mass=combination_dict["Powder"],
-                                    volume=None) if "Powder" in material_types else None,
-                    liquid=Material(uuid=material_combination["Liquid"],
-                                    mass=combination_dict["Liquid"] * combination_dict["Powder"] / 100,
-                                    volume=None) if "Liquid" in material_types else None,
-                    admixture=Material(uuid=material_combination["Admixture"],
-                                       mass=combination_dict["Admixture"] * combination_dict["Powder"] / 100,
-                                       volume=None) if "Admixture" in material_types else None,
-                    custom=Material(uuid=material_combination["Custom"],
-                                    mass=combination_dict["Custom"],
-                                    volume=None) if "Custom" in material_types else None,
+                    powder=MaterialContent(
+                        material=MaterialsFacade.get_material("powder", material_combination["Powder"]),
+                        mass=combination_dict["Powder"],
+                    ) if "Powder" in material_types else None,
+                    liquid=MaterialContent(
+                        material=MaterialsFacade.get_material("liquid", material_combination["Liquid"]),
+                        mass=combination_dict["Liquid"] * combination_dict["Powder"] / 100,
+                    ) if "Liquid" in material_types else None,
+                    admixture=MaterialContent(
+                        material=MaterialsFacade.get_material("admixture", material_combination["Admixture"]),
+                        mass=combination_dict["Admixture"] * combination_dict["Powder"] / 100,
+                    ) if "Admixture" in material_types else None,
+                    custom=MaterialContent(
+                        material=MaterialsFacade.get_material("custom", material_combination["Custom"]),
+                        mass=combination_dict["Custom"],
+                    ) if "Custom" in material_types else None,
                     air_pore_content=combination_dict["Air Pore Content"],
-                    aggregate=Material(uuid=material_combination["Aggregates"], mass=None, volume=None),
+                    aggregate=MaterialContent(
+                        material=MaterialsFacade.get_material("aggregates", material_combination["Aggregates"]),
+                    ),
                 )
             )
 
@@ -159,31 +168,49 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     def _complete_composition(cls, composition, specific_gravities, volume_constraint):
         c = composition
         total_volume = volume_constraint * c.air_pore_content / 100
+        c.costs = 0
+        c.co2_footprint = 0
+        c.delivery_time = 0
 
         if c.powder:
-            c.powder.volume = c.powder.mass / (specific_gravities[c.powder.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.powder.volume = c.powder.mass / (specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.powder.volume
+            c.costs += c.powder.material.costs.costs or 0
+            c.co2_footprint += c.powder.material.costs.co2_footprint or 0
+            c.delivery_time += c.powder.material.costs.delivery_time or 0
 
         if c.liquid:
-            c.liquid.volume = c.liquid.mass / (specific_gravities[c.liquid.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.liquid.volume = c.liquid.mass / (specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.liquid.volume
+            c.costs += c.liquid.material.costs.costs or 0
+            c.co2_footprint += c.liquid.material.costs.co2_footprint or 0
+            c.delivery_time += c.liquid.material.costs.delivery_time or 0
 
         if c.admixture:
             c.admixture.volume = c.admixture.mass / (
-                    specific_gravities[c.admixture.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                    specific_gravities[str(c.admixture.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.admixture.volume
+            c.costs += c.admixture.material.costs.costs or 0
+            c.co2_footprint += c.admixture.material.costs.co2_footprint or 0
+            c.delivery_time += c.admixture.material.costs.delivery_time or 0
 
         if c.custom:
-            c.custom.volume = c.custom.mass / (specific_gravities[c.custom.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+            c.custom.volume = c.custom.mass / (specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.custom.volume
+            c.costs += c.custom.material.costs.costs or 0
+            c.co2_footprint += c.custom.material.costs.co2_footprint or 0
+            c.delivery_time += c.custom.material.costs.delivery_time or 0
 
         if total_volume > volume_constraint:
             return None
 
         c.aggregate.volume = volume_constraint - total_volume
         c.aggregate.mass = round(
-            c.aggregate.volume * specific_gravities[c.aggregate.uuid] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
+            c.aggregate.volume * specific_gravities[str(c.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
         )
+        c.costs += c.aggregate.material.costs.costs or 0
+        c.co2_footprint += c.aggregate.material.costs.co2_footprint or 0
+        c.delivery_time += c.aggregate.material.costs.delivery_time or 0
 
         return c
 
@@ -199,6 +226,31 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                 densities_dict[uuid] = float(session_value.specific_gravity)
 
         return densities_dict
+
+    @classmethod
+    def _create_dataframe(cls, compositions):
+        rows = []
+        for idx, comp in enumerate(compositions):
+            row = {
+                'Idx_Sample': idx,
+                'Powder (kg)': comp.powder.mass,
+                'Liquid (kg)': comp.liquid.mass,
+                'Aggregates (kg)': comp.aggregate.mass,
+                'Materials': ", ".join(filter(None, [
+                    comp.powder.material.name if comp.powder else None,
+                    comp.liquid.material.name if comp.liquid else None,
+                    comp.admixture.material.name if comp.admixture else None,
+                    comp.custom.material.name if comp.custom else None,
+                    comp.aggregate.material.name if comp.aggregate else None,
+                ])),
+                'total costs': comp.costs,
+                'total co2_footprint': comp.co2_footprint,
+                'total delivery_time': comp.delivery_time,
+            }
+            rows.append(row)
+
+        df = pd.DataFrame(rows)
+        return df
 
     @classmethod
     def generate_formulations_with_weights_for_volume_constraint(cls, min_max_data, volume_constraint):
@@ -220,20 +272,8 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         # TODO: Create dataframe
         # TODO: Apply logic to weight based constraints
         # TODO: Fix binders
-        return
+        return cls._create_dataframe(completed_compositions)
 
-        #
-        # material_combinations = cls._generate_material_combinations(material_volumes)
-        #
-        # material_volumes_for_all_combinations = VolumesCalculator.generate_volumes_for_combinations(material_combinations)
-        #
-        # valid_volumes_for_all_combinations = VolumesCalculator.validate_volume_combinations(material_volumes_for_all_combinations, min_max_data["constraint"])
-        #
-        # valid_formulations_with_aggregates = VolumesCalculator.add_aggregates_volume_to_combination(valid_volumes_for_all_combinations, specific_gravities, min_max_data["constraint"])
-        #
-        # formulations_with_weights = VolumesCalculator.transform_volumes_to_weights(valid_formulations_with_aggregates, specific_gravities, admixture_and_custom_materials_indices)
-        #
-        # return formulations_with_weights
 
     @classmethod
     def generate_formulations_with_weights_for_weight_constraint(cls, min_max_data, weight_constraint):

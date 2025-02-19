@@ -33,11 +33,10 @@ class FormulationsService:
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
 
         if formulations_data['selected_constraint_type'] == 'Volume':
-            formulations = strategy.generate_formulations_with_weights_for_volume_constraint(
+            return strategy.generate_formulations_with_weights_for_volume_constraint(
                 formulations_data["materials_request_data"]["min_max_data"],
                 float(formulations_data["constraint"])
             )
-            # formulations = cls._build_formulations_data(formulations_with_weights, formulations_data)
         else:
             formulations = cls._compute_formulations_data_for_weight_constraint(strategy, formulations_data)
             return strategy.create_formulation_batch(formulations)
