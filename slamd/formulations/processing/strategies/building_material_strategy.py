@@ -256,26 +256,5 @@ class BuildingMaterialStrategy(ABC):
             entry.max.render_kw = {'disabled': 'disabled'}
             entry.min.label.text = 'Max (kg)'
             entry.max.label.text = 'Min (kg)'
-        cls._populate_min_max_entry_with_default_values(entry, type)
 
-
-    @classmethod
-    def _populate_min_max_entry_with_default_values(cls, entry, type):
-        if type == 'Powder':
-            entry.increment.data = 10
-            entry.min.data = 350
-            entry.max.data = 450
-        if type == 'Admixture':
-            entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
-            entry.increment.data = 1
-            entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
-            entry.min.data = 2
-            entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
-            entry.max.data = 4
-        if type == 'Air Pore Content':
-            entry.increment.data = 0
-            entry.increment.label.text = 'Increment %'
-            entry.max.data = 2
-            entry.max.label.text = 'Max %'
-            entry.min.data = 2
-            entry.min.label.text = 'Min %'
+        return entry

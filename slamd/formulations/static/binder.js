@@ -38,8 +38,8 @@ async function confirmSelection() {
     const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
     body = {
-        "selectedMaterials" : selectedMaterials,
-        "selectedConstraintType" : selectedConstraintType
+        "selected_materials" : selectedMaterials,
+        "selected_constraint_type" : selectedConstraintType
     }
 
     insertSpinnerInPlaceholder("formulations_min_max_placeholder");
@@ -70,13 +70,13 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(BINDER);
-        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+        const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         const token = document.getElementById("csrf_token").value;
         const constraintType = document.getElementById('constraint_selection')
         const processesRequestData = collectProcessesRequestData();
-        requestData['selectedConstraintType'] = constraintType.value
-        requestData['processesRequestData'] = processesRequestData
-        requestData['samplingSize'] = 1
+        requestData['selected_constraint_type'] = constraintType.value
+        requestData['processes_request_data'] = processesRequestData
+        requestData['sampling_size'] = 1
 
         insertSpinnerInPlaceholder("formulations-table-placeholder");
         await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", requestData);

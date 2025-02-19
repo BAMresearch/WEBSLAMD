@@ -69,7 +69,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         return min_max_form
 
     @classmethod
-    def create_formulation_batch(cls, formulations_data):
+    def generate_formulations(cls, formulations_data):
         return cls._create_formulation_batch_internal(formulations_data, TEMPORARY_BINDER_FORMULATION)
 
     @classmethod

@@ -85,13 +85,34 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return min_max_form
 
     @classmethod
-    def create_formulation_batch(cls, formulations_data):
-        return cls._create_formulation_batch_internal(formulations_data, TEMPORARY_CONCRETE_FORMULATION)
+    def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
+        entry = cls._create_min_max_form_entry_internal(
+            entries, uuids, name, material_type,
+            ['Powder', 'Liquid', 'Aggregates'],
+            ['Aggregates', 'Air Pore Content']
+        )
+        cls._populate_min_max_entry_with_default_values(entry, material_type)
 
     @classmethod
-    def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
-        cls._create_min_max_form_entry_internal(entries, uuids, name, material_type, ['Powder', 'Liquid', 'Aggregates'],
-                                                ['Aggregates', 'Air Pore Content'])
+    def _populate_min_max_entry_with_default_values(cls, entry, type):
+        if type == 'Powder':
+            entry.increment.data = 10
+            entry.min.data = 350
+            entry.max.data = 450
+        if type == 'Admixture':
+            entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
+            entry.increment.data = 1
+            entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
+            entry.min.data = 2
+            entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
+            entry.max.data = 4
+        if type == 'Air Pore Content':
+            entry.increment.data = 0
+            entry.increment.label.text = 'Increment %'
+            entry.max.data = 2
+            entry.max.label.text = 'Max %'
+            entry.min.data = 2
+            entry.min.label.text = 'Min %'
 
     @classmethod
     def _compute_weights_product(cls, all_materials_weights, constraint):
@@ -173,13 +194,13 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         if c.powder:
             c.powder.volume = c.powder.mass / (
-                        specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                    specific_gravities[str(c.powder.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.powder.volume
             c.total_mass += c.powder.mass
 
         if c.liquid:
             c.liquid.volume = c.liquid.mass / (
-                        specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                    specific_gravities[str(c.liquid.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.liquid.volume
             c.total_mass += c.liquid.mass
 
@@ -191,7 +212,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
 
         if c.custom:
             c.custom.volume = c.custom.mass / (
-                        specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
+                    specific_gravities[str(c.custom.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR)
             total_volume += c.custom.volume
             c.total_mass += c.custom.mass
 
@@ -257,7 +278,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         c.costs = round(c.costs, 2)
         c.co2_footprint = round(c.co2_footprint, 2)
         c.delivery_time = round(c.delivery_time, 2)
-
 
     @classmethod
     def _get_specific_gravities(cls, materials_dict):
@@ -326,4 +346,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         # TODO: Fix binders
         # TODO: Warning popup in frontend
         # TODO: Only allow button if all fields filled in
+        # TODO: Binder defaults?
+        # TODO: Recyclingrate
         return cls._create_dataframe(completed_compositions)

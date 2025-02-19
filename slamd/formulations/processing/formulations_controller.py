@@ -32,8 +32,8 @@ def formulations_page(building_material):
 @formulations.route('/<building_material>/add_min_max_entries', methods=['POST'])
 def add_formulations_min_max_entry(building_material):
     data = json.loads(request.data)
-    formulation_selection = data['selectedMaterials']
-    selected_constraint_type = data['selectedConstraintType']
+    formulation_selection = data['selected_materials']
+    selected_constraint_type = data['selected_constraint_type']
     min_max_form = FormulationsService.create_formulations_min_max_form(formulation_selection, building_material, selected_constraint_type)
     body = {'template': render_template('formulations_min_max_form.html', formulations_min_max_form=min_max_form)}
     return make_response(jsonify(body), 200)
