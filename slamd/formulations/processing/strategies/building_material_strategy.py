@@ -217,7 +217,6 @@ class BuildingMaterialStrategy(ABC):
                 cls._calculate_composition_cost(completed_composition)
                 completed_compositions.append(completed_composition)
 
-        # TODO: Warning popup in frontend
         return cls._create_dataframe(completed_compositions)
 
     @classmethod

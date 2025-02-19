@@ -4,8 +4,9 @@
  * common functions would lead to tight coupling between these separated use cases.
  */
 
-const CONCRETE = "CONCRETE"
-const BINDER = "BINDER"
+const CONCRETE = "CONCRETE";
+const BINDER = "BINDER";
+const MAX_COMBINATIONS_THRESHOLD = 10000;
 
 function collectBuildingMaterialFormulationSelection() {
     const powderPlaceholder = document.getElementById("powder_selection");
@@ -143,4 +144,24 @@ function collectProcessesRequestData() {
     return {
         processes: rowData,
     };
+}
+
+function calculateUuidCombinationsCount(rowData) {
+    let uuidCombinationsCount = 1;
+    for (const row of rowData) {
+        const uuidList = row.uuid ? row.uuid.split(',') : [];
+        uuidCombinationsCount *= uuidList.length > 0 ? uuidList.length : 1;
+    }
+    return uuidCombinationsCount;
+}
+
+function calculateCombinationsCount(rowData) {
+    let combinationsCount = 1;
+    for (const row of rowData) {
+        if (row.min != null && row.max != null && row.increment != null && !isNaN(row.min) && !isNaN(row.max) && !isNaN(row.increment) && row.increment > 0) {
+            const range = (row.max - row.min) / row.increment + 1;
+            combinationsCount *= range;
+        }
+    }
+    return combinationsCount;
 }

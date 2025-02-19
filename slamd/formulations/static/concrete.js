@@ -58,6 +58,18 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(CONCRETE);
+        const rowData = requestData.materials_request_data.min_max_data;
+        const combinationsCount = calculateCombinationsCount(rowData);
+        const uuidCombinationsCount = calculateUuidCombinationsCount(rowData);
+        const totalCombinationsCount = combinationsCount * uuidCombinationsCount;
+
+        if (totalCombinationsCount > MAX_COMBINATIONS_THRESHOLD) {
+            const proceed = confirm(`The number of combinations exceeds ${MAX_COMBINATIONS_THRESHOLD}. Do you want to proceed?`);
+            if (!proceed) {
+                return;
+            }
+        }
+
         const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         const token = document.getElementById("csrf_token").value;
         const constraintType = document.getElementById('constraint_selection')
@@ -74,8 +86,6 @@ async function assignConfirmFormulationsConfigurationEvent() {
         document.getElementById("delete_formulations_batches_button").disabled = false;
     });
 }
-
-
 
 async function deleteFormulations() {
     await deleteDataAndEmbedTemplateInPlaceholder(CONCRETE_FORMULATIONS_MATERIALS_URL, "formulations-table-placeholder");
