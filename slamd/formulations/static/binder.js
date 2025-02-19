@@ -14,6 +14,7 @@ function toggleBasedOnSelectionAndConstraints() {
     const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder);
 
     const validSelectionConfiguration = powderSelected && liquidSelected;
+    binderWeightConstraint = document.getElementById("constraint").value;
     const validConstraintConfiguration = binderWeightConstraint !== undefined && binderWeightConstraint !== "" &&
         binderWeightConstraint > 0;
 
