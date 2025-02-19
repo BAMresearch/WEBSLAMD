@@ -64,7 +64,7 @@ async function assignConfirmFormulationsConfigurationEvent() {
         const totalCombinationsCount = combinationsCount * uuidCombinationsCount;
 
         if (totalCombinationsCount > MAX_COMBINATIONS_THRESHOLD) {
-            const proceed = confirm(`The number of combinations exceeds ${MAX_COMBINATIONS_THRESHOLD}. Do you want to proceed?`);
+            const proceed = confirm(`You are attempting to create ${totalCombinationsCount} formulations. Do you want to proceed?`);
             if (!proceed) {
                 return;
             }

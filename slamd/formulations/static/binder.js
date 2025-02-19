@@ -56,6 +56,18 @@ async function assignConfirmFormulationsConfigurationEvent() {
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(BINDER);
+        const rowData = requestData.materials_request_data.min_max_data;
+        const combinationsCount = calculateCombinationsCount(rowData);
+        const uuidCombinationsCount = calculateUuidCombinationsCount(rowData);
+        const totalCombinationsCount = combinationsCount * uuidCombinationsCount;
+
+        if (totalCombinationsCount > MAX_COMBINATIONS_THRESHOLD) {
+            const proceed = confirm(`You are attempting to create ${totalCombinationsCount} formulations. Do you want to proceed?`);
+            if (!proceed) {
+                return;
+            }
+        }
+
         const url = `${BINDER_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
         const token = document.getElementById("csrf_token").value;
         const constraintType = document.getElementById('constraint_selection')
