@@ -35,6 +35,7 @@ class FormulationsService:
             formulations_data["materials_request_data"]["min_max_data"],
             float(formulations_data["constraint"]),
             formulations_data["selected_constraint_type"],
+            [p["uuid"] for p in formulations_data["processes_request_data"]["processes"]],
         )
 
     @classmethod

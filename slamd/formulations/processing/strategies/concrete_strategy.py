@@ -116,48 +116,49 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return result
 
     @classmethod
-    def _find_material_combinations(cls, type_to_uuids):
-        material_types = list(type_to_uuids.keys())
-        uuid_lists = [type_to_uuids[material_type] for material_type in material_types]
+    def _find_material_and_process_combinations(cls, type_to_uuids):
+        types = list(type_to_uuids.keys())
+        uuid_lists = [type_to_uuids[material_type] for material_type in types]
 
         raw_combinations = itertools.product(*uuid_lists)
 
         combinations = []
         for combination in raw_combinations:
-            combination_dict = {material_type: uuid for material_type, uuid in zip(material_types, combination)}
+            combination_dict = {t: uuid for t, uuid in zip(types, combination)}
             combinations.append(combination_dict)
 
         return combinations
 
     @classmethod
-    def _create_preliminary_compositions(cls, material_combination, material_space):
-        material_types = list(material_space.keys())
+    def _create_preliminary_compositions(cls, combination, param_space):
+        types = list(param_space.keys())
 
         compositions = []
-        for combination in itertools.product(*[material_space[mt] for mt in material_types]):
-            combination_dict = dict(zip(material_types, combination))
-            # MaterialsFacade.get_material(material_type, uuid)
+        for composition in itertools.product(*[param_space[mt] for mt in types]):
+            combination_dict = dict(zip(types, composition))
+
             compositions.append(
                 ConcreteComposition(
                     powder=MaterialContent(
-                        material=MaterialsFacade.get_material("powder", material_combination["Powder"]),
+                        material=MaterialsFacade.get_material("powder", combination["Powder"]),
                         mass=combination_dict["Powder"],
-                    ) if "Powder" in material_types else None,
+                    ) if "Powder" in types else None,
                     liquid=MaterialContent(
-                        material=MaterialsFacade.get_material("liquid", material_combination["Liquid"]),
+                        material=MaterialsFacade.get_material("liquid", combination["Liquid"]),
                         mass=combination_dict["Liquid"] * combination_dict["Powder"] / 100,
-                    ) if "Liquid" in material_types else None,
+                    ) if "Liquid" in types else None,
                     admixture=MaterialContent(
-                        material=MaterialsFacade.get_material("admixture", material_combination["Admixture"]),
+                        material=MaterialsFacade.get_material("admixture", combination["Admixture"]),
                         mass=combination_dict["Admixture"] * combination_dict["Powder"] / 100,
-                    ) if "Admixture" in material_types else None,
+                    ) if "Admixture" in types else None,
                     custom=MaterialContent(
-                        material=MaterialsFacade.get_material("custom", material_combination["Custom"]),
+                        material=MaterialsFacade.get_material("custom", combination["Custom"]),
                         mass=combination_dict["Custom"],
-                    ) if "Custom" in material_types else None,
-                    air_pore_content=combination_dict["Air Pore Content"] if "Custom" in material_types else None,
+                    ) if "Custom" in types else None,
+                    air_pore_content=combination_dict["Air Pore Content"] if "Air Pore Content" in types else None,
+                    process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" else None,
                     aggregate=MaterialContent(
-                        material=MaterialsFacade.get_material("aggregates", material_combination["Aggregates"]),
+                        material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
                     ),
                 )
             )
@@ -205,6 +206,11 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             c.costs += c.custom.material.costs.costs or 0
             c.co2_footprint += c.custom.material.costs.co2_footprint or 0
             c.delivery_time += c.custom.material.costs.delivery_time or 0
+
+        if c.process:
+            c.costs += c.process.costs.costs or 0
+            c.co2_footprint += c.process.costs.co2_footprint or 0
+            c.delivery_time += c.process.costs.delivery_time or 0
 
         if constraint_type == "Volume" and total_volume > constraint:
             return None
@@ -256,6 +262,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                     comp.admixture.material.name if comp.admixture else None,
                     comp.custom.material.name if comp.custom else None,
                     comp.aggregate.material.name if comp.aggregate else None,
+                    comp.process.name if comp.process else None,
                 ])),
                 'total costs': comp.costs,
                 'total co2_footprint': comp.co2_footprint,
@@ -267,23 +274,28 @@ class ConcreteStrategy(BuildingMaterialStrategy):
         return df
 
     @classmethod
-    def generate_formulations(cls, min_max_data, constraint, constraint_type: Literal["Volume", "Weight"]):
-        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
+    def generate_formulations(cls, min_max_data, constraint, constraint_type: Literal["Volume", "Weight"], processes):
         materials = cls._extract_material_uuids(min_max_data)
-        specific_gravities = cls._get_specific_gravities(materials)
-        material_combinations = cls._find_material_combinations(materials)
+        material_and_process_combinations = cls._find_material_and_process_combinations(
+            {**materials, "Process": processes} if processes else materials
+        )
+
+        weights_and_ratios = WeightInputPreprocessor.collect_weights_as_dict(min_max_data)
+        parameter_space = {**weights_and_ratios, "Process": processes} if processes else weights_and_ratios
 
         compositions = []
-        for material_combination in material_combinations:
+        for combination in material_and_process_combinations:
             compositions.extend(
-                cls._create_preliminary_compositions(material_combination, weights_and_ratios))
+                cls._create_preliminary_compositions(combination, parameter_space)
+            )
+
+        specific_gravities = cls._get_specific_gravities(materials)
 
         completed_compositions = []
         for composition in compositions:
             if completed_composition := cls._complete_composition(composition, specific_gravities, constraint, constraint_type):
                 completed_compositions.append(completed_composition)
 
-        # TODO: Apply logic to weight based constraints
         # TODO: Fix binders
         # TODO: Warning popup in frontend
         # TODO: Processes

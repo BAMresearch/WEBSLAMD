@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from slamd.materials.processing.models.material import Material
+from slamd.materials.processing.models.process import Process
 
 
 @dataclass
@@ -17,8 +18,10 @@ class ConcreteComposition:
     liquid: MaterialContent | None
     admixture: MaterialContent | None
     aggregate: MaterialContent | None
-    air_pore_content: float  # In percent
     custom: MaterialContent | None
+
+    air_pore_content: float  # In percent
+    process: Optional[Process]
 
     costs: Optional[float] = None
     co2_footprint: Optional[float] = None
