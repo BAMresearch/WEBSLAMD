@@ -31,13 +31,11 @@ class FormulationsService:
     def create_materials_formulations(cls, formulations_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
 
-        if formulations_data['selected_constraint_type'] == 'Volume':
-            return strategy.generate_formulations_with_weights_for_volume_constraint(
-                formulations_data["materials_request_data"]["min_max_data"],
-                float(formulations_data["constraint"])
-            )
-        else:
-            pass
+        return strategy.generate_formulations(
+            formulations_data["materials_request_data"]["min_max_data"],
+            float(formulations_data["constraint"]),
+            formulations_data["selected_constraint_type"],
+        )
 
     @classmethod
     def delete_formulation(cls, building_material):
