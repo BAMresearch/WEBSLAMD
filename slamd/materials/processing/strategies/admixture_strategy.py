@@ -7,6 +7,12 @@ class AdmixtureStrategy(MaterialStrategy):
 
     @classmethod
     def create_material_from_dict(cls, dictionary):
+        # Required for backwards compatibility with saved sessions from before 2025-02
+        if "specific_gravity" not in dictionary:
+            dictionary["specific_gravity"] = ADMIXTURE_DEFAULT_SPECIFIC_GRAVITY
+        if "recyclingrate" not in dictionary["costs"]:
+            dictionary["costs"]["recyclingrate"] = None
+
         mat = Admixture()
         cls.fill_material_object_with_basic_info_from_dict(mat, dictionary)
         return mat

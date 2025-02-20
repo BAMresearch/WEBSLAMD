@@ -89,7 +89,10 @@ class SessionService:
         for mat_type, mat in loaded_materials:
             MaterialsPersistence.save(mat_type, mat)
 
-        DesignAssistantService.instantiate_da_session_on_upload(session_data[JSON_DESIGN_ASSISTANT_KEY])
+        if JSON_DESIGN_ASSISTANT_KEY in session_data:
+            DesignAssistantService.instantiate_da_session_on_upload(session_data[JSON_DESIGN_ASSISTANT_KEY])
+        else:
+            DesignAssistantPersistence.init_session()
 
         #for dataset in loaded_datasets:
             #if DiscoveryPersistence.query_dataset_by_name(dataset.name):
