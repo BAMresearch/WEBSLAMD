@@ -83,15 +83,20 @@ def test_slamd_shows_binder_formulations_page(client, monkeypatch):
 
 def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     request = json.dumps(
-        [
-            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-1'},
-            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-2'},
-            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Liquid', 'name': 'Blended Liquid 1-1'},
-            {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Aggregates', 'name': 'Blended Aggregates 1-1'},
-            {'uuid': 'fe6af2c7-22a8-11ed-8e81-2079188bdeea', 'type': 'Process', 'name': 'Process 1'}
-        ]
+        {
+            "selected_materials": [
+                {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-1'},
+                {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Powder', 'name': 'Blended Powder 1-2'},
+                {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Liquid', 'name': 'Blended Liquid 1-1'},
+                {'uuid': '44bb60a4-22aa-11ed-92ba-2079188bdeea', 'type': 'Aggregates',
+                 'name': 'Blended Aggregates 1-1'},
+                {'uuid': 'fe6af2c7-22a8-11ed-8e81-2079188bdeea', 'type': 'Process', 'name': 'Process 1'}
+            ],
+            "selected_constraint_type": "Weight"
+        }
     )
     response = client.post('/materials/formulations/concrete/add_min_max_entries', data=request)
+    print(json.loads(response.data.decode('utf-8'))['template'])
 
     assert response.status_code == 200
 
