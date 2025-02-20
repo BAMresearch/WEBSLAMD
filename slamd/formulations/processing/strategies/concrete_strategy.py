@@ -2,8 +2,12 @@ import itertools
 from typing import Literal
 
 from slamd.common.error_handling import ValueNotSupportedException
-from slamd.design_assistant.processing.constants import G_CM3_TO_KG_M3_CONVERSION_FACTOR
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_CONCRETE_FORMULATION
+from slamd.formulations.processing.constants import G_CM3_TO_KG_M3_CONVERSION_FACTOR, \
+    MINMAX_DEFAULT_CONCRETE_LIQUID_MIN, MINMAX_DEFAULT_CONCRETE_LIQUID_INC, MINMAX_DEFAULT_CONCRETE_LIQUID_MAX, \
+    MINMAX_DEFAULT_CONCRETE_POWDER_INC, MINMAX_DEFAULT_CONCRETE_POWDER_MIN, MINMAX_DEFAULT_CONCRETE_POWDER_MAX, \
+    MINMAX_DEFAULT_CONCRETE_ADMIXTURE_INC, MINMAX_DEFAULT_CONCRETE_ADMIXTURE_MIN, MINMAX_DEFAULT_CONCRETE_ADMIXTURE_MAX, \
+    MINMAX_DEFAULT_CONCRETE_CUSTOM_INC, MINMAX_DEFAULT_CONCRETE_CUSTOM_MIN, MINMAX_DEFAULT_CONCRETE_CUSTOM_MAX
 from slamd.formulations.processing.models.formulation import Formulation, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.concrete_selection_form import ConcreteSelectionForm
@@ -50,11 +54,11 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                        'W/C Ratio', 'Liquid')
 
         min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].increment.data = 5
+        min_max_form.materials_min_max_entries.entries[-1].increment.data = MINMAX_DEFAULT_CONCRETE_LIQUID_INC
         min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].min.data = 35
+        min_max_form.materials_min_max_entries.entries[-1].min.data = MINMAX_DEFAULT_CONCRETE_LIQUID_MIN
         min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].max.data = 60
+        min_max_form.materials_min_max_entries.entries[-1].max.data = MINMAX_DEFAULT_CONCRETE_LIQUID_MAX
 
         if len(admixture_names):
             joined_admixture_names = ', '.join(admixture_names)
@@ -91,20 +95,20 @@ class ConcreteStrategy(BuildingMaterialStrategy):
     @classmethod
     def _populate_min_max_entry_with_default_values(cls, entry, type):
         if type == 'Powder':
-            entry.increment.data = 10
-            entry.min.data = 350
-            entry.max.data = 450
+            entry.increment.data = MINMAX_DEFAULT_CONCRETE_POWDER_INC
+            entry.min.data = MINMAX_DEFAULT_CONCRETE_POWDER_MIN
+            entry.max.data = MINMAX_DEFAULT_CONCRETE_POWDER_MAX
         if type == 'Admixture':
             entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
-            entry.increment.data = 1
+            entry.increment.data = MINMAX_DEFAULT_CONCRETE_ADMIXTURE_INC
             entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
-            entry.min.data = 2
+            entry.min.data = MINMAX_DEFAULT_CONCRETE_ADMIXTURE_MIN
             entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
-            entry.max.data = 4
+            entry.max.data = MINMAX_DEFAULT_CONCRETE_ADMIXTURE_MAX
         if type == 'Custom':
-            entry.increment.data = 5
-            entry.min.data = 0
-            entry.max.data = 20
+            entry.increment.data = MINMAX_DEFAULT_CONCRETE_CUSTOM_INC
+            entry.min.data = MINMAX_DEFAULT_CONCRETE_CUSTOM_MIN
+            entry.max.data = MINMAX_DEFAULT_CONCRETE_CUSTOM_MAX
 
     @classmethod
     def _create_preliminary_compositions(cls, combination, param_space):

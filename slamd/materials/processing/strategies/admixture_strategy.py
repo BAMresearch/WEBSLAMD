@@ -10,7 +10,7 @@ class AdmixtureStrategy(MaterialStrategy):
         # Required for backwards compatibility with saved sessions from before 2025-02
         if "specific_gravity" not in dictionary:
             dictionary["specific_gravity"] = ADMIXTURE_DEFAULT_SPECIFIC_GRAVITY
-        if "recyclingrate" not in dictionary["costs"]:
+        if dictionary["costs"] is not None and "recyclingrate" not in dictionary["costs"]:
             dictionary["costs"]["recyclingrate"] = None
 
         mat = Admixture()

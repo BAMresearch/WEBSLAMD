@@ -3,6 +3,11 @@ from typing import Literal
 
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_BINDER_FORMULATION
+from slamd.formulations.processing.constants import MINMAX_DEFAULT_BINDER_LIQUID_INC, MINMAX_DEFAULT_BINDER_LIQUID_MIN, \
+    MINMAX_DEFAULT_BINDER_LIQUID_MAX, MINMAX_DEFAULT_BINDER_ADMIXTURE_INC, MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN, \
+    MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX, MINMAX_DEFAULT_BINDER_AGGREGATES_INC, MINMAX_DEFAULT_BINDER_AGGREGATES_MIN, \
+    MINMAX_DEFAULT_BINDER_AGGREGATES_MAX, MINMAX_DEFAULT_BINDER_CUSTOM_INC, MINMAX_DEFAULT_BINDER_CUSTOM_MIN, \
+    MINMAX_DEFAULT_BINDER_CUSTOM_MAX
 from slamd.formulations.processing.models.formulation import Formulation, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
@@ -44,11 +49,11 @@ class BinderStrategy(BuildingMaterialStrategy):
                                        'W/C Ratio', 'Liquid')
 
         min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].increment.data = 5
+        min_max_form.materials_min_max_entries.entries[-1].increment.data = MINMAX_DEFAULT_BINDER_LIQUID_INC
         min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].min.data = 35
+        min_max_form.materials_min_max_entries.entries[-1].min.data = MINMAX_DEFAULT_BINDER_LIQUID_MIN
         min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio) %'
-        min_max_form.materials_min_max_entries.entries[-1].max.data = 60
+        min_max_form.materials_min_max_entries.entries[-1].max.data = MINMAX_DEFAULT_BINDER_LIQUID_MAX
 
         if len(aggregates_names):
             joined_aggregates_names = ', '.join(aggregates_names)
@@ -86,19 +91,19 @@ class BinderStrategy(BuildingMaterialStrategy):
     def _populate_min_max_entry_with_default_values(cls, entry, type):
         if type == 'Admixture':
             entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
-            entry.increment.data = 1
+            entry.increment.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_INC
             entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
-            entry.min.data = 2
+            entry.min.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN
             entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
-            entry.max.data = 4
+            entry.max.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX
         if type == 'Aggregates':
-            entry.increment.data = 10
-            entry.min.data = 50
-            entry.max.data = 100
+            entry.increment.data = MINMAX_DEFAULT_BINDER_AGGREGATES_INC
+            entry.min.data = MINMAX_DEFAULT_BINDER_AGGREGATES_MIN
+            entry.max.data = MINMAX_DEFAULT_BINDER_AGGREGATES_MAX
         if type == 'Custom':
-            entry.increment.data = 5
-            entry.min.data = 0
-            entry.max.data = 20
+            entry.increment.data = MINMAX_DEFAULT_BINDER_CUSTOM_INC
+            entry.min.data = MINMAX_DEFAULT_BINDER_CUSTOM_MIN
+            entry.max.data = MINMAX_DEFAULT_BINDER_CUSTOM_MAX
 
     @classmethod
     def _create_preliminary_compositions(cls, combination, param_space):
