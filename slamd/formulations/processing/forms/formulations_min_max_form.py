@@ -40,3 +40,5 @@ class FormulationsMinMaxForm(Form):
     liquid_info_entry = StringField(
         validators=[validators.DataRequired(message='Entry name cannot be empty')]
     )
+
+    air_pore_content = DecimalField('Air Pore Content (%)')

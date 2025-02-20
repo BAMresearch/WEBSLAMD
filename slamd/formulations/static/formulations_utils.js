@@ -121,6 +121,20 @@ function collectFormulationsMinMaxRequestData(context) {
         });
     }
 
+    // Add air pore content entry if value exists, inserting it second to last (for WeightInputPreprocessor)
+    const airPoreContent = document.getElementById('air_pore_content');
+    if (airPoreContent && airPoreContent.value) {
+        const airPoreValue = parseFloat(airPoreContent.value);
+        const airPoreEntry = {
+            uuid: 'Air-Pore-Content-1',
+            type: 'Air Pore Content',
+            min: airPoreValue,
+            max: airPoreValue,
+            increment: 0
+        };
+        rowData.splice(rowData.length - 1, 0, airPoreEntry);
+    }
+
     const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint;
     return {
         materials_request_data: {

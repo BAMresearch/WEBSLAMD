@@ -67,8 +67,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                                            f'Customs ({joined_custom_names})', 'Custom')
 
         if selected_constraint_type == 'Volume':
-            cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, 'Air-Pore-Content-1',
-                                           'Air Pore Content', 'Air Pore Content')
+            min_max_form.air_pore_content.data = 2.0
 
         joined_aggregates_names = ', '.join(aggregates_names)
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(aggregates_uuids),
@@ -102,13 +101,6 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             entry.min.data = 2
             entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
             entry.max.data = 4
-        if type == 'Air Pore Content':
-            entry.increment.data = 0
-            entry.increment.label.text = 'Increment %'
-            entry.max.data = 2
-            entry.max.label.text = 'Max %'
-            entry.min.data = 2
-            entry.min.label.text = 'Min %'
         if type == 'Custom':
             entry.increment.data = 5
             entry.min.data = 0
