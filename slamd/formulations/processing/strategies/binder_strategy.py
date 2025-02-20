@@ -128,6 +128,7 @@ class BinderStrategy(BuildingMaterialStrategy):
                     process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" in types else None,
                     aggregate=MaterialContent(
                         material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
+                        mass=combination_dict["Aggregates"],
                     ) if "Aggregates" in types else None,
                     air_pore_content=None,
                 )

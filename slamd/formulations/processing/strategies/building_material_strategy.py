@@ -269,7 +269,7 @@ class BuildingMaterialStrategy(ABC):
                 'Liquid (kg)': formulation.liquid.mass,
                 'Aggregates (kg)': formulation.aggregate.mass if formulation.aggregate else None,
                 'Admixture (kg)': formulation.admixture.mass if formulation.admixture else None,
-                f'{formulation.custom.material.name} (kg)' if formulation.custom else "__placeholder": formulation.custom.mass if formulation.custom else None,
+                'Custom (kg)': formulation.custom.mass if formulation.custom else None,
                 'Materials': ", ".join(filter(None, [
                     formulation.powder.material.name if formulation.powder else None,
                     formulation.liquid.material.name if formulation.liquid else None,
