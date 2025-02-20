@@ -4,14 +4,10 @@ from typing import Literal
 
 import pandas as pd
 
-from slamd.common.common_validators import validate_ranges
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
-from slamd.common.slamd_utils import empty, not_numeric
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
-from slamd.formulations.processing.forms.weights_form import WeightsForm
 from slamd.formulations.processing.models.formulation import Formulation
-from slamd.formulations.processing.weight_input_preprocessor import MAX_NUMBER_OF_WEIGHTS, WeightInputPreprocessor
+from slamd.formulations.processing.weight_input_preprocessor import WeightInputPreprocessor
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 WEIGHT_FORM_DELIMITER = '/'
