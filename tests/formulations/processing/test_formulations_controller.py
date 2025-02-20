@@ -139,33 +139,7 @@ def test_slamd_adds_formulations_min_max_entries(client, monkeypatch):
     assert 'materials_min_max_entries-3-min' not in template
     assert 'materials_min_max_entries-3-max' not in template
 
-    assert 'Show mixture in terms of base material composition' in template
-
-
-def test_slamd_shows_weights_of_formulations(client, monkeypatch):
-    def mock_create_weights_form(data, building_material):
-        form = WeightsForm()
-        entry1 = form.all_weights_entries.append_entry()
-        entry1.idx.data = '0'
-        entry1.weights.data = ['15/10']
-        entry2 = form.all_weights_entries.append_entry()
-        entry2.idx.data = '1'
-        entry2.weights.data = ['10/15']
-        return form
-
-    monkeypatch.setattr(FormulationsService, 'create_weights_form', mock_create_weights_form)
-
-    # We mock processing of the request body, so it does not matter which data we pass. The simplest option is empty
-    response = client.post('/materials/formulations/concrete/add_weights', data=b'{}')
-
-    assert response.status_code == 200
-
-    template = json.loads(response.data.decode('utf-8'))['template']
-    assert 'Here you can see all the weight combinations generated using the configuration above.' in template
-    assert 'all_weights_entries-0-weights' in template
-    assert 'all_weights_entries-1-weights' in template
-    assert '15/10' in template
-    assert '10/15' in template
+    assert 'Create material formulations for given configuration' in template
 
 
 def test_slamd_creates_formulation_batch(client, monkeypatch):

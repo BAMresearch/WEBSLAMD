@@ -10,6 +10,7 @@ from slamd.discovery.processing.models.dataset import Dataset
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
+from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
 from slamd.materials.processing.models.aggregates import Aggregates
 from slamd.materials.processing.models.custom import Custom
@@ -83,15 +84,15 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
         return None
 
     def mock_get_material(material_type, uuid):
-        if material_type == 'Powder':
+        if material_type.lower() == 'powder':
             if uuid == 'additional':
                 return _create_additional_powder()
             return prepare_test_base_powders_for_blending(material_type, uuid)
-        elif material_type == 'Liquid':
+        elif material_type.lower() == 'liquid':
             return prepare_test_base_liquids_for_blending(material_type, uuid)
-        elif material_type == 'Aggregates':
+        elif material_type.lower() == 'aggregates':
             return prepare_test_base_aggregates_for_blending(material_type, uuid)
-        elif material_type == 'Admixture':
+        elif material_type.lower() == 'admixture':
             return prepare_test_admixture()
         return None
 
@@ -100,63 +101,115 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
         mock_save_and_overwrite_dataset_called_with = input, filename
         return None
 
+    def mock_get_specific_gravities(materials_dict):
+        return {
+            "uuid1": 1,
+            "additional": 2,
+            "uuid2": 3,
+            "uuid admixture": 4,
+            "uuid3": 5,
+        }
+
     monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
     monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
     monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
     monkeypatch.setattr(DiscoveryFacade, 'save_and_overwrite_dataset', mock_save_and_overwrite_dataset)
+    monkeypatch.setattr(BuildingMaterialStrategy, '_get_specific_gravities', mock_get_specific_gravities)
 
     formulations_data = {
         'materials_request_data': {
-            'materials_formulation_configuration': [
-                {'uuids': 'uuid1,additional', 'type': 'Powder'},
-                {'uuids': 'uuid2', 'type': 'Liquid'},
-                {'uuids': 'uuid admixture', 'type': 'Admixture'},
-                {'uuids': 'uuid3', 'type': 'Aggregates'}]
+            'min_max_data': [
+                {'uuid': 'uuid1,additional', 'type': 'Powder', 'increment': 50, 'min': 350, 'max': 400},
+                {'uuid': 'uuid2', 'type': 'Liquid', 'increment': 5, 'min': 35, 'max': 40},
+                {'uuid': 'uuid admixture', 'type': 'Admixture', 'increment': 1, 'min': 2, 'max': 3},
+                {'uuid': 'uuid3', 'type': 'Aggregates', 'increment': None, 'min': None, 'max': None}]
         },
-        'weights_request_data': {
-            'all_weights': ['200.0/20.0/1.0/779.0', '200.0/30.0/1.0/769.0', '300.0/20.0/2.0/678.0',
-                            '300.0/30.0/2.0/668.0']
-        },
+        'constraint': 1.00,
+        'selected_constraint_type': 'Volume',
         'processes_request_data': {
             'processes': []
         },
         'sampling_size': 1
     }
 
-    expected_df = _create_expected_df_as_dict()
+    expected_df = _create_expected_concrete_df_as_dict()
 
     df = FormulationsService.create_materials_formulations(formulations_data, 'concrete')
 
-    assert df.replace({np.nan: None}).to_dict() == expected_df
+    assert df.equals(expected_df)
     assert mock_query_dataset_by_name_called_with == 'temporary_concrete.csv'
     assert mock_save_and_overwrite_dataset_called_with[0].name == 'temporary_concrete.csv'
     assert mock_save_and_overwrite_dataset_called_with[1] == 'temporary_concrete.csv'
 
 
-# As we already tested details of the creation of a batch for concrete we choose to only check the basic data flow here
+# noinspection PyUnresolvedReferences
 def test_create_materials_formulations_creates_initial_formulation_batch_for_binder(monkeypatch):
-    mock_create_building_material_strategy_called_with = None
-    mock_create_formulation_batch_called_with = None
+    mock_query_dataset_by_name_called_with = None
+    mock_save_and_overwrite_dataset_called_with = None
 
-    def mock_create_building_material_strategy(building_material):
-        nonlocal mock_create_building_material_strategy_called_with
-        mock_create_building_material_strategy_called_with = building_material
-        return BinderStrategy
+    def mock_query_dataset_by_name(input):
+        nonlocal mock_query_dataset_by_name_called_with
+        mock_query_dataset_by_name_called_with = input
+        return None
 
-    def mock_create_formulation_batch(request_data):
-        nonlocal mock_create_formulation_batch_called_with
-        mock_create_formulation_batch_called_with = 'dummy formulations request data'
-        return 'batch'
+    def mock_get_process(uuid):
+        return None
 
-    monkeypatch.setattr(BuildingMaterialsFactory, 'create_building_material_strategy',
-                        mock_create_building_material_strategy)
-    monkeypatch.setattr(BinderStrategy, 'create_formulation_batch', mock_create_formulation_batch)
+    def mock_get_material(material_type, uuid):
+        if material_type.lower() == 'powder':
+            return prepare_test_base_powders_for_blending(material_type, uuid)
+        elif material_type.lower() == 'liquid':
+            return prepare_test_base_liquids_for_blending(material_type, uuid)
+        elif material_type.lower() == 'aggregates':
+            return prepare_test_base_aggregates_for_blending(material_type, uuid)
+        elif material_type.lower() == 'admixture':
+            return prepare_test_admixture()
+        return None
 
-    batch = FormulationsService.create_materials_formulations('dummy formulations request data', 'binder')
+    def mock_save_and_overwrite_dataset(input, filename):
+        nonlocal mock_save_and_overwrite_dataset_called_with
+        mock_save_and_overwrite_dataset_called_with = input, filename
+        return None
 
-    assert mock_create_building_material_strategy_called_with == 'binder'
-    assert mock_create_formulation_batch_called_with == 'dummy formulations request data'
-    assert batch == 'batch'
+    def mock_get_specific_gravities(materials_dict):
+        return {
+            "uuid1": 1,
+            "additional": 2,
+            "uuid2": 3,
+            "uuid admixture": 4,
+            "uuid3": 5,
+        }
+
+    monkeypatch.setattr(DiscoveryFacade, 'query_dataset_by_name', mock_query_dataset_by_name)
+    monkeypatch.setattr(MaterialsFacade, 'get_material', mock_get_material)
+    monkeypatch.setattr(MaterialsFacade, 'get_process', mock_get_process)
+    monkeypatch.setattr(DiscoveryFacade, 'save_and_overwrite_dataset', mock_save_and_overwrite_dataset)
+    monkeypatch.setattr(BuildingMaterialStrategy, '_get_specific_gravities', mock_get_specific_gravities)
+
+    formulations_data = {
+        'materials_request_data': {
+            'min_max_data': [
+                {'uuid': 'uuid1', 'type': 'Aggregates', 'increment': 50, 'min': 350, 'max': 400},
+                {'uuid': 'uuid2', 'type': 'Liquid', 'increment': 5, 'min': 35, 'max': 40},
+                {'uuid': 'uuid admixture', 'type': 'Admixture', 'increment': 1, 'min': 2, 'max': 3},
+                {'uuid': 'uuid3', 'type': 'Powder', 'increment': None, 'min': None, 'max': None}]
+        },
+        'constraint': 500,
+        'selected_constraint_type': 'Weight',
+        'processes_request_data': {
+            'processes': []
+        },
+        'sampling_size': 1
+    }
+
+    expected_df = _create_expected_binder_df_as_dict()
+
+    df = FormulationsService.create_materials_formulations(formulations_data, 'binder')
+
+    assert df.equals(expected_df)
+    assert mock_query_dataset_by_name_called_with == 'temporary_binder.csv'
+    assert mock_save_and_overwrite_dataset_called_with[0].name == 'temporary_binder.csv'
+    assert mock_save_and_overwrite_dataset_called_with[1] == 'temporary_binder.csv'
 
 
 @pytest.mark.parametrize("context", ['concrete', 'binder'])
@@ -219,161 +272,70 @@ def _create_additional_powder():
     return powder
 
 
-def _create_expected_df_as_dict():
-    return {'Admixture (kg)': {0: 1.0,
-                               1: 1.0,
-                               2: 2.0,
-                               3: 2.0,
-                               4: 1.0,
-                               5: 1.0,
-                               6: 2.0,
-                               7: 2.0},
-            'Aggregates (kg)': {0: 779.0,
-                                1: 769.0,
-                                2: 678.0,
-                                3: 668.0,
-                                4: 779.0,
-                                5: 769.0,
-                                6: 678.0,
-                                7: 668.0},
-            'Idx_Sample': {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7},
-            'Liquid (kg)': {0: 20.0,
-                            1: 30.0,
-                            2: 20.0,
-                            3: 30.0,
-                            4: 20.0,
-                            5: 30.0,
-                            6: 20.0,
-                            7: 30.0},
-            'Materials': {0: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          1: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          2: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          3: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          4: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          5: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          6: 'powder 1, liquid 2, admixture 1, aggregate 3',
-                          7: 'powder 1, liquid 2, admixture 1, aggregate 3'},
-            'Powder (kg)': {0: 200.0,
-                            1: 200.0,
-                            2: 300.0,
-                            3: 300.0,
-                            4: 200.0,
-                            5: 200.0,
-                            6: 300.0,
-                            7: 300.0},
-            'Prop1': {0: 5.0, 1: 5.0, 2: 5.0, 3: 5.0, 4: 5.0, 5: 5.0, 6: 5.0, 7: 5.0},
-            'Prop2': {0: 'Other Category',
-                      1: 'Other Category',
-                      2: 'Other Category',
-                      3: 'Other Category',
-                      4: 'Other Category',
-                      5: 'Other Category',
-                      6: 'Other Category',
-                      7: 'Other Category'},
-            'Prop3': {0: 'Not a number 2',
-                      1: 'Not a number 2',
-                      2: 'Not a number 2',
-                      3: 'Not a number 2',
-                      4: 'Not a number 2',
-                      5: 'Not a number 2',
-                      6: 'Not a number 2',
-                      7: 'Not a number 2'},
-            'Prop4': {0: 12.0,
-                      1: 12.0,
-                      2: 12.0,
-                      3: 12.0,
-                      4: None,
-                      5: None,
-                      6: None,
-                      7: None},
-            'al2_o3': {0: 7.0, 1: 7.0, 2: 7.0, 3: 7.0, 4: None, 5: None, 6: None, 7: None},
-            'coarse_aggregates': {0: 9.0,
-                                  1: 9.0,
-                                  2: 9.0,
-                                  3: 9.0,
-                                  4: 9.0,
-                                  5: 9.0,
-                                  6: 9.0,
-                                  7: 9.0},
-            'fe3_o2': {0: 10.0, 1: 10.0, 2: 10.0, 3: 10.0, 4: 2.3, 5: 2.3, 6: 2.3, 7: 2.3},
-            'fine': {0: 50.0, 1: 50.0, 2: 50.0, 3: 50.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0},
-            'fine_aggregates': {0: 27.0,
-                                1: 27.0,
-                                2: 27.0,
-                                3: 27.0,
-                                4: 27.0,
-                                5: 27.0,
-                                6: 27.0,
-                                7: 27.0},
-            'fineness_modulus': {0: 5.0,
-                                 1: 5.0,
-                                 2: 5.0,
-                                 3: 5.0,
-                                 4: 5.0,
-                                 5: 5.0,
-                                 6: 5.0,
-                                 7: 5.0},
-            'h2_o_mol': {0: 11.0,
-                         1: 11.0,
-                         2: 11.0,
-                         3: 11.0,
-                         4: 11.0,
-                         5: 11.0,
-                         6: 11.0,
-                         7: 11.0},
-            'na2_si_o3': {0: 20.0,
-                          1: 20.0,
-                          2: 20.0,
-                          3: 20.0,
-                          4: 20.0,
-                          5: 20.0,
-                          6: 20.0,
-                          7: 20.0},
-            'na2_si_o3_mol': {0: 4.0,
-                              1: 4.0,
-                              2: 4.0,
-                              3: 4.0,
-                              4: 4.0,
-                              5: 4.0,
-                              6: 4.0,
-                              7: 4.0},
-            'na_o_h': {0: 4.1, 1: 4.1, 2: 4.1, 3: 4.1, 4: 4.1, 5: 4.1, 6: 4.1, 7: 4.1},
-            'total co2_footprint': {0: 58.74,
-                                    1: 58.14,
-                                    2: 53.68,
-                                    3: 53.08,
-                                    4: 55.14,
-                                    5: 54.54,
-                                    6: 48.28,
-                                    7: 47.68},
-            'total costs': {0: 26.23,
-                            1: 26.34,
-                            2: 29.27,
-                            3: 29.37,
-                            4: 16.68,
-                            5: 16.77,
-                            6: 14.93,
-                            7: 15.03},
-            'total delivery_time ': {0: 40.0,
-                                     1: 40.0,
-                                     2: 40.0,
-                                     3: 40.0,
-                                     4: 40.0,
-                                     5: 40.0,
-                                     6: 40.0,
-                                     7: 40.0},
-            'water_absorption': {0: 10.0,
-                                 1: 10.0,
-                                 2: 10.0,
-                                 3: 10.0,
-                                 4: 10.0,
-                                 5: 10.0,
-                                 6: 10.0,
-                                 7: 10.0}}
+def _create_expected_concrete_df_as_dict():
+    return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                         "Powder (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0, 350.0, 350.0, 350.0,
+                                         350.0, 400.0,
+                                         400.0, 400.0, 400.0],
+                         "Liquid (kg)": [122.5, 122.5, 140.0, 140.0, 140.0, 140.0, 160.0, 160.0, 122.5, 122.5, 140.0,
+                                         140.0, 140.0,
+                                         140.0, 160.0, 160.0],
+                         "Aggregates (kg)": [3037.08, 3032.71, 3007.92, 3003.54, 2756.67, 2751.67, 2723.33, 2718.33,
+                                             3912.08,
+                                             3907.71, 3882.92, 3878.54, 3756.67, 3751.67, 3723.33, 3718.33],
+                         "Admixture (kg)": [7.0, 10.5, 7.0, 10.5, 8.0, 12.0, 8.0, 12.0, 7.0, 10.5, 7.0, 10.5, 8.0, 12.0,
+                                            8.0, 12.0],
+                         "Materials": ["powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3",
+                                       "powder 1, liquid 2, admixture 1, aggregate 3"],
+                         "total costs": [23.4, 23.44, 23.47, 23.5, 24.14, 24.18, 24.22, 24.26, 18.92, 18.94, 18.95,
+                                         18.98, 18.74,
+                                         18.77, 18.78, 18.81],
+                         "total co2_footprint": [62.82, 62.76, 62.49, 62.43, 61.26, 61.19, 60.86, 60.79, 62.81, 62.76,
+                                                 62.55, 62.51,
+                                                 61.62, 61.56, 61.31, 61.26],
+                         "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
+                         "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                                  0.0, 0.0]
+                         })
 
 
-# noinspection PyTypeChecker
-# mock uuid so we do simply use strings instead of actual uuids
+def _create_expected_binder_df_as_dict():
+    return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7],
+                          "Powder (kg)": [109.49, 108.7, 105.63, 104.9, 72.99, 72.46, 70.42, 69.93],
+                          "Liquid (kg)": [38.32, 38.05, 42.25, 41.96, 25.55, 25.36, 28.17, 27.97],
+                          "Aggregates (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0],
+                          "Admixture (kg)": [2.19, 3.26, 2.11, 3.15, 1.46, 2.17, 1.41, 2.1],
+                          "Materials": ["powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1",
+                                        "powder 3, liquid 2, admixture 1, aggregate 1"],
+                          "total costs": [48.49, 48.51, 48.33, 48.35, 48.99, 49.01, 48.89, 48.9],
+                          "total co2_footprint": [19.19, 19.18, 19.12, 19.1, 19.46, 19.45, 19.41, 19.4],
+                          "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40],
+                          "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]})
+
+    # noinspection PyTypeChecker
+    # mock uuid so we do simply use strings instead of actual uuids
+
+
 def _mock_get_material(material_type, uuid):
     if material_type == 'Powder':
         if uuid == '1':
