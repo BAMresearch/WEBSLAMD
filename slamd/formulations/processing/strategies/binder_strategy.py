@@ -147,7 +147,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         # Equation for calculating dependent (powder) from absolute custom, relative liquid/admixture:
         # liquid * powder + aggregates + admixture * powder + custom + powder = constraint
         # powder * (liquid + admixture + 1) + aggregates + custom = constraint
-        # powder = constraint - custom - aggregates / (liquid + admixture + 1)
+        # powder = (constraint - custom - aggregates) / (liquid + admixture + 1)
 
         if constraint_type == "Volume":
             raise ValueError("Constraint type can not be 'Volume' for binders")

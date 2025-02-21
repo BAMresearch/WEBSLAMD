@@ -1,14 +1,10 @@
-import numpy as np
 import pandas as pd
 import pytest
 from werkzeug.datastructures import ImmutableMultiDict
 
 from slamd import create_app
-from slamd.common.error_handling import ValueNotSupportedException, SlamdRequestTooLargeException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade
 from slamd.discovery.processing.models.dataset import Dataset
-from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
-from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 from slamd.formulations.processing.formulations_service import FormulationsService
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.materials.processing.materials_facade import MaterialsFacade, MaterialsForFormulations
@@ -206,6 +202,10 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_bin
 
     df = FormulationsService.create_materials_formulations(formulations_data, 'binder')
 
+    with open("temp.json", "w") as f:
+        import json
+        json.dump(df.to_dict(orient="list"), f)
+
     assert df.equals(expected_df)
     assert mock_query_dataset_by_name_called_with == 'temporary_binder.csv'
     assert mock_save_and_overwrite_dataset_called_with[0].name == 'temporary_binder.csv'
@@ -275,62 +275,105 @@ def _create_additional_powder():
 def _create_expected_concrete_df_as_dict():
     return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                          "Powder (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0, 350.0, 350.0, 350.0,
-                                         350.0, 400.0,
-                                         400.0, 400.0, 400.0],
+                                         350.0, 400.0, 400.0, 400.0, 400.0],
                          "Liquid (kg)": [122.5, 122.5, 140.0, 140.0, 140.0, 140.0, 160.0, 160.0, 122.5, 122.5, 140.0,
-                                         140.0, 140.0,
-                                         140.0, 160.0, 160.0],
+                                         140.0, 140.0, 140.0, 160.0, 160.0],
                          "Aggregates (kg)": [3037.08, 3032.71, 3007.92, 3003.54, 2756.67, 2751.67, 2723.33, 2718.33,
-                                             3912.08,
-                                             3907.71, 3882.92, 3878.54, 3756.67, 3751.67, 3723.33, 3718.33],
+                                             3912.08, 3907.71, 3882.92, 3878.54, 3756.67, 3751.67, 3723.33, 3718.33],
                          "Admixture (kg)": [7.0, 10.5, 7.0, 10.5, 8.0, 12.0, 8.0, 12.0, 7.0, 10.5, 7.0, 10.5, 8.0, 12.0,
-                                            8.0, 12.0],
-                         "Materials": ["powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3",
-                                       "powder 1, liquid 2, admixture 1, aggregate 3"],
+                                            8.0, 12.0], "Materials": ["powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3",
+                                                                      "powder 1, liquid 2, admixture 1, aggregate 3"],
+                         "Prop1": [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                         "Prop2": ["Other Category", "Other Category", "Other Category", "Other Category",
+                                   "Other Category", "Other Category", "Other Category", "Other Category",
+                                   "Other Category", "Other Category", "Other Category", "Other Category",
+                                   "Other Category", "Other Category", "Other Category", "Other Category"],
+                         "Prop3": ["Not a number 2", "Not a number 2", "Not a number 2", "Not a number 2",
+                                   "Not a number 2", "Not a number 2", "Not a number 2", "Not a number 2",
+                                   "Not a number 2", "Not a number 2", "Not a number 2", "Not a number 2",
+                                   "Not a number 2", "Not a number 2", "Not a number 2", "Not a number 2"],
+                         "Prop4": [12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, 12.0, None, None, None, None, None, None,
+                                   None,
+                                   None],
+                         "fe3_o2": [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 2.3, 2.3, 2.3, 2.3, 2.3, 2.3, 2.3,
+                                    2.3],
+                         "al2_o3": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0, None, None, None, None, None, None, None,
+                                    None],
+                         "fine": [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                                  1.0],
+                         "na2_si_o3": [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0,
+                                       20.0, 20.0, 20.0],
+                         "na2_si_o3_mol": [4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0,
+                                           4.0],
+                         "na_o_h": [4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1],
+                         "h2_o_mol": [11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0,
+                                      11.0, 11.0, 11.0],
+                         "fine_aggregates": [27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0, 27.0,
+                                             27.0, 27.0, 27.0, 27.0],
+                         "coarse_aggregates": [9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+                                               9.0, 9.0],
+                         "fineness_modulus": [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0,
+                                              5.0],
+                         "water_absorption": [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0,
+                                              10.0, 10.0, 10.0, 10.0],
                          "total costs": [23.4, 23.44, 23.47, 23.5, 24.14, 24.18, 24.22, 24.26, 18.92, 18.94, 18.95,
-                                         18.98, 18.74,
-                                         18.77, 18.78, 18.81],
+                                         18.98, 18.74, 18.77, 18.78, 18.81],
                          "total co2_footprint": [62.82, 62.76, 62.49, 62.43, 61.26, 61.19, 60.86, 60.79, 62.81, 62.76,
-                                                 62.55, 62.51,
-                                                 61.62, 61.56, 61.31, 61.26],
+                                                 62.55, 62.51, 61.62, 61.56, 61.31, 61.26],
                          "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
                          "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                                  0.0, 0.0]
-                         })
+                                                  0.0, 0.0]})
 
 
 def _create_expected_binder_df_as_dict():
     return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7],
-                          "Powder (kg)": [109.49, 108.7, 105.63, 104.9, 72.99, 72.46, 70.42, 69.93],
-                          "Liquid (kg)": [38.32, 38.05, 42.25, 41.96, 25.55, 25.36, 28.17, 27.97],
-                          "Aggregates (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0],
-                          "Admixture (kg)": [2.19, 3.26, 2.11, 3.15, 1.46, 2.17, 1.41, 2.1],
-                          "Materials": ["powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1",
-                                        "powder 3, liquid 2, admixture 1, aggregate 1"],
-                          "total costs": [48.49, 48.51, 48.33, 48.35, 48.99, 49.01, 48.89, 48.9],
-                          "total co2_footprint": [19.19, 19.18, 19.12, 19.1, 19.46, 19.45, 19.41, 19.4],
-                          "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40],
-                          "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]})
+                         "Powder (kg)": [109.49, 108.7, 105.63, 104.9, 72.99, 72.46, 70.42, 69.93],
+                         "Liquid (kg)": [38.32, 38.05, 42.25, 41.96, 25.55, 25.36, 28.17, 27.97],
+                         "Aggregates (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0],
+                         "Admixture (kg)": [2.19, 3.26, 2.11, 3.15, 1.46, 2.17, 1.41, 2.1],
+                         "Materials": ["powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1",
+                                       "powder 3, liquid 2, admixture 1, aggregate 1"],
+                         "Prop1": [2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0],
+                         "Prop2": ["Category", "Category", "Category", "Category", "Category", "Category", "Category",
+                                   "Category"],
+                         "Prop3": ["Not a number 1", "Not a number 1", "Not a number 1", "Not a number 1",
+                                   "Not a number 1", "Not a number 1", "Not a number 1", "Not a number 1"],
+                         "Prop4": [10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2, 10.2],
+                         "fe3_o2": [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
+                         "al2_o3": [7.0, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0, 7.0],
+                         "fine": [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0],
+                         "na2_si_o3": [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
+                         "na2_si_o3_mol": [4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0],
+                         "na_o_h": [4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1],
+                         "h2_o_mol": [11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0, 11.0],
+                         "fine_aggregates": [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
+                         "coarse_aggregates": [4.4, 4.4, 4.4, 4.4, 4.4, 4.4, 4.4, 4.4],
+                         "fineness_modulus": [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                         "water_absorption": [10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
+                         "total costs": [48.49, 48.51, 48.33, 48.35, 48.99, 49.01, 48.89, 48.9],
+                         "total co2_footprint": [19.19, 19.18, 19.12, 19.1, 19.46, 19.45, 19.41, 19.4],
+                         "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40],
+                         "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]})
 
     # noinspection PyTypeChecker
     # mock uuid so we do simply use strings instead of actual uuids
