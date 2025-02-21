@@ -138,7 +138,7 @@ class ConcreteStrategy(BuildingMaterialStrategy):
                     ) if "Custom" in types else None,
                     air_pore_content=combination_dict["Air Pore Content"] if "Air Pore Content" in types else None,
                     process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" in types else None,
-                    aggregate=MaterialContent(
+                    aggregates=MaterialContent(
                         material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
                     ),
                 )
@@ -182,15 +182,15 @@ class ConcreteStrategy(BuildingMaterialStrategy):
             return None
 
         if constraint_type == "Volume":
-            f.aggregate.volume = constraint - total_volume
-            f.aggregate.mass = round(
-                f.aggregate.volume * specific_gravities[
-                    str(f.aggregate.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
+            f.aggregates.volume = constraint - total_volume
+            f.aggregates.mass = round(
+                f.aggregates.volume * specific_gravities[
+                    str(f.aggregates.material.uuid)] * G_CM3_TO_KG_M3_CONVERSION_FACTOR, 2
             )
-            f.total_mass += f.aggregate.mass
+            f.total_mass += f.aggregates.mass
         elif constraint_type == "Weight":
-            f.aggregate.mass = round(constraint - f.total_mass, 2)
-            f.total_mass += f.aggregate.mass
+            f.aggregates.mass = round(constraint - f.total_mass, 2)
+            f.total_mass += f.aggregates.mass
         else:
             raise ValueError("Invalid constraint type: " + str(constraint_type))
 

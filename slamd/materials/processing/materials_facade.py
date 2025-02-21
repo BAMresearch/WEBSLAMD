@@ -83,18 +83,15 @@ class MaterialsFacade:
         return sorted_materials
 
     @classmethod
-    def materials_formulation_as_dict(cls, materials):
+    def materials_formulation_as_dict(cls, formulation):
         full_dict = {}
-        types = []
-        names = []
-        for material in list(materials):
-            types.append(material.type)
-            names.append(material.name)
-            strategy = MaterialFactory.create_strategy(material.type.lower())
-            full_dict = {**full_dict, **strategy.for_formulation(material)}
+        for material in ["powder", "liquid", "aggregates", "admixture", "custom"]:
+            if getattr(formulation, material) is not None:
+                strategy = MaterialFactory.create_strategy(material)
+                full_dict = {**full_dict, **strategy.for_formulation(getattr(formulation, material).material)}
 
         full_dict = {k: v for k, v in full_dict.items() if not_empty(v)}
-        return full_dict, types, names
+        return full_dict
 
     @classmethod
     def save_material(cls, material):

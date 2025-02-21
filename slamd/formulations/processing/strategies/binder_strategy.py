@@ -131,7 +131,7 @@ class BinderStrategy(BuildingMaterialStrategy):
                         mass=combination_dict["Custom"],
                     ) if "Custom" in types else None,
                     process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" in types else None,
-                    aggregate=MaterialContent(
+                    aggregates=MaterialContent(
                         material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
                         mass=combination_dict["Aggregates"],
                     ) if "Aggregates" in types else None,
@@ -157,8 +157,8 @@ class BinderStrategy(BuildingMaterialStrategy):
         if c.custom:
             c.total_mass += c.custom.mass
 
-        if c.aggregate:
-            c.total_mass += c.aggregate.mass
+        if c.aggregates:
+            c.total_mass += c.aggregates.mass
 
         if c.powder:
             # Total mass contains (custom mass + aggregates mass) at this point

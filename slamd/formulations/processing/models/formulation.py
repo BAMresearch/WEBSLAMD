@@ -17,7 +17,7 @@ class Formulation:
     powder: MaterialContent | None
     liquid: MaterialContent | None
     admixture: MaterialContent | None
-    aggregate: MaterialContent | None
+    aggregates: MaterialContent | None
     custom: MaterialContent | None
 
     air_pore_content: Optional[float]  # In percent

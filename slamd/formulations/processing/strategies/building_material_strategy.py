@@ -237,12 +237,12 @@ class BuildingMaterialStrategy(ABC):
             f.recycling_rate += (f.custom.material.costs.recyclingrate or 0) * custom_factor
             f.delivery_time = max(f.delivery_time, f.custom.material.costs.delivery_time or 0)
 
-        if f.aggregate:
-            aggregate_factor = f.aggregate.mass / f.total_mass
-            f.costs += (f.aggregate.material.costs.costs or 0) * aggregate_factor
-            f.co2_footprint += (f.aggregate.material.costs.co2_footprint or 0) * aggregate_factor
-            f.recycling_rate += (f.aggregate.material.costs.recyclingrate or 0) * aggregate_factor
-            f.delivery_time = max(f.delivery_time, f.aggregate.material.costs.delivery_time or 0)
+        if f.aggregates:
+            aggregate_factor = f.aggregates.mass / f.total_mass
+            f.costs += (f.aggregates.material.costs.costs or 0) * aggregate_factor
+            f.co2_footprint += (f.aggregates.material.costs.co2_footprint or 0) * aggregate_factor
+            f.recycling_rate += (f.aggregates.material.costs.recyclingrate or 0) * aggregate_factor
+            f.delivery_time = max(f.delivery_time, f.aggregates.material.costs.delivery_time or 0)
 
         if f.process:
             f.costs += f.process.costs.costs or 0
@@ -263,11 +263,12 @@ class BuildingMaterialStrategy(ABC):
     def _create_dataframe_internal(cls, formulations, filename):
         rows = []
         for idx, formulation in enumerate(formulations):
+            attributes = MaterialsFacade.materials_formulation_as_dict(formulation)
             row = {
                 'Idx_Sample': idx,
                 'Powder (kg)': formulation.powder.mass,
                 'Liquid (kg)': formulation.liquid.mass,
-                'Aggregates (kg)': formulation.aggregate.mass if formulation.aggregate else None,
+                'Aggregates (kg)': formulation.aggregates.mass if formulation.aggregates else None,
                 'Admixture (kg)': formulation.admixture.mass if formulation.admixture else None,
                 'Custom (kg)': formulation.custom.mass if formulation.custom else None,
                 'Materials': ", ".join(filter(None, [
@@ -275,9 +276,10 @@ class BuildingMaterialStrategy(ABC):
                     formulation.liquid.material.name if formulation.liquid else None,
                     formulation.admixture.material.name if formulation.admixture else None,
                     formulation.custom.material.name if formulation.custom else None,
-                    formulation.aggregate.material.name if formulation.aggregate else None,
+                    formulation.aggregates.material.name if formulation.aggregates else None,
                     formulation.process.name if formulation.process else None,
                 ])),
+                **attributes,
                 'total costs': formulation.costs,
                 'total co2_footprint': formulation.co2_footprint,
                 'total delivery_time': formulation.delivery_time,
