@@ -63,12 +63,12 @@ function assignChangeBlendingStrategyEvent(){
 
     if (blending_strategy === 'Weight-based'){
       for (let label of labels) {
-        label.textContent = label.textContent.replace('Vol.-%', 'W.-%');
+        label.textContent = label.textContent.replace('Vol.-%', 'M.-%');
       }
     }
     else {
       for (let label of labels) {
-        label.textContent = label.textContent.replace('W.-%', 'Vol.-%');
+        label.textContent = label.textContent.replace('M.-%', 'Vol.-%');
       }
     }
   });

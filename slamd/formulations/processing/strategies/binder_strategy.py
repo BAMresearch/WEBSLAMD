@@ -1,9 +1,17 @@
+import itertools
+from typing import Literal
+
 from slamd.common.error_handling import ValueNotSupportedException
 from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORARY_BINDER_FORMULATION
+from slamd.formulations.processing.constants import MINMAX_DEFAULT_BINDER_LIQUID_INC, MINMAX_DEFAULT_BINDER_LIQUID_MIN, \
+    MINMAX_DEFAULT_BINDER_LIQUID_MAX, MINMAX_DEFAULT_BINDER_ADMIXTURE_INC, MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN, \
+    MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX, MINMAX_DEFAULT_BINDER_AGGREGATES_INC, MINMAX_DEFAULT_BINDER_AGGREGATES_MIN, \
+    MINMAX_DEFAULT_BINDER_AGGREGATES_MAX, MINMAX_DEFAULT_BINDER_CUSTOM_INC, MINMAX_DEFAULT_BINDER_CUSTOM_MIN, \
+    MINMAX_DEFAULT_BINDER_CUSTOM_MAX
+from slamd.formulations.processing.models.formulation import Formulation, MaterialContent
 from slamd.formulations.processing.strategies.building_material_strategy import BuildingMaterialStrategy
 from slamd.formulations.processing.forms.binder_selection_form import BinderSelectionForm
 from slamd.formulations.processing.forms.formulations_min_max_form import FormulationsMinMaxForm
-from slamd.formulations.processing.weights_calculator import WeightsCalculator
 from slamd.materials.processing.materials_facade import MaterialsFacade
 
 
@@ -24,7 +32,7 @@ class BinderStrategy(BuildingMaterialStrategy):
         return dataframe
 
     @classmethod
-    def create_min_max_form(cls, formulation_selection):
+    def create_min_max_form(cls, formulation_selection, selected_constraint_type):
         result = cls.classify_formulation_selection(formulation_selection)
         powder_names, powder_uuids = result['Powder']
         liquid_names, liquid_uuids = result['Liquid']
@@ -40,9 +48,12 @@ class BinderStrategy(BuildingMaterialStrategy):
         cls._create_min_max_form_entry(min_max_form.materials_min_max_entries, ','.join(liquid_uuids),
                                        'W/C Ratio', 'Liquid')
 
-        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio)'
-        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio)'
-        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio)'
+        min_max_form.materials_min_max_entries.entries[-1].increment.label.text = 'Increment (W/C-ratio) %'
+        min_max_form.materials_min_max_entries.entries[-1].increment.data = MINMAX_DEFAULT_BINDER_LIQUID_INC
+        min_max_form.materials_min_max_entries.entries[-1].min.label.text = 'Min (W/C-ratio) %'
+        min_max_form.materials_min_max_entries.entries[-1].min.data = MINMAX_DEFAULT_BINDER_LIQUID_MIN
+        min_max_form.materials_min_max_entries.entries[-1].max.label.text = 'Max (W/C-ratio) %'
+        min_max_form.materials_min_max_entries.entries[-1].max.data = MINMAX_DEFAULT_BINDER_LIQUID_MAX
 
         if len(aggregates_names):
             joined_aggregates_names = ', '.join(aggregates_names)
@@ -69,17 +80,111 @@ class BinderStrategy(BuildingMaterialStrategy):
         return min_max_form
 
     @classmethod
-    def create_formulation_batch(cls, formulations_data):
-        return cls._create_formulation_batch_internal(formulations_data, TEMPORARY_BINDER_FORMULATION)
-
-    @classmethod
     def _create_min_max_form_entry(cls, entries, uuids, name, material_type):
-        cls._create_min_max_form_entry_internal(entries, uuids, name, material_type, ['Powder', 'Liquid'], 'Powder')
+        entry = cls._create_min_max_form_entry_internal(
+            entries, uuids, name, material_type,
+            ['Powder', 'Liquid'], 'Powder'
+        )
+        cls._populate_min_max_entry_with_default_values(entry, material_type)
 
     @classmethod
-    def _compute_weights_product(cls, all_materials_weights, weight_constraint):
-        return WeightsCalculator.compute_full_binder_weights_product(all_materials_weights, weight_constraint)
+    def _populate_min_max_entry_with_default_values(cls, entry, type):
+        if type == 'Admixture':
+            entry.increment.label.text = 'Increment (Admixture/Powder-ratio) %'
+            entry.increment.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_INC
+            entry.min.label.text = 'Min (Admixture/Powder-ratio) %'
+            entry.min.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN
+            entry.max.label.text = 'Max (Admixture/Powder-ratio) %'
+            entry.max.data = MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX
+        if type == 'Aggregates':
+            entry.increment.data = MINMAX_DEFAULT_BINDER_AGGREGATES_INC
+            entry.min.data = MINMAX_DEFAULT_BINDER_AGGREGATES_MIN
+            entry.max.data = MINMAX_DEFAULT_BINDER_AGGREGATES_MAX
+        if type == 'Custom':
+            entry.increment.data = MINMAX_DEFAULT_BINDER_CUSTOM_INC
+            entry.min.data = MINMAX_DEFAULT_BINDER_CUSTOM_MIN
+            entry.max.data = MINMAX_DEFAULT_BINDER_CUSTOM_MAX
 
     @classmethod
-    def _sort_materials(cls, materials_for_formulation):
-        return MaterialsFacade.sort_for_binder_formulation(materials_for_formulation)
+    def _create_preliminary_compositions(cls, combination, param_space):
+        types = list(param_space.keys())
+
+        compositions = []
+        for composition in itertools.product(*[param_space[mt] for mt in types]):
+            combination_dict = dict(zip(types, composition))
+
+            compositions.append(
+                Formulation(
+                    powder=MaterialContent(
+                        material=MaterialsFacade.get_material("powder", combination["Powder"]),
+                    ),
+                    liquid=MaterialContent(
+                        material=MaterialsFacade.get_material("liquid", combination["Liquid"]),
+                        mass=combination_dict["Liquid"],
+                    ) if "Liquid" in types else None,
+                    admixture=MaterialContent(
+                        material=MaterialsFacade.get_material("admixture", combination["Admixture"]),
+                        mass=combination_dict["Admixture"],
+                    ) if "Admixture" in types else None,
+                    custom=MaterialContent(
+                        material=MaterialsFacade.get_material("custom", combination["Custom"]),
+                        mass=combination_dict["Custom"],
+                    ) if "Custom" in types else None,
+                    process=MaterialsFacade.get_process(combination_dict["Process"]) if "Process" in types else None,
+                    aggregates=MaterialContent(
+                        material=MaterialsFacade.get_material("aggregates", combination["Aggregates"]),
+                        mass=combination_dict["Aggregates"],
+                    ) if "Aggregates" in types else None,
+                    air_pore_content=None,
+                )
+            )
+
+        return compositions
+
+    @classmethod
+    def _complete_composition(cls, c: Formulation, specific_gravities, constraint,
+                              constraint_type: Literal["Volume", "Weight"]):
+        # Equation for calculating dependent (powder) from absolute custom, relative liquid/admixture:
+        # liquid * powder + aggregates + admixture * powder + custom + powder = constraint
+        # powder * (liquid + admixture + 1) + aggregates + custom = constraint
+        # powder = (constraint - custom - aggregates) / (liquid + admixture + 1)
+
+        if constraint_type == "Volume":
+            raise ValueError("Constraint type can not be 'Volume' for binders")
+
+        c.total_mass = 0
+
+        if c.custom:
+            c.total_mass += c.custom.mass
+
+        if c.aggregates:
+            c.total_mass += c.aggregates.mass
+
+        if c.powder:
+            # Total mass contains (custom mass + aggregates mass) at this point
+            c.powder.mass = (constraint - c.total_mass) / (
+                (c.liquid.mass / 100 if c.liquid else 0)
+                + (c.admixture.mass / 100 if c.admixture else 0)
+                + 1
+            )
+            c.powder.mass = round(c.powder.mass, 2)
+            c.total_mass += c.powder.mass
+
+        # If we can't fit into the constraint, powder mass is negative -> invalid
+        if c.powder.mass < 0:
+            return None
+
+        # Now we convert liquid and admixture masses from % of powder to actual kg
+        if c.liquid:
+            c.liquid.mass = round(c.liquid.mass * c.powder.mass / 100, 2)
+            c.total_mass += c.liquid.mass
+
+        if c.admixture:
+            c.admixture.mass = round(c.admixture.mass * c.powder.mass / 100, 2)
+            c.total_mass += c.admixture.mass
+
+        return c
+
+    @classmethod
+    def _create_dataframe(cls, formulations):
+        return cls._create_dataframe_internal(formulations, TEMPORARY_BINDER_FORMULATION)

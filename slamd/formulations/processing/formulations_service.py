@@ -8,7 +8,6 @@ from slamd.discovery.processing.discovery_facade import DiscoveryFacade, TEMPORA
 from slamd.formulations.processing.building_material import BuildingMaterial
 from slamd.formulations.processing.building_materials_factory import BuildingMaterialsFactory
 
-
 class FormulationsService:
 
     @classmethod
@@ -19,27 +18,20 @@ class FormulationsService:
         return form, df
 
     @classmethod
-    def create_formulations_min_max_form(cls, formulation_selection, building_material):
+    def create_formulations_min_max_form(cls, formulation_selection, building_material, selected_constraint_type):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.create_min_max_form(formulation_selection)
-
-    @classmethod
-    def create_weights_form(cls, weights_request_data, building_material):
-        strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.populate_weights_form(weights_request_data)
+        return strategy.create_min_max_form(formulation_selection, selected_constraint_type)
 
     @classmethod
     def create_materials_formulations(cls, formulations_data, building_material):
         strategy = BuildingMaterialsFactory.create_building_material_strategy(building_material)
-        return strategy.create_formulation_batch(formulations_data)
 
-    @classmethod
-    def _create_properties(cls, inner_dict):
-        properties = ''
-        for key, value in inner_dict.items():
-            properties += f'{key}: {value}; '
-        properties = properties.strip()[:-1]
-        return properties
+        return strategy.generate_formulations(
+            formulations_data["materials_request_data"]["min_max_data"],
+            float(formulations_data["constraint"]),
+            formulations_data["selected_constraint_type"],
+            [p["uuid"] for p in formulations_data["processes_request_data"]["processes"]],
+        )
 
     @classmethod
     def delete_formulation(cls, building_material):

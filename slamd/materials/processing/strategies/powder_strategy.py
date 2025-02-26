@@ -26,6 +26,12 @@ class PowderStrategy(MaterialStrategy):
 
     @classmethod
     def create_material_from_dict(cls, dictionary):
+        # Required for backwards compatibility with saved sessions from before 2025-02
+        if "specific_gravity" not in dictionary:
+            dictionary["specific_gravity"] = POWDER_DEFAULT_SPECIFIC_GRAVITY
+        if dictionary["costs"] is not None and "recyclingrate" not in dictionary["costs"]:
+            dictionary["costs"]["recyclingrate"] = None
+
         powder = Powder()
         cls.fill_material_object_with_basic_info_from_dict(powder, dictionary)
 

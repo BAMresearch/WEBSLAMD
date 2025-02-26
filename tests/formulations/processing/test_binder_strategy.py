@@ -1,4 +1,7 @@
 from slamd import create_app
+from slamd.formulations.processing.constants import MINMAX_DEFAULT_BINDER_LIQUID_INC, MINMAX_DEFAULT_BINDER_LIQUID_MIN, \
+    MINMAX_DEFAULT_BINDER_LIQUID_MAX, MINMAX_DEFAULT_BINDER_ADMIXTURE_INC, MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN, \
+    MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX
 from slamd.formulations.processing.strategies.binder_strategy import BinderStrategy
 
 
@@ -20,15 +23,15 @@ def test_create_min_max_form(monkeypatch):
     expected_materials_min_max_entries = [{'uuid_field': '3,4',
                                            'type_field': 'Liquid',
                                            'materials_entry_name': 'W/C Ratio',
-                                           'increment': None,
-                                           'min': None,
-                                           'max': None},
+                                           'increment': MINMAX_DEFAULT_BINDER_LIQUID_INC,
+                                           'min': MINMAX_DEFAULT_BINDER_LIQUID_MIN,
+                                           'max': MINMAX_DEFAULT_BINDER_LIQUID_MAX},
                                           {'uuid_field': '5',
                                            'type_field': 'Admixture',
                                            'materials_entry_name': 'Admixtures (Admixture 1)',
-                                           'increment': None,
-                                           'min': None,
-                                           'max': None},
+                                           'increment': MINMAX_DEFAULT_BINDER_ADMIXTURE_INC,
+                                           'min': MINMAX_DEFAULT_BINDER_ADMIXTURE_MIN,
+                                           'max': MINMAX_DEFAULT_BINDER_ADMIXTURE_MAX},
                                           {'uuid_field': '1,2',
                                            'type_field': 'Powder',
                                            'materials_entry_name': 'Powders (Blended Powder-0.3/0.7, '
@@ -45,7 +48,7 @@ def test_create_min_max_form(monkeypatch):
 
     app = create_app('testing', with_session=False)
     with app.test_request_context('/materials/formulations/binder'):
-        result = BinderStrategy.create_min_max_form(formulation_selection)
+        result = BinderStrategy.create_min_max_form(formulation_selection, "Weight")
 
     assert result.data['materials_min_max_entries'] == expected_materials_min_max_entries
     assert result.data['process_entries'] == expected_process_entries

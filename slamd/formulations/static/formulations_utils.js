@@ -4,11 +4,9 @@
  * common functions would lead to tight coupling between these separated use cases.
  */
 
-let allWeightFieldsHaveValidInput = false;
-const CONCRETE_LIQUID_HTML_ID_INCLUDES = "-1-";
-const BINDER_LIQUID_HTML_ID_INCLUDES = "-0-";
-const CONCRETE = "CONCRETE"
-const BINDER = "BINDER"
+const CONCRETE = "CONCRETE";
+const BINDER = "BINDER";
+const MAX_COMBINATIONS_THRESHOLD = 10000;
 
 function collectBuildingMaterialFormulationSelection() {
     const powderPlaceholder = document.getElementById("powder_selection");
@@ -47,30 +45,30 @@ function addListenersToIndependentFields(context) {
     const independentInputFields = collectInputFields();
     for (const item of independentInputFields) {
         item.min.addEventListener("keyup", () => {
-            computeDependentValue("min", item.min, independentInputFields, context);
+            // computeDependentValue("min", item.min, independentInputFields, context);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.min.id).setAttribute("title", "");
 
         item.max.addEventListener("keyup", () => {
-            computeDependentValue("max", item.max, independentInputFields, context);
+            // computeDependentValue("max", item.max, independentInputFields, context);
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
         document.getElementById(item.max.id).setAttribute("title", "");
 
         item.increment.addEventListener("keyup", () => {
             const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint
-            correctInputFieldValue(item.increment, 0, parseFloat(constraint));
+            // correctInputFieldValue(item.increment, 0, parseFloat(constraint));
             toggleConfirmationFormulationsButtons(independentInputFields);
         });
     }
 }
 
 function toggleConfirmationFormulationsButtons(inputFields) {
-    const allIncrementsFilled = inputFields.filter((item) => item["increment"].value === "").length === 0;
-    const allMinFilled = inputFields.filter((item) => item["min"].value === "").length === 0;
-    const allMaxFilled = inputFields.filter((item) => item["max"].value === "").length === 0;
-    document.getElementById("confirm_formulations_configuration_button").disabled = !(
+    const allIncrementsFilled = inputFields.filter(item => item.increment.value === "").length === 0;
+    const allMinFilled = inputFields.filter(item => item.min.value === "").length === 0;
+    const allMaxFilled = inputFields.filter(item => item.max.value === "").length === 0;
+    document.getElementById("create_formulations_batch_button").disabled = !(
         allIncrementsFilled &&
         allMinFilled &&
         allMaxFilled
@@ -82,7 +80,7 @@ function toggleConfirmationFormulationsButtons(inputFields) {
  * to define formulations without weight constraints we internally take this possibility into account.
  */
 function collectInputFields(only_independent = true) {
-    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 1;
+    let numberOfIndependentRows = document.querySelectorAll('[id$="-min"]').length - 2;
 
     if (!only_independent) {
         numberOfIndependentRows += 1;
@@ -90,9 +88,11 @@ function collectInputFields(only_independent = true) {
 
     const inputFields = [];
     for (let i = 0; i < numberOfIndependentRows; i++) {
-        const min = document.getElementById(`materials_min_max_entries-${i}-min`);
-        const max = document.getElementById(`materials_min_max_entries-${i}-max`);
-        const increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+        const type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
+        let min = document.getElementById(`materials_min_max_entries-${i}-min`);
+        let max = document.getElementById(`materials_min_max_entries-${i}-max`);
+        let increment = document.getElementById(`materials_min_max_entries-${i}-increment`);
+
         inputFields.push({
             min: min,
             max: max,
@@ -121,10 +121,26 @@ function collectFormulationsMinMaxRequestData(context) {
         });
     }
 
+    // Add air pore content entry if value exists, inserting it second to last (for WeightInputPreprocessor)
+    const airPoreContent = document.getElementById('air_pore_content');
+    if (airPoreContent && airPoreContent.value) {
+        const airPoreValue = parseFloat(airPoreContent.value);
+        const airPoreEntry = {
+            uuid: 'Air-Pore-Content-1',
+            type: 'Air Pore Content',
+            min: airPoreValue,
+            max: airPoreValue,
+            increment: 0
+        };
+        rowData.splice(rowData.length - 1, 0, airPoreEntry);
+    }
+
     const constraint = context === CONCRETE ? concreteWeightConstraint : binderWeightConstraint;
     return {
-        materials_formulation_configuration: rowData,
-        weight_constraint: constraint,
+        materials_request_data: {
+            min_max_data: rowData
+        },
+        constraint: constraint,
     };
 }
 
@@ -144,197 +160,22 @@ function collectProcessesRequestData() {
     };
 }
 
-function collectMaterialRequestData() {
-    const numberOfMaterialsRows = document.querySelectorAll('[id$="-min"]').length - 1;
-
-    const rowData = [];
-    for (let i = 0; i <= numberOfMaterialsRows; i++) {
-        const uuids = document.getElementById(`materials_min_max_entries-${i}-uuid_field`);
-        const type = document.getElementById(`materials_min_max_entries-${i}-type_field`);
-        rowData.push({
-            uuids: uuids.value,
-            type: type.value,
-        });
+function calculateUuidCombinationsCount(rowData) {
+    let uuidCombinationsCount = 1;
+    for (const row of rowData) {
+        const uuidList = row.uuid ? row.uuid.split(',') : [];
+        uuidCombinationsCount *= uuidList.length > 0 ? uuidList.length : 1;
     }
-    return {
-        materials_formulation_configuration: rowData,
-    };
+    return uuidCombinationsCount;
 }
 
-function collectWeights() {
-    const weightFields = document.querySelectorAll('[id^="all_weights_entries-"]');
-
-    const weightData = [];
-    for (const weightField of weightFields) {
-        weightData.push(weightField.value);
-    }
-    return {
-        all_weights: weightData,
-    };
-}
-
-function computeAggregateValue(independentMinMaxInputFields, inputFieldName, currentInputField) {
-    const sumOfIndependentFields = autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, currentInputField);
-    const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
-    if (unfilledFields.length === 0) {
-        const lastMinItem = document.getElementById(
-            `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
-        );
-        lastMinItem.value = (concreteWeightConstraint - sumOfIndependentFields).toFixed(2);
-    }
-}
-
-
-function computeDependentValue(inputFieldName, currentInputField, independentMinMaxInputFields, context) {
-    if (context === CONCRETE) {
-        computeAggregateValue(independentMinMaxInputFields, inputFieldName, currentInputField);
-    } else {
-        computePowderValue(independentMinMaxInputFields, inputFieldName, currentInputField, context);
-    }
-
-}
-
-function autocorrectConcreteInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
-    correctInputFieldValue(currentInputField, 0);
-
-    // Empty values => NaN; all others are parsed to float
-    let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
-
-    // Multiply the liquid value (second in array/index 1) with the powder value (first in array/index 0)
-    // Since liquid is given as a ratio of powder
-    // The + casts to a number, because toFixed returns strings...
-    independentFieldValues[1] = +(independentFieldValues[0] * independentFieldValues[1]).toFixed(2);
-
-    let sumOfIndependentFields = independentFieldValues
-        .filter((item) => !Number.isNaN(item))
-        .reduce((x, y) => x + y, 0);
-
-    if (sumOfIndependentFields > concreteWeightConstraint) {
-        if (currentInputField.id.includes(CONCRETE_LIQUID_HTML_ID_INCLUDES)) {
-            // liquids need to be updated with a ratio instead of a total
-            currentInputField.value = (
-                (concreteWeightConstraint - (sumOfIndependentFields - independentFieldValues[1])) / independentFieldValues[0]
-            ).toFixed(2);
-        } else {
-            currentInputField.value = (concreteWeightConstraint - (sumOfIndependentFields - currentInputField.value)).toFixed(2);
-        }
-        sumOfIndependentFields = concreteWeightConstraint;
-    }
-    return sumOfIndependentFields;
-}
-
-function computePowderValue(independentMinMaxInputFields, inputFieldName, currentInputField, context) {
-    const sumOfNonLiquidsAndLiquid = autocorrectBinderInput(independentMinMaxInputFields, inputFieldName, currentInputField, context);
-    const sumOfNonLiquids = sumOfNonLiquidsAndLiquid[0]
-    const liquidWCValue = sumOfNonLiquidsAndLiquid[1]
-    const unfilledFields = independentMinMaxInputFields.filter((item) => item[inputFieldName].value === "");
-    if (unfilledFields.length === 0) {
-        const lastMinItem = document.getElementById(
-            `materials_min_max_entries-${independentMinMaxInputFields.length}-${inputFieldName}`
-        );
-        lastMinItem.value = ((binderWeightConstraint - sumOfNonLiquids) / (1 + liquidWCValue)).toFixed(2)
-    }
-}
-
-function autocorrectBinderInput(independentMinMaxInputFields, inputFieldName, currentInputField) {
-    correctInputFieldValue(currentInputField, 0);
-
-    // Empty values => NaN; all others are parsed to float
-    let independentFieldValues = independentMinMaxInputFields.map((item) => parseFloat(item[inputFieldName].value));
-
-    // By construction liquid always occurs in the first row
-    let nonLiquidValues = independentFieldValues.slice(1, independentFieldValues.length)
-
-    let sumOfNonLiquidWeights = nonLiquidValues
-        .filter((item) => !Number.isNaN(item))
-        .reduce((x, y) => x + y, 0);
-
-    let liquidValue = independentFieldValues[0]
-
-    if (sumOfNonLiquidWeights > binderWeightConstraint) {
-        if (!currentInputField.id.includes(BINDER_LIQUID_HTML_ID_INCLUDES)) {
-            currentInputField.value = (binderWeightConstraint - (sumOfNonLiquidWeights - currentInputField.value)).toFixed(2);
+function calculateCombinationsCount(rowData) {
+    let combinationsCount = 1;
+    for (const row of rowData) {
+        if (row.min != null && row.max != null && row.increment != null && !isNaN(row.min) && !isNaN(row.max) && !isNaN(row.increment) && row.increment > 0) {
+            const range = (row.max - row.min) / row.increment + 1;
+            combinationsCount *= range;
         }
     }
-
-    return [sumOfNonLiquidWeights, liquidValue]
-}
-
-function assignKeyboardEventsToWeightForm(initialCreationOfForm = false) {
-    if (initialCreationOfForm) {
-        allWeightFieldsHaveValidInput = true;
-    }
-
-    toggleSubmitButtonBasedOnWeights();
-}
-
-function assignDeleteWeightEvent() {
-    const numberOfWeightEntries = document.querySelectorAll('[id^="all_weights_entries-"]').length;
-
-    for (let i = 0; i < numberOfWeightEntries; i++) {
-        const deleteButton = document.getElementById(`delete_weight_button___${i}`);
-        deleteButton.addEventListener("click", () => {
-            document.getElementById(`all_weights_entries-${i}-weights`).remove();
-            deleteButton.remove();
-        });
-    }
-}
-
-function assignCreateFormulationsBatchEvent(url) {
-    const button = document.getElementById("create_formulations_batch_button");
-    enableTooltip(button);
-
-    button.addEventListener("click", async () => {
-        const materialsRequestData = collectMaterialRequestData();
-        const weightsRequestData = collectWeights();
-        const processesRequestData = collectProcessesRequestData();
-        const samplingSize = document.getElementById("sampling_size_slider").value
-
-        const formulationsRequest = {
-            materials_request_data: materialsRequestData,
-            weights_request_data: weightsRequestData,
-            processes_request_data: processesRequestData,
-            sampling_size: samplingSize
-        };
-
-        insertSpinnerInPlaceholder("formulations-table-placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", formulationsRequest);
-        removeSpinnerInPlaceholder("formulations-table-placeholder");
-
-        document.getElementById("submit").disabled = false;
-        document.getElementById("delete_formulations_batches_button").disabled = false;
-    });
-}
-
-function toggleSubmitButtonBasedOnWeights() {
-    const weightFields = collectWeightFields();
-    const numberOfMaterials = document.querySelectorAll('[id$="-min"]').length - 1;
-    for (const weightInput of weightFields) {
-        weightInput.addEventListener("keyup", () => {
-            toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields);
-        });
-    }
-}
-
-function collectWeightFields() {
-    const numberOfWeightFields = document.querySelectorAll('[id$="-weights"]').length;
-
-    const weightFields = [];
-    for (let i = 0; i < numberOfWeightFields; i++) {
-        const weights = document.getElementById(`all_weights_entries-${i}-weights`);
-        weightFields.push(weights);
-    }
-    return weightFields;
-}
-
-function toggleSubmitButtonBasedOnWeightInput(numberOfMaterials, weightFields) {
-    const regex = new RegExp("^\\d+([.,]\\d{1,2})*(/\\d+([.,]\\d{1,2})*){" + numberOfMaterials + "}$");
-    const nonMatchingInputs = weightFields.map((input) => input.value).filter((value) => !regex.test(value)).length;
-    allWeightFieldsHaveValidInput = nonMatchingInputs <= 0;
-    document.getElementById("create_formulations_batch_button").disabled = !allWeightFieldsHaveValidInput;
-}
-
-function updateSamplingRatioValue(ratio) {
-    const value = parseFloat(ratio);
-    document.getElementById("selected-ratio").value = value.toFixed(2);
+    return combinationsCount;
 }

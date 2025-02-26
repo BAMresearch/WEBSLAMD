@@ -9,6 +9,12 @@ class ProcessStrategy(MaterialStrategy):
 
     @classmethod
     def create_material_from_dict(cls, dictionary):
+        # Required for backwards compatibility with saved sessions from before 2025-02
+        if "specific_gravity" not in dictionary:
+            dictionary["specific_gravity"] = None
+        if dictionary["costs"] is not None and "recyclingrate" not in dictionary["costs"]:
+            dictionary["costs"]["recyclingrate"] = None
+
         mat = Process()
         cls.fill_material_object_with_basic_info_from_dict(mat, dictionary)
         return mat
@@ -41,31 +47,10 @@ class ProcessStrategy(MaterialStrategy):
 
     @classmethod
     def for_formulation(cls, process):
-        co2_footprint, costs = cls._adjust_units_to_match_with_materials(process)
-
-        multidict = MultiDict([
-            (f'delivery_time ({process.type})', float_if_not_empty(process.costs.delivery_time)),
-            (f'costs ({process.type})', costs),
-            (f'co2_footprint ({process.type})', co2_footprint),
-        ])
+        multidict = MultiDict()
 
         cls._convert_additional_properties_for_formulation(multidict, process)
         multidict.add('duration', float_if_not_empty(process.duration))
         multidict.add('temperature', float_if_not_empty(process.temperature))
         multidict.add('relative humidity', float_if_not_empty(process.relative_humidity))
         return multidict
-
-    @classmethod
-    def _adjust_units_to_match_with_materials(cls, process):
-        """
-        Costs for processes are measured in Euro while for materials they are measured in Euro / kg. Since in FormulationConverter
-        within _postprocess_dataframe all costs are summed up and divided by 1000 (for converting to proper units for formulations)
-        the corresponding processes must be adjusted accordingly. The most simple way is to scale them here.
-        """
-        costs = float_if_not_empty(process.costs.costs)
-        if costs:
-            costs *= 1000
-        co2_footprint = float_if_not_empty(process.costs.co2_footprint)
-        if co2_footprint:
-            co2_footprint *= 1000
-        return co2_footprint, costs

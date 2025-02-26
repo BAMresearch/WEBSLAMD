@@ -72,13 +72,9 @@ class MaterialStrategy(ABC):
 
     @classmethod
     def for_formulation(cls, material):
-        multidict = MultiDict([
-            (f'delivery_time ({material.type})', float_if_not_empty(material.costs.delivery_time)),
-            (f'costs ({material.type})', float_if_not_empty(material.costs.costs)),
-            (f'co2_footprint ({material.type})', float_if_not_empty(material.costs.co2_footprint)),
-        ])
-        cls._convert_additional_properties_for_formulation(multidict, material)
-        return multidict
+        out = MultiDict()
+        cls._convert_additional_properties_for_formulation(out, material)
+        return out
 
     @classmethod
     def create_dto(cls, material):

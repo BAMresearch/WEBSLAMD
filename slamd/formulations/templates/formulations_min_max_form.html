@@ -42,7 +42,7 @@
 
 {% for entry in formulations_min_max_form.materials_min_max_entries %}
 <div class="d-none">
-    {{ entry.uuid_field(class_="form-control", hidden=True) }}
+    {{ entry.uuid_field(class_="form-control uuid-field", hidden=True) }}
     {{ entry.type_field(class_="form-control", hidden=True) }}
 </div>
 <div class="row g-3 mb-3 align-items-end">
@@ -79,9 +79,15 @@
     <div class="col-3">
         {{ formulations_min_max_form.liquid_info_entry(class_="form-control", disabled=True) }}
     </div>
+    {% if formulations_min_max_form.air_pore_content.data is not none %}
+        <div class="col-3">
+            {{ formulations_min_max_form.air_pore_content.label(class_="control-label") }}
+            {{ formulations_min_max_form.air_pore_content(class_="form-control") }}
+        </div>
+    {% endif %}
 </div>
-<button class="btn btn-success col-12 mb-3" type="button" id="confirm_formulations_configuration_button"
-    data-bs-toggle="tooltip" data-bs-placement="bottom"
-    title="Preview the chosen formulations in terms of their base material composition" disabled>
-    3 - Show mixture in terms of base material composition
+<button class="btn btn-success col-12 mb-3" type="button" id="create_formulations_batch_button" data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="A batch of material formulations based on the configuration are created. You can add several to define a dataset and add some targets in the next step.">
+    3 - Create material formulations for given configuration
 </button>

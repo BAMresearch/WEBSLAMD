@@ -5,7 +5,7 @@ Furthermore in case we are adding more and more types of building materials, ded
 lead too much more flexibility and extensibility.
 """
 from flask_wtf import FlaskForm as Form
-from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField
+from wtforms import validators, SelectMultipleField, SubmitField, DecimalField, StringField, SelectField
 
 
 class BinderSelectionForm(Form):
@@ -46,13 +46,17 @@ class BinderSelectionForm(Form):
         choices=[]
     )
 
-    weight_constraint = DecimalField(
-        label='1.7 - Constraint (Sum of materials used for formulation) (kg) *',
+    constraint_selection = SelectField(label='1.7 - Constraint type selection',
+                                       choices=['Weight'])
+
+    constraint = DecimalField(
+        label='1.8 - Max. Weight (kg) (Sum of materials used for formulation) *',
+        default=500,
         validators=[validators.DataRequired(message='Weight constraint cannot be empty')]
     )
 
     dataset_name = StringField(
-        label='1.8 - Name of the dataset (optional)',
+        label='1.9 - Name of the dataset (optional)',
         validators=[validators.DataRequired(message='Dataset name cannot be empty')]
     )
 

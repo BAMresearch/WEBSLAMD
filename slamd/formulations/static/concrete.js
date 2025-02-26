@@ -10,6 +10,8 @@ function toggleBasedOnSelectionAndConstraints() {
     const powderPlaceholder = document.getElementById("powder_selection");
     const liquidPlaceholder = document.getElementById("liquid_selection");
     const aggregatesPlaceholder = document.getElementById("aggregates_selection");
+    concreteWeightConstraint = document.getElementById("constraint").value;
+
 
     const powderSelected = atLeastOneItemIsSelected(powderPlaceholder);
     const liquidSelected = atLeastOneItemIsSelected(liquidPlaceholder);
@@ -24,7 +26,7 @@ function toggleBasedOnSelectionAndConstraints() {
 }
 
 function toggleSelectionConfirmationButtonAfterConstraintChange() {
-    concreteWeightConstraint = document.getElementById("weight_constraint").value;
+    concreteWeightConstraint = document.getElementById("constraint").value;
     toggleBasedOnSelectionAndConstraints();
 }
 
@@ -32,13 +34,18 @@ async function confirmSelection() {
     removeInnerHtmlFromPlaceholder("formulations_min_max_placeholder");
     removeInnerHtmlFromPlaceholder("formulations_weights_placeholder");
     document.getElementById("submit").disabled = true;
-    concreteWeightConstraint = document.getElementById("weight_constraint").value;
-
+    concreteWeightConstraint = document.getElementById("constraint").value;
     const selectedMaterials = collectBuildingMaterialFormulationSelection();
+    const selectedConstraintType = document.getElementById("constraint_selection").value;
     const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_min_max_entries`;
 
+    body = {
+        "selected_materials" : selectedMaterials,
+        "selected_constraint_type" : selectedConstraintType
+    }
+
     insertSpinnerInPlaceholder("formulations_min_max_placeholder");
-    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", selectedMaterials);
+    await postDataAndEmbedTemplateInPlaceholder(url, "formulations_min_max_placeholder", body);
     removeSpinnerInPlaceholder("formulations_min_max_placeholder");
 
     addListenersToIndependentFields(CONCRETE);
@@ -46,19 +53,37 @@ async function confirmSelection() {
 }
 
 async function assignConfirmFormulationsConfigurationEvent() {
-    const button = document.getElementById("confirm_formulations_configuration_button");
+    const button = document.getElementById("create_formulations_batch_button");
     enableTooltip(button);
 
     button.addEventListener("click", async () => {
         const requestData = collectFormulationsMinMaxRequestData(CONCRETE);
-        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/add_weights`;
+        const rowData = requestData.materials_request_data.min_max_data;
+        const combinationsCount = calculateCombinationsCount(rowData);
+        const uuidCombinationsCount = calculateUuidCombinationsCount(rowData);
+        const totalCombinationsCount = combinationsCount * uuidCombinationsCount;
 
-        insertSpinnerInPlaceholder("formulations_weights_placeholder");
-        await postDataAndEmbedTemplateInPlaceholder(url, "formulations_weights_placeholder", requestData);
-        removeSpinnerInPlaceholder("formulations_weights_placeholder");
-        assignKeyboardEventsToWeightForm(true);
-        assignDeleteWeightEvent();
-        assignCreateFormulationsBatchEvent(`${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`);
+        if (totalCombinationsCount > MAX_COMBINATIONS_THRESHOLD) {
+            const proceed = confirm(`You are attempting to create ${totalCombinationsCount} formulations. Do you want to proceed?`);
+            if (!proceed) {
+                return;
+            }
+        }
+
+        const url = `${CONCRETE_FORMULATIONS_MATERIALS_URL}/create_formulations_batch`;
+        const token = document.getElementById("csrf_token").value;
+        const constraintType = document.getElementById('constraint_selection')
+        const processesRequestData = collectProcessesRequestData();
+        requestData['selected_constraint_type'] = constraintType.value
+        requestData['processes_request_data'] = processesRequestData
+        requestData['sampling_size'] = 1
+
+        insertSpinnerInPlaceholder("formulations-table-placeholder");
+        await postDataAndEmbedTemplateInPlaceholder(url, "formulations-table-placeholder", requestData);
+        removeSpinnerInPlaceholder("formulations-table-placeholder");
+
+        document.getElementById("submit").disabled = false;
+        document.getElementById("delete_formulations_batches_button").disabled = false;
     });
 }
 
@@ -72,7 +97,7 @@ async function deleteFormulations() {
 
 window.addEventListener("load", function () {
     document.getElementById("confirm_materials_and_processes_selection_button").addEventListener("click", confirmSelection);
-    document.getElementById("weight_constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
+    document.getElementById("constraint").addEventListener("keyup", toggleSelectionConfirmationButtonAfterConstraintChange);
     document.getElementById("powder_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("liquid_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
     document.getElementById("aggregates_selection").addEventListener("change", toggleBasedOnSelectionAndConstraints);
