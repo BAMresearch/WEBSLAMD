@@ -27,5 +27,6 @@ class Formulation:
     co2_footprint: Optional[float] = None
     delivery_time: Optional[float] = None
     recycling_rate: Optional[float] = None
+    specific_gravity: Optional[float] = None
 
     total_mass: Optional[float] = None
