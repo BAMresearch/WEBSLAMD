@@ -128,7 +128,7 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_con
         'sampling_size': 1
     }
 
-    expected_df = _create_expected_concrete_df_as_dict()
+    expected_df = _create_expected_concrete_df()
 
     df = FormulationsService.create_materials_formulations(formulations_data, 'concrete')
 
@@ -198,7 +198,7 @@ def test_create_materials_formulations_creates_initial_formulation_batch_for_bin
         'sampling_size': 1
     }
 
-    expected_df = _create_expected_binder_df_as_dict()
+    expected_df = _create_expected_binder_df()
 
     df = FormulationsService.create_materials_formulations(formulations_data, 'binder')
 
@@ -272,7 +272,7 @@ def _create_additional_powder():
     return powder
 
 
-def _create_expected_concrete_df_as_dict():
+def _create_expected_concrete_df():
     return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                          "Powder (kg)": [350.0, 350.0, 350.0, 350.0, 400.0, 400.0, 400.0, 400.0, 350.0, 350.0, 350.0,
                                          350.0, 400.0, 400.0, 400.0, 400.0],
@@ -336,10 +336,12 @@ def _create_expected_concrete_df_as_dict():
                                                  62.55, 62.51, 61.62, 61.56, 61.31, 61.26],
                          "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
                          "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                                  0.0, 0.0]})
+                                                  0.0, 0.0],
+                         "total specific_gravity": [2.27, 2.27, 2.26, 2.27, 2.28, 2.28, 2.28, 2.28, 2.0, 2.0, 2.0, 2.0,
+                                                    1.97, 1.97, 1.97, 1.97]})
 
 
-def _create_expected_binder_df_as_dict():
+def _create_expected_binder_df():
     return pd.DataFrame({"Idx_Sample": [0, 1, 2, 3, 4, 5, 6, 7],
                          "Powder (kg)": [109.49, 108.7, 105.63, 104.9, 72.99, 72.46, 70.42, 69.93],
                          "Liquid (kg)": [38.32, 38.05, 42.25, 41.96, 25.55, 25.36, 28.17, 27.97],
@@ -373,7 +375,8 @@ def _create_expected_binder_df_as_dict():
                          "total costs": [48.49, 48.51, 48.33, 48.35, 48.99, 49.01, 48.89, 48.9],
                          "total co2_footprint": [19.19, 19.18, 19.12, 19.1, 19.46, 19.45, 19.41, 19.4],
                          "total delivery_time": [40, 40, 40, 40, 40, 40, 40, 40],
-                         "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]})
+                         "total recycling_rate": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                         "total specific_gravity": [2.74, 2.74, 2.73, 2.73, 2.71, 2.71, 2.7, 2.7]})
 
     # noinspection PyTypeChecker
     # mock uuid so we do simply use strings instead of actual uuids

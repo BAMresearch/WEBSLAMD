@@ -207,12 +207,14 @@ class BuildingMaterialStrategy(ABC):
         f.co2_footprint = 0
         f.delivery_time = 0
         f.recycling_rate = 0
+        f.specific_gravity = 0
 
         if f.powder:
             powder_factor = f.powder.mass / f.total_mass
             f.costs += (f.powder.material.costs.costs or 0) * powder_factor
             f.co2_footprint += (f.powder.material.costs.co2_footprint or 0) * powder_factor
             f.recycling_rate += (f.powder.material.costs.recyclingrate or 0) * powder_factor
+            f.specific_gravity += (f.powder.material.specific_gravity or 0) * powder_factor
             f.delivery_time = max(f.delivery_time, f.powder.material.costs.delivery_time or 0)
 
         if f.liquid:
@@ -220,6 +222,7 @@ class BuildingMaterialStrategy(ABC):
             f.costs += (f.liquid.material.costs.costs or 0) * liquid_factor
             f.co2_footprint += (f.liquid.material.costs.co2_footprint or 0) * liquid_factor
             f.recycling_rate += (f.liquid.material.costs.recyclingrate or 0) * liquid_factor
+            f.specific_gravity += (f.liquid.material.specific_gravity or 0) * liquid_factor
             f.delivery_time = max(f.delivery_time, f.liquid.material.costs.delivery_time or 0)
 
         if f.admixture:
@@ -227,6 +230,7 @@ class BuildingMaterialStrategy(ABC):
             f.costs += (f.admixture.material.costs.costs or 0) * admixture_factor
             f.co2_footprint += (f.admixture.material.costs.co2_footprint or 0) * admixture_factor
             f.recycling_rate += (f.admixture.material.costs.recyclingrate or 0) * admixture_factor
+            f.specific_gravity += (f.admixture.material.specific_gravity or 0) * admixture_factor
             f.delivery_time = max(f.delivery_time, f.admixture.material.costs.delivery_time or 0)
 
         if f.custom:
@@ -234,6 +238,7 @@ class BuildingMaterialStrategy(ABC):
             f.costs += (f.custom.material.costs.costs or 0) * custom_factor
             f.co2_footprint += (f.custom.material.costs.co2_footprint or 0) * custom_factor
             f.recycling_rate += (f.custom.material.costs.recyclingrate or 0) * custom_factor
+            f.specific_gravity += (f.custom.material.specific_gravity or 0) * custom_factor
             f.delivery_time = max(f.delivery_time, f.custom.material.costs.delivery_time or 0)
 
         if f.aggregates:
@@ -241,6 +246,7 @@ class BuildingMaterialStrategy(ABC):
             f.costs += (f.aggregates.material.costs.costs or 0) * aggregate_factor
             f.co2_footprint += (f.aggregates.material.costs.co2_footprint or 0) * aggregate_factor
             f.recycling_rate += (f.aggregates.material.costs.recyclingrate or 0) * aggregate_factor
+            f.specific_gravity += (f.aggregates.material.specific_gravity or 0) * aggregate_factor
             f.delivery_time = max(f.delivery_time, f.aggregates.material.costs.delivery_time or 0)
 
         if f.process:
@@ -251,6 +257,7 @@ class BuildingMaterialStrategy(ABC):
         f.costs = round(f.costs, 2)
         f.co2_footprint = round(f.co2_footprint, 2)
         f.delivery_time = round(f.delivery_time, 2)
+        f.specific_gravity = round(f.specific_gravity, 2)
         f.recycling_rate = round(f.recycling_rate, 2)
 
     @classmethod
@@ -283,6 +290,7 @@ class BuildingMaterialStrategy(ABC):
                 'total co2_footprint': formulation.co2_footprint,
                 'total delivery_time': formulation.delivery_time,
                 'total recycling_rate': formulation.recycling_rate,
+                'total specific_gravity': formulation.specific_gravity,
             }
             rows.append(row)
 
