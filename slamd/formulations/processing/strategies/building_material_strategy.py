@@ -125,15 +125,13 @@ class BuildingMaterialStrategy(ABC):
     @classmethod
     def generate_formulations(cls, min_max_data, constraint, constraint_type: Literal["Volume", "Weight"], processes):
         materials = cls._extract_material_uuids(min_max_data)
-        material_and_process_combinations = cls._find_material_and_process_combinations(
-            {**materials, "Process": processes} if processes else materials
-        )
+        material_combinations = cls._find_material_combinations(materials)
 
         weights_and_ratios = WeightInputPreprocessor.collect_weights(min_max_data)
         parameter_space = {**weights_and_ratios, "Process": processes} if processes else weights_and_ratios
 
         compositions = []
-        for combination in material_and_process_combinations:
+        for combination in material_combinations:
             compositions.extend(
                 cls._create_preliminary_compositions(combination, parameter_space)
             )
@@ -164,7 +162,7 @@ class BuildingMaterialStrategy(ABC):
         return result
 
     @classmethod
-    def _find_material_and_process_combinations(cls, type_to_uuids):
+    def _find_material_combinations(cls, type_to_uuids):
         types = list(type_to_uuids.keys())
         uuid_lists = [type_to_uuids[material_type] for material_type in types]
 
